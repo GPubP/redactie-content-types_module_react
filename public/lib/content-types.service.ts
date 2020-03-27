@@ -3,7 +3,7 @@ import apiService from './services/api-service';
 
 export const getContentTypes = async (): Promise<ContentTypeSchema[] | null> => {
 	try {
-		const response: ContentTypesSchema = await apiService.get('contentTypes').json();
+		const response: ContentTypesSchema = await apiService.get('content-types').json();
 
 		return response._embedded;
 	} catch (err) {
