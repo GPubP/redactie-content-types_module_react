@@ -23,7 +23,7 @@ Core.routes.register({
 	routes: [
 		{
 			path: '/content-types/beheer',
-			component: ContentTypesOverview,
+			component: ContentTypesOverview as any,
 		},
 	],
 });
