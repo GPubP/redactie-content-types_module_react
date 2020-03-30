@@ -1,12 +1,13 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import DataLoader from '../../components/DataLoader/DataLoader';
 import { BREADCRUMB_OPTIONS } from '../../content-types.const';
 import { ContentTypesRouteProps } from '../../content-types.types';
 import useRoutes from '../../hooks/useRoutes/useRoutes';
-import { Tab } from '../../types';
+import { LoadingState, Tab } from '../../types';
 
 const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ basePath, routes }) => {
 	const route = routes.find(item => item.path === `${basePath}/aanmaken`) || null;
@@ -28,10 +29,22 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ basePath, routes }) =>
 	 */
 	const activeRoute = useRoutes();
 	const breadcrumbs = useBreadcrumbs(activeRoute as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
+	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+
+	useEffect(() => {
+		setInitialLoading(LoadingState.Loaded);
+	}, []);
 
 	/**
 	 * Render
 	 */
+	const renderChildRoutes = (): any => {
+		return Core.routes.render(route?.routes as ModuleRouteConfig[], {
+			basePath: basePath,
+			routes: route?.routes,
+			contentType: null,
+		});
+	};
 	return (
 		<>
 			<ContextHeader
@@ -41,10 +54,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ basePath, routes }) =>
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			{Core.routes.render(route?.routes as ModuleRouteConfig[], {
-				basePath: basePath,
-				routes: route?.routes,
-			})}
+			<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
 		</>
 	);
 };
