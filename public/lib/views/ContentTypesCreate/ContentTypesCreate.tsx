@@ -1,5 +1,5 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
-import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
+import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC } from 'react';
 
 import { BREADCRUMB_OPTIONS } from '../../content-types.const';
@@ -8,10 +8,11 @@ import useRoutes from '../../hooks/useRoutes/useRoutes';
 import { Tab } from '../../types';
 
 const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ basePath, routes }) => {
+	const route = routes.find(item => item.path === `${basePath}/aanmaken`) || null;
 	const TABS: Tab[] = [
-		{ name: 'Instellingen', target: `${basePath}/aanmaken/instellingen`, active: true },
-		{ name: 'Content Componenten', target: `${basePath}/aanmaken/componenten` },
-		{ name: 'Sites', target: `${basePath}/aanmaken/sites` },
+		{ name: 'Instellingen', target: `${route?.path}/instellingen`, active: true },
+		{ name: 'Content Componenten', target: `${route?.path}/componenten` },
+		{ name: 'Sites', target: `${route?.path}/sites` },
 	];
 
 	/**
@@ -28,6 +29,10 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ basePath, routes }) =>
 			<ContextHeader tabs={TABS} title="Content type aanmaken">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
+			{Core.routes.render(route?.routes as ModuleRouteConfig[], {
+				basePath: basePath,
+				routes: route?.routes,
+			})}
 		</>
 	);
 };
