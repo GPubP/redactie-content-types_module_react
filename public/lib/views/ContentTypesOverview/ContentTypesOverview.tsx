@@ -105,7 +105,9 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ basePath }) => {
 			<ContextHeader title="Content types">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
-					<Button iconLeft="plus">Nieuwe maken</Button>
+					<Button iconLeft="plus" onClick={() => history.push(`${basePath}/aanmaken`)}>
+						Nieuwe maken
+					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<DataLoader loadingState={loadingState} render={renderOverview} />

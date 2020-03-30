@@ -2,7 +2,10 @@ import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 
-import { ContentTypesOverview } from './lib/views';
+import ContentTypeComponents from './lib/components/ContentTypeComponents/ContentTypeComponents';
+import ContentTypeSettings from './lib/components/ContentTypeSettings/ContentTypeSettings';
+import ContentTypeSites from './lib/components/ContentTypeSites/ContentTypeSites';
+import { ContentTypesCreate, ContentTypesOverview } from './lib/views';
 
 const ContentTypesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 	const location = useLocation();
@@ -12,7 +15,19 @@ const ContentTypesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 		return <Redirect to={`${route.path}/beheer`} />;
 	}
 
-	return <>{Core.routes.render(route.routes as ModuleRouteConfig[])}</>;
+	// if path is /content-types/aanmaken, redirect to /content-types/aanmaken/instellingen
+	if (/\/content-types\/aanmaken$/.test(location.pathname)) {
+		return <Redirect to={`${route.path}/aanmaken/instellingen`} />;
+	}
+
+	return (
+		<>
+			{Core.routes.render(route.routes as ModuleRouteConfig[], {
+				basePath: route.path,
+				routes: route.routes,
+			})}
+		</>
+	);
 };
 
 Core.routes.register({
@@ -24,6 +39,24 @@ Core.routes.register({
 		{
 			path: '/content-types/beheer',
 			component: ContentTypesOverview as any,
+		},
+		{
+			path: '/content-types/aanmaken',
+			component: ContentTypesCreate as any,
+			routes: [
+				{
+					path: '/content-types/aanmaken/instellingen',
+					component: ContentTypeSettings as any,
+				},
+				{
+					path: '/content-types/aanmaken/componenten',
+					component: ContentTypeComponents as any,
+				},
+				{
+					path: '/content-types/aanmaken/sites',
+					component: ContentTypeSites as any,
+				},
+			],
 		},
 	],
 });
