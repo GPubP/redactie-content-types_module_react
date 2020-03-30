@@ -29,10 +29,12 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ basePath, routes }) =>
 			<ContextHeader tabs={TABS} title="Content type aanmaken">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			{Core.routes.render(route?.routes as ModuleRouteConfig[], {
-				basePath: basePath,
-				routes: route?.routes,
-			})}
+			<div className="u-container u-wrapper u-margin-top">
+				{Core.routes.render(route?.routes as ModuleRouteConfig[], {
+					basePath: basePath,
+					routes: route?.routes,
+				})}
+			</div>
 		</>
 	);
 };

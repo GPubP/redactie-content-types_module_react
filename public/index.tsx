@@ -5,6 +5,7 @@ import { Redirect, useLocation } from 'react-router-dom';
 import ContentTypeComponents from './lib/components/ContentTypeComponents/ContentTypeComponents';
 import ContentTypeSettings from './lib/components/ContentTypeSettings/ContentTypeSettings';
 import ContentTypeSites from './lib/components/ContentTypeSites/ContentTypeSites';
+import { generateSettingsFormState } from './lib/content-types.helpers';
 import { ContentTypesCreate, ContentTypesOverview } from './lib/views';
 
 const ContentTypesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
@@ -46,7 +47,13 @@ Core.routes.register({
 			routes: [
 				{
 					path: '/content-types/aanmaken/instellingen',
-					component: ContentTypeSettings as any,
+					component: () => (
+						<ContentTypeSettings
+							initialState={generateSettingsFormState()}
+							onCancel={() => {}}
+							onSubmit={() => {}}
+						/>
+					),
 				},
 				{
 					path: '/content-types/aanmaken/componenten',

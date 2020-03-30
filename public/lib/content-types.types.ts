@@ -5,6 +5,11 @@ export interface ContentTypesRouteProps {
 	routes: ModuleRouteConfig[];
 }
 
+export interface ContentTypeSettingsFormState {
+	name: string;
+	description: string;
+}
+
 export interface ContentTypeSchema {
 	uuid: string;
 	data: {
