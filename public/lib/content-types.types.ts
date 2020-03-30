@@ -7,18 +7,15 @@ export interface ContentTypesRouteProps {
 
 export interface ContentTypeSchema {
 	uuid: string;
-	data: {
-		name: string;
+	meta: {
+		label: string;
 		description: string;
 		status: string;
-	};
-	meta: {
-		tenant: string;
 		createdAt: string;
-		updatedAt: string;
+		lastModified: string;
 	};
 }
 
 export interface ContentTypesSchema {
-	_embedded: ContentTypeSchema[];
+	data: ContentTypeSchema[];
 }
