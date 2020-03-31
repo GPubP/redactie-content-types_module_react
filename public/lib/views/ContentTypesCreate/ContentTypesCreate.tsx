@@ -17,7 +17,7 @@ const TABS: Tab[] = [
 	},
 	{
 		name: 'Content Componenten',
-		target: 'componenten',
+		target: 'content-componenten',
 		active: false,
 	},
 	{
@@ -27,7 +27,7 @@ const TABS: Tab[] = [
 	},
 ];
 
-const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ basePath, routes }) => {
+const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) => {
 	/**
 	 * Hooks
 	 */
@@ -42,16 +42,19 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ basePath, routes }) =>
 	/**
 	 * Methods
 	 */
-	const activeRoute = routes.find(item => item.path === `${basePath}/aanmaken`) || null;
+	const activeRoute =
+		routes.find(item => item.path === `/${tenantId}/content-types/aanmaken`) || null;
 
 	/**
 	 * Render
 	 */
 	const renderChildRoutes = (): any => {
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-			basePath: basePath,
+			tenantId: tenantId,
 			routes: activeRoute?.routes,
 			contentType: null,
+			fieldTypes: [],
+			onSubmit: () => console.log('here'),
 		});
 	};
 	return (

@@ -1,8 +1,9 @@
-import { ModuleRouteConfig } from '@redactie/redactie-core';
+import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 
-export interface ContentTypesRouteProps {
+export interface ContentTypesRouteProps extends RouteConfigComponentProps {
 	basePath: string;
 	routes: ModuleRouteConfig[];
+	tenantId: string;
 }
 
 export interface Operator {
