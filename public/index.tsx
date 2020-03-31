@@ -2,7 +2,7 @@ import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { ContentTypesRouteProps } from './lib/content-types.types';
+import { ContentTypesRouteProps } from './lib/contentTypes.types';
 import { ContentTypesCreate, ContentTypesOverview } from './lib/views';
 import ContentTypeDetailCC from './lib/views/ContentTypeDetailCC/ContentTypeDetailCC';
 import ContentTypeDetailSettings from './lib/views/ContentTypeDetailSettings/ContentTypeDetailSettings';

@@ -1,8 +1,12 @@
-import { ContentTypeSchema, FieldTypesSchema } from '../../content-types.types';
+import { RouteConfigComponentProps } from '@redactie/redactie-core';
 
-export interface ContenTypeDetailCCProps {
+import { ContentTypeSchema } from '../../services/contentTypes';
+import { FieldTypesSchema } from '../../services/fieldTypes';
+
+export interface ContenTypeDetailCCProps extends RouteConfigComponentProps {
 	contentType: ContentTypeSchema;
 	fieldTypes: FieldTypesSchema;
+	tenantId: string;
 	onSubmit: (contentType: ContentTypeSchema) => void;
 }
 

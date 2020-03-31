@@ -1,20 +1,22 @@
 import { Button, Card, Select, TextField } from '@acpaas-ui/react-components';
 import { Table } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
-import { compose, map, pathOr, propOr } from 'ramda';
+import { pathOr } from 'ramda';
 import React, { FC } from 'react';
 
 import { StatusIcon } from '../../components/StatusIcon/StatusIcon';
-import { ContentTypeFieldSchema } from '../../content-types.types';
+import { ContentTypeFieldSchema } from '../../services/contentTypes';
+import { FieldTypesSchema } from '../../services/fieldTypes';
 
 import { CT_CC_VALIDATION_SCHEMA } from './ContentTypeDetailCC.const';
 import { ContentTypeDetailCCRow, ContenTypeDetailCCProps } from './ContentTypeDetailCC.types';
 import { DummyCTs } from './_temp.cts';
 
 const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
-	contentType,
 	fieldTypes,
 	onSubmit,
+	tenantId,
+	history,
 }) => {
 	const initialState = DummyCTs[0];
 
@@ -54,15 +56,12 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	};
 
 	const TableField = ({
-		field,
-		form,
-		...props
+		value: fields,
 	}: {
-		field: any;
-		form: FormData;
+		value: ContentTypeFieldSchema[];
 	}): React.ReactElement => {
-		const contentTypeRows: ContentTypeDetailCCRow[] = compose(
-			map((cc: ContentTypeFieldSchema) => ({
+		const contentTypeRows: ContentTypeDetailCCRow[] = (fields || []).map(
+			(cc: ContentTypeFieldSchema) => ({
 				label: cc.label,
 				name: cc.name,
 				fieldType: cc.fieldType,
@@ -70,9 +69,8 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 				required: !!cc.generalConfig.required,
 				translatable: !!cc.generalConfig.multiLanguage,
 				hidden: !!cc.generalConfig.hidden,
-			})),
-			propOr([], 'fields')
-		)(initialState);
+			})
+		);
 
 		const contentTypeColumns = [
 			{
@@ -130,82 +128,66 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 				onSubmit={onSubmit}
 				validationSchema={CT_CC_VALIDATION_SCHEMA}
 			>
-				{({ submitForm, values }) => (
-					<Field name="fields" placeholder="No fields" component={TableField} />
-				)}
+				{() => <Field name="fields" placeholder="No fields" as={TableField} />}
 			</Formik>
 		);
 	};
 
-	const CTNewCCForm: FC = () => {
+	const CTNewCCForm: FC<{ fieldTypes: FieldTypesSchema }> = ({ fieldTypes }) => {
+		const options = fieldTypes.map(fieldType => ({
+			key: fieldType.uuid,
+			value: fieldType.uuid,
+			label: fieldType?.data?.label,
+		}));
+
 		return (
-			<Formik initialValues={{}} onSubmit={() => console.log('submit')}>
-				{({ submitForm, values }) => (
+			<Formik
+				initialValues={{}}
+				onSubmit={(formValue: any) =>
+					history.push(
+						`/${tenantId}/content-types/aanmaken/content-componenten/nieuw?name=${formValue.name}&field-type=${formValue.fieldType}`
+					)
+				}
+			>
+				{({ submitForm }) => (
 					<>
 						<div className="row u-margin-top u-margin-bottom">
-							<Field
-								className="col-xs-6"
-								as="select"
-								name="fieldType"
-								component={({ className, ...props }: any) => (
-									<div className={className}>
-										<Select
-											{...props}
-											label="Selecteer"
-											options={[
-												{
-													key: '0',
-													value: '2100 Deurne',
-													label: '2100 Deurne',
-												},
-												{
-													key: '1',
-													value: '2030 Antwerpen',
-													label: '2030 Antwerpen',
-												},
-												{
-													key: '2',
-													value: '2200 Merksem',
-													label: '2200 Merksem',
-												},
-												{
-													key: '3',
-													value: '2040 Brasschaat',
-													label: '2040 Brasschaat',
-												},
-											]}
-										/>
-										<div className="u-text-light u-margin-top-xs">
-											Selecteer een content component van een bepaald type.
-										</div>
-									</div>
-								)}
-							></Field>
-							<Field
-								className="col-xs-6"
-								type="text"
-								name="label"
-								placeholder="Typ een naam"
-								component={({ className, ...props }: any) => (
-									<div className={className}>
-										<TextField label="Naam" {...props} />
-
-										<div className="u-text-light u-margin-top-xs">
-											Kies een gebruiksvriendelijke redactie naam,
-											bijvoorbeeld &apos;Titel&apos;.
-										</div>
-									</div>
-								)}
-							/>
+							<div className="col-xs-6">
+								<Field
+									label="Selecteer"
+									placeholder="Selecteer een content component"
+									name="fieldType"
+									options={options}
+									as={Select}
+								/>
+								<div className="u-text-light u-margin-top-xs">
+									Selecteer een content component van een bepaald type.
+								</div>
+							</div>
+							<div className="col-xs-6">
+								<Field
+									type="text"
+									label="Naam"
+									name="name"
+									placeholder="Typ een naam"
+									as={TextField}
+								/>
+								<div className="u-text-light u-margin-top-xs">
+									Kies een gebruiksvriendelijke redactie naam, bijvoorbeeld
+									&apos;Titel&apos;.
+								</div>
+							</div>
 						</div>
-						<Button outline>Toevoegen</Button>
+						<Button onClick={submitForm} outline>
+							Toevoegen
+						</Button>
 					</>
 				)}
 			</Formik>
 		);
 	};
 
-	const CTCCDetail: FC = () => {
+	const CTCCDetail: FC<{ fieldTypes: FieldTypesSchema }> = ({ fieldTypes }) => {
 		return (
 			<Card>
 				<div className="u-margin">
@@ -217,7 +199,7 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 						<Card>
 							<div className="u-margin">
 								<h5>Voeg een content componenten toe</h5>
-								<CTNewCCForm />
+								<CTNewCCForm fieldTypes={fieldTypes} />
 							</div>
 						</Card>
 					</div>
@@ -234,7 +216,7 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 				</div>
 
 				<div className="col-xs-9">
-					<CTCCDetail />
+					<CTCCDetail fieldTypes={fieldTypes} />
 				</div>
 			</div>
 		</div>
