@@ -57,7 +57,6 @@ const ContentTypeComponents: FC<ContenTypeCCProps> = ({ contentType, fieldTypes,
 		field: any;
 		form: FormData;
 	}): React.ReactElement => {
-		console.log(field);
 		const contentTypeRows: ContentTypeRow[] = compose(
 			map((cc: ContentTypeFieldSchema) => ({
 				label: cc.label,
