@@ -5,6 +5,11 @@ export interface ContentTypesRouteProps {
 	routes: ModuleRouteConfig[];
 }
 
+export interface Operator {
+	label: string;
+	value: string;
+}
+
 export interface ContentTypeFieldSchema {
 	uuid?: string;
 	label: string;
@@ -14,10 +19,7 @@ export interface ContentTypeFieldSchema {
 	fieldType: string;
 	config: any;
 	validators: string[];
-	operators: Array<{
-		label: string;
-		value: string;
-	}>;
+	operators: Operator[];
 	generalConfig: {
 		multiLanguage?: boolean;
 		required?: boolean;
@@ -52,4 +54,40 @@ export interface ContentTypeSchema {
 
 export interface ContentTypesSchema {
 	_embedded: ContentTypeSchema[];
+}
+
+export interface FieldTypeSchemaData {
+	label: string;
+	name: string;
+	componentName: string;
+	validators: string[];
+	defaultValidatorValues: any[];
+	defaultConfig: any;
+	formSchema: {
+		fields: any[];
+	};
+	dataType: string;
+	generalConfig: {
+		isQueryable: boolean;
+		isTranslate: boolean;
+		isMultiple: boolean;
+	};
+	operators: Operator[];
+}
+
+export interface FieldTypeSchemaMeta {
+	created: string;
+	lastModified: string;
+	lastEditor: string;
+	deleted: boolean;
+}
+
+export interface FieldTypeSchema {
+	uuid: string;
+	data: FieldTypeSchemaData;
+	meta: FieldTypeSchemaMeta;
+}
+
+export interface FieldTypesSchema {
+	_embedded: FieldTypeSchema[];
 }
