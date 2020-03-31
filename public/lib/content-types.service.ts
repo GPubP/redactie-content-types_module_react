@@ -11,3 +11,14 @@ export const getContentTypes = async (): Promise<ContentTypeSchema[] | null> => 
 		return null;
 	}
 };
+
+export const getFieldTypes = async (): Promise<any[] | null> => {
+	try {
+		const response: any = await apiService.get('field-types').json();
+
+		return response._embedded;
+	} catch (err) {
+		console.error(err);
+		return null;
+	}
+};
