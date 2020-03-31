@@ -9,13 +9,6 @@ import { DummySites } from './_temp.cts';
 
 const ContentTypeSites: FC = () => {
 	const initialState = DummySites;
-	/**
-	 * Hooks
-	 */
-
-	/**
-	 * Methods
-	 */
 
 	const sitesRows: ContentTypeRow[] = initialState.map(site => ({
 		name: site.name,
