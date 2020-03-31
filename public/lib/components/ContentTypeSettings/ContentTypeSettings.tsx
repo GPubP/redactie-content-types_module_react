@@ -4,13 +4,10 @@ import kebabCase from 'lodash.kebabcase';
 import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { generateSettingsFormState } from '../../content-types.helpers';
-import { createSettings } from '../../content-types.service';
-import { ContentTypeSettingsFormState, ContentTypesRouteProps } from '../../content-types.types';
+import { CT_CC_VALIDATION_SCHEMA } from './ContentTypeSettings.conts';
+import { ContenTypeCCProps } from './ContentTypeSettings.types';
 
-import { CONTENT_TYPES_SETTINGS_VALIDATION_SCHEMA } from './ContentTypeSettings.conts';
-
-const ContentTypeSettings: FC<ContentTypesRouteProps> = ({ basePath }) => {
+const ContentTypeSettings: FC<ContenTypeCCProps> = ({ basePath, contentType, onSubmit }) => {
 	/**
 	 * Hooks
 	 */
@@ -19,41 +16,30 @@ const ContentTypeSettings: FC<ContentTypesRouteProps> = ({ basePath }) => {
 	/**
 	 * Methods
 	 */
-	const navigateToNext = (): void => {
-		history.push('componenten');
-	};
-
 	const navigateToOverview = (): void => {
 		history.push(basePath);
 	};
 
-	const onSubmit = ({ name, description }: ContentTypeSettingsFormState): void => {
-		const request = { name, description };
-		const response = createSettings(request);
-
-		if (response) {
-			// Create was succesful, go to next tab
-			navigateToNext();
-		}
-	};
-
 	return (
 		<Formik
-			initialValues={generateSettingsFormState()}
+			initialValues={contentType}
 			onSubmit={onSubmit}
-			validationSchema={CONTENT_TYPES_SETTINGS_VALIDATION_SCHEMA}
+			validationSchema={CT_CC_VALIDATION_SCHEMA}
 		>
 			{({ submitForm, values }) => (
 				<>
 					<div className="row">
 						<div className="col-xs-12 col-md-8 row middle-xs">
 							<div className="col-xs-12 col-md-8">
-								<Field as={TextField} label="Naam" name="name" required />
+								<Field as={TextField} label="Naam" name="meta.label" required />
+								<div className="u-text-light u-margin-top-xs">
+									Geef het content type een korte en duidelijke naam.
+								</div>
 							</div>
 
 							<div className="col-xs-12 col-md-4">
 								<div className="u-margin-top">
-									Systeemnaam: <b>{kebabCase(values.name)}</b>
+									Systeemnaam: <b>{kebabCase(values.meta.label)}</b>
 								</div>
 							</div>
 						</div>
@@ -64,9 +50,13 @@ const ContentTypeSettings: FC<ContentTypesRouteProps> = ({ basePath }) => {
 								<Field
 									as={TextField}
 									label="Beschrijving"
-									name="description"
+									name="meta.description"
 									required
 								/>
+								<div className="u-text-light u-margin-top-xs">
+									Geef het content type een duidelijke beschrijving voor in het
+									overzicht.
+								</div>
 							</div>
 						</div>
 					</div>

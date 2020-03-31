@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
 import { BREADCRUMB_OPTIONS } from '../../content-types.const';
+import { generateSettingsFormState } from '../../content-types.helpers';
 import { ContentTypesRouteProps } from '../../content-types.types';
 import useRoutes from '../../hooks/useRoutes/useRoutes';
 import { LoadingState, Tab } from '../../types';
@@ -51,7 +52,8 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ basePath, routes }) =>
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
 			basePath: basePath,
 			routes: activeRoute?.routes,
-			contentType: null,
+			contentType: generateSettingsFormState(),
+			fieldTypes: null,
 		});
 	};
 	return (
