@@ -49,9 +49,9 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ basePath }) => {
 
 		const contentTypesRows = contentTypes.map(contentType => ({
 			id: contentType.uuid,
-			name: contentType.data.name,
-			description: contentType.data.description,
-			status: contentType.data.status,
+			name: contentType.meta.label,
+			description: contentType.meta.description,
+			status: contentType.meta.status,
 		}));
 
 		const contentTypesColumns = [
