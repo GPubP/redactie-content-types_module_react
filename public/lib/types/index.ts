@@ -11,6 +11,6 @@ export interface DefaultComponentProps {
 export interface Tab {
 	name: string;
 	target: string;
-	active?: boolean;
+	active: boolean;
 	disabled?: boolean;
 }

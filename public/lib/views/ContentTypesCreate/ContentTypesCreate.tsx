@@ -9,26 +9,30 @@ import { ContentTypesRouteProps } from '../../content-types.types';
 import useRoutes from '../../hooks/useRoutes/useRoutes';
 import { LoadingState, Tab } from '../../types';
 
-const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ basePath, routes }) => {
-	const route = routes.find(item => item.path === `${basePath}/aanmaken`) || null;
-	const TABS: Tab[] = [
-		{
-			name: 'Instellingen',
-			target: `${route?.path}/instellingen`,
-			active: true,
-		},
-		{
-			name: 'Content Componenten',
-			target: `${route?.path}/componenten`,
-		},
-		{ name: 'Sites', target: `${route?.path}/sites` },
-	];
+const TABS: Tab[] = [
+	{
+		name: 'Instellingen',
+		target: 'instellingen',
+		active: true,
+	},
+	{
+		name: 'Content Componenten',
+		target: 'componenten',
+		active: false,
+	},
+	{
+		name: 'Sites',
+		target: 'sites',
+		active: false,
+	},
+];
 
+const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ basePath, routes }) => {
 	/**
 	 * Hooks
 	 */
-	const activeRoute = useRoutes();
-	const breadcrumbs = useBreadcrumbs(activeRoute as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
+	const breadcrumbRoutes = useRoutes();
+	const breadcrumbs = useBreadcrumbs(breadcrumbRoutes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 
 	useEffect(() => {
@@ -36,12 +40,17 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ basePath, routes }) =>
 	}, []);
 
 	/**
+	 * Methods
+	 */
+	const activeRoute = routes.find(item => item.path === `${basePath}/aanmaken`) || null;
+
+	/**
 	 * Render
 	 */
 	const renderChildRoutes = (): any => {
-		return Core.routes.render(route?.routes as ModuleRouteConfig[], {
+		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
 			basePath: basePath,
-			routes: route?.routes,
+			routes: activeRoute?.routes,
 			contentType: null,
 		});
 	};
@@ -49,7 +58,11 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ basePath, routes }) =>
 		<>
 			<ContextHeader
 				tabs={TABS}
-				linkProps={(props: any) => ({ ...props, to: props.href, component: Link })}
+				linkProps={(props: any) => ({
+					...props,
+					to: props.href,
+					component: Link,
+				})}
 				title="Content type aanmaken"
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
