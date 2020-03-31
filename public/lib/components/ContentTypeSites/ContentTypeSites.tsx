@@ -1,3 +1,4 @@
+import { Button } from '@acpaas-ui/react-components';
 import { Table } from '@acpaas-ui/react-editorial-components';
 import React, { FC } from 'react';
 
@@ -20,7 +21,7 @@ const ContentTypeSites: FC = () => {
 		name: site.name,
 		description: site.description,
 		contentItems: site.contentItems,
-		status: site.active ? 'Actief' : 'Niet actief',
+		status: site.active,
 	}));
 
 	const sitesColumns = [
@@ -44,6 +45,31 @@ const ContentTypeSites: FC = () => {
 			component(value: string, rowData: ContentTypeRow) {
 				const isActive = !!rowData['status'];
 				return <SiteStatus active={isActive} />;
+			},
+		},
+		{
+			label: '',
+			component(value: string, rowData: ContentTypeRow) {
+				const isActive = !!rowData['status'];
+				if (rowData.contentItems === 0) {
+					if (isActive) {
+						return (
+							<Button
+								onClick={() => console.log('toggle state')}
+								type="danger"
+								outline
+							>
+								Deactiveren
+							</Button>
+						);
+					}
+
+					return (
+						<Button onClick={() => console.log('toggle state')} type="success" outline>
+							Activeren
+						</Button>
+					);
+				}
 			},
 		},
 	];
