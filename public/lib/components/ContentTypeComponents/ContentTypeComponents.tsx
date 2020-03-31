@@ -5,12 +5,13 @@ import { compose, map, pathOr, propOr } from 'ramda';
 import React, { FC } from 'react';
 
 import { ContentTypeFieldSchema } from '../../content-types.types';
+import { StatusIcon } from '../StatusIcon/StatusIcon';
 
 import { CT_CC_VALIDATION_SCHEMA } from './ContentTypeComponents.const';
 import { ContentTypeRow, ContenTypeCCProps } from './ContentTypeComponents.types';
 import { DummyCTs } from './_temp.cts';
 
-const ContentTypeComponents: FC<ContenTypeCCProps> = ({ contentType, onSubmit }) => {
+const ContentTypeComponents: FC<ContenTypeCCProps> = ({ contentType, fieldTypes, onSubmit }) => {
 	const initialState = DummyCTs[0];
 
 	/**
@@ -25,15 +26,26 @@ const ContentTypeComponents: FC<ContenTypeCCProps> = ({ contentType, onSubmit })
 	 * Render
 	 */
 
-	const Status = (active: boolean): React.ReactElement => {
+	const CTCCNavigtion: FC = () => {
 		return (
-			<div className="u-text-center">
-				{active ? (
-					<span className="u-text-success fa fa-check"></span>
-				) : (
-					<span className="u-text-danger fa fa-close"></span>
-				)}
-			</div>
+			<>
+				<ul className="m-nav-list">
+					<li>
+						<a className="is-active" href="#compartiment1">
+							Compartiment 1
+						</a>
+					</li>
+					<li>
+						<a href="#compartiment2">Compartiment 2</a>
+					</li>
+					<li>
+						<a href="#compartiment3">Compartiment 3</a>
+					</li>
+				</ul>
+				<Button className="u-margin-top" iconLeft="plus" primary>
+					Sectie toevoegen
+				</Button>
+			</>
 		);
 	};
 
@@ -71,22 +83,30 @@ const ContentTypeComponents: FC<ContenTypeCCProps> = ({ contentType, onSubmit })
 			{
 				label: 'Meerdere',
 				value: 'multiple',
-				component: (value: any, rowData: ContentTypeRow) => Status(rowData.multiple),
+				component(value: any, rowData: ContentTypeRow) {
+					return <StatusIcon active={rowData.multiple} />;
+				},
 			},
 			{
 				label: 'Verplicht',
 				value: 'required',
-				component: (value: any, rowData: ContentTypeRow) => Status(rowData.required),
+				component(value: any, rowData: ContentTypeRow) {
+					return <StatusIcon active={rowData.required} />;
+				},
 			},
 			{
 				label: 'Vertaalbaar',
 				value: 'translatable',
-				component: (value: any, rowData: ContentTypeRow) => Status(rowData.translatable),
+				component(value: any, rowData: ContentTypeRow) {
+					return <StatusIcon active={rowData.translatable} />;
+				},
 			},
 			{
 				label: 'Verborgen',
 				value: 'hidden',
-				component: (value: any, rowData: ContentTypeRow) => Status(rowData.hidden),
+				component(value: any, rowData: ContentTypeRow) {
+					return <StatusIcon active={rowData.hidden} />;
+				},
 			},
 		];
 
@@ -100,136 +120,118 @@ const ContentTypeComponents: FC<ContenTypeCCProps> = ({ contentType, onSubmit })
 		);
 	};
 
+	const CTCCListTableForm: FC = () => {
+		return (
+			<Formik
+				initialValues={initialState}
+				onSubmit={onSubmit}
+				validationSchema={CT_CC_VALIDATION_SCHEMA}
+			>
+				{({ submitForm, values }) => (
+					<Field name="fields" placeholder="No fields" component={TableField} />
+				)}
+			</Formik>
+		);
+	};
+
+	const CTNewCCForm: FC = () => {
+		return (
+			<Formik initialValues={{}} onSubmit={() => console.log('submit')}>
+				{({ submitForm, values }) => (
+					<>
+						<div className="row u-margin-top u-margin-bottom">
+							<Field
+								className="col-xs-6"
+								as="select"
+								name="fieldType"
+								component={({ className, ...props }: any) => (
+									<div className={className}>
+										<Select
+											{...props}
+											label="Selecteer"
+											options={[
+												{
+													key: '0',
+													value: '2100 Deurne',
+													label: '2100 Deurne',
+												},
+												{
+													key: '1',
+													value: '2030 Antwerpen',
+													label: '2030 Antwerpen',
+												},
+												{
+													key: '2',
+													value: '2200 Merksem',
+													label: '2200 Merksem',
+												},
+												{
+													key: '3',
+													value: '2040 Brasschaat',
+													label: '2040 Brasschaat',
+												},
+											]}
+										/>
+										<div className="u-text-light u-margin-top-xs">
+											Selecteer een content component van een bepaald type.
+										</div>
+									</div>
+								)}
+							></Field>
+							<Field
+								className="col-xs-6"
+								type="text"
+								name="label"
+								placeholder="Typ een naam"
+								component={({ className, ...props }: any) => (
+									<div className={className}>
+										<TextField label="Naam" {...props} />
+
+										<div className="u-text-light u-margin-top-xs">
+											Kies een gebruiksvriendelijke redactie naam,
+											bijvoorbeeld &apos;Titel&apos;.
+										</div>
+									</div>
+								)}
+							/>
+						</div>
+						<Button outline>Toevoegen</Button>
+					</>
+				)}
+			</Formik>
+		);
+	};
+
+	const CTCCDetail: FC = () => {
+		return (
+			<Card>
+				<div className="u-margin">
+					<h5>Content componenten</h5>
+
+					<CTCCListTableForm />
+
+					<div className="u-margin-top">
+						<Card>
+							<div className="u-margin">
+								<h5>Voeg een content componenten toe</h5>
+								<CTNewCCForm />
+							</div>
+						</Card>
+					</div>
+				</div>
+			</Card>
+		);
+	};
+
 	return (
 		<div className="u-container u-wrapper u-margin-top u-margin-bottom-lg">
 			<div className="row between-xs top-xs">
-				<ul className="col-xs-3 m-nav-list">
-					<li>
-						<a href="#compartiment1">Compartiment 1</a>
-					</li>
-					<li>
-						<a className="is-active" href="#">
-							Compartiment 2
-						</a>
-					</li>
-					<li>
-						<a href="#compartiment2">Compartiment 2</a>
-					</li>
-				</ul>
+				<div className="col-xs-3">
+					<CTCCNavigtion />
+				</div>
 
 				<div className="col-xs-9">
-					<Card>
-						<div className="u-margin">
-							<h5>Content componenten</h5>
-							<Formik
-								initialValues={initialState}
-								onSubmit={onSubmit}
-								validationSchema={CT_CC_VALIDATION_SCHEMA}
-							>
-								{({ submitForm, values }) => (
-									<Field
-										name="fields"
-										placeholder="No fields"
-										component={TableField}
-									/>
-								)}
-							</Formik>
-							<div className="u-margin-top">
-								<Card>
-									<div className="u-margin">
-										<h5>Voeg een content componenten toe</h5>
-										<Formik
-											initialValues={{}}
-											onSubmit={() => console.log('submit')}
-										>
-											{({ submitForm, values }) => (
-												<>
-													<div className="row u-margin-top u-margin-bottom">
-														<Field
-															className="col-xs-6"
-															as="select"
-															name="fieldType"
-															component={({
-																className,
-																...props
-															}: any) => (
-																<div className={className}>
-																	<Select
-																		{...props}
-																		label="Selecteer"
-																		options={[
-																			{
-																				key: '0',
-																				value:
-																					'2100 Deurne',
-																				label:
-																					'2100 Deurne',
-																			},
-																			{
-																				key: '1',
-																				value:
-																					'2030 Antwerpen',
-																				label:
-																					'2030 Antwerpen',
-																			},
-																			{
-																				key: '2',
-																				value:
-																					'2200 Merksem',
-																				label:
-																					'2200 Merksem',
-																			},
-																			{
-																				key: '3',
-																				value:
-																					'2040 Brasschaat',
-																				label:
-																					'2040 Brasschaat',
-																			},
-																		]}
-																	/>
-																	<div className="u-text-light u-margin-top-xs">
-																		Selecteer een content
-																		component van een bepaald
-																		type.
-																	</div>
-																</div>
-															)}
-														></Field>
-														<Field
-															className="col-xs-6"
-															type="text"
-															name="label"
-															placeholder="Typ een naam"
-															component={({
-																className,
-																...props
-															}: any) => (
-																<div className={className}>
-																	<TextField
-																		label="Naam"
-																		{...props}
-																	/>
-
-																	<div className="u-text-light u-margin-top-xs">
-																		Kies een
-																		gebruiksvriendelijke
-																		redactie naam, bijvoorbeeld
-																		&apos;Titel&apos;.
-																	</div>
-																</div>
-															)}
-														/>
-													</div>
-													<Button outline>Toevoegen</Button>
-												</>
-											)}
-										</Formik>
-									</div>
-								</Card>
-							</div>
-						</div>
-					</Card>
+					<CTCCDetail />
 				</div>
 			</div>
 		</div>
