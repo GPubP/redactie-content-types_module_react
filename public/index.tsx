@@ -2,11 +2,11 @@ import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import ContentTypeComponents from './lib/components/ContentTypeComponents/ContentTypeComponents';
-import ContentTypeSettings from './lib/components/ContentTypeSettings/ContentTypeSettings';
-import ContentTypeSites from './lib/components/ContentTypeSites/ContentTypeSites';
 import { ContentTypesRouteProps } from './lib/content-types.types';
 import { ContentTypesCreate, ContentTypesOverview } from './lib/views';
+import ContentTypeDetailCC from './lib/views/ContentTypeDetailCC/ContentTypeDetailCC';
+import ContentTypeDetailSettings from './lib/views/ContentTypeDetailSettings/ContentTypeDetailSettings';
+import ContentTypeDetailSites from './lib/views/ContentTypeDetailSites/ContentTypeDetailSites';
 
 const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 	route,
@@ -51,15 +51,15 @@ Core.routes.register({
 			routes: [
 				{
 					path: '/content-types/aanmaken/instellingen',
-					component: ContentTypeSettings,
+					component: ContentTypeDetailSettings,
 				},
 				{
 					path: '/content-types/aanmaken/content-componenten',
-					component: ContentTypeComponents,
+					component: ContentTypeDetailCC,
 				},
 				{
 					path: '/content-types/aanmaken/sites',
-					component: ContentTypeSites,
+					component: ContentTypeDetailSites,
 				},
 			],
 		},

@@ -4,14 +4,18 @@ import { Field, Formik } from 'formik';
 import { compose, map, pathOr, propOr } from 'ramda';
 import React, { FC } from 'react';
 
+import { StatusIcon } from '../../components/StatusIcon/StatusIcon';
 import { ContentTypeFieldSchema } from '../../content-types.types';
-import { StatusIcon } from '../StatusIcon/StatusIcon';
 
-import { CT_CC_VALIDATION_SCHEMA } from './ContentTypeComponents.const';
-import { ContentTypeRow, ContenTypeCCProps } from './ContentTypeComponents.types';
+import { CT_CC_VALIDATION_SCHEMA } from './ContentTypeDetailCC.const';
+import { ContentTypeDetailCCRow, ContenTypeDetailCCProps } from './ContentTypeDetailCC.types';
 import { DummyCTs } from './_temp.cts';
 
-const ContentTypeComponents: FC<ContenTypeCCProps> = ({ contentType, fieldTypes, onSubmit }) => {
+const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
+	contentType,
+	fieldTypes,
+	onSubmit,
+}) => {
 	const initialState = DummyCTs[0];
 
 	/**
@@ -57,7 +61,7 @@ const ContentTypeComponents: FC<ContenTypeCCProps> = ({ contentType, fieldTypes,
 		field: any;
 		form: FormData;
 	}): React.ReactElement => {
-		const contentTypeRows: ContentTypeRow[] = compose(
+		const contentTypeRows: ContentTypeDetailCCRow[] = compose(
 			map((cc: ContentTypeFieldSchema) => ({
 				label: cc.label,
 				name: cc.name,
@@ -82,28 +86,28 @@ const ContentTypeComponents: FC<ContenTypeCCProps> = ({ contentType, fieldTypes,
 			{
 				label: 'Meerdere',
 				value: 'multiple',
-				component(value: any, rowData: ContentTypeRow) {
+				component(value: any, rowData: ContentTypeDetailCCRow) {
 					return <StatusIcon active={rowData.multiple} />;
 				},
 			},
 			{
 				label: 'Verplicht',
 				value: 'required',
-				component(value: any, rowData: ContentTypeRow) {
+				component(value: any, rowData: ContentTypeDetailCCRow) {
 					return <StatusIcon active={rowData.required} />;
 				},
 			},
 			{
 				label: 'Vertaalbaar',
 				value: 'translatable',
-				component(value: any, rowData: ContentTypeRow) {
+				component(value: any, rowData: ContentTypeDetailCCRow) {
 					return <StatusIcon active={rowData.translatable} />;
 				},
 			},
 			{
 				label: 'Verborgen',
 				value: 'hidden',
-				component(value: any, rowData: ContentTypeRow) {
+				component(value: any, rowData: ContentTypeDetailCCRow) {
 					return <StatusIcon active={rowData.hidden} />;
 				},
 			},
@@ -237,4 +241,4 @@ const ContentTypeComponents: FC<ContenTypeCCProps> = ({ contentType, fieldTypes,
 	);
 };
 
-export default ContentTypeComponents;
+export default ContentTypeDetailCC;

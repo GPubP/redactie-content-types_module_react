@@ -1,12 +1,12 @@
 import { ContentTypeSchema, FieldTypesSchema } from '../../content-types.types';
 
-export interface ContenTypeCCProps {
+export interface ContenTypeDetailCCProps {
 	contentType: ContentTypeSchema;
 	fieldTypes: FieldTypesSchema;
 	onSubmit: (contentType: ContentTypeSchema) => void;
 }
 
-export interface ContentTypeRow {
+export interface ContentTypeDetailCCRow {
 	label: string;
 	name: string;
 	fieldType: string;
