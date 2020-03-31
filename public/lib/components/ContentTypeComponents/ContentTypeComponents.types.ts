@@ -1,7 +1,8 @@
-import { ContentTypeSchema } from '../../content-types.types';
+import { ContentTypeSchema, FieldTypesSchema } from '../../content-types.types';
 
 export interface ContenTypeCCProps {
 	contentType: ContentTypeSchema;
+	fieldTypes: FieldTypesSchema;
 	onSubmit: (contentType: ContentTypeSchema) => void;
 }
 
