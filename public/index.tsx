@@ -47,13 +47,7 @@ Core.routes.register({
 			routes: [
 				{
 					path: '/content-types/aanmaken/instellingen',
-					component: () => (
-						<ContentTypeSettings
-							initialState={generateSettingsFormState()}
-							onCancel={() => {}}
-							onSubmit={() => {}}
-						/>
-					),
+					component: ContentTypeSettings as any,
 				},
 				{
 					path: '/content-types/aanmaken/componenten',

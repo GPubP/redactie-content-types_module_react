@@ -11,3 +11,19 @@ export const getContentTypes = async (): Promise<ContentTypeSchema[] | null> => 
 		return null;
 	}
 };
+
+export const createSettings = async (body: any): Promise<any | null> => {
+	try {
+		//const response: any = await apiService.post('content-types', { json: body }).json();
+		const response: any = { data: body };
+
+		if (!response.data) {
+			throw new Error('Failed to create site');
+		}
+
+		return response;
+	} catch (err) {
+		console.error(err);
+		return null;
+	}
+};
