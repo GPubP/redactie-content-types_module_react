@@ -7,16 +7,15 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
-import { BREADCRUMB_OPTIONS } from '../../content-types.const';
-import { getContentTypes } from '../../content-types.service';
-import { ContentTypeSchema, ContentTypesRouteProps } from '../../content-types.types';
+import { BREADCRUMB_OPTIONS } from '../../contentTypes.const';
+import { ContentTypesRouteProps } from '../../contentTypes.types';
 import useRoutes from '../../hooks/useRoutes/useRoutes';
+import { ContentTypeSchema, getContentTypes } from '../../services/contentTypes';
 import { LoadingState } from '../../types';
 
-const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ basePath }) => {
+const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ tenantId, history }) => {
 	/**
 	 * Hooks
 	 */
@@ -24,7 +23,6 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ basePath }) => {
 	const [contentTypes, setContentTypes] = useState<ContentTypeSchema[] | null>(null);
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
-	const history = useHistory();
 
 	useEffect(() => {
 		getContentTypes()
@@ -79,7 +77,9 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ basePath }) => {
 						<Button
 							ariaLabel="Edit"
 							icon="edit"
-							onClick={() => history.push(`${basePath}/${id}/bewerken`)}
+							onClick={() =>
+								history.push(`/${tenantId}/content-types/${id}/bewerken`)
+							}
 							type="primary"
 							transparent
 						></Button>
@@ -105,7 +105,10 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ basePath }) => {
 			<ContextHeader title="Content types">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
-					<Button iconLeft="plus" onClick={() => history.push(`${basePath}/aanmaken`)}>
+					<Button
+						iconLeft="plus"
+						onClick={() => history.push(`/${tenantId}/content-types/aanmaken`)}
+					>
 						Nieuwe maken
 					</Button>
 				</ContextHeaderActionsSection>
