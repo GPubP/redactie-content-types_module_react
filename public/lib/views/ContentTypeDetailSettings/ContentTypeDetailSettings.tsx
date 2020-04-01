@@ -36,15 +36,15 @@ const ContentTypeSettings: FC<ContenTypeDetailSettingsProps> = ({
 								</div>
 							</div>
 
-							<div className="col-xs-12 col-md-4">
-								<div className="u-margin-top">
+							<div className="col-xs-12 col-md-4 u-margin-top u-margin-bottom">
+								<div>
 									Systeemnaam: <b>{kebabCase(values.meta.label)}</b>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div className="row u-margin-top">
-						<div className="col-xs-12 row middle-xs">
+					<div className="row">
+						<div className="col-xs-12 row middle-xs u-margin-top">
 							<div className="col-xs-12">
 								<Field
 									as={TextField}
