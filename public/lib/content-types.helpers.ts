@@ -1,4 +1,4 @@
-import { ContentTypeSchema } from './content-types.types';
+import { ContentTypeSchema } from './services/contentTypes';
 
 export const generateSettingsFormState = (): ContentTypeSchema => ({
 	_id: '',

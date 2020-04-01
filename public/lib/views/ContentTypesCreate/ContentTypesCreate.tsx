@@ -4,9 +4,10 @@ import React, { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
-import { BREADCRUMB_OPTIONS } from '../../content-types.const';
 import { generateSettingsFormState } from '../../content-types.helpers';
-import { ContentTypesRouteProps } from '../../content-types.types';
+import { BREADCRUMB_OPTIONS } from '../../contentTypes.const';
+import { ContentTypesRouteProps } from '../../contentTypes.types';
+import useFieldTypes from '../../hooks/useFieldTypes/useFieldTypes';
 import useRoutes from '../../hooks/useRoutes/useRoutes';
 import { LoadingState, Tab } from '../../types';
 
@@ -18,7 +19,7 @@ const TABS: Tab[] = [
 	},
 	{
 		name: 'Content Componenten',
-		target: 'componenten',
+		target: 'content-componenten',
 		active: false,
 	},
 	{
@@ -28,34 +29,42 @@ const TABS: Tab[] = [
 	},
 ];
 
-const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ basePath, routes }) => {
+const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) => {
 	/**
 	 * Hooks
 	 */
 	const breadcrumbRoutes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(breadcrumbRoutes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 
 	useEffect(() => {
-		setInitialLoading(LoadingState.Loaded);
-	}, []);
+		if (fieldTypesLoadingState === LoadingState.Loaded) {
+			return setInitialLoading(LoadingState.Loaded);
+		}
+
+		setInitialLoading(LoadingState.Loading);
+	}, [fieldTypesLoadingState]);
 
 	/**
 	 * Methods
 	 */
-	const activeRoute = routes.find(item => item.path === `${basePath}/aanmaken`) || null;
+	const activeRoute =
+		routes.find(item => item.path === `/${tenantId}/content-types/aanmaken`) || null;
 
 	/**
 	 * Render
 	 */
 	const renderChildRoutes = (): any => {
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-			basePath: basePath,
+			tenantId: tenantId,
 			routes: activeRoute?.routes,
 			contentType: generateSettingsFormState(),
-			fieldTypes: null,
+			fieldTypes,
+			onSubmit: () => console.log('temp onSubmit in contentTypesCreate'),
 		});
 	};
+
 	return (
 		<>
 			<ContextHeader
