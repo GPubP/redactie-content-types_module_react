@@ -59,12 +59,12 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ tenantId, history })
 			},
 			{
 				label: 'Gebruikt op',
-				value: 'SW',
+				value: 'description',
 				disableSorting: true,
 			},
 			{
 				label: 'Status',
-				value: '',
+				value: 'status',
 				disableSorting: true,
 			},
 			{
