@@ -4,6 +4,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
+import { generateSettingsFormState } from '../../content-types.helpers';
 import { BREADCRUMB_OPTIONS, CONTENT_DETAIL_TABS } from '../../contentTypes.const';
 import { ContentTypesRouteProps } from '../../contentTypes.types';
 import useFieldTypes from '../../hooks/useFieldTypes/useFieldTypes';
@@ -40,7 +41,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) =>
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
 			tenantId: tenantId,
 			routes: activeRoute?.routes,
-			contentType: null,
+			contentType: generateSettingsFormState(),
 			fieldTypes,
 			onSubmit: () => console.log('temp onSubmit in contentTypesCreate'),
 		});
@@ -59,7 +60,9 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) =>
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
+			<div className="u-container u-wrapper u-margin-top">
+				<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
+			</div>
 		</>
 	);
 };
