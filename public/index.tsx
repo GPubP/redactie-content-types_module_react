@@ -7,6 +7,7 @@ import { ContentTypesCreate, ContentTypesOverview } from './lib/views';
 import ContentTypeDetailCC from './lib/views/ContentTypeDetailCC/ContentTypeDetailCC';
 import ContentTypeDetailSettings from './lib/views/ContentTypeDetailSettings/ContentTypeDetailSettings';
 import ContentTypeDetailSites from './lib/views/ContentTypeDetailSites/ContentTypeDetailSites';
+import ContentTypesUpdate from './lib/views/ContentTypeUpdate/ContentTypeUpdate';
 
 const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 	route,
@@ -59,6 +60,24 @@ Core.routes.register({
 				},
 				{
 					path: '/content-types/aanmaken/sites',
+					component: ContentTypeDetailSites,
+				},
+			],
+		},
+		{
+			path: '/content-types/:contentTypeUuid',
+			component: ContentTypesUpdate,
+			routes: [
+				{
+					path: '/content-types/:contentTypeUuid/instellingen',
+					component: ContentTypeDetailSettings,
+				},
+				{
+					path: '/content-types/:contentTypeUuid/content-componenten',
+					component: ContentTypeDetailCC,
+				},
+				{
+					path: '/content-types/:contentTypeUuid/sites',
 					component: ContentTypeDetailSites,
 				},
 			],

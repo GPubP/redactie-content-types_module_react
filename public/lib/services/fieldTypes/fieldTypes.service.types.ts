@@ -7,7 +7,7 @@ export interface FieldTypeSchemaData {
 	label: string;
 	name: string;
 	componentName: string;
-	validators: string[];
+	validators: any[];
 	defaultValidatorValues: any[];
 	defaultConfig: any;
 	formSchema: {

@@ -46,7 +46,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ tenantId, history })
 		}
 
 		const contentTypesRows = contentTypes.map(contentType => ({
-			id: contentType.uuid,
+			uuid: contentType.uuid,
 			name: contentType.meta.label,
 			description: contentType.meta.description,
 			status: contentType.meta.status,
@@ -71,14 +71,14 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ tenantId, history })
 				disableSorting: true,
 				component(value: unknown, rowData: unknown) {
 					// TODO: add types for rowData
-					const { id } = rowData as any;
+					const { uuid } = rowData as any;
 
 					return (
 						<Button
 							ariaLabel="Edit"
 							icon="edit"
 							onClick={() =>
-								history.push(`/${tenantId}/content-types/${id}/bewerken`)
+								history.push(`/${tenantId}/content-types/${uuid}/bewerken`)
 							}
 							type="primary"
 							transparent
