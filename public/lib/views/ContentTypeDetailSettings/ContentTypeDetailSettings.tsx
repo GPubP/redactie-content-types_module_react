@@ -2,29 +2,28 @@ import { Button, TextField } from '@acpaas-ui/react-components';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC } from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { CT_CC_VALIDATION_SCHEMA } from './ContentTypeSettings.conts';
-import { ContenTypeCCProps } from './ContentTypeSettings.types';
+import { CT_SETTINGS_VALIDATION_SCHEMA } from './ContentTypeDetailSettings.const';
+import { ContenTypeDetailSettingsProps } from './ContentTypeDetailSettings.types';
 
-const ContentTypeSettings: FC<ContenTypeCCProps> = ({ basePath, contentType, onSubmit }) => {
-	/**
-	 * Hooks
-	 */
-	const history = useHistory();
-
+const ContentTypeSettings: FC<ContenTypeDetailSettingsProps> = ({
+	contentType,
+	onSubmit,
+	tenantId,
+	history,
+}) => {
 	/**
 	 * Methods
 	 */
 	const navigateToOverview = (): void => {
-		history.push(basePath);
+		history.push(`/${tenantId}/content-types`);
 	};
 
 	return (
 		<Formik
 			initialValues={contentType}
 			onSubmit={onSubmit}
-			validationSchema={CT_CC_VALIDATION_SCHEMA}
+			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA}
 		>
 			{({ submitForm, values }) => (
 				<>
@@ -62,11 +61,7 @@ const ContentTypeSettings: FC<ContenTypeCCProps> = ({ basePath, contentType, onS
 					</div>
 					{/* TODO: these should go in the action bar */}
 					<div className="u-margin-top">
-						<Button
-							className="u-margin-right-xs"
-							onClick={() => submitForm()}
-							type="success"
-						>
+						<Button className="u-margin-right-xs" onClick={submitForm} type="success">
 							Bewaar en ga verder
 						</Button>
 						<Button onClick={navigateToOverview} outline>
