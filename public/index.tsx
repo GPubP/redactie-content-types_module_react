@@ -16,18 +16,18 @@ const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 }) => {
 	// if path is /content-types, redirect to /content-types/beheer
 	if (/\/content-types$/.test(location.pathname)) {
-		return <Redirect to={`${route.path}/beheer`} />;
+		return <Redirect to={`/${tenantId}/content-types/beheer`} />;
 	}
 
 	// if path is /content-types/aanmaken, redirect to /content-types/aanmaken/instellingen
 	if (/\/content-types\/aanmaken$/.test(location.pathname)) {
-		return <Redirect to={`${route.path}/aanmaken/instellingen`} />;
+		return <Redirect to={`/${tenantId}/content-types/aanmaken/instellingen`} />;
 	}
 
 	return (
 		<>
 			{Core.routes.render(route.routes as ModuleRouteConfig[], {
-				basePath: match.path,
+				basePath: match.url,
 				routes: route.routes,
 				tenantId: tenantId,
 			})}
