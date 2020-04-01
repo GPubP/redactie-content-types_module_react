@@ -4,8 +4,9 @@ import React, { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
-import { BREADCRUMB_OPTIONS } from '../../content-types.const';
-import { ContentTypesRouteProps } from '../../content-types.types';
+import { BREADCRUMB_OPTIONS } from '../../contentTypes.const';
+import { ContentTypesRouteProps } from '../../contentTypes.types';
+import useFieldTypes from '../../hooks/useFieldTypes/useFieldTypes';
 import useRoutes from '../../hooks/useRoutes/useRoutes';
 import { LoadingState, Tab } from '../../types';
 
@@ -34,10 +35,15 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) =>
 	const breadcrumbRoutes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(breadcrumbRoutes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 
 	useEffect(() => {
-		setInitialLoading(LoadingState.Loaded);
-	}, []);
+		if (fieldTypesLoadingState === LoadingState.Loaded) {
+			return setInitialLoading(LoadingState.Loaded);
+		}
+
+		setInitialLoading(LoadingState.Loading);
+	}, [fieldTypesLoadingState]);
 
 	/**
 	 * Methods
@@ -53,10 +59,11 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) =>
 			tenantId: tenantId,
 			routes: activeRoute?.routes,
 			contentType: null,
-			fieldTypes: [],
-			onSubmit: () => console.log('here'),
+			fieldTypes,
+			onSubmit: () => console.log('temp onSubmit in contentTypesCreate'),
 		});
 	};
+
 	return (
 		<>
 			<ContextHeader

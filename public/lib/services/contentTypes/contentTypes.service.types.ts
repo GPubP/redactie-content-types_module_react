@@ -1,14 +1,11 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 
+import { Operator } from '../fieldTypes';
+
 export interface ContentTypesRouteProps extends RouteConfigComponentProps {
 	basePath: string;
 	routes: ModuleRouteConfig[];
 	tenantId: string;
-}
-
-export interface Operator {
-	label: string;
-	value: string;
 }
 
 export interface ContentTypeFieldSchema {
@@ -54,41 +51,5 @@ export interface ContentTypeSchema {
 }
 
 export interface ContentTypesSchema {
-	_embedded: ContentTypeSchema[];
-}
-
-export interface FieldTypeSchemaData {
-	label: string;
-	name: string;
-	componentName: string;
-	validators: string[];
-	defaultValidatorValues: any[];
-	defaultConfig: any;
-	formSchema: {
-		fields: any[];
-	};
-	dataType: string;
-	generalConfig: {
-		isQueryable: boolean;
-		isTranslate: boolean;
-		isMultiple: boolean;
-	};
-	operators: Operator[];
-}
-
-export interface FieldTypeSchemaMeta {
-	created: string;
-	lastModified: string;
-	lastEditor: string;
-	deleted: boolean;
-}
-
-export interface FieldTypeSchema {
-	uuid: string;
-	data: FieldTypeSchemaData;
-	meta: FieldTypeSchemaMeta;
-}
-
-export interface FieldTypesSchema {
-	_embedded: FieldTypeSchema[];
+	data: ContentTypeSchema[];
 }

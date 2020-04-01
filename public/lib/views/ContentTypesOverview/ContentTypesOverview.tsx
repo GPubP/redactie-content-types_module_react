@@ -7,13 +7,12 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
-import { BREADCRUMB_OPTIONS } from '../../content-types.const';
-import { getContentTypes } from '../../content-types.service';
-import { ContentTypeSchema, ContentTypesRouteProps } from '../../content-types.types';
+import { BREADCRUMB_OPTIONS } from '../../contentTypes.const';
+import { ContentTypesRouteProps } from '../../contentTypes.types';
 import useRoutes from '../../hooks/useRoutes/useRoutes';
+import { ContentTypeSchema, getContentTypes } from '../../services/contentTypes';
 import { LoadingState } from '../../types';
 
 const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ tenantId, history }) => {
