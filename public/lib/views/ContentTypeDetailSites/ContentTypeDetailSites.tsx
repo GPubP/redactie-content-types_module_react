@@ -2,7 +2,7 @@ import { Button } from '@acpaas-ui/react-components';
 import { Table } from '@acpaas-ui/react-editorial-components';
 import React, { FC } from 'react';
 
-import SiteStatus from '../SiteStatus/SiteStatus';
+import SiteStatus from '../../components/SiteStatus/SiteStatus';
 
 import { ContentTypeRow } from './ContentTypeSites.types';
 import { DummySites } from './_temp.cts';
