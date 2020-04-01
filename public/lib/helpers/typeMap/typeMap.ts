@@ -1,4 +1,4 @@
-import { TypeMap } from './Status.types';
+import { TypeMap } from './typeMap.types';
 
 export const typeMap: TypeMap = {
 	ACTIVE: 'success',

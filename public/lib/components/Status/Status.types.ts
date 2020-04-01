@@ -1,10 +1,6 @@
-export type StatusType = 'ACTIVE' | 'ARCHIVED' | 'INACTIVE';
+import { StatusType } from '../../helpers/typeMap/typeMap.types';
 
 export interface StatusProps {
 	label: string;
 	type: StatusType;
 }
-
-export type TypeMap = {
-	[key in StatusType]: string;
-};
