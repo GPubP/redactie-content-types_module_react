@@ -3,12 +3,10 @@ import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core
 import React, { FC, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import DataLoader from '../../components/DataLoader/DataLoader';
+import { DataLoader } from '../../components';
 import { BREADCRUMB_OPTIONS, CONTENT_DETAIL_TABS } from '../../contentTypes.const';
 import { ContentTypesRouteProps } from '../../contentTypes.types';
-import useContentType from '../../hooks/useContentType/useContentType';
-import useFieldTypes from '../../hooks/useFieldTypes/useFieldTypes';
-import useRoutes from '../../hooks/useRoutes/useRoutes';
+import { useContentType, useFieldTypes, useRoutes } from '../../hooks';
 import { LoadingState } from '../../types';
 
 const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) => {

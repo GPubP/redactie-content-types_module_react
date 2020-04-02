@@ -1,23 +1,23 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 
-import DataLoader from '../../components/DataLoader/DataLoader';
-import { generateSettingsFormState } from '../../content-types.helpers';
+import { DataLoader } from '../../components';
 import { BREADCRUMB_OPTIONS, CONTENT_DETAIL_TABS } from '../../contentTypes.const';
+import { generateSettingsFormState } from '../../contentTypes.helpers';
 import { ContentTypesRouteProps } from '../../contentTypes.types';
-import useFieldTypes from '../../hooks/useFieldTypes/useFieldTypes';
-import useRoutes from '../../hooks/useRoutes/useRoutes';
-import { LoadingState, Tab } from '../../types';
+import { useFieldTypes, useRoutes } from '../../hooks';
+import { LoadingState } from '../../types';
 
 const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) => {
 	/**
 	 * Hooks
 	 */
+	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const match = useRouteMatch;
 	const breadcrumbRoutes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(breadcrumbRoutes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
-	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 
 	useEffect(() => {
@@ -33,6 +33,16 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) =>
 	 */
 	const activeRoute =
 		routes.find(item => item.path === `/${tenantId}/content-types/aanmaken`) || null;
+
+	const activeTabs = CONTENT_DETAIL_TABS.map(tab => {
+		console.log('---- matcher', match(tab.target));
+
+		return {
+			...tab,
+		};
+	});
+
+	console.log(activeTabs);
 
 	/**
 	 * Render
@@ -50,7 +60,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) =>
 	return (
 		<>
 			<ContextHeader
-				tabs={CONTENT_DETAIL_TABS}
+				tabs={activeTabs}
 				linkProps={(props: any) => ({
 					...props,
 					to: props.href,

@@ -1,22 +1,25 @@
 import { Button, TextField } from '@acpaas-ui/react-components';
+import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC } from 'react';
 
+import { MODULE_PATHS } from '../../contentTypes.const';
+import { useNavigate } from '../../hooks';
+
 import { CT_SETTINGS_VALIDATION_SCHEMA } from './ContentTypeDetailSettings.const';
 import { ContenTypeDetailSettingsProps } from './ContentTypeDetailSettings.types';
 
-const ContentTypeSettings: FC<ContenTypeDetailSettingsProps> = ({
-	contentType,
-	onSubmit,
-	tenantId,
-	history,
-}) => {
+const ContentTypeSettings: FC<ContenTypeDetailSettingsProps> = ({ contentType, onSubmit }) => {
+	/**
+	 * Hooks
+	 */
+	const navigate = useNavigate();
 	/**
 	 * Methods
 	 */
 	const navigateToOverview = (): void => {
-		history.push(`/${tenantId}/content-types`);
+		navigate(MODULE_PATHS.root);
 	};
 
 	return (
@@ -26,7 +29,7 @@ const ContentTypeSettings: FC<ContenTypeDetailSettingsProps> = ({
 			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA}
 		>
 			{({ submitForm, values }) => (
-				<>
+				<div className="u-container u-wrapper u-margin-top u-margin-bottom-lg">
 					<div className="row">
 						<div className="col-xs-12 col-md-8 row middle-xs">
 							<div className="col-xs-12 col-md-8">
@@ -59,16 +62,21 @@ const ContentTypeSettings: FC<ContenTypeDetailSettingsProps> = ({
 							</div>
 						</div>
 					</div>
-					{/* TODO: these should go in the action bar */}
-					<div className="u-margin-top">
-						<Button className="u-margin-right-xs" onClick={submitForm} type="success">
-							Bewaar en ga verder
-						</Button>
-						<Button onClick={navigateToOverview} outline>
-							Annuleer
-						</Button>
-					</div>
-				</>
+					<ActionBar className="o-action-bar" show>
+						<ActionBarContentSection>
+							<Button
+								className="u-margin-right-xs"
+								onClick={submitForm}
+								type="success"
+							>
+								Bewaar en ga verder
+							</Button>
+							<Button onClick={navigateToOverview} outline>
+								Annuleer
+							</Button>
+						</ActionBarContentSection>
+					</ActionBar>
+				</div>
 			)}
 		</Formik>
 	);

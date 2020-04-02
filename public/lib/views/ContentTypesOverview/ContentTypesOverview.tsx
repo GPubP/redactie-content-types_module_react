@@ -7,20 +7,22 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
+import { generatePath } from 'react-router-dom';
 
-import DataLoader from '../../components/DataLoader/DataLoader';
-import { BREADCRUMB_OPTIONS } from '../../contentTypes.const';
+import { DataLoader } from '../../components';
+import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesRouteProps } from '../../contentTypes.types';
-import useRoutes from '../../hooks/useRoutes/useRoutes';
+import { useNavigate, useRoutes } from '../../hooks';
 import { ContentTypeSchema, getContentTypes } from '../../services/contentTypes';
 import { LoadingState } from '../../types';
 
-const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ tenantId, history }) => {
+const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	/**
 	 * Hooks
 	 */
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
 	const [contentTypes, setContentTypes] = useState<ContentTypeSchema[] | null>(null);
+	const navigate = useNavigate();
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 
@@ -69,16 +71,15 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ tenantId, history })
 				label: '',
 				classList: ['u-text-right'],
 				disableSorting: true,
-				component(value: unknown, rowData: unknown) {
-					// TODO: add types for rowData
-					const { uuid } = rowData as any;
+				component(value: unknown, rowData: ContentTypeSchema) {
+					const { uuid: contentTypeUuid } = rowData;
 
 					return (
 						<Button
 							ariaLabel="Edit"
 							icon="edit"
 							onClick={() =>
-								history.push(`/${tenantId}/content-types/${uuid}/bewerken`)
+								navigate(generatePath(MODULE_PATHS.edit, { contentTypeUuid }))
 							}
 							type="primary"
 							transparent
@@ -105,10 +106,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ tenantId, history })
 			<ContextHeader title="Content types">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
-					<Button
-						iconLeft="plus"
-						onClick={() => history.push(`/${tenantId}/content-types/aanmaken`)}
-					>
+					<Button iconLeft="plus" onClick={() => navigate(MODULE_PATHS.create)}>
 						Nieuwe maken
 					</Button>
 				</ContextHeaderActionsSection>
