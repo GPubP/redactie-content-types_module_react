@@ -28,6 +28,14 @@ const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 		return <Redirect to={`/${tenantId}${MODULE_PATHS.createSettings}`} />;
 	}
 
+	if (
+		/\/content-types\/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b$/.test(
+			location.pathname
+		)
+	) {
+		return <Redirect to={`${location.pathname}/instellingen`} />;
+	}
+
 	return (
 		<TenantContext.Provider value={tenantId}>
 			{Core.routes.render(route.routes as ModuleRouteConfig[], {

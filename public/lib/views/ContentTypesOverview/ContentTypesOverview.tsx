@@ -62,10 +62,12 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 			{
 				label: 'Gebruikt op',
 				value: 'description',
+				disableSorting: true,
 			},
 			{
 				label: 'Status',
 				value: 'status',
+				disableSorting: true,
 			},
 			{
 				label: '',

@@ -63,7 +63,9 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) =>
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
+			<div className="u-container u-wrapper u-margin-top">
+				<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
+			</div>
 		</>
 	);
 };

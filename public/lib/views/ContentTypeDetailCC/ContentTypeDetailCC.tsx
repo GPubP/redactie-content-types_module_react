@@ -84,7 +84,7 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 			(cc: ContentTypeFieldSchema) => ({
 				label: cc.label,
 				name: cc.name,
-				fieldType: cc.fieldType,
+				fieldType: pathOr('error', ['fieldType', 'data', 'label'])(cc),
 				multiple: typeof cc.generalConfig.max === 'number' && cc.generalConfig.max > 0,
 				required: !!cc.generalConfig.required,
 				translatable: !!cc.generalConfig.multiLanguage,
