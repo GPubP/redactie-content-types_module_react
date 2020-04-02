@@ -1,14 +1,14 @@
-import { Button, Card, Select, TextField } from '@acpaas-ui/react-components';
 import { Table } from '@acpaas-ui/react-editorial-components';
+import { Button, Card } from '@acpaas-ui/react-components';
 import { Field, Formik } from 'formik';
 import { init, pathOr } from 'ramda';
 import React, { FC } from 'react';
 
-import { StatusIcon } from '../../components/StatusIcon/StatusIcon';
+import { CCForm } from '../../components';
 import { ContentTypeFieldSchema, ContentTypeSchema } from '../../services/contentTypes';
 import { FieldTypesSchema } from '../../services/fieldTypes';
 
-import { CT_CC_VALIDATION_SCHEMA } from './ContentTypeDetailCC.const';
+import { CONTENT_TYPE_COLUMNS, CT_CC_VALIDATION_SCHEMA } from './ContentTypeDetailCC.const';
 import { ContentTypeDetailCCRow, ContenTypeDetailCCProps } from './ContentTypeDetailCC.types';
 import { DummyCTs } from './_temp.cts';
 
@@ -71,49 +71,10 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 			})
 		);
 
-		const contentTypeColumns = [
-			{
-				label: 'Naam',
-				value: 'label',
-			},
-			{
-				label: 'type',
-				value: 'fieldType',
-			},
-			{
-				label: 'Meerdere',
-				value: 'multiple',
-				component(value: any, rowData: ContentTypeDetailCCRow) {
-					return <StatusIcon active={rowData.multiple} />;
-				},
-			},
-			{
-				label: 'Verplicht',
-				value: 'required',
-				component(value: any, rowData: ContentTypeDetailCCRow) {
-					return <StatusIcon active={rowData.required} />;
-				},
-			},
-			{
-				label: 'Vertaalbaar',
-				value: 'translatable',
-				component(value: any, rowData: ContentTypeDetailCCRow) {
-					return <StatusIcon active={rowData.translatable} />;
-				},
-			},
-			{
-				label: 'Verborgen',
-				value: 'hidden',
-				component(value: any, rowData: ContentTypeDetailCCRow) {
-					return <StatusIcon active={rowData.hidden} />;
-				},
-			},
-		];
-
 		return (
 			<Table
 				className="u-margin-top"
-				columns={contentTypeColumns}
+				columns={CONTENT_TYPE_COLUMNS}
 				rows={contentTypeRows}
 				totalValues={pathOr(0, ['fields', 'length'])(initialState)}
 			></Table>
@@ -131,60 +92,6 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 				validationSchema={CT_CC_VALIDATION_SCHEMA}
 			>
 				{() => <Field name="fields" placeholder="No fields" as={TableField} />}
-			</Formik>
-		);
-	};
-
-	const CTNewCCForm: FC<{ fieldTypes: FieldTypesSchema }> = ({ fieldTypes }) => {
-		const options = fieldTypes.map(fieldType => ({
-			key: fieldType.uuid,
-			value: fieldType.uuid,
-			label: fieldType?.data?.label,
-		}));
-
-		return (
-			<Formik
-				initialValues={{}}
-				onSubmit={(formValue: any) =>
-					history.push(
-						`/${tenantId}/content-types/aanmaken/content-componenten/nieuw?name=${formValue.name}&field-type=${formValue.fieldType}`
-					)
-				}
-			>
-				{({ submitForm }) => (
-					<>
-						<div className="row u-margin-top u-margin-bottom">
-							<div className="col-xs-6">
-								<Field
-									label="Selecteer"
-									placeholder="Selecteer een content component"
-									name="fieldType"
-									options={options}
-									as={Select}
-								/>
-								<div className="u-text-light u-margin-top-xs">
-									Selecteer een content component van een bepaald type.
-								</div>
-							</div>
-							<div className="col-xs-6">
-								<Field
-									type="text"
-									label="Naam"
-									name="name"
-									placeholder="Typ een naam"
-									as={TextField}
-								/>
-								<div className="u-text-light u-margin-top-xs">
-									Kies een gebruiksvriendelijke redactie naam, bijvoorbeeld
-									&apos;Titel&apos;.
-								</div>
-							</div>
-						</div>
-						<Button onClick={submitForm} outline>
-							Toevoegen
-						</Button>
-					</>
-				)}
 			</Formik>
 		);
 	};

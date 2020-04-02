@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { StatusIconProps } from './StatusIcon.types';
 
-export const StatusIcon: FC<StatusIconProps> = ({ active }) => {
+const StatusIcon: FC<StatusIconProps> = ({ active }) => {
 	return (
 		<div className="u-text-center">
 			{active ? (
@@ -13,3 +13,5 @@ export const StatusIcon: FC<StatusIconProps> = ({ active }) => {
 		</div>
 	);
 };
+
+export default StatusIcon;
