@@ -1,7 +1,7 @@
 import { Button, Card, Select, TextField } from '@acpaas-ui/react-components';
 import { Table } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
-import { init, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import React, { FC } from 'react';
 
 import { StatusIcon } from '../../components/StatusIcon/StatusIcon';
@@ -10,7 +10,6 @@ import { FieldTypesSchema } from '../../services/fieldTypes';
 
 import { CT_CC_VALIDATION_SCHEMA } from './ContentTypeDetailCC.const';
 import { ContentTypeDetailCCRow, ContenTypeDetailCCProps } from './ContentTypeDetailCC.types';
-import { DummyCTs } from './_temp.cts';
 
 const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	fieldTypes,
@@ -63,7 +62,7 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 			(cc: ContentTypeFieldSchema) => ({
 				label: cc.label,
 				name: cc.name,
-				fieldType: cc.fieldType,
+				fieldType: pathOr('error', ['fieldType', 'data', 'label'])(cc),
 				multiple: typeof cc.generalConfig.max === 'number' && cc.generalConfig.max > 0,
 				required: !!cc.generalConfig.required,
 				translatable: !!cc.generalConfig.multiLanguage,
@@ -136,11 +135,13 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	};
 
 	const CTNewCCForm: FC<{ fieldTypes: FieldTypesSchema }> = ({ fieldTypes }) => {
-		const options = fieldTypes.map(fieldType => ({
-			key: fieldType.uuid,
-			value: fieldType.uuid,
-			label: fieldType?.data?.label,
-		}));
+		const options = Array.isArray(fieldTypes)
+			? fieldTypes.map(fieldType => ({
+					key: fieldType.uuid,
+					value: fieldType.uuid,
+					label: fieldType?.data?.label,
+			  }))
+			: [];
 
 		return (
 			<Formik
