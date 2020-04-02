@@ -77,9 +77,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ tenantId, history })
 						<Button
 							ariaLabel="Edit"
 							icon="edit"
-							onClick={() =>
-								history.push(`/${tenantId}/content-types/${uuid}/bewerken`)
-							}
+							onClick={() => history.push(`/${tenantId}/content-types/${uuid}`)}
 							type="primary"
 							transparent
 						></Button>
