@@ -7,6 +7,7 @@ import { ContentTypesCreate, ContentTypesOverview } from './lib/views';
 import ContentTypeDetailCC from './lib/views/ContentTypeDetailCC/ContentTypeDetailCC';
 import ContentTypeDetailSettings from './lib/views/ContentTypeDetailSettings/ContentTypeDetailSettings';
 import ContentTypeDetailSites from './lib/views/ContentTypeDetailSites/ContentTypeDetailSites';
+import ContentTypesUpdate from './lib/views/ContentTypeUpdate/ContentTypeUpdate';
 
 const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 	route,
@@ -22,6 +23,14 @@ const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 	// if path is /content-types/aanmaken, redirect to /content-types/aanmaken/instellingen
 	if (/\/content-types\/aanmaken$/.test(location.pathname)) {
 		return <Redirect to={`/${tenantId}/content-types/aanmaken/instellingen`} />;
+	}
+
+	if (
+		/\/content-types\/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b$/.test(
+			location.pathname
+		)
+	) {
+		return <Redirect to={`${location.pathname}/instellingen`} />;
 	}
 
 	return (
@@ -59,6 +68,24 @@ Core.routes.register({
 				},
 				{
 					path: '/content-types/aanmaken/sites',
+					component: ContentTypeDetailSites,
+				},
+			],
+		},
+		{
+			path: '/content-types/:contentTypeUuid',
+			component: ContentTypesUpdate,
+			routes: [
+				{
+					path: '/content-types/:contentTypeUuid/instellingen',
+					component: ContentTypeDetailSettings,
+				},
+				{
+					path: '/content-types/:contentTypeUuid/content-componenten',
+					component: ContentTypeDetailCC,
+				},
+				{
+					path: '/content-types/:contentTypeUuid/sites',
 					component: ContentTypeDetailSites,
 				},
 			],

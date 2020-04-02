@@ -1,11 +1,11 @@
 import { Button, Card, Select, TextField } from '@acpaas-ui/react-components';
 import { Table } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
-import { pathOr } from 'ramda';
+import { init, pathOr } from 'ramda';
 import React, { FC } from 'react';
 
 import { StatusIcon } from '../../components/StatusIcon/StatusIcon';
-import { ContentTypeFieldSchema } from '../../services/contentTypes';
+import { ContentTypeFieldSchema, ContentTypeSchema } from '../../services/contentTypes';
 import { FieldTypesSchema } from '../../services/fieldTypes';
 
 import { CT_CC_VALIDATION_SCHEMA } from './ContentTypeDetailCC.const';
@@ -14,12 +14,11 @@ import { DummyCTs } from './_temp.cts';
 
 const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	fieldTypes,
+	contentType: initialState,
 	onSubmit,
 	tenantId,
 	history,
 }) => {
-	const initialState = DummyCTs[0];
-
 	/**
 	 * Hooks
 	 */
@@ -121,11 +120,14 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 		);
 	};
 
-	const CTCCListTableForm: FC = () => {
+	const CTCCListTableForm: FC<{
+		initialValues: any;
+		onSubmit: (contentType: ContentTypeSchema) => void;
+	}> = ({ initialValues, onSubmit: onFormSubmit }) => {
 		return (
 			<Formik
-				initialValues={initialState}
-				onSubmit={onSubmit}
+				initialValues={initialValues}
+				onSubmit={onFormSubmit}
 				validationSchema={CT_CC_VALIDATION_SCHEMA}
 			>
 				{() => <Field name="fields" placeholder="No fields" as={TableField} />}
@@ -193,7 +195,7 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 				<div className="u-margin">
 					<h5>Content componenten</h5>
 
-					<CTCCListTableForm />
+					<CTCCListTableForm initialValues={initialState} onSubmit={onSubmit} />
 
 					<div className="u-margin-top">
 						<Card>
