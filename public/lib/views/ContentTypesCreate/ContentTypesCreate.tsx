@@ -1,7 +1,7 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import React, { FC, useEffect, useState } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import React, { FC, useEffect, useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 
 import { DataLoader } from '../../components';
 import { BREADCRUMB_OPTIONS, CONTENT_DETAIL_TABS } from '../../contentTypes.const';
@@ -10,15 +10,23 @@ import { ContentTypesRouteProps } from '../../contentTypes.types';
 import { useFieldTypes, useRoutes } from '../../hooks';
 import { LoadingState } from '../../types';
 
-const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) => {
+const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes, tenantId }) => {
 	/**
 	 * Hooks
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const match = useRouteMatch;
 	const breadcrumbRoutes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(breadcrumbRoutes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
+
+	const activeTabs = useMemo(
+		() =>
+			CONTENT_DETAIL_TABS.map(tab => ({
+				...tab,
+				active: new RegExp(`${tab.target}$`).test(location.pathname),
+			})),
+		[location.pathname]
+	);
 
 	useEffect(() => {
 		if (fieldTypesLoadingState === LoadingState.Loaded) {
@@ -29,25 +37,12 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) =>
 	}, [fieldTypesLoadingState]);
 
 	/**
-	 * Methods
-	 */
-	const activeRoute =
-		routes.find(item => item.path === `/${tenantId}/content-types/aanmaken`) || null;
-
-	const activeTabs = CONTENT_DETAIL_TABS.map(tab => {
-		console.log('---- matcher', match(tab.target));
-
-		return {
-			...tab,
-		};
-	});
-
-	console.log(activeTabs);
-
-	/**
 	 * Render
 	 */
 	const renderChildRoutes = (): any => {
+		const activeRoute =
+			routes.find(item => item.path === `/${tenantId}/content-types/aanmaken`) || null;
+
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
 			tenantId: tenantId,
 			routes: activeRoute?.routes,

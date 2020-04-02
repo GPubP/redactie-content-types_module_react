@@ -1,11 +1,5 @@
 import { Button, Card } from '@acpaas-ui/react-components';
-import {
-	ActionBar,
-	ActionBarContentSection,
-	Filter,
-	FilterBody,
-	Table,
-} from '@acpaas-ui/react-editorial-components';
+import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
 import { pathOr } from 'ramda';
 import React, { FC, ReactElement } from 'react';
@@ -66,11 +60,6 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 				<Button className="u-margin-top" iconLeft="plus" primary>
 					Sectie toevoegen
 				</Button>
-				<Filter>
-					<FilterBody>
-						<p>Hello</p>
-					</FilterBody>
-				</Filter>
 			</>
 		);
 	};
