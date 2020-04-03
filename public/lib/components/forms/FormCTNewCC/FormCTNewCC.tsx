@@ -2,13 +2,9 @@ import { Button, Select, TextField } from '@acpaas-ui/react-components';
 import { Field, Formik } from 'formik';
 import React, { FC } from 'react';
 
-interface CCFormProps {
-	fieldTypeOptions: any[];
-	formState: any;
-	onSubmit: (formValues: any) => void;
-}
+import { FormCTNewCCProps } from './FormCTNewCC.types';
 
-const CCForm: FC<CCFormProps> = ({ fieldTypeOptions, formState, onSubmit }) => {
+const FormGeneralCC: FC<FormCTNewCCProps> = ({ fieldTypeOptions, formState, onSubmit }) => {
 	return (
 		<Formik initialValues={formState} onSubmit={onSubmit}>
 			{({ submitForm }) => (
@@ -51,4 +47,4 @@ const CCForm: FC<CCFormProps> = ({ fieldTypeOptions, formState, onSubmit }) => {
 	);
 };
 
-export default CCForm;
+export default FormGeneralCC;

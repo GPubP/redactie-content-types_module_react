@@ -4,7 +4,7 @@ import { Field, Formik } from 'formik';
 import { pathOr } from 'ramda';
 import React, { FC, ReactElement } from 'react';
 
-import { CCForm, NavList } from '../../components';
+import { FormCTNewCC, NavList } from '../../components';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { useNavigate } from '../../hooks';
 import { ContentTypeFieldSchema } from '../../services/contentTypes';
@@ -93,7 +93,7 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 						<Card>
 							<div className="u-margin">
 								<h5>Voeg een content componenten toe</h5>
-								<CCForm
+								<FormCTNewCC
 									fieldTypeOptions={fieldTypeOptions}
 									formState={{}}
 									onSubmit={onCCFormSubmit}

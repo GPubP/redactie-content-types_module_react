@@ -43,9 +43,8 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 	 */
 	const renderChildRoutes = (): any => {
 		const activeRoute =
-			routes.find(
-				item => item.path === generatePath(MODULE_PATHS.detail, { contentTypeUuid })
-			) || null;
+			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detail}`) || null;
+
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
 			tenantId,
 			contentType,
