@@ -1,6 +1,7 @@
 import { Button, Card } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
+import { stringify } from 'query-string';
 import { pathOr } from 'ramda';
 import React, { FC, ReactElement } from 'react';
 
@@ -36,7 +37,7 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	 * Methods
 	 */
 	const onCCFormSubmit = ({ name, fieldType }: any): void => {
-		navigate(`${MODULE_PATHS.createCCnew}?name=${name}&field-type=${fieldType}`);
+		navigate(`${MODULE_PATHS.createCCnew}?${stringify({ name, fieldType })}`);
 	};
 
 	/**

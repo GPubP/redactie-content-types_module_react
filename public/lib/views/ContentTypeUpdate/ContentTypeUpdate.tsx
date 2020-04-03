@@ -6,13 +6,7 @@ import { Link, useParams } from 'react-router-dom';
 import { DataLoader } from '../../components';
 import { CONTENT_DETAIL_TABS, MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesRouteProps } from '../../contentTypes.types';
-import {
-	useActiveTabs,
-	useContentType,
-	useFieldTypes,
-	useNavigate,
-	useRoutesBreadcrumbs,
-} from '../../hooks';
+import { useActiveTabs, useContentType, useFieldTypes, useRoutesBreadcrumbs } from '../../hooks';
 import { LoadingState } from '../../types';
 
 const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tenantId }) => {
@@ -22,7 +16,6 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const { contentTypeUuid } = useParams();
 	const breadcrumbs = useRoutesBreadcrumbs();
-	const { generatePath } = useNavigate();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 	const [contentTypeLoadingState, contentType] = useContentType(contentTypeUuid);
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, location.pathname);
