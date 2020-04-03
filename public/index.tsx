@@ -6,7 +6,6 @@ import { MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesRouteProps } from './lib/contentTypes.types';
 import { TenantContext } from './lib/context';
 import {
-	ContentTypesCCNew,
 	ContentTypesCreate,
 	ContentTypesDetailCC,
 	ContentTypesDetailSettings,
@@ -77,10 +76,6 @@ Core.routes.register({
 					component: ContentTypesDetailSites,
 				},
 			],
-		},
-		{
-			path: MODULE_PATHS.createCCnew,
-			component: ContentTypesCCNew,
 		},
 		{
 			path: MODULE_PATHS.detail,
