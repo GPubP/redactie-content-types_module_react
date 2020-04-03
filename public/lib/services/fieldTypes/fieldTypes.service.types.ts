@@ -35,4 +35,6 @@ export interface FieldTypeSchema {
 	meta: FieldTypeSchemaMeta;
 }
 
-export type FieldTypesSchema = FieldTypeSchema[];
+export type FieldTypesSchema = {
+	data: FieldTypeSchema[];
+};
