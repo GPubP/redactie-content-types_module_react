@@ -22,9 +22,9 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	 */
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
 	const [contentTypes, setContentTypes] = useState<ContentTypeSchema[] | null>(null);
-	const navigate = useNavigate();
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
+	const { navigate } = useNavigate();
 
 	useEffect(() => {
 		getContentTypes()
@@ -80,9 +80,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 						<Button
 							ariaLabel="Edit"
 							icon="edit"
-							onClick={() =>
-								navigate(generatePath(MODULE_PATHS.edit, { contentTypeUuid }))
-							}
+							onClick={() => navigate(MODULE_PATHS.edit, { contentTypeUuid })}
 							type="primary"
 							transparent
 						></Button>

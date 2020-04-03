@@ -27,6 +27,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 			})),
 		[location.pathname]
 	);
+	const { generatePath } = useNavigate();
 
 	useEffect(() => {
 		if (fieldTypesLoadingState === LoadingState.Loaded) {
@@ -41,13 +42,13 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 	 */
 	const renderChildRoutes = (): any => {
 		const activeRoute =
-			routes.find(item => item.path === `/${tenantId}/content-types/aanmaken`) || null;
+			routes.find(item => item.path === generatePath(MODULE_PATHS.create)) || null;
 
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-			tenantId: tenantId,
+			tenantId,
+			fieldTypes,
 			routes: activeRoute?.routes,
 			contentType: generateSettingsFormState(),
-			fieldTypes,
 			onSubmit: () => console.log('temp onSubmit in contentTypesCreate'),
 		});
 	};

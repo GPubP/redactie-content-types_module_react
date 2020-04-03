@@ -17,6 +17,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) =>
 	const breadcrumbRoutes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(breadcrumbRoutes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const { generatePath } = useNavigate();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 	const [contentTypeLoadingState, contentType] = useContentType(contentTypeUuid);
 
@@ -32,20 +33,18 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) =>
 	}, [contentTypeLoadingState, fieldTypesLoadingState]);
 
 	/**
-	 * Methods
-	 */
-	const activeRoute =
-		routes.find(item => item.path === `/${tenantId}/content-types/:contentTypeUuid`) || null;
-
-	/**
 	 * Render
 	 */
 	const renderChildRoutes = (): any => {
+		const activeRoute =
+			routes.find(
+				item => item.path === generatePath(MODULE_PATHS.detail, { contentTypeUuid })
+			) || null;
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-			tenantId: tenantId,
-			routes: activeRoute?.routes,
+			tenantId,
 			contentType,
 			fieldTypes,
+			routes: activeRoute?.routes,
 			onSubmit: () => console.log('temp onSubmit in contentTypesCreate'),
 		});
 	};

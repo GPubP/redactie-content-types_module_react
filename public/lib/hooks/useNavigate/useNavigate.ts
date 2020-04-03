@@ -1,17 +1,25 @@
 import * as H from 'history';
 import { useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { generatePath, useHistory } from 'react-router-dom';
 
-import { TenantContext } from '../../../index';
+import { TenantContext } from '../../context';
 
-type NavigateFn = (path: string, state?: H.LocationState) => void;
+type Params = { [paramName: string]: string | number | boolean | undefined };
+type GenerateFn = (path: string, params?: Params) => string;
+type NavigateFn = (path: string, params?: Params, state?: H.LocationState) => void;
 
-const useNavigate = (): NavigateFn => {
+const useNavigate = (): { generatePath: GenerateFn; navigate: NavigateFn } => {
+	const { tenantId } = useContext(TenantContext);
 	const history = useHistory();
-	const tenantId = useContext(TenantContext);
 
-	return (path: string, state?: H.LocationState) => {
-		history.push(`/${tenantId}${path}`, state);
+	const generate = (path: string, params?: Params): string =>
+		generatePath(`/${tenantId}${path}`, params);
+	const navigate = (path: string, params?: Params, state?: H.LocationState): void =>
+		history.push(generate(path, params), state);
+
+	return {
+		generatePath: generate,
+		navigate,
 	};
 };
 

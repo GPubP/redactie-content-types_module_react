@@ -1,16 +1,19 @@
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
-import React, { createContext, FC } from 'react';
+import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesRouteProps } from './lib/contentTypes.types';
-import { ContentTypesCreate, ContentTypesOverview } from './lib/views';
-import ContentTypeDetailCC from './lib/views/ContentTypeDetailCC/ContentTypeDetailCC';
-import ContentTypeDetailSettings from './lib/views/ContentTypeDetailSettings/ContentTypeDetailSettings';
-import ContentTypeDetailSites from './lib/views/ContentTypeDetailSites/ContentTypeDetailSites';
-import ContentTypesUpdate from './lib/views/ContentTypeUpdate/ContentTypeUpdate';
-
-export const TenantContext = createContext('');
+import { TenantContext } from './lib/context';
+import {
+	ContentTypesCCNew,
+	ContentTypesCreate,
+	ContentTypesDetailCC,
+	ContentTypesDetailSettings,
+	ContentTypesDetailSites,
+	ContentTypesOverview,
+	ContentTypesUpdate,
+} from './lib/views';
 
 const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 	route,
@@ -37,7 +40,7 @@ const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 	}
 
 	return (
-		<TenantContext.Provider value={tenantId}>
+		<TenantContext.Provider value={{ tenantId }}>
 			{Core.routes.render(route.routes as ModuleRouteConfig[], {
 				basePath: match.url,
 				routes: route.routes,
@@ -63,17 +66,21 @@ Core.routes.register({
 			routes: [
 				{
 					path: MODULE_PATHS.createSettings,
-					component: ContentTypeDetailSettings,
+					component: ContentTypesDetailSettings,
 				},
 				{
 					path: MODULE_PATHS.createCC,
-					component: ContentTypeDetailCC,
+					component: ContentTypesDetailCC,
 				},
 				{
 					path: MODULE_PATHS.createSites,
-					component: ContentTypeDetailSites,
+					component: ContentTypesDetailSites,
 				},
 			],
+		},
+		{
+			path: MODULE_PATHS.createCCnew,
+			component: ContentTypesCCNew,
 		},
 		{
 			path: MODULE_PATHS.detail,
@@ -81,15 +88,15 @@ Core.routes.register({
 			routes: [
 				{
 					path: MODULE_PATHS.detailSettings,
-					component: ContentTypeDetailSettings,
+					component: ContentTypesDetailSettings,
 				},
 				{
 					path: MODULE_PATHS.detailCC,
-					component: ContentTypeDetailCC,
+					component: ContentTypesDetailCC,
 				},
 				{
 					path: MODULE_PATHS.detailSites,
-					component: ContentTypeDetailSites,
+					component: ContentTypesDetailSites,
 				},
 			],
 		},

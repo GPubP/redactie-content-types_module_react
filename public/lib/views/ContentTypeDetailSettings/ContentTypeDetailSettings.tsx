@@ -14,7 +14,7 @@ const ContentTypeSettings: FC<ContenTypeDetailSettingsProps> = ({ contentType, o
 	/**
 	 * Hooks
 	 */
-	const navigate = useNavigate();
+	const { navigate } = useNavigate();
 	/**
 	 * Methods
 	 */
