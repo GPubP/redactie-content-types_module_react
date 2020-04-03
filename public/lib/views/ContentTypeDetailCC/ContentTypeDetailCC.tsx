@@ -4,12 +4,16 @@ import { Field, Formik } from 'formik';
 import { pathOr } from 'ramda';
 import React, { FC, ReactElement } from 'react';
 
-import { CCForm } from '../../components';
+import { CCForm, NavList } from '../../components';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { useNavigate } from '../../hooks';
 import { ContentTypeFieldSchema } from '../../services/contentTypes';
 
-import { CONTENT_TYPE_COLUMNS, CT_CC_VALIDATION_SCHEMA } from './ContentTypeDetailCC.const';
+import {
+	CONTENT_TYPE_COLUMNS,
+	CT_CC_NAV_LIST_ITEMS,
+	CT_CC_VALIDATION_SCHEMA,
+} from './ContentTypeDetailCC.const';
 import { ContentTypeDetailCCRow, ContenTypeDetailCCProps } from './ContentTypeDetailCC.types';
 
 const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
@@ -26,7 +30,7 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	/**
 	 * Hooks
 	 */
-	const navigate = useNavigate();
+	const { navigate } = useNavigate();
 
 	/**
 	 * Methods
@@ -38,32 +42,6 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	/**
 	 * Render
 	 */
-	const renderSubnav = (): ReactElement => {
-		return (
-			<>
-				<ul className="m-nav-list">
-					<li>
-						<a className="is-active" href="#instellingen">
-							Instellingen
-						</a>
-					</li>
-					<li>
-						<a href="#configuratie">Configuratie</a>
-					</li>
-					<li>
-						<a href="#validatie">Validatie</a>
-					</li>
-					<li>
-						<a href="#standaard-waarden">Standaard waarden</a>
-					</li>
-				</ul>
-				<Button className="u-margin-top" iconLeft="plus" primary>
-					Sectie toevoegen
-				</Button>
-			</>
-		);
-	};
-
 	const renderTableField = ({
 		value: fields,
 	}: {
@@ -131,7 +109,12 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	return (
 		<div className="u-container u-wrapper u-margin-top u-margin-bottom-lg">
 			<div className="row between-xs top-xs">
-				<div className="col-xs-3">{renderSubnav()}</div>
+				<div className="col-xs-3">
+					<NavList items={CT_CC_NAV_LIST_ITEMS} />
+					<Button className="u-margin-top" iconLeft="plus" primary>
+						Sectie toevoegen
+					</Button>
+				</div>
 
 				<div className="col-xs-9">{renderDetail()}</div>
 

@@ -5,14 +5,12 @@ import {
 	ContextHeaderTopSection,
 	Table,
 } from '@acpaas-ui/react-editorial-components';
-import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { generatePath } from 'react-router-dom';
 
 import { DataLoader } from '../../components';
-import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../contentTypes.const';
+import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesRouteProps } from '../../contentTypes.types';
-import { useNavigate, useRoutes } from '../../hooks';
+import { useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { ContentTypeSchema, getContentTypes } from '../../services/contentTypes';
 import { LoadingState } from '../../types';
 
@@ -22,9 +20,8 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	 */
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
 	const [contentTypes, setContentTypes] = useState<ContentTypeSchema[] | null>(null);
-	const routes = useRoutes();
-	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const { navigate } = useNavigate();
+	const breadcrumbs = useRoutesBreadcrumbs();
 
 	useEffect(() => {
 		getContentTypes()

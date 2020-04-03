@@ -60,3 +60,9 @@ export const CONTENT_TYPE_COLUMNS = [
 		},
 	},
 ];
+
+export const CT_CC_NAV_LIST_ITEMS = [
+	{ label: 'Compartiment 1', to: { hash: 'compartiment-1' } },
+	{ label: 'Compartiment 2', to: { hash: 'compartiment-2' } },
+	{ label: 'Compartiment 3', to: { hash: 'compartiment-3' } },
+];

@@ -1,13 +1,13 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
-import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import React, { FC, useEffect, useState, useMemo } from 'react';
+import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
+import React, { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DataLoader } from '../../components';
-import { BREADCRUMB_OPTIONS, CONTENT_DETAIL_TABS } from '../../contentTypes.const';
+import { CONTENT_DETAIL_TABS, MODULE_PATHS } from '../../contentTypes.const';
 import { generateSettingsFormState } from '../../contentTypes.helpers';
 import { ContentTypesRouteProps } from '../../contentTypes.types';
-import { useFieldTypes, useRoutes } from '../../hooks';
+import { useActiveTabs, useFieldTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { LoadingState } from '../../types';
 
 const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes, tenantId }) => {
@@ -15,18 +15,9 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 	 * Hooks
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const breadcrumbRoutes = useRoutes();
-	const breadcrumbs = useBreadcrumbs(breadcrumbRoutes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
+	const breadcrumbs = useRoutesBreadcrumbs();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
-
-	const activeTabs = useMemo(
-		() =>
-			CONTENT_DETAIL_TABS.map(tab => ({
-				...tab,
-				active: new RegExp(`${tab.target}$`).test(location.pathname),
-			})),
-		[location.pathname]
-	);
+	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, location.pathname);
 	const { generatePath } = useNavigate();
 
 	useEffect(() => {
