@@ -1,24 +1,24 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
-import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
+import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import DataLoader from '../../components/DataLoader/DataLoader';
-import { generateSettingsFormState } from '../../content-types.helpers';
-import { BREADCRUMB_OPTIONS, CONTENT_DETAIL_TABS } from '../../contentTypes.const';
+import { DataLoader } from '../../components';
+import { CONTENT_DETAIL_TABS, MODULE_PATHS } from '../../contentTypes.const';
+import { generateSettingsFormState } from '../../contentTypes.helpers';
 import { ContentTypesRouteProps } from '../../contentTypes.types';
-import useFieldTypes from '../../hooks/useFieldTypes/useFieldTypes';
-import useRoutes from '../../hooks/useRoutes/useRoutes';
-import { LoadingState, Tab } from '../../types';
+import { useActiveTabs, useFieldTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
+import { LoadingState } from '../../types';
 
-const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) => {
+const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes, tenantId }) => {
 	/**
 	 * Hooks
 	 */
-	const breadcrumbRoutes = useRoutes();
-	const breadcrumbs = useBreadcrumbs(breadcrumbRoutes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const breadcrumbs = useRoutesBreadcrumbs();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
+	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, location.pathname);
+	const { generatePath } = useNavigate();
 
 	useEffect(() => {
 		if (fieldTypesLoadingState === LoadingState.Loaded) {
@@ -29,20 +29,17 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) =>
 	}, [fieldTypesLoadingState]);
 
 	/**
-	 * Methods
-	 */
-	const activeRoute =
-		routes.find(item => item.path === `/${tenantId}/content-types/aanmaken`) || null;
-
-	/**
 	 * Render
 	 */
 	const renderChildRoutes = (): any => {
+		const activeRoute =
+			routes.find(item => item.path === generatePath(MODULE_PATHS.create)) || null;
+
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-			tenantId: tenantId,
+			tenantId,
+			fieldTypes,
 			routes: activeRoute?.routes,
 			contentType: generateSettingsFormState(),
-			fieldTypes,
 			onSubmit: () => console.log('temp onSubmit in contentTypesCreate'),
 		});
 	};
@@ -50,7 +47,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) =>
 	return (
 		<>
 			<ContextHeader
-				tabs={CONTENT_DETAIL_TABS}
+				tabs={activeTabs}
 				linkProps={(props: any) => ({
 					...props,
 					to: props.href,

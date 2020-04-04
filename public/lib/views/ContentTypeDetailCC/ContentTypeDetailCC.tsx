@@ -1,63 +1,52 @@
-import { Button, Card, Select, TextField } from '@acpaas-ui/react-components';
-import { Table } from '@acpaas-ui/react-editorial-components';
+import { Button, Card } from '@acpaas-ui/react-components';
+import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
 import { pathOr } from 'ramda';
-import React, { FC } from 'react';
+import React, { FC, ReactElement } from 'react';
 
-import { StatusIcon } from '../../components/StatusIcon/StatusIcon';
-import { ContentTypeFieldSchema, ContentTypeSchema } from '../../services/contentTypes';
-import { FieldTypesSchema } from '../../services/fieldTypes';
+import { FormCTNewCC, NavList } from '../../components';
+import { MODULE_PATHS } from '../../contentTypes.const';
+import { useNavigate } from '../../hooks';
+import { ContentTypeFieldSchema } from '../../services/contentTypes';
 
-import { CT_CC_VALIDATION_SCHEMA } from './ContentTypeDetailCC.const';
+import {
+	CONTENT_TYPE_COLUMNS,
+	CT_CC_NAV_LIST_ITEMS,
+	CT_CC_VALIDATION_SCHEMA,
+} from './ContentTypeDetailCC.const';
 import { ContentTypeDetailCCRow, ContenTypeDetailCCProps } from './ContentTypeDetailCC.types';
 
 const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	fieldTypes,
 	contentType: initialState,
 	onSubmit,
-	tenantId,
-	history,
 }) => {
+	const fieldTypeOptions = fieldTypes.map(fieldType => ({
+		key: fieldType.uuid,
+		value: fieldType.uuid,
+		label: fieldType?.data?.label,
+	}));
+
 	/**
 	 * Hooks
 	 */
+	const { navigate } = useNavigate();
 
 	/**
 	 * Methods
 	 */
+	const onCCFormSubmit = ({ name, fieldType }: any): void => {
+		navigate(`${MODULE_PATHS.createCCnew}?name=${name}&field-type=${fieldType}`);
+	};
 
 	/**
 	 * Render
 	 */
-
-	const CTCCNavigtion: FC = () => {
-		return (
-			<>
-				<ul className="m-nav-list">
-					<li>
-						<a className="is-active" href="#compartiment1">
-							Compartiment 1
-						</a>
-					</li>
-					<li>
-						<a href="#compartiment2">Compartiment 2</a>
-					</li>
-					<li>
-						<a href="#compartiment3">Compartiment 3</a>
-					</li>
-				</ul>
-				<Button className="u-margin-top" iconLeft="plus" primary>
-					Sectie toevoegen
-				</Button>
-			</>
-		);
-	};
-
-	const TableField = ({
+	const renderTableField = ({
 		value: fields,
 	}: {
 		value: ContentTypeFieldSchema[];
-	}): React.ReactElement => {
+	}): ReactElement => {
 		const contentTypeRows: ContentTypeDetailCCRow[] = (fields || []).map(
 			(cc: ContentTypeFieldSchema) => ({
 				label: cc.label,
@@ -70,139 +59,45 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 			})
 		);
 
-		const contentTypeColumns = [
-			{
-				label: 'Naam',
-				value: 'label',
-			},
-			{
-				label: 'type',
-				value: 'fieldType',
-			},
-			{
-				label: 'Meerdere',
-				value: 'multiple',
-				component(value: any, rowData: ContentTypeDetailCCRow) {
-					return <StatusIcon active={rowData.multiple} />;
-				},
-			},
-			{
-				label: 'Verplicht',
-				value: 'required',
-				component(value: any, rowData: ContentTypeDetailCCRow) {
-					return <StatusIcon active={rowData.required} />;
-				},
-			},
-			{
-				label: 'Vertaalbaar',
-				value: 'translatable',
-				component(value: any, rowData: ContentTypeDetailCCRow) {
-					return <StatusIcon active={rowData.translatable} />;
-				},
-			},
-			{
-				label: 'Verborgen',
-				value: 'hidden',
-				component(value: any, rowData: ContentTypeDetailCCRow) {
-					return <StatusIcon active={rowData.hidden} />;
-				},
-			},
-		];
-
 		return (
 			<Table
 				className="u-margin-top"
-				columns={contentTypeColumns}
+				columns={CONTENT_TYPE_COLUMNS}
 				rows={contentTypeRows}
 				totalValues={pathOr(0, ['fields', 'length'])(initialState)}
 			></Table>
 		);
 	};
 
-	const CTCCListTableForm: FC<{
-		initialValues: any;
-		onSubmit: (contentType: ContentTypeSchema) => void;
-	}> = ({ initialValues, onSubmit: onFormSubmit }) => {
+	const renderTableForm = (): ReactElement => {
 		return (
 			<Formik
-				initialValues={initialValues}
-				onSubmit={onFormSubmit}
+				initialValues={initialState}
+				onSubmit={onSubmit}
 				validationSchema={CT_CC_VALIDATION_SCHEMA}
 			>
-				{() => <Field name="fields" placeholder="No fields" as={TableField} />}
+				{() => <Field name="fields" placeholder="No fields" as={renderTableField} />}
 			</Formik>
 		);
 	};
 
-	const CTNewCCForm: FC<{ fieldTypes: FieldTypesSchema }> = ({ fieldTypes }) => {
-		const options = Array.isArray(fieldTypes)
-			? fieldTypes.map(fieldType => ({
-					key: fieldType.uuid,
-					value: fieldType.uuid,
-					label: fieldType?.data?.label,
-			  }))
-			: [];
-
-		return (
-			<Formik
-				initialValues={{}}
-				onSubmit={(formValue: any) =>
-					history.push(
-						`/${tenantId}/content-types/aanmaken/content-componenten/nieuw?name=${formValue.name}&field-type=${formValue.fieldType}`
-					)
-				}
-			>
-				{({ submitForm }) => (
-					<>
-						<div className="row u-margin-top u-margin-bottom">
-							<div className="col-xs-6">
-								<Field
-									label="Selecteer"
-									placeholder="Selecteer een content component"
-									name="fieldType"
-									options={options}
-									as={Select}
-								/>
-								<div className="u-text-light u-margin-top-xs">
-									Selecteer een content component van een bepaald type.
-								</div>
-							</div>
-							<div className="col-xs-6">
-								<Field
-									type="text"
-									label="Naam"
-									name="name"
-									placeholder="Typ een naam"
-									as={TextField}
-								/>
-								<div className="u-text-light u-margin-top-xs">
-									Kies een gebruiksvriendelijke redactie naam, bijvoorbeeld
-									&apos;Titel&apos;.
-								</div>
-							</div>
-						</div>
-						<Button onClick={submitForm} outline>
-							Toevoegen
-						</Button>
-					</>
-				)}
-			</Formik>
-		);
-	};
-
-	const CTCCDetail: FC<{ fieldTypes: FieldTypesSchema }> = ({ fieldTypes }) => {
+	const renderDetail = (): ReactElement => {
 		return (
 			<Card>
 				<div className="u-margin">
 					<h5>Content componenten</h5>
 
-					<CTCCListTableForm initialValues={initialState} onSubmit={onSubmit} />
+					{renderTableForm()}
 
 					<div className="u-margin-top">
 						<Card>
 							<div className="u-margin">
 								<h5>Voeg een content componenten toe</h5>
-								<CTNewCCForm fieldTypes={fieldTypes} />
+								<FormCTNewCC
+									fieldTypeOptions={fieldTypeOptions}
+									formState={{}}
+									onSubmit={onCCFormSubmit}
+								/>
 							</div>
 						</Card>
 					</div>
@@ -215,12 +110,20 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 		<div className="u-container u-wrapper u-margin-top u-margin-bottom-lg">
 			<div className="row between-xs top-xs">
 				<div className="col-xs-3">
-					<CTCCNavigtion />
+					<NavList items={CT_CC_NAV_LIST_ITEMS} />
+					<Button className="u-margin-top" iconLeft="plus" primary>
+						Sectie toevoegen
+					</Button>
 				</div>
 
-				<div className="col-xs-9">
-					<CTCCDetail fieldTypes={fieldTypes} />
-				</div>
+				<div className="col-xs-9">{renderDetail()}</div>
+
+				<ActionBar className="o-action-bar" show>
+					<ActionBarContentSection>
+						<Button>Bewaar</Button>
+						<Button>Annuleer</Button>
+					</ActionBarContentSection>
+				</ActionBar>
 			</div>
 		</div>
 	);

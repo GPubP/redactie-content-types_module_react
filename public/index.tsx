@@ -2,12 +2,17 @@ import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
+import { MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesRouteProps } from './lib/contentTypes.types';
-import { ContentTypesCreate, ContentTypesOverview } from './lib/views';
-import ContentTypeDetailCC from './lib/views/ContentTypeDetailCC/ContentTypeDetailCC';
-import ContentTypeDetailSettings from './lib/views/ContentTypeDetailSettings/ContentTypeDetailSettings';
-import ContentTypeDetailSites from './lib/views/ContentTypeDetailSites/ContentTypeDetailSites';
-import ContentTypesUpdate from './lib/views/ContentTypeUpdate/ContentTypeUpdate';
+import { TenantContext } from './lib/context';
+import {
+	ContentTypesCreate,
+	ContentTypesDetailCC,
+	ContentTypesDetailSettings,
+	ContentTypesDetailSites,
+	ContentTypesOverview,
+	ContentTypesUpdate,
+} from './lib/views';
 
 const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 	route,
@@ -17,12 +22,12 @@ const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 }) => {
 	// if path is /content-types, redirect to /content-types/beheer
 	if (/\/content-types$/.test(location.pathname)) {
-		return <Redirect to={`/${tenantId}/content-types/beheer`} />;
+		return <Redirect to={`/${tenantId}${MODULE_PATHS.admin}`} />;
 	}
 
 	// if path is /content-types/aanmaken, redirect to /content-types/aanmaken/instellingen
 	if (/\/content-types\/aanmaken$/.test(location.pathname)) {
-		return <Redirect to={`/${tenantId}/content-types/aanmaken/instellingen`} />;
+		return <Redirect to={`/${tenantId}${MODULE_PATHS.createSettings}`} />;
 	}
 
 	if (
@@ -34,59 +39,59 @@ const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 	}
 
 	return (
-		<>
+		<TenantContext.Provider value={{ tenantId }}>
 			{Core.routes.render(route.routes as ModuleRouteConfig[], {
 				basePath: match.url,
 				routes: route.routes,
 				tenantId: tenantId,
 			})}
-		</>
+		</TenantContext.Provider>
 	);
 };
 
 Core.routes.register({
-	path: '/content-types',
+	path: MODULE_PATHS.root,
 	label: 'Content types',
 	component: ContentTypesComponent,
 	exact: true,
 	routes: [
 		{
-			path: '/content-types/beheer',
+			path: MODULE_PATHS.admin,
 			component: ContentTypesOverview,
 		},
 		{
-			path: '/content-types/aanmaken',
+			path: MODULE_PATHS.create,
 			component: ContentTypesCreate,
 			routes: [
 				{
-					path: '/content-types/aanmaken/instellingen',
-					component: ContentTypeDetailSettings,
+					path: MODULE_PATHS.createSettings,
+					component: ContentTypesDetailSettings,
 				},
 				{
-					path: '/content-types/aanmaken/content-componenten',
-					component: ContentTypeDetailCC,
+					path: MODULE_PATHS.createCC,
+					component: ContentTypesDetailCC,
 				},
 				{
-					path: '/content-types/aanmaken/sites',
-					component: ContentTypeDetailSites,
+					path: MODULE_PATHS.createSites,
+					component: ContentTypesDetailSites,
 				},
 			],
 		},
 		{
-			path: '/content-types/:contentTypeUuid',
+			path: MODULE_PATHS.detail,
 			component: ContentTypesUpdate,
 			routes: [
 				{
-					path: '/content-types/:contentTypeUuid/instellingen',
-					component: ContentTypeDetailSettings,
+					path: MODULE_PATHS.detailSettings,
+					component: ContentTypesDetailSettings,
 				},
 				{
-					path: '/content-types/:contentTypeUuid/content-componenten',
-					component: ContentTypeDetailCC,
+					path: MODULE_PATHS.detailCC,
+					component: ContentTypesDetailCC,
 				},
 				{
-					path: '/content-types/:contentTypeUuid/sites',
-					component: ContentTypeDetailSites,
+					path: MODULE_PATHS.detailSites,
+					component: ContentTypesDetailSites,
 				},
 			],
 		},
