@@ -4,22 +4,28 @@ export const BREADCRUMB_OPTIONS = {
 	excludePaths: ['/', '/:tenantId'],
 };
 
-export const CONTENT_DETAIL_TABS: Tab[] = [
-	{
+export const CONTENT_TYPE_DETAIL_TAB_MAP: { [key: string]: Tab } = {
+	settings: {
 		name: 'Instellingen',
 		target: 'instellingen',
 		active: true,
 	},
-	{
+	contentComponenten: {
 		name: 'Content Componenten',
 		target: 'content-componenten',
 		active: false,
 	},
-	{
+	sites: {
 		name: 'Sites',
 		target: 'sites',
 		active: false,
 	},
+};
+
+export const CONTENT_DETAIL_TABS: Tab[] = [
+	CONTENT_TYPE_DETAIL_TAB_MAP.settings,
+	CONTENT_TYPE_DETAIL_TAB_MAP.contentComponenten,
+	CONTENT_TYPE_DETAIL_TAB_MAP.sites,
 ];
 
 export const MODULE_PATHS = {
@@ -34,5 +40,5 @@ export const MODULE_PATHS = {
 	detailSettings: '/content-types/:contentTypeUuid/instellingen',
 	detailCC: '/content-types/:contentTypeUuid/content-componenten',
 	detailSites: '/content-types/:contentTypeUuid/sites',
-	edit: '/content-types/:contentTypeUuid/bewerken',
+	edit: '/content-types/:contentTypeUuid',
 };
