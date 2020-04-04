@@ -1,26 +1,24 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
-import Core, { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
+import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import DataLoader from '../../components/DataLoader/DataLoader';
-import { BREADCRUMB_OPTIONS, CONTENT_DETAIL_TABS } from '../../contentTypes.const';
+import { DataLoader } from '../../components';
+import { CONTENT_DETAIL_TABS, MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesRouteProps } from '../../contentTypes.types';
-import useContentType from '../../hooks/useContentType/useContentType';
-import useFieldTypes from '../../hooks/useFieldTypes/useFieldTypes';
-import useRoutes from '../../hooks/useRoutes/useRoutes';
+import { useActiveTabs, useContentType, useFieldTypes, useRoutesBreadcrumbs } from '../../hooks';
 import { LoadingState } from '../../types';
 
-const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) => {
+const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tenantId }) => {
 	/**
 	 * Hooks
 	 */
-	const { contentTypeUuid } = useParams();
-	const breadcrumbRoutes = useRoutes();
-	const breadcrumbs = useBreadcrumbs(breadcrumbRoutes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const { contentTypeUuid } = useParams();
+	const breadcrumbs = useRoutesBreadcrumbs();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 	const [contentTypeLoadingState, contentType] = useContentType(contentTypeUuid);
+	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, location.pathname);
 
 	useEffect(() => {
 		if (
@@ -34,20 +32,17 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) =>
 	}, [contentTypeLoadingState, fieldTypesLoadingState]);
 
 	/**
-	 * Methods
-	 */
-	const activeRoute =
-		routes.find(item => item.path === `/${tenantId}/content-types/:contentTypeUuid`) || null;
-
-	/**
 	 * Render
 	 */
 	const renderChildRoutes = (): any => {
+		const activeRoute =
+			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detail}`) || null;
+
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-			tenantId: tenantId,
-			routes: activeRoute?.routes,
+			tenantId,
 			contentType,
 			fieldTypes,
+			routes: activeRoute?.routes,
 			onSubmit: () => console.log('temp onSubmit in contentTypesCreate'),
 		});
 	};
@@ -55,13 +50,13 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ routes, tenantId }) =>
 	return (
 		<>
 			<ContextHeader
-				tabs={CONTENT_DETAIL_TABS}
+				tabs={activeTabs}
 				linkProps={(props: any) => ({
 					...props,
 					to: props.href,
 					component: Link,
 				})}
-				title="Content type aanmaken"
+				title="Content type bewerken"
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
