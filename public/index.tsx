@@ -25,11 +25,13 @@ const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 }) => {
 	// if path is /content-types, redirect to /content-types/beheer
 	if (/\/content-types$/.test(location.pathname)) {
+		console.log('redirect 1');
 		return <Redirect to={`/${tenantId}${MODULE_PATHS.admin}`} />;
 	}
 
 	// if path is /content-types/aanmaken, redirect to /content-types/aanmaken/instellingen
 	if (/\/content-types\/aanmaken$/.test(location.pathname)) {
+		console.log('redirect 2');
 		return <Redirect to={`/${tenantId}${MODULE_PATHS.createSettings}`} />;
 	}
 
@@ -39,6 +41,14 @@ const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 		)
 	) {
 		return <Redirect to={`${location.pathname}/instellingen`} />;
+	}
+
+	if (
+		/\/content-types\/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b\/content-componenten\/nieuw$/.test(
+			location.pathname
+		)
+	) {
+		return <Redirect to={`${location.pathname}/instellingen${location.search}`} />;
 	}
 
 	return (
@@ -69,44 +79,35 @@ Core.routes.register({
 					path: MODULE_PATHS.createSettings,
 					component: ContentTypesDetailSettings,
 				},
-				{
-					path: MODULE_PATHS.createCCNew,
-					component: ContentTypesCCNew,
-					routes: [
-						{
-							path: MODULE_PATHS.createCCNewSettings,
-							component: ContentTypesCCSettings,
-						},
-						{
-							path: MODULE_PATHS.createCCNewConfig,
-							component: ContentTypesCCForm,
-						},
-						{
-							path: MODULE_PATHS.createCCNewValidation,
-							component: ContentTypesCCForm,
-						},
-						// TODO: add new CC defaults view
-						// {
-						// 	path: MODULE_PATHS.createCCNewDefaults,
-						// 	component: () => null,
-						// },
-					],
-				},
-				{
-					path: MODULE_PATHS.createCC,
-					component: ContentTypesDetailCC,
-					exact: true,
-				},
-				{
-					path: MODULE_PATHS.createSites,
-					component: ContentTypesDetailSites,
-				},
 			],
 		},
 		{
 			path: MODULE_PATHS.detail,
 			component: ContentTypesUpdate,
 			routes: [
+				{
+					path: MODULE_PATHS.detailCCNew,
+					component: ContentTypesCCNew,
+					routes: [
+						{
+							path: MODULE_PATHS.detailCCNewSettings,
+							component: ContentTypesCCSettings,
+						},
+						{
+							path: MODULE_PATHS.detailCCNewConfig,
+							component: ContentTypesCCForm,
+						},
+						{
+							path: MODULE_PATHS.detailCCNewValidation,
+							component: ContentTypesCCForm,
+						},
+						// TODO: add edit CC defaults view
+						// {
+						// 	path: MODULE_PATHS.detailCCNewDefaults,
+						// 	component: () => null,
+						// },
+					],
+				},
 				{
 					path: MODULE_PATHS.detailCCEdit,
 					component: ContentTypesCCNew,
@@ -133,10 +134,6 @@ Core.routes.register({
 				{
 					path: MODULE_PATHS.detailSettings,
 					component: ContentTypesDetailSettings,
-				},
-				{
-					path: MODULE_PATHS.detailCC,
-					component: ContentTypesDetailCC,
 				},
 				{
 					path: MODULE_PATHS.detailCC,

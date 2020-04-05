@@ -77,7 +77,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 						<Button
 							ariaLabel="Edit"
 							icon="edit"
-							onClick={() => navigate(MODULE_PATHS.edit, { contentTypeUuid })}
+							onClick={() => navigate(MODULE_PATHS.detail, { contentTypeUuid })}
 							type="primary"
 							transparent
 						></Button>

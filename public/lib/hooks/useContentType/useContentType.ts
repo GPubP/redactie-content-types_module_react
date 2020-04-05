@@ -1,11 +1,40 @@
 import { useEffect, useState } from 'react';
 
-import { ContentTypeSchema, getContentType } from '../../services/contentTypes';
+import {
+	ContentTypeSchema,
+	createContentType,
+	getContentType,
+	updateContentType,
+} from '../../services/contentTypes';
 import { LoadingState } from '../../types';
 
-const useContentType = (uuid: string | undefined): [LoadingState, ContentTypeSchema | null] => {
+const useContentType = (
+	uuid: string | null = null
+): [
+	LoadingState,
+	ContentTypeSchema | null,
+	(contentType: ContentTypeSchema) => Promise<void>,
+	(contentType: ContentTypeSchema) => Promise<void>
+] => {
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
 	const [contentType, setContentType] = useState<ContentTypeSchema | null>(null);
+
+	const localUpdateContentType = (contentType: ContentTypeSchema): Promise<void> => {
+		setLoadingState(LoadingState.Loading);
+
+		return updateContentType(contentType).then(response => {
+			setContentType(response);
+			setLoadingState(LoadingState.Loaded);
+		});
+	};
+	const localCreateContentType = (contentType: ContentTypeSchema): Promise<void> => {
+		setLoadingState(LoadingState.Loading);
+
+		return createContentType(contentType).then(response => {
+			setContentType(response);
+			setLoadingState(LoadingState.Loaded);
+		});
+	};
 
 	useEffect(() => {
 		if (!uuid) {
@@ -26,7 +55,7 @@ const useContentType = (uuid: string | undefined): [LoadingState, ContentTypeSch
 			});
 	}, [uuid]);
 
-	return [loadingState, contentType];
+	return [loadingState, contentType, localUpdateContentType, localCreateContentType];
 };
 
 export default useContentType;

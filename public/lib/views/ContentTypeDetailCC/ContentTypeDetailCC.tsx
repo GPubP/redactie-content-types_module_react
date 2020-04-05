@@ -37,12 +37,11 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	 * Methods
 	 */
 	const onCCFormSubmit = ({ name, fieldType }: any): void => {
-		console.log(
-			'--- navigate',
-			`${MODULE_PATHS.createCCNew}\\?${stringify({ name, fieldType })}`
-		);
-
-		navigate(`${MODULE_PATHS.createCCNew}\\?${stringify({ name, fieldType })}`);
+		navigate(`${MODULE_PATHS.detailCCNew}?fieldType=:fieldType&name=:name`, {
+			contentTypeUuid: initialState.uuid,
+			name,
+			fieldType,
+		});
 	};
 
 	/**
@@ -113,25 +112,30 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	};
 
 	return (
-		<div className="u-container u-wrapper u-margin-top u-margin-bottom-lg">
-			<div className="row between-xs top-xs">
-				<div className="col-xs-3">
-					<NavList items={CT_CC_NAV_LIST_ITEMS} />
-					<Button className="u-margin-top" iconLeft="plus" primary>
-						Sectie toevoegen
-					</Button>
+		<>
+			<div className="u-container u-wrapper">
+				<div className="row between-xs top-xs u-margin-bottom-lg">
+					<div className="col-xs-3">
+						<NavList items={CT_CC_NAV_LIST_ITEMS} />
+						<Button className="u-margin-top" iconLeft="plus" primary>
+							Sectie toevoegen
+						</Button>
+					</div>
+
+					<div className="col-xs-9">{renderDetail()}</div>
 				</div>
-
-				<div className="col-xs-9">{renderDetail()}</div>
-
-				<ActionBar className="o-action-bar" show>
-					<ActionBarContentSection>
-						<Button>Bewaar</Button>
-						<Button>Annuleer</Button>
-					</ActionBarContentSection>
-				</ActionBar>
 			</div>
-		</div>
+			<ActionBar show>
+				<ActionBarContentSection>
+					<div className="u-wrapper">
+						<Button className="u-margin-right" type="success">
+							Bewaar
+						</Button>
+						<Button outline>Annuleer</Button>
+					</div>
+				</ActionBarContentSection>
+			</ActionBar>
+		</>
 	);
 };
 

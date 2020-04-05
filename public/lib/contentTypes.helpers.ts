@@ -1,24 +1,15 @@
-import { ContentTypeSchema } from './services/contentTypes';
+import { ContentTypeCreate } from './services/contentTypes';
 import { FieldTypeSchemaData } from './services/fieldTypes';
 
-export const generateSettingsFormState = (): ContentTypeSchema => ({
-	_id: '',
+
+export const generateEmptyContentType = (): ContentTypeCreate => ({
 	fields: [],
 	meta: {
-		created: '',
-		lastModified: '',
-		taxonomy: {
-			available: [],
-			fieldType: 'taxonomy',
-			tags: [],
-		},
-		deleted: false,
-		lastEditor: '',
 		safeLabel: '',
 		description: '',
 		label: '',
+		deleted: false,
 	},
-	uuid: 'e',
 });
 
 export const generateCCFormState = (

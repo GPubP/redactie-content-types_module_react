@@ -6,6 +6,7 @@ import { FieldTypeSchema } from '../../services/fieldTypes';
 export interface ContenTypeDetailCCProps extends RouteConfigComponentProps {
 	contentType: ContentTypeSchema;
 	fieldTypes: FieldTypeSchema[];
+	tenantId: string;
 	onSubmit: (contentType: ContentTypeSchema) => void;
 }
 

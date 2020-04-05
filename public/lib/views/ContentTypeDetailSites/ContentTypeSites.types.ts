@@ -9,9 +9,11 @@ export interface ContenTypeDetailSitesProps extends RouteConfigComponentProps {
 	onSubmit: (contentType: ContentTypeSchema) => void;
 }
 
-export interface ContentTypeRow {
+export interface SitesRowData {
+	uuid: string;
 	name: string;
-	contentItems: number;
 	description: string;
-	status: string;
+	status: boolean;
+	contentTypes: string[];
+	contentItems: number;
 }
