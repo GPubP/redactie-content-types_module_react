@@ -4,14 +4,16 @@ import React, { FC } from 'react';
 
 import { ContentTypesCCFormProps } from './ContentTypesCCForm.types';
 
-const ContentTypesCCForm: FC<ContentTypesCCFormProps> = ({ formData }) => {
+const ContentTypesCCForm: FC<ContentTypesCCFormProps> = ({ fieldData }) => {
 	const formsAPI = Core.modules.getModuleAPI('forms-module') as FormsAPI;
 
-	if (!formsAPI || !formData) {
+	if (!formsAPI || !fieldData) {
 		return null;
 	}
 
-	return <formsAPI.Form schema={formData.formSchema} validationSchema={{}} errorMessages={{}} />;
+	return null;
+
+	// return <formsAPI.Form schema={fieldData.formSchema} validationSchema={{}} errorMessages={{}} />;
 };
 
 export default ContentTypesCCForm;

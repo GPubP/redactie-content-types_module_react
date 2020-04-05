@@ -55,7 +55,7 @@ const ContentTypesCCNew: FC<ContentTypesCCNewProps> = ({
 
 		// TODO: add redirect to settings
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-			fieldType: fieldType,
+			fieldData: fieldType,
 			routes: activeRoute?.routes,
 			fieldFormState: fieldFormState,
 			onSubmit: (data: any) => setFieldFormState(data),
