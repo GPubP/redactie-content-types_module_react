@@ -10,7 +10,7 @@ import { ContentTypesRouteProps } from '../../contentTypes.types';
 import { useActiveTabs, useFieldTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { LoadingState } from '../../types';
 
-const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes, tenantId }) => {
+const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) => {
 	/**
 	 * Hooks
 	 */
@@ -29,6 +29,12 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 	}, [fieldTypesLoadingState]);
 
 	/**
+	 * Methods
+	 */
+	//  Don't show tabs on new CC page
+	const showTabs = /\/nieuw\//.test(location.pathname) === false;
+
+	/**
 	 * Render
 	 */
 	const renderChildRoutes = (): any => {
@@ -36,7 +42,6 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 			routes.find(item => item.path === generatePath(MODULE_PATHS.create)) || null;
 
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-			tenantId,
 			fieldTypes,
 			routes: activeRoute?.routes,
 			contentType: generateSettingsFormState(),
@@ -47,10 +52,10 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 	return (
 		<>
 			<ContextHeader
-				tabs={activeTabs}
+				tabs={showTabs ? activeTabs : undefined}
 				linkProps={(props: any) => ({
 					...props,
-					to: props.href,
+					to: generatePath(`${MODULE_PATHS.create}/${props.href}`),
 					component: Link,
 				})}
 				title="Content type aanmaken"

@@ -6,10 +6,16 @@ import { Link, useParams } from 'react-router-dom';
 import { DataLoader } from '../../components';
 import { CONTENT_DETAIL_TABS, MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesRouteProps } from '../../contentTypes.types';
-import { useActiveTabs, useContentType, useFieldTypes, useRoutesBreadcrumbs } from '../../hooks';
+import {
+	useActiveTabs,
+	useContentType,
+	useFieldTypes,
+	useRoutesBreadcrumbs,
+	useTenantContext,
+} from '../../hooks';
 import { LoadingState } from '../../types';
 
-const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tenantId }) => {
+const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) => {
 	/**
 	 * Hooks
 	 */
@@ -19,6 +25,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 	const [contentTypeLoadingState, contentType] = useContentType(contentTypeUuid);
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, location.pathname);
+	const { tenantId } = useTenantContext();
 
 	useEffect(() => {
 		if (

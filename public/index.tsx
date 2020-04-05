@@ -6,7 +6,9 @@ import { MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesRouteProps } from './lib/contentTypes.types';
 import { TenantContext } from './lib/context';
 import {
+	ContentTypesCCForm,
 	ContentTypesCCNew,
+	ContentTypesCCSettings,
 	ContentTypesCreate,
 	ContentTypesDetailCC,
 	ContentTypesDetailSettings,
@@ -44,7 +46,6 @@ const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 			{Core.routes.render(route.routes as ModuleRouteConfig[], {
 				basePath: match.url,
 				routes: route.routes,
-				tenantId: tenantId,
 			})}
 		</TenantContext.Provider>
 	);
@@ -69,8 +70,32 @@ Core.routes.register({
 					component: ContentTypesDetailSettings,
 				},
 				{
+					path: MODULE_PATHS.createCCNew,
+					component: ContentTypesCCNew,
+					routes: [
+						{
+							path: MODULE_PATHS.createCCNewSettings,
+							component: ContentTypesCCSettings,
+						},
+						{
+							path: MODULE_PATHS.createCCNewConfig,
+							component: ContentTypesCCForm,
+						},
+						{
+							path: MODULE_PATHS.createCCNewValidation,
+							component: ContentTypesCCForm,
+						},
+						// TODO: add new CC defaults view
+						// {
+						// 	path: MODULE_PATHS.createCCNewDefaults,
+						// 	component: () => null,
+						// },
+					],
+				},
+				{
 					path: MODULE_PATHS.createCC,
 					component: ContentTypesDetailCC,
+					exact: true,
 				},
 				{
 					path: MODULE_PATHS.createSites,
@@ -79,16 +104,39 @@ Core.routes.register({
 			],
 		},
 		{
-			path: MODULE_PATHS.createCCnew,
-			component: ContentTypesCCNew,
-		},
-		{
 			path: MODULE_PATHS.detail,
 			component: ContentTypesUpdate,
 			routes: [
 				{
+					path: MODULE_PATHS.detailCCEdit,
+					component: ContentTypesCCNew,
+					routes: [
+						{
+							path: MODULE_PATHS.detailCCEditSettings,
+							component: ContentTypesCCSettings,
+						},
+						{
+							path: MODULE_PATHS.detailCCEditConfig,
+							component: ContentTypesCCForm,
+						},
+						{
+							path: MODULE_PATHS.detailCCEditValidation,
+							component: ContentTypesCCForm,
+						},
+						// TODO: add edit CC defaults view
+						// {
+						// 	path: MODULE_PATHS.detailCCEditDefaults,
+						// 	component: () => null,
+						// },
+					],
+				},
+				{
 					path: MODULE_PATHS.detailSettings,
 					component: ContentTypesDetailSettings,
+				},
+				{
+					path: MODULE_PATHS.detailCC,
+					component: ContentTypesDetailCC,
 				},
 				{
 					path: MODULE_PATHS.detailCC,

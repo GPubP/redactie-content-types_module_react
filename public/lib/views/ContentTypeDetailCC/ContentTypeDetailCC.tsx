@@ -37,7 +37,12 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	 * Methods
 	 */
 	const onCCFormSubmit = ({ name, fieldType }: any): void => {
-		navigate(`${MODULE_PATHS.createCCnew}?${stringify({ name, fieldType })}`);
+		console.log(
+			'--- navigate',
+			`${MODULE_PATHS.createCCNew}\\?${stringify({ name, fieldType })}`
+		);
+
+		navigate(`${MODULE_PATHS.createCCNew}\\?${stringify({ name, fieldType })}`);
 	};
 
 	/**

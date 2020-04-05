@@ -1,10 +1,21 @@
 import { api } from '../api';
 
-import { FieldTypesSchema } from './fieldTypes.service.types';
+import { FieldTypeSchema, FieldTypeSchemaData, FieldTypesSchema } from './fieldTypes.service.types';
 
 export const getFieldTypes = async (): Promise<FieldTypesSchema | null> => {
 	try {
 		const response: any = await api.get('field-types').json();
+
+		return response.data;
+	} catch (err) {
+		console.error(err);
+		return null;
+	}
+};
+
+export const getFieldType = async (uuid: string): Promise<FieldTypeSchemaData | null> => {
+	try {
+		const response: FieldTypeSchema = await api.get(`field-types/${uuid}`).json();
 
 		return response.data;
 	} catch (err) {
