@@ -1,7 +1,6 @@
 import { ContentTypeCreate } from './services/contentTypes';
 import { FieldTypeSchemaData } from './services/fieldTypes';
 
-
 export const generateEmptyContentType = (): ContentTypeCreate => ({
 	fields: [],
 	meta: {

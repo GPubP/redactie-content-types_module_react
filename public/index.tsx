@@ -25,13 +25,11 @@ const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 }) => {
 	// if path is /content-types, redirect to /content-types/beheer
 	if (/\/content-types$/.test(location.pathname)) {
-		console.log('redirect 1');
 		return <Redirect to={`/${tenantId}${MODULE_PATHS.admin}`} />;
 	}
 
 	// if path is /content-types/aanmaken, redirect to /content-types/aanmaken/instellingen
 	if (/\/content-types\/aanmaken$/.test(location.pathname)) {
-		console.log('redirect 2');
 		return <Redirect to={`/${tenantId}${MODULE_PATHS.createSettings}`} />;
 	}
 

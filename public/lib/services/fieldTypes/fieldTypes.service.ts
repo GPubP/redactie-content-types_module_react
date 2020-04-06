@@ -1,6 +1,6 @@
 import { api } from '../api';
 
-import { FieldTypeSchema, FieldTypeSchemaData, FieldTypesSchema } from './fieldTypes.service.types';
+import { FieldTypeSchema, FieldTypeSchemaData } from './fieldTypes.service.types';
 
 export const getFieldTypes = async (): Promise<FieldTypeSchema[] | null> => {
 	try {

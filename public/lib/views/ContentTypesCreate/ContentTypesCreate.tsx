@@ -66,7 +66,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	 * Methods
 	 */
 	//  Don't show tabs on new CC page
-	const showTabs = /\/nieuw\//.test(location.pathname) === false;
+	const showTabs = !/\/nieuw\//.test(location.pathname);
 
 	/**
 	 * Render
@@ -86,7 +86,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	return (
 		<>
 			<ContextHeader
-				tabs={activeTabs.slice(0, 1)}
+				tabs={showTabs ? activeTabs.slice(0, 1) : undefined}
 				linkProps={(props: any) => ({
 					...props,
 					to: generatePath(`${MODULE_PATHS.create}/${props.href}`),

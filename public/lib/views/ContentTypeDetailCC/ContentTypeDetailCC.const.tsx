@@ -28,7 +28,7 @@ export const CONTENT_TYPE_COLUMNS = [
 		value: 'label',
 	},
 	{
-		label: 'type',
+		label: 'Type',
 		value: 'fieldType',
 	},
 	{

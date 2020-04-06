@@ -23,15 +23,14 @@ const ContentTypeSettings: FC<ContenTypeDetailSettingsProps> = ({ contentType, o
 		navigate(MODULE_PATHS.root);
 	};
 
+	const onFormSubmit = (value: ContentTypeSchema): void => {
+		onSubmit({ ...contentType.meta, ...value.meta }, CONTENT_TYPE_DETAIL_TAB_MAP.settings);
+	};
+
 	return (
 		<Formik
 			initialValues={contentType}
-			onSubmit={(value: ContentTypeSchema) =>
-				onSubmit(
-					{ ...contentType.meta, ...value.meta },
-					CONTENT_TYPE_DETAIL_TAB_MAP.settings
-				)
-			}
+			onSubmit={onFormSubmit}
 			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA}
 		>
 			{({ submitForm, values }) => (
@@ -70,7 +69,7 @@ const ContentTypeSettings: FC<ContenTypeDetailSettingsProps> = ({ contentType, o
 							</div>
 						</div>
 					</div>
-					<ActionBar show>
+					<ActionBar isOpen>
 						<ActionBarContentSection>
 							<div className="u-wrapper">
 								<Button

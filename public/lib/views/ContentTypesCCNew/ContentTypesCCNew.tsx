@@ -3,8 +3,7 @@ import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-c
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import kebabCase from 'lodash.kebabcase';
 import { parse } from 'query-string';
-import { clone } from 'ramda';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useState } from 'react';
 
 import { DataLoader, NavList } from '../../components';
 import { MODULE_PATHS } from '../../contentTypes.const';
@@ -90,9 +89,9 @@ const ContentTypesCCNew: FC<ContentTypesCCNewProps> = ({
 						</div>
 					</div>
 				</div>
-				<ActionBar show>
+				<ActionBar isOpen>
 					<ActionBarContentSection>
-						<Button onClick={onCTSubmit} type="success">
+						<Button className="u-margin-right-xs" onClick={onCTSubmit} type="success">
 							Bewaar
 						</Button>
 						<Button onClick={onCTSubmit} outline>

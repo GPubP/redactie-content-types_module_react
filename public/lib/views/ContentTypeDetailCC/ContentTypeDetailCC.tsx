@@ -1,7 +1,6 @@
 import { Button, Card } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
-import { stringify } from 'query-string';
 import { pathOr } from 'ramda';
 import React, { FC, ReactElement } from 'react';
 
@@ -125,10 +124,10 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 					<div className="col-xs-9">{renderDetail()}</div>
 				</div>
 			</div>
-			<ActionBar show>
+			<ActionBar isOpen>
 				<ActionBarContentSection>
 					<div className="u-wrapper">
-						<Button className="u-margin-right" type="success">
+						<Button className="u-margin-right-xs" type="success">
 							Bewaar
 						</Button>
 						<Button outline>Annuleer</Button>
