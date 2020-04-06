@@ -1,12 +1,14 @@
-import { Button } from '@acpaas-ui/react-components';
+import { Button, TextField } from '@acpaas-ui/react-components';
 import {
 	ContextHeader,
 	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
+	Filter,
+	FilterBody,
 	Table,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useRef, useState } from 'react';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
 import { BREADCRUMB_OPTIONS } from '../../contentTypes.const';
@@ -115,6 +117,31 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ tenantId, history })
 					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
+			<div className="u-margin-top">
+				<Filter
+					title="Filter"
+					noFilterText="Geen filters beschikbaar"
+					onConfirm={() => console.log('Filter verwijderen')}
+					onClear={() => console.log('Filter verwijderen')}
+					confirmText="Toepassen"
+					cleanText="Alles leegmaken"
+					onFilterRemove={() => console.log('Filter verwijderen')}
+				>
+					<FilterBody>
+						<div className="col-xs-8">
+							<TextField
+								label="Naam"
+								id="naam"
+								name="naam"
+								className="textfield-class"
+								placeholder="Zoeken op naam"
+								onChange={(event: any) => console.log(event.target.value)}
+								iconright="search"
+							/>
+						</div>
+					</FilterBody>
+				</Filter>
+			</div>
 			<DataLoader loadingState={loadingState} render={renderOverview} />
 		</>
 	);

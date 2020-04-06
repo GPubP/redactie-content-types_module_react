@@ -9,7 +9,7 @@
 	"scripts": {
 		"build:types": "tsc --emitDeclarationOnly",
 		"build": "npm run build:types && webpack --env.prod",
-		"build:w": "npm run build:types && webpack -w --env",
+		"build:w": "npm run build:types && webpack -w --env.prod",
 		"build:analyse": "npm run build:types && webpack --env.analyse",
 		"start": "concurrently --kill-others \"npm run build:w\" \"cd demo && npm run start\"",
 		"lint:scss": "stylelint public/**/*.scss --allow-empty-input",
@@ -27,12 +27,12 @@
 	"keywords": [
 		"Redactie",
 		"React",
-		"Sites",
+		"Content-Types",
 		"Module"
 	],
 	"devDependencies": {
-		"@acpaas-ui/react-components": "3.4.1",
-		"@acpaas-ui/react-editorial-components": "0.0.1-5",
+		"@acpaas-ui/react-components": "4.0.0",
+		"@acpaas-ui/react-editorial-components": "0.0.1-7",
 		"@babel/core": "7.8.3",
 		"@babel/preset-env": "7.8.3",
 		"@babel/preset-react": "7.8.3",
