@@ -6,9 +6,10 @@ import { MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesRouteProps } from './lib/contentTypes.types';
 import { TenantContext } from './lib/context';
 import {
-	ContentTypesCCForm,
+	ContentTypesCCConfig,
 	ContentTypesCCNew,
 	ContentTypesCCSettings,
+	ContentTypesCCValidation,
 	ContentTypesCreate,
 	ContentTypesDetailCC,
 	ContentTypesDetailSettings,
@@ -23,6 +24,8 @@ const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 	location,
 	tenantId,
 }) => {
+	const uuidRegex = '\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b';
+
 	// if path is /content-types, redirect to /content-types/beheer
 	if (/\/content-types$/.test(location.pathname)) {
 		return <Redirect to={`/${tenantId}${MODULE_PATHS.admin}`} />;
@@ -33,18 +36,12 @@ const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 		return <Redirect to={`/${tenantId}${MODULE_PATHS.createSettings}`} />;
 	}
 
-	if (
-		/\/content-types\/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b$/.test(
-			location.pathname
-		)
-	) {
+	if (new RegExp(`/content-types/${uuidRegex}$`).test(location.pathname)) {
 		return <Redirect to={`${location.pathname}/instellingen`} />;
 	}
 
 	if (
-		/\/content-types\/\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b\/content-componenten\/nieuw$/.test(
-			location.pathname
-		)
+		new RegExp(`/content-types/${uuidRegex}/content-componenten/nieuw$`).test(location.pathname)
 	) {
 		return <Redirect to={`${location.pathname}/instellingen${location.search}`} />;
 	}
@@ -93,11 +90,11 @@ Core.routes.register({
 						},
 						{
 							path: MODULE_PATHS.detailCCNewConfig,
-							component: ContentTypesCCForm,
+							component: ContentTypesCCConfig,
 						},
 						{
 							path: MODULE_PATHS.detailCCNewValidation,
-							component: ContentTypesCCForm,
+							component: ContentTypesCCValidation,
 						},
 						// TODO: add edit CC defaults view
 						// {
@@ -116,11 +113,11 @@ Core.routes.register({
 						},
 						{
 							path: MODULE_PATHS.detailCCEditConfig,
-							component: ContentTypesCCForm,
+							component: ContentTypesCCConfig,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditValidation,
-							component: ContentTypesCCForm,
+							component: ContentTypesCCValidation,
 						},
 						// TODO: add edit CC defaults view
 						// {

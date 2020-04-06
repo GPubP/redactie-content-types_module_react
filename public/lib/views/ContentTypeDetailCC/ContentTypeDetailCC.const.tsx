@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { array, object, string } from 'yup';
 
 import { StatusIcon } from '../../components';
@@ -26,6 +27,11 @@ export const CONTENT_TYPE_COLUMNS = [
 	{
 		label: 'Naam',
 		value: 'label',
+		component(value: string) {
+			console.log(value);
+
+			// return <Link>value</Link>
+		},
 	},
 	{
 		label: 'Type',

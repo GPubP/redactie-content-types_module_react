@@ -13,7 +13,7 @@ const radioGroup = [
 const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) => {
 	return (
 		<Formik initialValues={initialValues} onSubmit={onSubmit}>
-			{() => {
+			{({ values }) => {
 				return (
 					<>
 						<h6>Instellingen</h6>
@@ -34,7 +34,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 
 								<div className="col-xs-12 col-md-4 u-margin-top u-margin-bottom">
 									<div>
-										Systeemnaam: <b>{kebabCase()}</b>
+										Systeemnaam: <b>{kebabCase(values.label)}</b>
 									</div>
 								</div>
 							</div>
@@ -50,16 +50,24 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 						</div>
 						<div className="row u-margin-top">
 							<div className="col-xs-12 col-md-8">
-								<Field as={RadioGroup} name="multiple" options={radioGroup} />
+								<Field
+									as={RadioGroup}
+									name="generalConfig.isMultiple"
+									options={radioGroup}
+								/>
 								<div className="u-text-light u-margin-top-xs">
-									Geef de redacteur een richtlijn voor het ingeven van deze
-									content component.
+									Bepaal hoeveel items van dit component er aangemaakt kunnen
+									worden
 								</div>
 							</div>
 						</div>
 						<div className="row u-margin-top">
 							<div className="col-xs-12 col-md-8">
-								<Field as={Checkbox} label="Verborgen" />
+								<Field
+									as={Checkbox}
+									name="generalConfig.isQueryable"
+									label="Verborgen"
+								/>
 								<div className="u-text-light">
 									Bepaal of deze content component zichtbaar mag zijn. Opgelet,
 									content componenten die een standaard waarde krijgen en als
@@ -70,7 +78,11 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 						</div>
 						<div className="row u-margin-top">
 							<div className="col-xs-12 col-md-8">
-								<Field as={Checkbox} label="Aanpasbaar" />
+								<Field
+									as={Checkbox}
+									name="generalConfig.isTranslate"
+									label="Aanpasbaar"
+								/>
 								<div className="u-text-light">
 									Bepaal of deze content component aangepast mag worden door de
 									redacteur.
