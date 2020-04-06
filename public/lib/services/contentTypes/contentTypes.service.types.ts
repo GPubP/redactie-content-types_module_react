@@ -53,3 +53,14 @@ export interface ContentTypeSchema {
 export interface ContentTypesSchema {
 	data: ContentTypeSchema[];
 }
+
+export interface ContentTypeCreate {
+	fields: ContentTypeFieldSchema[];
+	meta: {
+		label: string;
+		description: string;
+		safeLabel: string;
+		// TODO: fix in backend that this isn't needed
+		deleted: boolean;
+	};
+}

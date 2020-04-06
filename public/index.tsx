@@ -67,14 +67,6 @@ Core.routes.register({
 					path: MODULE_PATHS.createSettings,
 					component: ContentTypesDetailSettings,
 				},
-				{
-					path: MODULE_PATHS.createCC,
-					component: ContentTypesDetailCC,
-				},
-				{
-					path: MODULE_PATHS.createSites,
-					component: ContentTypesDetailSites,
-				},
 			],
 		},
 		{

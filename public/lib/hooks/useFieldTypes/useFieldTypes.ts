@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 
-import { FieldTypesSchema } from '../../services/fieldTypes';
+import { FieldTypeSchema } from '../../services/fieldTypes';
 import { getFieldTypes } from '../../services/fieldTypes/fieldTypes.service';
 import { LoadingState } from '../../types';
 
-const useFieldTypes = (): [LoadingState, FieldTypesSchema | null] => {
+const useFieldTypes = (): [LoadingState, FieldTypeSchema[] | null] => {
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [fieldTypes, setFieldTypes] = useState<FieldTypesSchema | null>(null);
+	const [fieldTypes, setFieldTypes] = useState<FieldTypeSchema[] | null>(null);
 
 	useEffect(() => {
 		setLoadingState(LoadingState.Loading);
