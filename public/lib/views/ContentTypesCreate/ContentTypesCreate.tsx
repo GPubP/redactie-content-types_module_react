@@ -18,7 +18,7 @@ import {
 	useNavigate,
 	useRoutesBreadcrumbs,
 } from '../../hooks';
-import { ContentTypeSchema, ContenTypeMetaSchema } from '../../services/contentTypes';
+import { ContentTypeMetaSchema, ContentTypeSchema } from '../../services/contentTypes';
 import { LoadingState, Tab } from '../../types';
 
 const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes, tenantId }) => {
@@ -55,7 +55,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 				createContentType({
 					...generateEmptyContentType(),
 					meta: {
-						...(sectionData as ContenTypeMetaSchema),
+						...(sectionData as ContentTypeMetaSchema),
 					},
 				} as ContentTypeSchema);
 				break;
