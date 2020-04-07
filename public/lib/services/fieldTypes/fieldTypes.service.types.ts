@@ -30,6 +30,7 @@ export interface FieldTypeSchemaMeta {
 }
 
 export interface FieldTypeSchema {
+	_id?: string;
 	uuid: string;
 	data: FieldTypeSchemaData;
 	meta: FieldTypeSchemaMeta;

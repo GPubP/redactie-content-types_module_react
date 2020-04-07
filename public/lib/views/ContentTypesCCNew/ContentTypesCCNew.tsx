@@ -20,7 +20,7 @@ const ContentTypesCCNew: FC<ContentTypesCCNewProps> = ({
 	routes,
 	onSubmit,
 }) => {
-	const { fieldType: fieldTypeUuid, name } = parse(location.search);
+	const { fieldType: fieldTypeUuid, id: fieldTypeId, name } = parse(location.search);
 	const initalFieldValues = {
 		name: kebabCase((name as string | undefined) || ''),
 		label: (name as string | undefined) || '',
@@ -51,7 +51,7 @@ const ContentTypesCCNew: FC<ContentTypesCCNewProps> = ({
 	};
 
 	const onCTSubmit = (): void => {
-		const contentTypeField = { ...newFieldType, fieldType: fieldTypeUuid };
+		const contentTypeField = { ...newFieldType, fieldType: fieldTypeId };
 
 		onSubmit(contentTypeField, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
 		navigateToOverview();
@@ -64,7 +64,7 @@ const ContentTypesCCNew: FC<ContentTypesCCNewProps> = ({
 	/**
 	 * Render
 	 */
-	const renderChildRoutes = (): any => {
+	const renderChildRoutes = (): ReactElement | null => {
 		const activeRoute =
 			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detailCCNew}`) || null;
 

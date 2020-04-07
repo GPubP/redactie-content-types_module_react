@@ -1,7 +1,7 @@
 import { Button, Card } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
-import { pathOr } from 'ramda';
+import { pathOr, propOr } from 'ramda';
 import React, { FC, ReactElement } from 'react';
 
 import { FormCTNewCC, NavList } from '../../components';
@@ -36,9 +36,11 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	/**
 	 * Methods
 	 */
-	const onCCFormSubmit = ({ name, fieldType }: any): void => {
-		navigate(`${MODULE_PATHS.detailCCNew}?fieldType=:fieldType&name=:name`, {
+	const onCCFormSubmit = ({ name, fieldType }: NewCCFormState): void => {
+		const currentFieldType = fieldTypes.find(ft => ft.uuid === fieldType);
+		navigate(`${MODULE_PATHS.detailCCNew}?fieldType=:fieldType&id=:id&name=:name`, {
 			contentTypeUuid: initialState.uuid,
+			id: propOr('', '_id', currentFieldType),
 			name,
 			fieldType,
 		});

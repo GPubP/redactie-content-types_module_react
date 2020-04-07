@@ -1,7 +1,7 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import { omit } from 'ramda';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
@@ -103,7 +103,11 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	/**
 	 * Render
 	 */
-	const renderChildRoutes = (): any => {
+	const renderChildRoutes = (): ReactElement | null => {
+		if (!contentType) {
+			return null;
+		}
+
 		const activeRoute =
 			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detail}`) || null;
 
