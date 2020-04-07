@@ -3,12 +3,13 @@ import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-c
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import kebabCase from 'lodash.kebabcase';
 import { parse } from 'query-string';
-import React, { FC, ReactElement, useState } from 'react';
+import { equals } from 'ramda';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader, NavList } from '../../components';
-import { MODULE_PATHS } from '../../contentTypes.const';
-import { generateCCFormState } from '../../contentTypes.helpers';
+import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
 import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
+import { FieldTypeSchemaData } from '../../services/fieldTypes';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCNew.const';
 import { ContentTypesCCNewProps } from './ContentTypesCCNew.types';
@@ -21,28 +22,41 @@ const ContentTypesCCNew: FC<ContentTypesCCNewProps> = ({
 }) => {
 	const { fieldType: fieldTypeUuid, name } = parse(location.search);
 	const initalFieldValues = {
-		name: (name as string | undefined) || '',
-		label: kebabCase((name as string | undefined) || ''),
+		name: kebabCase((name as string | undefined) || ''),
+		label: (name as string | undefined) || '',
 	};
 
 	/**
 	 * Hooks
 	 */
-	const [fieldFormState, setFieldFormState] = useState(generateCCFormState(initalFieldValues));
-	const [loadingState, fieldType] = useFieldType(fieldTypeUuid as string | undefined);
+	const [newFieldType, setNewFieldType] = useState<FieldTypeSchemaData | null>(null);
+	const [loadingState, fieldType] = useFieldType(
+		fieldTypeUuid as string | undefined,
+		initalFieldValues
+	);
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
+
+	useEffect(() => {
+		if (fieldType && !newFieldType) {
+			setNewFieldType(fieldType);
+		}
+	}, [fieldType, newFieldType]);
 
 	/**
 	 * Methods
 	 */
-	const onCTSubmit = (): void => {
-		onSubmit({
-			...contentType,
-			fields: [...contentType.fields, fieldFormState],
-		});
-		// Return to CC overview
+	const navigateToOverview = (): void => {
 		navigate(MODULE_PATHS.detailCC, { contentTypeUuid: contentType.uuid });
+	};
+
+	const onCTSubmit = (): void => {
+		onSubmit(newFieldType, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
+		navigateToOverview();
+	};
+
+	const onFieldTypeChange = (data: Partial<FieldTypeSchemaData>): void => {
+		setNewFieldType({ ...fieldType, ...data } as FieldTypeSchemaData);
 	};
 
 	/**
@@ -52,12 +66,16 @@ const ContentTypesCCNew: FC<ContentTypesCCNewProps> = ({
 		const activeRoute =
 			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detailCCNew}`) || null;
 
-		// TODO: add redirect to settings
+		const fieldTypeData = {
+			...fieldType,
+			label: (name as string | undefined) || '',
+			name: kebabCase((name as string | undefined) || ''),
+		} as FieldTypeSchemaData;
+
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-			fieldData: fieldType,
+			fieldTypeData,
 			routes: activeRoute?.routes,
-			fieldFormState: fieldFormState,
-			onSubmit: (data: any) => setFieldFormState(data),
+			onSubmit: onFieldTypeChange,
 		});
 	};
 
@@ -91,10 +109,15 @@ const ContentTypesCCNew: FC<ContentTypesCCNewProps> = ({
 				</div>
 				<ActionBar isOpen>
 					<ActionBarContentSection>
-						<Button className="u-margin-right-xs" onClick={onCTSubmit} type="success">
+						<Button
+							className="u-margin-right-xs"
+							disabled={equals(fieldType, newFieldType) || !newFieldType}
+							onClick={onCTSubmit}
+							type="success"
+						>
 							Bewaar
 						</Button>
-						<Button onClick={onCTSubmit} outline>
+						<Button onClick={navigateToOverview} outline>
 							Annuleer
 						</Button>
 					</ActionBarContentSection>

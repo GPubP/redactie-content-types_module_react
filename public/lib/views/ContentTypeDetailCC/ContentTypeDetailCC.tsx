@@ -30,7 +30,7 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	/**
 	 * Hooks
 	 */
-	const { navigate } = useNavigate();
+	const { generatePath, navigate } = useNavigate();
 
 	/**
 	 * Methods
@@ -53,6 +53,10 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	}): ReactElement => {
 		const contentTypeRows: ContentTypeDetailCCRow[] = (fields || []).map(
 			(cc: ContentTypeFieldSchema) => ({
+				path: generatePath(MODULE_PATHS.detailCCEdit, {
+					contentTypeUuid: initialState.uuid,
+					ccUuid: cc.uuid,
+				}),
 				label: cc.label,
 				name: cc.name,
 				fieldType: pathOr('error', ['fieldType', 'data', 'label'])(cc),
@@ -69,7 +73,7 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 				columns={CONTENT_TYPE_COLUMNS}
 				rows={contentTypeRows}
 				totalValues={pathOr(0, ['fields', 'length'])(initialState)}
-			></Table>
+			/>
 		);
 	};
 

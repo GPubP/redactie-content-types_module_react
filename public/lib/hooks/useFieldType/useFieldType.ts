@@ -3,7 +3,10 @@ import { useEffect, useState } from 'react';
 import { FieldTypeSchemaData, getFieldType } from '../../services/fieldTypes';
 import { LoadingState } from '../../types';
 
-const useFieldType = (uuid: string | undefined): [LoadingState, FieldTypeSchemaData | null] => {
+const useFieldType = (
+	uuid: string | undefined,
+	overrides: Partial<FieldTypeSchemaData> = {}
+): [LoadingState, FieldTypeSchemaData | null] => {
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
 	const [fieldType, setFieldType] = useState<FieldTypeSchemaData | null>(null);
 
@@ -19,7 +22,7 @@ const useFieldType = (uuid: string | undefined): [LoadingState, FieldTypeSchemaD
 		getFieldType(uuid)
 			.then(result => {
 				if (result) {
-					setFieldType(result);
+					setFieldType({ ...result, ...overrides });
 				}
 
 				setLoadingState(LoadingState.Loaded);
@@ -27,7 +30,7 @@ const useFieldType = (uuid: string | undefined): [LoadingState, FieldTypeSchemaD
 			.catch(() => {
 				setLoadingState(LoadingState.Error);
 			});
-	}, [fieldType, loadingState, uuid]);
+	}, [fieldType, loadingState, overrides, uuid]);
 
 	return [loadingState, fieldType];
 };

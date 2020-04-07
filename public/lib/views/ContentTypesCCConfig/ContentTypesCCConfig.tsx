@@ -2,27 +2,24 @@ import { FieldSchema, FormsAPI, FormSchema } from '@redactie/form-renderer-modul
 import Core from '@redactie/redactie-core';
 import React, { FC } from 'react';
 
-import { ContentTypesCCConfigProps } from './ContentTypesCCConfig.types';
+import { ContentTypesCCNewRouteProps } from '../../contentTypes.types';
 
-const ContentTypesCCConfig: FC<ContentTypesCCConfigProps> = ({ fieldData }) => {
+const ContentTypesCCConfig: FC<ContentTypesCCNewRouteProps> = ({ fieldTypeData, onSubmit }) => {
 	/**
 	 * Methods
 	 */
 	const formsAPI = Core.modules.getModuleAPI('forms-module') as FormsAPI;
 
-	// TODO: replace this with actual validation schema (fieldData.validationSchema)
+	// TODO: replace this with actual validation schema (fieldTypeData.validationSchema)
 	const validationSchema = {
 		$schema: 'http://json-schema.org/draft-07/schema#',
 		type: 'object',
 		properties: {},
 	};
 
-	const mapFormSchema = (): FormSchema => {
-		if (!fieldData?.formSchema) {
-			return { fields: [] };
-		}
-		return {
-			fields: fieldData.formSchema.fields.map(
+	const parsedFormSchema: FormSchema = {
+		fields:
+			fieldTypeData?.formSchema.fields.map(
 				(field): FieldSchema => ({
 					name: field.name,
 					module: field.fieldType?.data?.module,
@@ -31,23 +28,24 @@ const ContentTypesCCConfig: FC<ContentTypesCCConfigProps> = ({ fieldData }) => {
 					config: field.config,
 					dataType: 'string',
 				})
-			),
-		};
+			) || [],
 	};
 
 	/**
 	 * Render
 	 */
-
-	if (!formsAPI || !fieldData?.formSchema) {
-		return null;
+	if (!formsAPI || parsedFormSchema.fields.length === 0) {
+		return <p>Er zijn geen configuratie mogelijkheden</p>;
 	}
 
 	return (
 		<formsAPI.Form
-			schema={mapFormSchema()}
+			schema={parsedFormSchema}
 			validationSchema={validationSchema}
 			errorMessages={{}}
+			onSubmit={data => {
+				console.log(data);
+			}}
 		/>
 	);
 };

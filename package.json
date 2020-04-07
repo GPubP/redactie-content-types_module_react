@@ -28,7 +28,7 @@
 	"keywords": [
 		"Redactie",
 		"React",
-		"Sites",
+		"Content types",
 		"Module"
 	],
 	"devDependencies": {
@@ -46,6 +46,7 @@
 		"@testing-library/jest-dom": "5.0.2",
 		"@testing-library/react": "9.4.0",
 		"@types/jest": "24.9.1",
+		"@types/lodash.debounce": "^4.0.6",
 		"@types/lodash.kebabcase": "4.1.6",
 		"@types/ramda": "0.26.44",
 		"@types/react": "16.9.19",
@@ -89,6 +90,7 @@
 	"dependencies": {
 		"formik": "2.1.4",
 		"ky": "0.17.0",
+		"lodash.debounce": "^4.0.8",
 		"lodash.kebabcase": "4.1.1",
 		"query-string": "^6.11.1",
 		"ramda": "0.27.0",

@@ -1,17 +1,19 @@
 import React, { FC } from 'react';
 
 import { FormCCSettings } from '../../components';
+import { generateCCFormState } from '../../contentTypes.helpers';
+import { CCSettingsFormState, ContentTypesCCNewRouteProps } from '../../contentTypes.types';
 
-import { ContentTypesCCSettingsProps } from './ContentTypesCCSettings.types';
+const ContentTypesCCSettings: FC<ContentTypesCCNewRouteProps> = ({ fieldTypeData, onSubmit }) => {
+	const { label, name, componentName, dataType } = fieldTypeData;
 
-const ContentTypesCCSettings: FC<ContentTypesCCSettingsProps> = ({ fieldFormState, onSubmit }) => {
 	/**
 	 * Render
 	 */
 	return (
 		<FormCCSettings
-			initialValues={fieldFormState}
-			onSubmit={(data: any) => {
+			initialValues={generateCCFormState({ label, name, componentName, dataType })}
+			onSubmit={(data: CCSettingsFormState<boolean>) => {
 				onSubmit(data);
 			}}
 		/>

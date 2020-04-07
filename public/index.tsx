@@ -24,7 +24,7 @@ const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 	location,
 	tenantId,
 }) => {
-	const uuidRegex = '\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b';
+	const uuidRegex = '\\b[0-9a-f]{8}\\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\\b[0-9a-f]{12}\\b';
 
 	// if path is /content-types, redirect to /content-types/beheer
 	if (/\/content-types$/.test(location.pathname)) {

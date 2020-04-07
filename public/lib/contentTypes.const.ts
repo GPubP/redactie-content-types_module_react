@@ -4,13 +4,15 @@ export const BREADCRUMB_OPTIONS = {
 	excludePaths: ['/', '/:tenantId'],
 };
 
-export const CONTENT_TYPE_DETAIL_TAB_MAP: { [key: string]: Tab } = {
+export const CONTENT_TYPE_DETAIL_TAB_MAP: {
+	[key in 'settings' | 'contentComponents' | 'sites']: Tab;
+} = {
 	settings: {
 		name: 'Instellingen',
 		target: 'instellingen',
 		active: true,
 	},
-	contentComponenten: {
+	contentComponents: {
 		name: 'Content Componenten',
 		target: 'content-componenten',
 		active: false,
@@ -24,11 +26,11 @@ export const CONTENT_TYPE_DETAIL_TAB_MAP: { [key: string]: Tab } = {
 
 export const CONTENT_DETAIL_TABS: Tab[] = [
 	CONTENT_TYPE_DETAIL_TAB_MAP.settings,
-	CONTENT_TYPE_DETAIL_TAB_MAP.contentComponenten,
+	CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents,
 	CONTENT_TYPE_DETAIL_TAB_MAP.sites,
 ];
 
-const CC_EDIT_PATH = '/content-types/:contentTypeUuid/content-componenten/bewerken';
+const CC_EDIT_PATH = '/content-types/:contentTypeUuid/content-componenten/:ccUuid';
 const CC_NEW_PATH = '/content-types/:contentTypeUuid/content-componenten/nieuw';
 
 export const MODULE_PATHS = {

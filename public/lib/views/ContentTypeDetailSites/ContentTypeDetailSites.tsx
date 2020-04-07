@@ -103,7 +103,7 @@ const ContentTypeSites: FC<ContenTypeDetailCCProps> = ({ contentType }) => {
 				label: '',
 				disableSorting: true,
 				component(value: string, rowData: SitesRowData) {
-					const isActive = rowData.contentTypes.includes(contentType._id);
+					const isActive = (rowData.contentTypes || []).includes(contentType._id);
 					if (rowData.contentItems !== 0) {
 						return null;
 					}

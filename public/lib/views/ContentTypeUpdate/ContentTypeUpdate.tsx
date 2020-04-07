@@ -53,7 +53,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	 * Methods
 	 */
 	const getRequestBody = (
-		sectionData: ContentTypeFieldSchema[] | ContenTypeMetaSchema,
+		sectionData: ContentTypeFieldSchema | ContenTypeMetaSchema,
 		tab: Tab
 	): ContentTypeSchema | null => {
 		switch (tab.name) {
@@ -65,10 +65,10 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 						...(sectionData as ContenTypeMetaSchema),
 					},
 				} as ContentTypeSchema;
-			case CONTENT_TYPE_DETAIL_TAB_MAP.contentComponenten.name:
+			case CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents.name:
 				return {
 					...contentType,
-					fields: sectionData as ContentTypeFieldSchema[],
+					fields: [...(contentType?.fields || []), sectionData as ContentTypeFieldSchema],
 				} as ContentTypeSchema;
 			case CONTENT_TYPE_DETAIL_TAB_MAP.sites.name:
 				// TODO: move sites update here
@@ -79,7 +79,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	};
 
 	const updateCT = (
-		sectionData: ContentTypeFieldSchema[] | ContenTypeMetaSchema,
+		sectionData: ContentTypeFieldSchema | ContenTypeMetaSchema,
 		tab: Tab
 	): void => {
 		const newCT = getRequestBody(sectionData, tab);
@@ -106,7 +106,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 			contentType,
 			fieldTypes,
 			routes: activeRoute?.routes,
-			onSubmit: (sectionData: ContentTypeFieldSchema[] | ContenTypeMetaSchema, tab: Tab) =>
+			onSubmit: (sectionData: ContentTypeFieldSchema | ContenTypeMetaSchema, tab: Tab) =>
 				updateCT(sectionData, tab),
 		});
 	};

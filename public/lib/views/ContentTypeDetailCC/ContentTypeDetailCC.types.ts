@@ -11,6 +11,7 @@ export interface ContenTypeDetailCCProps extends RouteConfigComponentProps {
 }
 
 export interface ContentTypeDetailCCRow {
+	path: string;
 	label: string;
 	name: string;
 	fieldType: string;

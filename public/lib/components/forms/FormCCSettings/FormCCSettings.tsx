@@ -1,24 +1,55 @@
 import { Checkbox, RadioGroup, Textarea, TextField } from '@acpaas-ui/react-components';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
+import { is } from 'ramda';
 import React, { FC } from 'react';
+
+import { CCSettingsFormState } from '../../../contentTypes.types';
+import AutoSubmit from '../AutoSubmit/AutoSubmit';
 
 import { FormCCSettingsProps } from './FormCCSettings.types';
 
-const radioGroup = [
+const IS_MULTIPLE_OPTIONS = [
 	{ key: 'single', label: 'Eén item', value: 'false' },
 	{ key: 'multiple', label: 'Meerdere items', value: 'true' },
 ];
 
 const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) => {
+	/**
+	 * Methods
+	 */
+	const parseValues = (values: CCSettingsFormState): CCSettingsFormState<boolean> => {
+		const { isMultiple, isQueryable } = values.generalConfig;
+
+		console.log('is querable', isQueryable);
+
+		return {
+			...values,
+			generalConfig: {
+				...values.generalConfig,
+				isMultiple: is(String, isMultiple)
+					? isMultiple === 'true'
+					: (isMultiple as boolean),
+				isQueryable: isQueryable, // Invert value because of input label
+			},
+		};
+	};
+
+	/**
+	 * Render
+	 */
 	return (
-		<Formik initialValues={initialValues} onSubmit={onSubmit}>
+		<Formik
+			initialValues={initialValues}
+			onSubmit={formValues => onSubmit(parseValues(formValues))}
+		>
 			{({ values }) => {
 				return (
 					<>
+						<AutoSubmit />
 						<h6>Instellingen</h6>
 						<div className="row u-margin-top">
-							<div className="col-xs-12 col-md-8 row middle-xs">
+							<div className="col-xs-12 row middle-xs">
 								<div className="col-xs-12 col-md-8">
 									<Field
 										as={TextField}
@@ -32,7 +63,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 									</div>
 								</div>
 
-								<div className="col-xs-12 col-md-4 u-margin-top u-margin-bottom">
+								<div className="col-xs-12 col-md-4 u-margin-top-xs u-margin-bottom">
 									<div>
 										Systeemnaam: <b>{kebabCase(values.label)}</b>
 									</div>
@@ -40,7 +71,8 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 							</div>
 						</div>
 						<div className="row u-margin-top">
-							<div className="col-xs-12 col-md-8">
+							<div className="col-xs-12">
+								{/* TODO: needs extra prop for this field */}
 								<Field as={Textarea} label="Richtlijn (optioneel)" value="" />
 								<div className="u-text-light u-margin-top-xs">
 									Geef de redacteur een richtlijn voor het ingeven van deze
@@ -49,11 +81,11 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 							</div>
 						</div>
 						<div className="row u-margin-top">
-							<div className="col-xs-12 col-md-8">
+							<div className="col-xs-12">
 								<Field
 									as={RadioGroup}
 									name="generalConfig.isMultiple"
-									options={radioGroup}
+									options={IS_MULTIPLE_OPTIONS}
 								/>
 								<div className="u-text-light u-margin-top-xs">
 									Bepaal hoeveel items van dit component er aangemaakt kunnen
@@ -62,11 +94,14 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 							</div>
 						</div>
 						<div className="row u-margin-top">
-							<div className="col-xs-12 col-md-8">
+							<div className="col-xs-12">
 								<Field
 									as={Checkbox}
+									checked={!values.generalConfig.isQueryable} // Invert value
 									name="generalConfig.isQueryable"
 									label="Verborgen"
+									value={!values.generalConfig.isQueryable}
+									type="checkbox"
 								/>
 								<div className="u-text-light">
 									Bepaal of deze content component zichtbaar mag zijn. Opgelet,
@@ -77,11 +112,13 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 							</div>
 						</div>
 						<div className="row u-margin-top">
-							<div className="col-xs-12 col-md-8">
+							<div className="col-xs-12">
 								<Field
 									as={Checkbox}
+									checked={values.generalConfig.isTranslate}
 									name="generalConfig.isTranslate"
 									label="Aanpasbaar"
+									type="checkbox"
 								/>
 								<div className="u-text-light">
 									Bepaal of deze content component aangepast mag worden door de

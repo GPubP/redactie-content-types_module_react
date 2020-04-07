@@ -1,5 +1,5 @@
+import { CCSettingsFormState } from './contentTypes.types';
 import { ContentTypeCreate } from './services/contentTypes';
-import { FieldTypeSchemaData } from './services/fieldTypes';
 
 export const generateEmptyContentType = (): ContentTypeCreate => ({
 	fields: [],
@@ -12,16 +12,16 @@ export const generateEmptyContentType = (): ContentTypeCreate => ({
 });
 
 export const generateCCFormState = (
-	initialValues: Partial<FieldTypeSchemaData> = {}
-): Partial<FieldTypeSchemaData> => ({
+	initialValues: Partial<CCSettingsFormState> = {}
+): CCSettingsFormState => ({
 	label: '',
 	name: '',
 	componentName: '',
 	dataType: '',
 	generalConfig: {
-		isQueryable: false,
-		isTranslate: false,
-		isMultiple: false,
+		isQueryable: true,
+		isTranslate: true,
+		isMultiple: 'false', // Needs to be a string for radio button
 	},
 	...initialValues,
 });

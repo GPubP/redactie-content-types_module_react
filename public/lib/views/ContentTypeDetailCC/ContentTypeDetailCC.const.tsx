@@ -28,9 +28,13 @@ export const CONTENT_TYPE_COLUMNS = [
 		label: 'Naam',
 		value: 'label',
 		component(value: string) {
-			console.log(value);
-
-			// return <Link>value</Link>
+			return (
+				<>
+					{value}
+					{/* <Link to={rowData.path}>{value}</Link> */}
+					<p className="u-text-light">systeemnaam: []</p>
+				</>
+			);
 		},
 	},
 	{

@@ -1,6 +1,6 @@
-import { FieldTypeSchemaData } from '../../../services/fieldTypes';
+import { CCSettingsFormState } from '../../../contentTypes.types';
 
 export interface FormCCSettingsProps {
-	initialValues: Partial<FieldTypeSchemaData>;
+	initialValues: CCSettingsFormState;
 	onSubmit: (formValues: any) => void;
 }

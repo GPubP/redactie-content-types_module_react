@@ -5,25 +5,16 @@ import React, { FC } from 'react';
 import { ContentTypesCCValidationProps } from './ContentTypesCCValidation.types';
 
 const ContentTypesCCValidation: FC<ContentTypesCCValidationProps> = ({ fieldData }) => {
-	console.log(fieldData);
-
 	/**
 	 * Methods
 	 */
 	const formsAPI = Core.modules.getModuleAPI('forms-module') as FormsAPI;
 
-	const validationSchema = {
-		$schema: 'http://json-schema.org/draft-07/schema#',
-		type: 'object',
-		properties: {},
-	};
-
 	/**
 	 * Render
 	 */
-
 	if (!formsAPI || !fieldData?.formSchema) {
-		return null;
+		return <p>Er zijn geen validatie mogelijkheden</p>;
 	}
 
 	// return (
@@ -34,7 +25,8 @@ const ContentTypesCCValidation: FC<ContentTypesCCValidationProps> = ({ fieldData
 	// 	/>
 	// );
 
-	return null;
+	// TODO: show validation schema
+	return <p>Er zijn geen validatie mogelijkheden</p>;
 };
 
 export default ContentTypesCCValidation;
