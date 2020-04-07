@@ -3,10 +3,6 @@ import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import {
-	ContentTypeFieldSchema,
-	ContenTypeMetaSchema,
-} from '../../../../dist/lib/content-types.types.d';
 import DataLoader from '../../components/DataLoader/DataLoader';
 import {
 	CONTENT_DETAIL_TABS,
@@ -15,7 +11,11 @@ import {
 } from '../../contentTypes.const';
 import { ContentTypesRouteProps } from '../../contentTypes.types';
 import { useActiveTabs, useContentType, useFieldTypes, useRoutesBreadcrumbs } from '../../hooks';
-import { ContentTypeSchema } from '../../services/contentTypes';
+import {
+	ContentTypeFieldSchema,
+	ContentTypeSchema,
+	ContenTypeMetaSchema,
+} from '../../services/contentTypes';
 import { LoadingState, Tab } from '../../types';
 
 const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tenantId }) => {
