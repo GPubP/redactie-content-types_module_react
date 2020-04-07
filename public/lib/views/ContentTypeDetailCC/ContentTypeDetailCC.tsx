@@ -6,6 +6,7 @@ import React, { FC, ReactElement } from 'react';
 
 import { FormCTNewCC, NavList } from '../../components';
 import { MODULE_PATHS } from '../../contentTypes.const';
+import { NewCCFormState } from '../../contentTypes.types';
 import { useNavigate } from '../../hooks';
 import { ContentTypeFieldSchema } from '../../services/contentTypes';
 
@@ -103,7 +104,7 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 								<h5>Voeg een content componenten toe</h5>
 								<FormCTNewCC
 									fieldTypeOptions={fieldTypeOptions}
-									formState={{}}
+									formState={{ fieldType: '', name: '' }}
 									onSubmit={onCCFormSubmit}
 								/>
 							</div>

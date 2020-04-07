@@ -27,6 +27,9 @@ const ContentTypeSettings: FC<ContenTypeDetailSettingsProps> = ({ contentType, o
 		onSubmit({ ...contentType.meta, ...value.meta }, CONTENT_TYPE_DETAIL_TAB_MAP.settings);
 	};
 
+	/**
+	 * Render
+	 */
 	return (
 		<Formik
 			initialValues={contentType}

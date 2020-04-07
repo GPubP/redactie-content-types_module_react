@@ -4,6 +4,13 @@ import React, { FC } from 'react';
 
 import { FormCTNewCCProps } from './FormCTNewCC.types';
 
+const FIELD_TYPES_DEFAULT_OPTION = {
+	key: 'default-option',
+	label: 'Selecteer een content component',
+	value: '',
+	disabled: true,
+};
+
 const FormGeneralCC: FC<FormCTNewCCProps> = ({ fieldTypeOptions, formState, onSubmit }) => {
 	return (
 		<Formik initialValues={formState} onSubmit={onSubmit}>
@@ -13,9 +20,8 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({ fieldTypeOptions, formState, onSu
 						<div className="col-xs-6">
 							<Field
 								label="Selecteer"
-								placeholder="Selecteer een content component"
 								name="fieldType"
-								options={fieldTypeOptions}
+								options={[FIELD_TYPES_DEFAULT_OPTION, ...fieldTypeOptions]}
 								as={Select}
 							/>
 							<div className="u-text-light u-margin-top-xs">

@@ -13,6 +13,11 @@ export interface ContentTypesCCNewRouteProps extends ContentTypesRouteProps {
 	onSubmit: (data: any) => void;
 }
 
+export interface NewCCFormState {
+	fieldType: string;
+	name: string;
+}
+
 export interface CCSettingsFormState<IsMultiple = boolean | string> {
 	label: string;
 	name: string;
