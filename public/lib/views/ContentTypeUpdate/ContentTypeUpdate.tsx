@@ -1,5 +1,6 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
+import { omit } from 'ramda';
 import React, { FC, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
@@ -56,26 +57,31 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		sectionData: ContentTypeFieldSchema | ContenTypeMetaSchema,
 		tab: Tab
 	): ContentTypeSchema | null => {
+		let body = null;
 		switch (tab.name) {
 			case CONTENT_TYPE_DETAIL_TAB_MAP.settings.name:
-				return {
+				body = {
 					...contentType,
 					meta: {
 						...contentType?.meta,
 						...(sectionData as ContenTypeMetaSchema),
 					},
-				} as ContentTypeSchema;
+				};
+				break;
 			case CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents.name:
-				return {
+				body = {
 					...contentType,
 					fields: [...(contentType?.fields || []), sectionData as ContentTypeFieldSchema],
-				} as ContentTypeSchema;
+				};
+				break;
 			case CONTENT_TYPE_DETAIL_TAB_MAP.sites.name:
 				// TODO: move sites update here
 				return null;
 			default:
 				return null;
 		}
+		// Remove properties
+		return omit(['errorMessages', 'validateSchema'], body) as ContentTypeSchema;
 	};
 
 	const updateCT = (

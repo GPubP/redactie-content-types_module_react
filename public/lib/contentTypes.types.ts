@@ -16,8 +16,6 @@ export interface ContentTypesCCNewRouteProps extends ContentTypesRouteProps {
 export interface CCSettingsFormState<IsMultiple = boolean | string> {
 	label: string;
 	name: string;
-	componentName: string;
-	dataType: string;
 	generalConfig: {
 		isQueryable: boolean;
 		isTranslate: boolean;

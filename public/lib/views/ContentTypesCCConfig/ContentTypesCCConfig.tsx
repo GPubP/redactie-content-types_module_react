@@ -31,6 +31,10 @@ const ContentTypesCCConfig: FC<ContentTypesCCNewRouteProps> = ({ fieldTypeData, 
 			) || [],
 	};
 
+	const onFormSubmit = (data: any): void => {
+		onSubmit({ config: data });
+	};
+
 	/**
 	 * Render
 	 */
@@ -43,9 +47,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCNewRouteProps> = ({ fieldTypeData, 
 			schema={parsedFormSchema}
 			validationSchema={validationSchema}
 			errorMessages={{}}
-			onSubmit={data => {
-				console.log(data);
-			}}
+			onSubmit={onFormSubmit}
 		/>
 	);
 };

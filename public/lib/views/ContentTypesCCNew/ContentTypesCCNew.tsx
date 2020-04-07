@@ -51,7 +51,9 @@ const ContentTypesCCNew: FC<ContentTypesCCNewProps> = ({
 	};
 
 	const onCTSubmit = (): void => {
-		onSubmit(newFieldType, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
+		const contentTypeField = { ...newFieldType, fieldType: fieldTypeUuid };
+
+		onSubmit(contentTypeField, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
 		navigateToOverview();
 	};
 
@@ -66,14 +68,8 @@ const ContentTypesCCNew: FC<ContentTypesCCNewProps> = ({
 		const activeRoute =
 			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detailCCNew}`) || null;
 
-		const fieldTypeData = {
-			...fieldType,
-			label: (name as string | undefined) || '',
-			name: kebabCase((name as string | undefined) || ''),
-		} as FieldTypeSchemaData;
-
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-			fieldTypeData,
+			fieldTypeData: newFieldType,
 			routes: activeRoute?.routes,
 			onSubmit: onFieldTypeChange,
 		});

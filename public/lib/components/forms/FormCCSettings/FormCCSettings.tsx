@@ -21,8 +21,6 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 	const parseValues = (values: CCSettingsFormState): CCSettingsFormState<boolean> => {
 		const { isMultiple, isQueryable } = values.generalConfig;
 
-		console.log('is querable', isQueryable);
-
 		return {
 			...values,
 			generalConfig: {
@@ -30,7 +28,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 				isMultiple: is(String, isMultiple)
 					? isMultiple === 'true'
 					: (isMultiple as boolean),
-				isQueryable: isQueryable, // Invert value because of input label
+				isQueryable: !isQueryable, // Re-invert value for request
 			},
 		};
 	};
@@ -97,11 +95,9 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 							<div className="col-xs-12">
 								<Field
 									as={Checkbox}
-									checked={!values.generalConfig.isQueryable} // Invert value
+									checked={values.generalConfig.isQueryable}
 									name="generalConfig.isQueryable"
 									label="Verborgen"
-									value={!values.generalConfig.isQueryable}
-									type="checkbox"
 								/>
 								<div className="u-text-light">
 									Bepaal of deze content component zichtbaar mag zijn. Opgelet,
@@ -118,7 +114,6 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 									checked={values.generalConfig.isTranslate}
 									name="generalConfig.isTranslate"
 									label="Aanpasbaar"
-									type="checkbox"
 								/>
 								<div className="u-text-light">
 									Bepaal of deze content component aangepast mag worden door de

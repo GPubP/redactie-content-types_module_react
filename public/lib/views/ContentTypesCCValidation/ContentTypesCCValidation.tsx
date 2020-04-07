@@ -13,10 +13,11 @@ const ContentTypesCCValidation: FC<ContentTypesCCValidationProps> = ({ fieldData
 	/**
 	 * Render
 	 */
-	if (!formsAPI || !fieldData?.formSchema) {
+	if (!formsAPI || !fieldData?.validators.length) {
 		return <p>Er zijn geen validatie mogelijkheden</p>;
 	}
 
+	// TODO: show validation schema based on validators property
 	// return (
 	// 	<formsAPI.Form
 	// 		schema={}
@@ -25,7 +26,6 @@ const ContentTypesCCValidation: FC<ContentTypesCCValidationProps> = ({ fieldData
 	// 	/>
 	// );
 
-	// TODO: show validation schema
 	return <p>Er zijn geen validatie mogelijkheden</p>;
 };
 
