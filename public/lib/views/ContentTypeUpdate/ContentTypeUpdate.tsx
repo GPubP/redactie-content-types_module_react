@@ -1,7 +1,7 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
 import {
@@ -9,33 +9,29 @@ import {
 	CONTENT_TYPE_DETAIL_TAB_MAP,
 	MODULE_PATHS,
 } from '../../contentTypes.const';
-import { generateEmptyContentType } from '../../contentTypes.helpers';
 import { ContentTypesRouteProps } from '../../contentTypes.types';
+import { useActiveTabs, useContentType, useFieldTypes, useRoutesBreadcrumbs } from '../../hooks';
 import {
-	useActiveTabs,
-	useContentType,
-	useFieldTypes,
-	useNavigate,
-	useRoutesBreadcrumbs,
-} from '../../hooks';
-import { ContentTypeMetaSchema, ContentTypeSchema } from '../../services/contentTypes';
+	ContentTypeFieldSchema,
+	ContentTypeMetaSchema,
+	ContentTypeSchema,
+} from '../../services/contentTypes';
 import { LoadingState, Tab } from '../../types';
 
-const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes, tenantId }) => {
+const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tenantId }) => {
 	/**
 	 * Hooks
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const { contentTypeUuid } = useParams();
 	const breadcrumbs = useRoutesBreadcrumbs();
-	const [contentTypeLoadingState, contentType, , createContentType] = useContentType();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
+	const [contentTypeLoadingState, contentType, updateContentType] = useContentType(
+		contentTypeUuid
+	);
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, location.pathname);
-	const { generatePath, navigate } = useNavigate();
 
 	useEffect(() => {
-		if (contentType) {
-			navigate(MODULE_PATHS.detailCC, { contentTypeUuid: contentType.uuid });
-		}
 		if (
 			fieldTypesLoadingState !== LoadingState.Loading &&
 			contentTypeLoadingState !== LoadingState.Loading
@@ -44,22 +40,49 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [contentType, contentTypeLoadingState, fieldTypesLoadingState, navigate]);
+	}, [contentTypeLoadingState, fieldTypesLoadingState]);
 
 	/**
 	 * Methods
 	 */
-	const upsertCT = (sectionData: any, tab: Tab): void => {
+	const getRequestBody = (
+		sectionData: ContentTypeFieldSchema[] | ContentTypeMetaSchema,
+		tab: Tab
+	): ContentTypeSchema | null => {
 		switch (tab.name) {
 			case CONTENT_TYPE_DETAIL_TAB_MAP.settings.name:
-				createContentType({
-					...generateEmptyContentType(),
+				return {
+					...contentType,
 					meta: {
+						...contentType?.meta,
 						...(sectionData as ContentTypeMetaSchema),
 					},
-				} as ContentTypeSchema);
-				break;
+				} as ContentTypeSchema;
+			case CONTENT_TYPE_DETAIL_TAB_MAP.contentComponenten.name:
+				return {
+					...contentType,
+					fields: sectionData as ContentTypeFieldSchema[],
+				} as ContentTypeSchema;
+			case CONTENT_TYPE_DETAIL_TAB_MAP.sites.name:
+				// TODO: move sites update here
+				return null;
+			default:
+				return null;
 		}
+	};
+
+	const updateCT = (
+		sectionData: ContentTypeFieldSchema[] | ContentTypeMetaSchema,
+		tab: Tab
+	): void => {
+		const newCT = getRequestBody(sectionData, tab);
+
+		if (!newCT) {
+			return;
+		}
+
+		// TODO: fix with store integration
+		updateContentType(newCT);
 	};
 
 	/**
@@ -67,27 +90,28 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 	 */
 	const renderChildRoutes = (): any => {
 		const activeRoute =
-			routes.find(item => item.path === generatePath(MODULE_PATHS.create)) || null;
+			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detail}`) || null;
 
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
 			tenantId,
+			contentType,
 			fieldTypes,
 			routes: activeRoute?.routes,
-			contentType: contentType || generateEmptyContentType(),
-			onSubmit: (sectionData: any, tab: Tab) => upsertCT(sectionData, tab),
+			onSubmit: (sectionData: ContentTypeFieldSchema[] | ContentTypeMetaSchema, tab: Tab) =>
+				updateCT(sectionData, tab),
 		});
 	};
 
 	return (
 		<>
 			<ContextHeader
-				tabs={activeTabs.slice(0, 1)}
+				tabs={activeTabs}
 				linkProps={(props: any) => ({
 					...props,
 					to: props.href,
 					component: Link,
 				})}
-				title="Content type aanmaken"
+				title="Content type bewerken"
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
@@ -98,4 +122,4 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 	);
 };
 
-export default ContentTypesCreate;
+export default ContentTypesUpdate;
