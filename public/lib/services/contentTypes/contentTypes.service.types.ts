@@ -27,7 +27,7 @@ export interface ContentTypeFieldSchema {
 	};
 }
 
-export interface ContenTypeMetaSchema {
+export interface ContentTypeMetaSchema {
 	label: string;
 	safeLabel: string;
 	description: string;
@@ -47,7 +47,7 @@ export interface ContentTypeSchema {
 	_id: string;
 	uuid: string;
 	fields: ContentTypeFieldSchema[];
-	meta: ContenTypeMetaSchema;
+	meta: ContentTypeMetaSchema;
 }
 
 export interface ContentTypesSchema {

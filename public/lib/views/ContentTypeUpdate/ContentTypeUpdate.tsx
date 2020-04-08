@@ -13,8 +13,8 @@ import { ContentTypesRouteProps } from '../../contentTypes.types';
 import { useActiveTabs, useContentType, useFieldTypes, useRoutesBreadcrumbs } from '../../hooks';
 import {
 	ContentTypeFieldSchema,
+	ContentTypeMetaSchema,
 	ContentTypeSchema,
-	ContenTypeMetaSchema,
 } from '../../services/contentTypes';
 import { LoadingState, Tab } from '../../types';
 
@@ -46,7 +46,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 	 * Methods
 	 */
 	const getRequestBody = (
-		sectionData: ContentTypeFieldSchema[] | ContenTypeMetaSchema,
+		sectionData: ContentTypeFieldSchema[] | ContentTypeMetaSchema,
 		tab: Tab
 	): ContentTypeSchema | null => {
 		switch (tab.name) {
@@ -55,7 +55,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 					...contentType,
 					meta: {
 						...contentType?.meta,
-						...(sectionData as ContenTypeMetaSchema),
+						...(sectionData as ContentTypeMetaSchema),
 					},
 				} as ContentTypeSchema;
 			case CONTENT_TYPE_DETAIL_TAB_MAP.contentComponenten.name:
@@ -72,7 +72,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 	};
 
 	const updateCT = (
-		sectionData: ContentTypeFieldSchema[] | ContenTypeMetaSchema,
+		sectionData: ContentTypeFieldSchema[] | ContentTypeMetaSchema,
 		tab: Tab
 	): void => {
 		const newCT = getRequestBody(sectionData, tab);
@@ -97,7 +97,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 			contentType,
 			fieldTypes,
 			routes: activeRoute?.routes,
-			onSubmit: (sectionData: ContentTypeFieldSchema[] | ContenTypeMetaSchema, tab: Tab) =>
+			onSubmit: (sectionData: ContentTypeFieldSchema[] | ContentTypeMetaSchema, tab: Tab) =>
 				updateCT(sectionData, tab),
 		});
 	};
