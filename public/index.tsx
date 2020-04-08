@@ -51,13 +51,19 @@ const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
 
 Core.routes.register({
 	path: MODULE_PATHS.root,
-	label: 'Content types',
 	component: ContentTypesComponent,
+	navigation: {
+		label: 'Structuur',
+	},
 	exact: true,
 	routes: [
 		{
 			path: MODULE_PATHS.admin,
 			component: ContentTypesOverview,
+			navigation: {
+				label: 'Content types',
+				parentPath: MODULE_PATHS.root,
+			},
 		},
 		{
 			path: MODULE_PATHS.create,
