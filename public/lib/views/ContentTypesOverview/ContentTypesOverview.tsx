@@ -8,13 +8,13 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
+import { DataLoader } from '../../components';
 import FilterForm from '../../components/FilterForm/FilterForm';
 import { generateFilterFormState } from '../../content-types.helpers';
-import { ContentTypesRouteProps, FilterFormState } from '../../contentTypes.types';
-import useRoutes from '../../hooks/useRoutes/useRoutes';
-import { DataLoader } from '../../components';
 import { MODULE_PATHS } from '../../contentTypes.const';
+import { ContentTypesRouteProps, FilterFormState } from '../../contentTypes.types';
 import { useNavigate, useRoutesBreadcrumbs } from '../../hooks';
+import useRoutes from '../../hooks/useRoutes/useRoutes';
 import { ContentTypeSchema, getContentTypes } from '../../services/contentTypes';
 import { FilterItemSchema } from '../../services/filterItems/filterItems.service.types';
 import { LoadingState } from '../../types';
