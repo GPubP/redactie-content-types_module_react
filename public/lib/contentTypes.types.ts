@@ -5,3 +5,7 @@ export interface ContentTypesRouteProps extends RouteConfigComponentProps {
 	routes: ModuleRouteConfig[];
 	tenantId: string;
 }
+
+export interface FilterFormState {
+	name: string;
+}

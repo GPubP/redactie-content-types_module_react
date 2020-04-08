@@ -1,20 +1,22 @@
-import { Button, TextField } from '@acpaas-ui/react-components';
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { Button } from '@acpaas-ui/react-components';
 import {
 	ContextHeader,
 	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
-	Filter,
-	FilterBody,
 	Table,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import React, { FC, ReactElement, useEffect, useRef, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
+import FilterForm from '../../components/FilterForm/FilterForm';
+import { generateFilterFormState } from '../../content-types.helpers';
 import { BREADCRUMB_OPTIONS } from '../../contentTypes.const';
-import { ContentTypesRouteProps } from '../../contentTypes.types';
+import { ContentTypesRouteProps, FilterFormState } from '../../contentTypes.types';
 import useRoutes from '../../hooks/useRoutes/useRoutes';
 import { ContentTypeSchema, getContentTypes } from '../../services/contentTypes';
+import { FilterItemSchema } from '../../services/filterItems/filterItems.service.types';
 import { LoadingState } from '../../types';
 
 const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ tenantId, history }) => {
@@ -23,8 +25,16 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ tenantId, history })
 	 */
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
 	const [contentTypes, setContentTypes] = useState<ContentTypeSchema[] | null>(null);
+	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
+
+	const onSubmit = ({ name }: FilterFormState): void => {
+		const request = { name };
+		console.log(request);
+		setFilterItems(filterItems?.concat(request));
+		console.log(filterItems);
+	};
 
 	useEffect(() => {
 		getContentTypes()
@@ -118,29 +128,13 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = ({ tenantId, history })
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<div className="u-margin-top">
-				<Filter
-					title="Filter"
-					noFilterText="Geen filters beschikbaar"
-					onConfirm={() => console.log('Filter verwijderen')}
-					onClear={() => console.log('Filter verwijderen')}
-					confirmText="Toepassen"
-					cleanText="Alles leegmaken"
-					onFilterRemove={() => console.log('Filter verwijderen')}
-				>
-					<FilterBody>
-						<div className="col-xs-8">
-							<TextField
-								label="Naam"
-								id="naam"
-								name="naam"
-								className="textfield-class"
-								placeholder="Zoeken op naam"
-								onChange={(event: any) => console.log(event.target.value)}
-								iconright="search"
-							/>
-						</div>
-					</FilterBody>
-				</Filter>
+				<FilterForm
+					initialState={generateFilterFormState()}
+					onCancel={() => console.log('verwijder filters')}
+					onSubmit={onSubmit}
+					deleteActiveFilter={() => console.log('verwijder een filter')}
+					activeFilters={filterItems}
+				/>
 			</div>
 			<DataLoader loadingState={loadingState} render={renderOverview} />
 		</>

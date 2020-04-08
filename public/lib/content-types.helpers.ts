@@ -1,3 +1,4 @@
+import { FilterFormState } from './contentTypes.types';
 import { ContentTypeSchema } from './services/contentTypes';
 
 export const generateSettingsFormState = (): ContentTypeSchema => ({
@@ -18,4 +19,8 @@ export const generateSettingsFormState = (): ContentTypeSchema => ({
 		label: '',
 	},
 	uuid: 'e',
+});
+
+export const generateFilterFormState = (): FilterFormState => ({
+	name: '',
 });
