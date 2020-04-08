@@ -14,7 +14,6 @@ import { generateFilterFormState } from '../../content-types.helpers';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesRouteProps, FilterFormState } from '../../contentTypes.types';
 import { useNavigate, useRoutesBreadcrumbs } from '../../hooks';
-import useRoutes from '../../hooks/useRoutes/useRoutes';
 import { ContentTypeSchema, getContentTypes } from '../../services/contentTypes';
 import { FilterItemSchema } from '../../services/filterItems/filterItems.service.types';
 import { LoadingState } from '../../types';
@@ -26,13 +25,11 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
 	const [contentTypes, setContentTypes] = useState<ContentTypeSchema[] | null>(null);
 	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
-	const routes = useRoutes();
 	const { navigate } = useNavigate();
 	const breadcrumbs = useRoutesBreadcrumbs();
 
 	const onSubmit = ({ name }: FilterFormState): void => {
-		const request = { name };
-		console.log(request);
+		const request = { label: 'Naam', value: name };
 		setFilterItems(filterItems?.concat(request));
 		console.log(filterItems);
 	};

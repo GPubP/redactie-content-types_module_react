@@ -1,5 +1,6 @@
 export interface FilterItemSchema {
-	name: string;
+	label: string;
+	value: string;
 }
 
 export interface FilterItemsSchema {

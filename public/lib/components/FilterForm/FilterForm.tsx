@@ -10,46 +10,44 @@ const FilterForm: FC<FilterFormProps> = ({
 	initialState,
 	onCancel,
 	onSubmit,
+	activeFilters,
 	deleteActiveFilter,
 }) => {
-	const formRef = useRef(null) as any;
-
-	const handleSubmit = (): void => {
-		if (formRef.current) {
-			formRef.current.handleSubmit();
-		}
-	};
 	return (
 		<>
-			<Filter
-				title="Filter"
-				noFilterText="Geen filters beschikbaar"
-				onConfirm={handleSubmit}
-				onClear={onCancel}
-				confirmText="Toepassen"
-				cleanText="Alles leegmaken"
-				onFilterRemove={deleteActiveFilter}
+			<Formik
+				initialValues={initialState}
+				onSubmit={onSubmit}
+				validationSchema={FILTER_FORM_VALIDATION_SCHEMA}
 			>
-				<FilterBody>
-					<div className="col-xs-8">
-						<Formik
-							innerRef={formRef}
-							initialValues={initialState}
-							onSubmit={onSubmit}
-							validationSchema={FILTER_FORM_VALIDATION_SCHEMA}
+				{({ submitForm }) => {
+					return (
+						<Filter
+							title="Filter"
+							noFilterText="Geen filters beschikbaar"
+							onConfirm={submitForm}
+							onClear={onCancel}
+							confirmText="Toepassen"
+							cleanText="Alles leegmaken"
+							activeFilters={activeFilters}
+							onFilterRemove={deleteActiveFilter}
 						>
-							<Field
-								as={TextField}
-								label="Naam"
-								name="name"
-								required
-								placeholder="Zoeken op naam"
-								iconright="search"
-							/>
-						</Formik>
-					</div>
-				</FilterBody>
-			</Filter>
+							<FilterBody>
+								<div className="col-xs-8">
+									<Field
+										as={TextField}
+										label="Naam"
+										name="name"
+										required
+										placeholder="Zoeken op naam"
+										iconright="search"
+									/>
+								</div>
+							</FilterBody>
+						</Filter>
+					);
+				}}
+			</Formik>
 		</>
 	);
 };
