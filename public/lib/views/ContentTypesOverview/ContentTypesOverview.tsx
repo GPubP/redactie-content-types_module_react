@@ -14,7 +14,9 @@ import { generateFilterFormState } from '../../content-types.helpers';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesRouteProps, FilterFormState } from '../../contentTypes.types';
 import { useNavigate, useRoutesBreadcrumbs } from '../../hooks';
-import { ContentTypeSchema, getContentTypes } from '../../services/contentTypes';
+import useContentTypes from '../../hooks/useContentTypes/useContentTypes';
+import { ContentTypeSchema } from '../../services/contentTypes';
+import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../services/contentTypes/contentTypes.service.cont';
 import { FilterItemSchema } from '../../services/filterItems/filterItems.service.types';
 import { LoadingState } from '../../types';
 
@@ -22,30 +24,41 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	/**
 	 * Hooks
 	 */
-	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [contentTypes, setContentTypes] = useState<ContentTypeSchema[] | null>(null);
 	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
+	const [contentTypesSearchParams, setContentTypesSearchParams] = useState(
+		DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
+	);
 	const { navigate } = useNavigate();
 	const breadcrumbs = useRoutesBreadcrumbs();
-
-	const onSubmit = ({ name }: FilterFormState): void => {
-		const request = { label: 'Naam', value: name };
-		setFilterItems(filterItems?.concat(request));
-		console.log(filterItems);
-	};
+	const [loadingState, contentTypes] = useContentTypes(contentTypesSearchParams);
+	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 
 	useEffect(() => {
-		getContentTypes()
-			.then(data => {
-				if (data?.length) {
-					setContentTypes(data);
-				}
-				setLoadingState(LoadingState.Loaded);
-			})
-			.catch(() => {
-				setLoadingState(LoadingState.Error);
-			});
-	}, []);
+		if (loadingState === LoadingState.Loaded || loadingState === LoadingState.Error) {
+			setInitialLoading(LoadingState.Loaded);
+		}
+	}, [loadingState]);
+
+	/**
+	 * Functions
+	 */
+	const onSubmit = ({ name }: FilterFormState): void => {
+		//add item to filterItems for Taglist
+		const request = { label: name, value: name };
+		const setFilter = filterItems?.concat(request);
+		setFilterItems(setFilter);
+		//get value array from filterItems
+		const names = setFilter.map(item => {
+			return item['value'];
+		});
+		//turn array into encoded string
+		const str = names.toString();
+		//add encoded string to searchParams
+		setContentTypesSearchParams({
+			...contentTypesSearchParams,
+			search: str,
+		});
+	};
 
 	/**
 	 * Render
@@ -55,7 +68,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 			return null;
 		}
 
-		const contentTypesRows = contentTypes.map(contentType => ({
+		const contentTypesRows = contentTypes.data.map(contentType => ({
 			uuid: contentType.uuid,
 			name: contentType.meta.label,
 			description: contentType.meta.description,
@@ -124,11 +137,11 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					initialState={generateFilterFormState()}
 					onCancel={() => console.log('verwijder filters')}
 					onSubmit={onSubmit}
-					deleteActiveFilter={() => console.log('verwijder een filter')}
+					deleteActiveFilter={() => console.log('klik')}
 					activeFilters={filterItems}
 				/>
 			</div>
-			<DataLoader loadingState={loadingState} render={renderOverview} />
+			<DataLoader loadingState={initialLoading} render={renderOverview} />
 		</>
 	);
 };

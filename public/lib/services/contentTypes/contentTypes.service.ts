@@ -1,12 +1,30 @@
-import { api } from '../api';
+import api, { parseSearchParams } from '../api/api.service';
+import { SearchParams } from '../api/api.service.types';
 
-import { ContentTypeSchema, ContentTypesSchema } from './contentTypes.service.types';
+import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from './contentTypes.service.cont';
+import {
+	ContentTypeSchema,
+	ContentTypesDataSchema,
+	ContentTypesSchema,
+} from './contentTypes.service.types';
 
-export const getContentTypes = async (): Promise<ContentTypeSchema[] | null> => {
+export const getContentTypes = async (
+	searchParams: SearchParams = DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
+): Promise<ContentTypesDataSchema | null> => {
 	try {
-		const response: ContentTypesSchema = await api.get('content/content-types').json();
+		const response: ContentTypesSchema = await api
+			.get('content/content-types', {
+				searchParams: parseSearchParams(searchParams),
+			})
+			.json();
 
-		return response.data;
+		if (!response.data) {
+			throw new Error('Failed to get content-types');
+		}
+
+		return {
+			data: response.data,
+		};
 	} catch (err) {
 		console.error(err);
 		return null;

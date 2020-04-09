@@ -49,6 +49,9 @@ export interface ContentTypeSchema {
 	fields: ContentTypeFieldSchema[];
 	meta: ContentTypeMetaSchema;
 }
+export interface ContentTypesDataSchema {
+	data: ContentTypeSchema[];
+}
 
 export interface ContentTypesSchema {
 	data: ContentTypeSchema[];
