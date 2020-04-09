@@ -4,14 +4,14 @@ import React, { FC, useEffect, useState } from 'react';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
 import SiteStatus from '../../components/SiteStatus/SiteStatus';
+import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import useSites from '../../hooks/useSites/useSites';
 import { SiteSchema, SitesDetailRequestBody, updateSite } from '../../services/sites';
 import { LoadingState } from '../../types';
-import { ContenTypeDetailCCProps } from '../ContentTypeDetailCC/ContentTypeDetailCC.types';
 
 import { SitesRowData } from './ContentTypeSites.types';
 
-const ContentTypeSites: FC<ContenTypeDetailCCProps> = ({ contentType }) => {
+const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => {
 	const [sitesLoading, sites] = useSites();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 

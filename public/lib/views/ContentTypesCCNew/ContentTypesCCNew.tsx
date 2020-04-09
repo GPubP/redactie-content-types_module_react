@@ -8,6 +8,7 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader, NavList } from '../../components';
 import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
+import { ContentTypesCCNewRouteProps } from '../../contentTypes.types';
 import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
 import { FieldTypeSchemaData } from '../../services/fieldTypes';
 
@@ -68,11 +69,14 @@ const ContentTypesCCNew: FC<ContentTypesCCNewProps> = ({
 		const activeRoute =
 			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detailCCNew}`) || null;
 
-		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-			fieldTypeData: newFieldType,
-			routes: activeRoute?.routes,
-			onSubmit: onFieldTypeChange,
-		});
+		return Core.routes.render(
+			activeRoute?.routes as ModuleRouteConfig[],
+			{
+				fieldTypeData: newFieldType,
+				routes: activeRoute?.routes,
+				onSubmit: onFieldTypeChange,
+			} as ContentTypesCCNewRouteProps
+		);
 	};
 
 	const renderCCNew = (): ReactElement => {
@@ -103,7 +107,7 @@ const ContentTypesCCNew: FC<ContentTypesCCNewProps> = ({
 						</div>
 					</div>
 				</div>
-				<ActionBar isOpen>
+				<ActionBar className="o-action-bar--fixed" isOpen>
 					<ActionBarContentSection>
 						<Button
 							className="u-margin-right-xs"

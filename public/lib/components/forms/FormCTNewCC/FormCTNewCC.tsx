@@ -2,14 +2,8 @@ import { Button, Select, TextField } from '@acpaas-ui/react-components';
 import { Field, Formik } from 'formik';
 import React, { FC } from 'react';
 
+import { FIELD_TYPES_DEFAULT_OPTION } from './FormCTNewCC.const';
 import { FormCTNewCCProps } from './FormCTNewCC.types';
-
-const FIELD_TYPES_DEFAULT_OPTION = {
-	key: 'default-option',
-	label: 'Selecteer een content component',
-	value: '',
-	disabled: true,
-};
 
 const FormGeneralCC: FC<FormCTNewCCProps> = ({ fieldTypeOptions, formState, onSubmit }) => {
 	return (

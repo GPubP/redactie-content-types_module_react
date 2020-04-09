@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { MODULE_PATHS } from './lib/contentTypes.const';
-import { ContentTypesRouteProps } from './lib/contentTypes.types';
+import { ContentTypesModuleProps } from './lib/contentTypes.types';
 import { TenantContext } from './lib/context';
 import {
 	ContentTypesCCConfig,
@@ -18,7 +18,7 @@ import {
 	ContentTypesUpdate,
 } from './lib/views';
 
-const ContentTypesComponent: FC<ContentTypesRouteProps> = ({
+const ContentTypesComponent: FC<ContentTypesModuleProps> = ({
 	route,
 	match,
 	location,

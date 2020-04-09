@@ -15,6 +15,7 @@ import {
 	useActiveTabs,
 	useContentType,
 	useFieldTypes,
+	useNavigate,
 	useRoutesBreadcrumbs,
 	useTenantContext,
 } from '../../hooks';
@@ -37,6 +38,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		contentTypeUuid
 	);
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, location.pathname);
+	const { navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 
 	useEffect(() => {
@@ -84,6 +86,10 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		return omit(['errorMessages', 'validateSchema'], body) as ContentTypeSchema;
 	};
 
+	const navigateToOverview = (): void => {
+		navigate(MODULE_PATHS.root);
+	};
+
 	const updateCT = (
 		sectionData: ContentTypeFieldSchema | ContentTypeMetaSchema,
 		tab: Tab
@@ -112,12 +118,11 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detail}`) || null;
 
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-			tenantId,
 			contentType,
 			fieldTypes,
+			onCancel: navigateToOverview,
+			onSubmit: updateCT,
 			routes: activeRoute?.routes,
-			onSubmit: (sectionData: ContentTypeFieldSchema | ContentTypeMetaSchema, tab: Tab) =>
-				updateCT(sectionData, tab),
 		});
 	};
 

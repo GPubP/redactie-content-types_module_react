@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { array, object, string } from 'yup';
 
 import { StatusIcon } from '../../components';
@@ -27,12 +26,11 @@ export const CONTENT_TYPE_COLUMNS = [
 	{
 		label: 'Naam',
 		value: 'label',
-		component(value: string) {
+		component(value: string, rowData: ContentTypeDetailCCRow) {
 			return (
 				<>
 					{value}
-					{/* <Link to={rowData.path}>{value}</Link> */}
-					<p className="u-text-light">systeemnaam: []</p>
+					<p className="u-text-light">systeemnaam: [{rowData.name}]</p>
 				</>
 			);
 		},

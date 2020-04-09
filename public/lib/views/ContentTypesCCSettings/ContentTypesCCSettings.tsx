@@ -11,7 +11,7 @@ const ContentTypesCCSettings: FC<ContentTypesCCNewRouteProps> = ({ fieldTypeData
 	return (
 		<FormCCSettings
 			initialValues={generateCCFormState(fieldTypeData)}
-			onSubmit={(data: CCSettingsFormState<boolean>) => {
+			onSubmit={(data: CCSettingsFormState) => {
 				onSubmit(data);
 			}}
 		/>

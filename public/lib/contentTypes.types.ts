@@ -1,11 +1,30 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 
-import { FieldTypeSchemaData } from './services/fieldTypes';
+import { ContentTypeFieldSchema, ContentTypeSchema } from './services/contentTypes';
+import { FieldTypeSchema, FieldTypeSchemaData, FieldTypeSchemaMeta } from './services/fieldTypes';
+import { Tab } from './types';
 
-export interface ContentTypesRouteProps extends RouteConfigComponentProps {
+export interface ContentTypesModuleProps extends RouteConfigComponentProps {
 	basePath: string;
 	routes: ModuleRouteConfig[];
 	tenantId: string;
+}
+
+export interface ContentTypesRouteProps<Params = {}> extends RouteConfigComponentProps<Params> {
+	basePath: string;
+	routes: ModuleRouteConfig[];
+}
+
+export interface ContentTypesDetailRouteProps<Params = {}>
+	extends RouteConfigComponentProps<Params> {
+	fieldTypes: FieldTypeSchema[];
+	contentType: ContentTypeSchema;
+	onCancel: () => void;
+	onSubmit: (
+		data: ContentTypeSchema | ContentTypeFieldSchema[] | FieldTypeSchemaMeta,
+		tab: Tab
+	) => void;
+	routes: ModuleRouteConfig[];
 }
 
 export interface ContentTypesCCNewRouteProps extends ContentTypesRouteProps {
@@ -18,12 +37,16 @@ export interface NewCCFormState {
 	name: string;
 }
 
-export interface CCSettingsFormState<IsMultiple = boolean | string> {
+export interface CCSettingsFormState {
 	label: string;
 	name: string;
+	config: {
+		guideline: string;
+	};
 	generalConfig: {
-		isQueryable: boolean;
-		isTranslate: boolean;
-		isMultiple: IsMultiple; // Radio button value is returned as string
+		required: boolean;
+		hidden: boolean;
+		min: number;
+		max: number;
 	};
 }

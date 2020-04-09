@@ -1,7 +1,8 @@
-import { pathOr, toString } from 'ramda';
+import { pathOr } from 'ramda';
 
 import { CCSettingsFormState } from './contentTypes.types';
 import { ContentTypeCreate } from './services/contentTypes';
+import { FieldTypeSchemaData } from './services/fieldTypes';
 
 export const generateEmptyContentType = (): ContentTypeCreate => ({
 	fields: [],
@@ -14,13 +15,17 @@ export const generateEmptyContentType = (): ContentTypeCreate => ({
 });
 
 export const generateCCFormState = (
-	initialValues: Partial<CCSettingsFormState<boolean>> = {}
+	initialValues: Partial<FieldTypeSchemaData> = {}
 ): CCSettingsFormState => ({
 	label: initialValues.label || '',
 	name: initialValues.name || '',
+	config: {
+		guideline: pathOr('', ['config', 'guideline'], initialValues),
+	},
 	generalConfig: {
-		isQueryable: !pathOr(true, ['generalConfig', 'isQueryable'], initialValues), // Invert value because of input label
-		isTranslate: pathOr(true, ['generalConfig', 'isTranslate'], initialValues),
-		isMultiple: toString(pathOr(false, ['generalConfig', 'isMultiple'], initialValues)), // Needs to be a string for radio button
+		required: pathOr(true, ['generalConfig', 'required'], initialValues),
+		hidden: pathOr(false, ['generalConfig', 'hidden'], initialValues),
+		min: pathOr(0, ['generalConfig', 'min'], initialValues),
+		max: pathOr(1, ['generalConfig', 'max'], initialValues),
 	},
 });
