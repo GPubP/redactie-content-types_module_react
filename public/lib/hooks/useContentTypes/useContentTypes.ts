@@ -13,7 +13,7 @@ const useContentTypes = (
 	useEffect(() => {
 		getContentTypes(searchParams)
 			.then(result => {
-				if (result?.data.length) {
+				if (result?.data) {
 					setContentTypes(result);
 				}
 				setLoadingState(LoadingState.Loaded);

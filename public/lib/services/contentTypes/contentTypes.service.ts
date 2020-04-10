@@ -13,9 +13,7 @@ export const getContentTypes = async (
 ): Promise<ContentTypesDataSchema | null> => {
 	try {
 		const response: ContentTypesSchema = await api
-			.get('content/content-types', {
-				searchParams: parseSearchParams(searchParams),
-			})
+			.get(`content/content-types?${parseSearchParams(searchParams)}`)
 			.json();
 
 		if (!response.data) {

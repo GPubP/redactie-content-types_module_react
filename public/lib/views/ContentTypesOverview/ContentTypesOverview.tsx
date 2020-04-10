@@ -6,6 +6,7 @@ import {
 	ContextHeaderTopSection,
 	Table,
 } from '@acpaas-ui/react-editorial-components';
+import { stringify } from 'query-string';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
@@ -51,12 +52,36 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 		const names = setFilter.map(item => {
 			return item['value'];
 		});
-		//turn array into encoded string
-		const str = names.toString();
-		//add encoded string to searchParams
+		//add array to searchParams
 		setContentTypesSearchParams({
 			...contentTypesSearchParams,
-			search: str,
+			search: names,
+		});
+	};
+
+	const deleteAllFilters = (): void => {
+		//set empty array as Taglist
+		const emptyFilter: [] = [];
+		setFilterItems(emptyFilter);
+		//delete search param from api call
+		setContentTypesSearchParams({
+			skip: 1,
+			limit: 10,
+		});
+	};
+
+	const deleteFilter = ({ name }: FilterFormState): void => {
+		//delete item from filterItems
+		const setFilter = filterItems?.filter(el => el.value !== name);
+		setFilterItems(setFilter);
+		//get value array from filterItems
+		const names = setFilter.map(item => {
+			return item['value'];
+		});
+		//add array to searchParams
+		setContentTypesSearchParams({
+			...contentTypesSearchParams,
+			search: names,
 		});
 	};
 
@@ -135,9 +160,9 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 			<div className="u-margin-top">
 				<FilterForm
 					initialState={generateFilterFormState()}
-					onCancel={() => console.log('verwijder filters')}
+					onCancel={deleteAllFilters}
 					onSubmit={onSubmit}
-					deleteActiveFilter={() => console.log('klik')}
+					deleteActiveFilter={deleteFilter}
 					activeFilters={filterItems}
 				/>
 			</div>
