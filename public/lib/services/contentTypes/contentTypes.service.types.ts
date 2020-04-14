@@ -1,12 +1,4 @@
-import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
-
 import { Operator } from '../fieldTypes';
-
-export interface ContentTypesRouteProps extends RouteConfigComponentProps {
-	basePath: string;
-	routes: ModuleRouteConfig[];
-	tenantId: string;
-}
 
 export interface ContentTypeFieldSchema {
 	uuid?: string;

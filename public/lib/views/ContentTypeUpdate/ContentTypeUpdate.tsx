@@ -1,6 +1,7 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
-import React, { FC, useEffect, useState } from 'react';
+import { omit } from 'ramda';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
@@ -10,7 +11,14 @@ import {
 	MODULE_PATHS,
 } from '../../contentTypes.const';
 import { ContentTypesRouteProps } from '../../contentTypes.types';
-import { useActiveTabs, useContentType, useFieldTypes, useRoutesBreadcrumbs } from '../../hooks';
+import {
+	useActiveTabs,
+	useContentType,
+	useFieldTypes,
+	useNavigate,
+	useRoutesBreadcrumbs,
+	useTenantContext,
+} from '../../hooks';
 import {
 	ContentTypeFieldSchema,
 	ContentTypeMetaSchema,
@@ -18,11 +26,12 @@ import {
 } from '../../services/contentTypes';
 import { LoadingState, Tab } from '../../types';
 
-const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tenantId }) => {
+const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) => {
 	/**
 	 * Hooks
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [CTFields, setCTFields] = useState<ContentTypeFieldSchema[]>([]);
 	const { contentTypeUuid } = useParams();
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
@@ -30,6 +39,8 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 		contentTypeUuid
 	);
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, location.pathname);
+	const { navigate } = useNavigate();
+	const { tenantId } = useTenantContext();
 
 	useEffect(() => {
 		if (
@@ -42,6 +53,12 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 		setInitialLoading(LoadingState.Loading);
 	}, [contentTypeLoadingState, fieldTypesLoadingState]);
 
+	useEffect(() => {
+		if (contentTypeLoadingState !== LoadingState.Loading && contentType?.fields.length) {
+			setCTFields(contentType.fields);
+		}
+	}, [contentType, contentTypeLoadingState]);
+
 	/**
 	 * Methods
 	 */
@@ -49,26 +66,35 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 		sectionData: ContentTypeFieldSchema[] | ContentTypeMetaSchema,
 		tab: Tab
 	): ContentTypeSchema | null => {
+		let body = null;
 		switch (tab.name) {
 			case CONTENT_TYPE_DETAIL_TAB_MAP.settings.name:
-				return {
+				body = {
 					...contentType,
 					meta: {
 						...contentType?.meta,
 						...(sectionData as ContentTypeMetaSchema),
 					},
-				} as ContentTypeSchema;
-			case CONTENT_TYPE_DETAIL_TAB_MAP.contentComponenten.name:
-				return {
+				};
+				break;
+			case CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents.name:
+				body = {
 					...contentType,
 					fields: sectionData as ContentTypeFieldSchema[],
-				} as ContentTypeSchema;
+				};
+				break;
 			case CONTENT_TYPE_DETAIL_TAB_MAP.sites.name:
 				// TODO: move sites update here
 				return null;
 			default:
 				return null;
 		}
+		// Remove properties
+		return omit(['errorMessages', 'validateSchema'], body) as ContentTypeSchema;
+	};
+
+	const navigateToOverview = (): void => {
+		navigate(MODULE_PATHS.root);
 	};
 
 	const updateCT = (
@@ -85,27 +111,34 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes, tena
 		updateContentType(newCT);
 	};
 
+	const showTabs = !/\/nieuw\//.test(location.pathname);
+
 	/**
 	 * Render
 	 */
-	const renderChildRoutes = (): any => {
+	const renderChildRoutes = (): ReactElement | null => {
+		if (!contentType) {
+			return null;
+		}
+
 		const activeRoute =
 			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detail}`) || null;
 
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-			tenantId,
-			contentType,
 			fieldTypes,
+			contentType,
+			CTFields,
+			setCTFields,
+			onCancel: navigateToOverview,
+			onSubmit: updateCT,
 			routes: activeRoute?.routes,
-			onSubmit: (sectionData: ContentTypeFieldSchema[] | ContentTypeMetaSchema, tab: Tab) =>
-				updateCT(sectionData, tab),
 		});
 	};
 
 	return (
 		<>
 			<ContextHeader
-				tabs={activeTabs}
+				tabs={showTabs ? activeTabs : undefined}
 				linkProps={(props: any) => ({
 					...props,
 					to: props.href,

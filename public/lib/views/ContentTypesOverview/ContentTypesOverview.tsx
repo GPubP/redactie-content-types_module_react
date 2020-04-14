@@ -77,7 +77,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 						<Button
 							ariaLabel="Edit"
 							icon="edit"
-							onClick={() => navigate(MODULE_PATHS.edit, { contentTypeUuid })}
+							onClick={() => navigate(MODULE_PATHS.detail, { contentTypeUuid })}
 							type="primary"
 							transparent
 						></Button>
@@ -87,14 +87,14 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 		];
 
 		return (
-			<div className="u-container u-wrapper">
-				<h5 className="u-margin-top">Resultaat ({contentTypesRows.length})</h5>
+			<>
+				<h5>Resultaat ({contentTypesRows.length})</h5>
 				<Table
 					className="u-margin-top"
 					rows={contentTypesRows}
 					columns={contentTypesColumns}
 				/>
-			</div>
+			</>
 		);
 	};
 
@@ -108,7 +108,9 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
-			<DataLoader loadingState={loadingState} render={renderOverview} />
+			<div className="u-container u-wrapper u-margin-top u-margin-bottom">
+				<DataLoader loadingState={loadingState} render={renderOverview} />
+			</div>
 		</>
 	);
 };

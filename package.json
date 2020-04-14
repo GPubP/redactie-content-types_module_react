@@ -1,7 +1,7 @@
 {
 	"name": "@redactie/content-types-module",
 	"version": "0.3.0",
-	"description": "redactie sites module",
+	"description": "redactie content types module",
 	"main": "dist/redactie-content-types-module.umd.js",
 	"module": "dist/redactie-content-types-module.umd.js",
 	"types": "dist/index.d.ts",
@@ -20,7 +20,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://ex02131@bitbucket.antwerpen.be/scm/wcm/redactie-sites_module.git"
+		"url": "https://ex02131@bitbucket.antwerpen.be/scm/wcm/redactie-content-types_module_react.git"
 	},
 	"publishConfig": {
 		"@redactie:registry": "https://nexusrepo.antwerpen.be/repository/npm-private"
@@ -28,7 +28,7 @@
 	"keywords": [
 		"Redactie",
 		"React",
-		"Sites",
+		"Content types",
 		"Module"
 	],
 	"devDependencies": {
@@ -40,11 +40,13 @@
 		"@babel/preset-typescript": "7.8.3",
 		"@commitlint/cli": "8.3.5",
 		"@commitlint/config-conventional": "8.3.4",
+		"@redactie/form-renderer-module": "^0.2.0",
 		"@redactie/module-webpack-plugin": "2.0.0",
 		"@redactie/redactie-core": "^1.2.0",
 		"@testing-library/jest-dom": "5.0.2",
 		"@testing-library/react": "9.4.0",
 		"@types/jest": "24.9.1",
+		"@types/lodash.debounce": "^4.0.6",
 		"@types/lodash.kebabcase": "4.1.6",
 		"@types/ramda": "0.26.44",
 		"@types/react": "16.9.19",
@@ -88,7 +90,9 @@
 	"dependencies": {
 		"formik": "2.1.4",
 		"ky": "0.17.0",
+		"lodash.debounce": "^4.0.8",
 		"lodash.kebabcase": "4.1.1",
+		"query-string": "^6.11.1",
 		"ramda": "0.27.0",
 		"yup": "0.28.3"
 	},

@@ -43,12 +43,17 @@ module.exports = {
 			ignoreDeclarationSort: true,
 		}],
 	},
-	"overrides": [
+	overrides: [
 		{
 				"files": ["**/*.tsx"],
 				"rules": {
 						"react/prop-types": "off"
 				}
 		}
-	]
+	],
+	settings: {
+		react: {
+			version: 'detect',
+		},
+	},
 };

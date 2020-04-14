@@ -5,7 +5,8 @@ import { pathOr } from 'ramda';
 import React, { FC, ReactElement } from 'react';
 
 import { FormCTNewCC, NavList } from '../../components';
-import { MODULE_PATHS } from '../../contentTypes.const';
+import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
+import { ContentTypesDetailRouteProps, NewCCFormState } from '../../contentTypes.types';
 import { useNavigate } from '../../hooks';
 import { ContentTypeFieldSchema } from '../../services/contentTypes';
 
@@ -14,11 +15,13 @@ import {
 	CT_CC_NAV_LIST_ITEMS,
 	CT_CC_VALIDATION_SCHEMA,
 } from './ContentTypeDetailCC.const';
-import { ContentTypeDetailCCRow, ContenTypeDetailCCProps } from './ContentTypeDetailCC.types';
+import { ContentTypeDetailCCRow } from './ContentTypeDetailCC.types';
 
-const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
+const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	fieldTypes,
-	contentType: initialState,
+	contentType,
+	CTFields,
+	onCancel,
 	onSubmit,
 }) => {
 	const fieldTypeOptions = fieldTypes.map(fieldType => ({
@@ -30,13 +33,23 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	/**
 	 * Hooks
 	 */
-	const { navigate } = useNavigate();
+	const { generatePath, navigate } = useNavigate();
 
 	/**
 	 * Methods
 	 */
-	const onCCFormSubmit = ({ name, fieldType }: any): void => {
-		navigate(`${MODULE_PATHS.createCCnew}?name=${name}&field-type=${fieldType}`);
+	const onCCFormSubmit = ({ name, fieldType }: NewCCFormState): void => {
+		const currentFieldType = fieldTypes.find(ft => ft.uuid === fieldType);
+		navigate(`${MODULE_PATHS.detailCCNew}?fieldType=:fieldType&id=:id&name=:name`, {
+			contentTypeUuid: contentType.uuid,
+			id: currentFieldType?._id || '',
+			name,
+			fieldType,
+		});
+	};
+
+	const onCCSave = (): void => {
+		onSubmit(CTFields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
 	};
 
 	/**
@@ -49,6 +62,10 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 	}): ReactElement => {
 		const contentTypeRows: ContentTypeDetailCCRow[] = (fields || []).map(
 			(cc: ContentTypeFieldSchema) => ({
+				path: generatePath(MODULE_PATHS.detailCCEdit, {
+					contentTypeUuid: contentType.uuid,
+					ccUuid: cc.uuid,
+				}),
 				label: cc.label,
 				name: cc.name,
 				fieldType: pathOr('error', ['fieldType', 'data', 'label'])(cc),
@@ -64,16 +81,16 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 				className="u-margin-top"
 				columns={CONTENT_TYPE_COLUMNS}
 				rows={contentTypeRows}
-				totalValues={pathOr(0, ['fields', 'length'])(initialState)}
-			></Table>
+				totalValues={CTFields.length}
+			/>
 		);
 	};
 
 	const renderTableForm = (): ReactElement => {
 		return (
 			<Formik
-				initialValues={initialState}
-				onSubmit={onSubmit}
+				initialValues={{ fields: CTFields }}
+				onSubmit={onCCSave}
 				validationSchema={CT_CC_VALIDATION_SCHEMA}
 			>
 				{() => <Field name="fields" placeholder="No fields" as={renderTableField} />}
@@ -95,7 +112,7 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 								<h5>Voeg een content componenten toe</h5>
 								<FormCTNewCC
 									fieldTypeOptions={fieldTypeOptions}
-									formState={{}}
+									formState={{ fieldType: '', name: '' }}
 									onSubmit={onCCFormSubmit}
 								/>
 							</div>
@@ -120,13 +137,15 @@ const ContentTypeDetailCC: FC<ContenTypeDetailCCProps> = ({
 					<div className="col-xs-9">{renderDetail()}</div>
 				</div>
 			</div>
-			<ActionBar show>
+			<ActionBar className="o-action-bar--fixed" isOpen>
 				<ActionBarContentSection>
 					<div className="u-wrapper">
-						<Button className="u-margin-right" type="success">
+						<Button className="u-margin-right-xs" onClick={onCCSave} type="success">
 							Bewaar
 						</Button>
-						<Button outline>Annuleer</Button>
+						<Button onClick={onCancel} outline>
+							Annuleer
+						</Button>
 					</div>
 				</ActionBarContentSection>
 			</ActionBar>
