@@ -15,6 +15,9 @@ import { useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { ContentTypeSchema, getContentTypes } from '../../services/contentTypes';
 import { LoadingState } from '../../types';
 
+import { CONTENT_TYPE_OVERVIEW_COLUMNS } from './ContentTypesOverview.const';
+import { ContentTypesOverviewTableRow } from './ContentTypesOverview.types';
+
 const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	/**
 	 * Hooks
@@ -45,47 +48,13 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 			return null;
 		}
 
-		const contentTypesRows = contentTypes.map(contentType => ({
-			uuid: contentType.uuid,
+		const contentTypesRows: ContentTypesOverviewTableRow[] = contentTypes.map(contentType => ({
+			contentTypeUuid: contentType.uuid,
 			name: contentType.meta.label,
 			description: contentType.meta.description,
-			status: contentType.meta.status,
+			status: contentType.meta.status || 'N/A',
+			navigate: ctUuid => navigate(MODULE_PATHS.detail, { ctUuid }),
 		}));
-
-		const contentTypesColumns = [
-			{
-				label: 'Naam',
-				value: 'name',
-			},
-			{
-				label: 'Gebruikt op',
-				value: 'description',
-				disableSorting: true,
-			},
-			{
-				label: 'Status',
-				value: 'status',
-				disableSorting: true,
-			},
-			{
-				label: '',
-				classList: ['u-text-right'],
-				disableSorting: true,
-				component(value: unknown, rowData: ContentTypeSchema) {
-					const { uuid: contentTypeUuid } = rowData;
-
-					return (
-						<Button
-							ariaLabel="Edit"
-							icon="edit"
-							onClick={() => navigate(MODULE_PATHS.detail, { contentTypeUuid })}
-							type="primary"
-							transparent
-						></Button>
-					);
-				},
-			},
-		];
 
 		return (
 			<>
@@ -93,7 +62,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 				<Table
 					className="u-margin-top"
 					rows={contentTypesRows}
-					columns={contentTypesColumns}
+					columns={CONTENT_TYPE_OVERVIEW_COLUMNS}
 				/>
 			</>
 		);
