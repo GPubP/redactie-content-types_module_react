@@ -1,8 +1,13 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
+import { Dispatch } from 'react';
 
 import { ContentTypeFieldSchema, ContentTypeSchema } from './services/contentTypes';
 import { FieldTypeSchema, FieldTypeSchemaData, FieldTypeSchemaMeta } from './services/fieldTypes';
 import { Tab } from './types';
+import {
+	ContentTypeUpdateAction,
+	ContentTypeUpdateState,
+} from './views/ContentTypeUpdate/ContentTypeUpdate.types';
 
 export interface ContentTypesModuleProps extends RouteConfigComponentProps {
 	basePath: string;
@@ -19,8 +24,8 @@ export interface ContentTypesDetailRouteProps<Params = {}>
 	extends RouteConfigComponentProps<Params> {
 	fieldTypes: FieldTypeSchema[];
 	contentType: ContentTypeSchema;
-	CTFields: ContentTypeFieldSchema[];
-	setCTFields: (fields: ContentTypeFieldSchema[]) => void;
+	state: ContentTypeUpdateState;
+	dispatch: Dispatch<ContentTypeUpdateAction>;
 	onCancel: () => void;
 	onSubmit: (
 		data: ContentTypeSchema | ContentTypeFieldSchema[] | FieldTypeSchemaMeta,

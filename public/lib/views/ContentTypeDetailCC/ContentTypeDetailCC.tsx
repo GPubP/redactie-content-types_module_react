@@ -25,7 +25,7 @@ import { ContentTypeDetailCCRow } from './ContentTypeDetailCC.types';
 const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	fieldTypes,
 	contentType,
-	CTFields,
+	state,
 	onCancel,
 	onSubmit,
 }) => {
@@ -54,7 +54,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	};
 
 	const onCCSave = (): void => {
-		onSubmit(CTFields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
+		onSubmit(state.fields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
 	};
 
 	/**
@@ -86,7 +86,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 				className="u-margin-top"
 				columns={CONTENT_TYPE_COLUMNS}
 				rows={contentTypeRows}
-				totalValues={CTFields.length}
+				totalValues={state.fields.length}
 			/>
 		);
 	};
@@ -94,7 +94,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	const renderTableForm = (): ReactElement => {
 		return (
 			<Formik
-				initialValues={{ fields: CTFields }}
+				initialValues={{ fields: state.fields }}
 				onSubmit={onCCSave}
 				validationSchema={CT_CC_VALIDATION_SCHEMA}
 			>

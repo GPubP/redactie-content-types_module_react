@@ -18,13 +18,14 @@ import {
 } from '../../contentTypes.types';
 import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
 import { ContentTypeFieldSchema } from '../../services/contentTypes';
+import { ContentTypeUpdateActionTypes } from '../ContentTypeUpdate/ContentTypeUpdate.types';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCNew.const';
 
 const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 	contentType,
-	CTFields,
-	setCTFields,
+	state,
+	dispatch,
 	location,
 	routes,
 }) => {
@@ -58,7 +59,10 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 
 	const onCTSubmit = (): void => {
 		if (CTField) {
-			setCTFields([...CTFields, CTField]);
+			dispatch({
+				type: ContentTypeUpdateActionTypes.UPDATE_FIELDS,
+				payload: [...state.fields, CTField],
+			});
 			navigateToOverview();
 		}
 	};

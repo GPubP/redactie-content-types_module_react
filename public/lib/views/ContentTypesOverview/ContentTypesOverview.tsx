@@ -53,7 +53,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 			name: contentType.meta.label,
 			description: contentType.meta.description,
 			status: contentType.meta.status || 'N/A',
-			navigate: ctUuid => navigate(MODULE_PATHS.detail, { ctUuid }),
+			navigate: contentTypeUuid => navigate(MODULE_PATHS.detail, { contentTypeUuid }),
 		}));
 
 		return (

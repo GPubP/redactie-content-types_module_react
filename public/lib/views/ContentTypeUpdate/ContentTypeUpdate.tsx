@@ -1,7 +1,7 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import { omit } from 'ramda';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useReducer, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
@@ -26,12 +26,15 @@ import {
 } from '../../services/contentTypes';
 import { LoadingState, Tab } from '../../types';
 
+import { contentTypeUpdateReducer, generateInitialState } from './ContentTypeUpdate.helpers';
+import { ContentTypeUpdateActionTypes } from './ContentTypeUpdate.types';
+
 const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) => {
 	/**
 	 * Hooks
 	 */
+	const [state, dispatch] = useReducer(contentTypeUpdateReducer, generateInitialState());
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const [CTFields, setCTFields] = useState<ContentTypeFieldSchema[]>([]);
 	const { contentTypeUuid } = useParams();
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
@@ -55,7 +58,10 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 
 	useEffect(() => {
 		if (contentTypeLoadingState !== LoadingState.Loading && contentType?.fields.length) {
-			setCTFields(contentType.fields);
+			dispatch({
+				type: ContentTypeUpdateActionTypes.UPDATE_FIELDS,
+				payload: contentType.fields,
+			});
 		}
 	}, [contentType, contentTypeLoadingState]);
 
@@ -127,8 +133,8 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
 			fieldTypes,
 			contentType,
-			CTFields,
-			setCTFields,
+			state,
+			dispatch,
 			onCancel: navigateToOverview,
 			onSubmit: updateCT,
 			routes: activeRoute?.routes,
