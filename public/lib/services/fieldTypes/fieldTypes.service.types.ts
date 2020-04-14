@@ -20,6 +20,7 @@ export interface FieldTypeSchemaData {
 		isMultiple: boolean;
 	};
 	operators: Operator[];
+	module: string;
 }
 
 export interface FieldTypeSchemaMeta {

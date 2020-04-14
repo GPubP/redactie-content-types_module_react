@@ -3,46 +3,47 @@ import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-c
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import kebabCase from 'lodash.kebabcase';
 import { parse } from 'query-string';
-import { equals } from 'ramda';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader, NavList } from '../../components';
-import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
-import { ContentTypesCCNewRouteProps } from '../../contentTypes.types';
+import { MODULE_PATHS } from '../../contentTypes.const';
+import { generateFieldFromType } from '../../contentTypes.helpers';
+import {
+	ContentTypesCCNewRouteProps,
+	ContentTypesDetailRouteProps,
+} from '../../contentTypes.types';
 import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
-import { FieldTypeSchemaData } from '../../services/fieldTypes';
+import { ContentTypeFieldSchema } from '../../services/contentTypes';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCNew.const';
-import { ContentTypesCCNewProps } from './ContentTypesCCNew.types';
 
-const ContentTypesCCNew: FC<ContentTypesCCNewProps> = ({
+const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 	contentType,
+	CTFields,
+	setCTFields,
 	location,
 	routes,
-	onSubmit,
 }) => {
 	const { fieldType: fieldTypeUuid, id: fieldTypeId, name } = parse(location.search);
 	const initalFieldValues = {
 		name: kebabCase((name as string | undefined) || ''),
 		label: (name as string | undefined) || '',
+		fieldType: fieldTypeId as string | undefined,
 	};
 
 	/**
 	 * Hooks
 	 */
-	const [newFieldType, setNewFieldType] = useState<FieldTypeSchemaData | null>(null);
-	const [loadingState, fieldType] = useFieldType(
-		fieldTypeUuid as string | undefined,
-		initalFieldValues
-	);
+	const [CTField, setCTField] = useState<ContentTypeFieldSchema | null>(null);
+	const [loadingState, fieldType] = useFieldType(fieldTypeUuid as string | undefined);
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 
 	useEffect(() => {
-		if (fieldType && !newFieldType) {
-			setNewFieldType(fieldType);
+		if (fieldType && !CTField) {
+			setCTField(generateFieldFromType(fieldType, initalFieldValues));
 		}
-	}, [fieldType, newFieldType]);
+	}, [fieldType, CTField, initalFieldValues]);
 
 	/**
 	 * Methods
@@ -52,14 +53,14 @@ const ContentTypesCCNew: FC<ContentTypesCCNewProps> = ({
 	};
 
 	const onCTSubmit = (): void => {
-		const contentTypeField = { ...newFieldType, fieldType: fieldTypeId };
-
-		onSubmit(contentTypeField, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
-		navigateToOverview();
+		if (CTField) {
+			setCTFields([...CTFields, CTField]);
+			navigateToOverview();
+		}
 	};
 
-	const onFieldTypeChange = (data: Partial<FieldTypeSchemaData>): void => {
-		setNewFieldType({ ...fieldType, ...data } as FieldTypeSchemaData);
+	const onFieldTypeChange = (data: ContentTypeFieldSchema): void => {
+		setCTField({ ...CTField, ...data });
 	};
 
 	/**
@@ -72,7 +73,8 @@ const ContentTypesCCNew: FC<ContentTypesCCNewProps> = ({
 		return Core.routes.render(
 			activeRoute?.routes as ModuleRouteConfig[],
 			{
-				fieldTypeData: newFieldType,
+				CTField,
+				fieldTypeData: fieldType,
 				routes: activeRoute?.routes,
 				onSubmit: onFieldTypeChange,
 			} as ContentTypesCCNewRouteProps
@@ -109,12 +111,7 @@ const ContentTypesCCNew: FC<ContentTypesCCNewProps> = ({
 				</div>
 				<ActionBar className="o-action-bar--fixed" isOpen>
 					<ActionBarContentSection>
-						<Button
-							className="u-margin-right-xs"
-							disabled={equals(fieldType, newFieldType) || !newFieldType}
-							onClick={onCTSubmit}
-							type="success"
-						>
+						<Button className="u-margin-right-xs" onClick={onCTSubmit} type="success">
 							Bewaar
 						</Button>
 						<Button onClick={navigateToOverview} outline>

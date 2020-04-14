@@ -5,7 +5,7 @@ import { pathOr } from 'ramda';
 import React, { FC, ReactElement } from 'react';
 
 import { FormCTNewCC, NavList } from '../../components';
-import { MODULE_PATHS } from '../../contentTypes.const';
+import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, NewCCFormState } from '../../contentTypes.types';
 import { useNavigate } from '../../hooks';
 import { ContentTypeFieldSchema } from '../../services/contentTypes';
@@ -20,6 +20,7 @@ import { ContentTypeDetailCCRow } from './ContentTypeDetailCC.types';
 const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	fieldTypes,
 	contentType,
+	CTFields,
 	onCancel,
 	onSubmit,
 }) => {
@@ -45,6 +46,10 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 			name,
 			fieldType,
 		});
+	};
+
+	const onCCSave = (): void => {
+		onSubmit(CTFields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
 	};
 
 	/**
@@ -76,7 +81,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 				className="u-margin-top"
 				columns={CONTENT_TYPE_COLUMNS}
 				rows={contentTypeRows}
-				totalValues={pathOr(0, ['fields', 'length'])(contentType)}
+				totalValues={CTFields.length}
 			/>
 		);
 	};
@@ -84,7 +89,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	const renderTableForm = (): ReactElement => {
 		return (
 			<Formik
-				initialValues={contentType.fields}
+				initialValues={{ fields: CTFields }}
 				onSubmit={onCCSave}
 				validationSchema={CT_CC_VALIDATION_SCHEMA}
 			>
@@ -135,7 +140,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 			<ActionBar className="o-action-bar--fixed" isOpen>
 				<ActionBarContentSection>
 					<div className="u-wrapper">
-						<Button className="u-margin-right-xs" type="success">
+						<Button className="u-margin-right-xs" onClick={onCCSave} type="success">
 							Bewaar
 						</Button>
 						<Button onClick={onCancel} outline>

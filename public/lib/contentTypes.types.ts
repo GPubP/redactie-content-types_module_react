@@ -19,6 +19,8 @@ export interface ContentTypesDetailRouteProps<Params = {}>
 	extends RouteConfigComponentProps<Params> {
 	fieldTypes: FieldTypeSchema[];
 	contentType: ContentTypeSchema;
+	CTFields: ContentTypeFieldSchema[];
+	setCTFields: (fields: ContentTypeFieldSchema[]) => void;
 	onCancel: () => void;
 	onSubmit: (
 		data: ContentTypeSchema | ContentTypeFieldSchema[] | FieldTypeSchemaMeta,
@@ -28,6 +30,7 @@ export interface ContentTypesDetailRouteProps<Params = {}>
 }
 
 export interface ContentTypesCCNewRouteProps extends ContentTypesRouteProps {
+	CTField: ContentTypeFieldSchema;
 	fieldTypeData: FieldTypeSchemaData;
 	onSubmit: (data: any) => void;
 }

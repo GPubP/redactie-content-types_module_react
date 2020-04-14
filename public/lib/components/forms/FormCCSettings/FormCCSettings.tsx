@@ -1,16 +1,31 @@
 import { Checkbox, RadioGroup, Textarea, TextField } from '@acpaas-ui/react-components';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import React, { FC } from 'react';
+import React, { ChangeEvent, FC, useState } from 'react';
 
+import { CCSettingsFormState } from '../../../contentTypes.types';
 import AutoSubmit from '../AutoSubmit/AutoSubmit';
 
 import { IS_MULTIPLE_OPTIONS } from './FormCCSettings.const';
 import { FormCCSettingsProps } from './FormCCSettings.types';
 
 const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) => {
+	const [isMultiple, setIsMultiple] = useState(false);
+
+	const onFormSubmit = (values: CCSettingsFormState): void => {
+		// Reset min and max to initial values if not muliple
+		onSubmit({
+			...values,
+			generalConfig: {
+				...values.generalConfig,
+				min: isMultiple ? values.generalConfig.min : 0,
+				max: isMultiple ? values.generalConfig.max : 1,
+			},
+		});
+	};
+
 	return (
-		<Formik initialValues={initialValues} onSubmit={formValues => onSubmit(formValues)}>
+		<Formik initialValues={initialValues} onSubmit={onFormSubmit}>
 			{({ values }) => {
 				return (
 					<>
@@ -53,15 +68,38 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 						</div>
 						<div className="row u-margin-top">
 							<div className="col-xs-12">
-								<Field
-									as={RadioGroup}
-									name="generalConfig.isMultiple"
+								<RadioGroup
+									name="isMultiple"
+									onChange={(e: ChangeEvent<HTMLInputElement>) =>
+										setIsMultiple(e.target.value === 'true')
+									}
 									options={IS_MULTIPLE_OPTIONS}
+									value={String(isMultiple)}
 								/>
 								<div className="u-text-light u-margin-top-xs">
 									Bepaal hoeveel items van dit component er aangemaakt kunnen
 									worden
 								</div>
+								{isMultiple && (
+									<div className="row u-margin-top">
+										<div className="col-xs-2">
+											<Field
+												as={TextField}
+												type="number"
+												label="Min."
+												name="generalConfig.min"
+											/>
+										</div>
+										<div className="col-xs-2">
+											<Field
+												as={TextField}
+												type="number"
+												label="Max."
+												name="generalConfig.max"
+											/>
+										</div>
+									</div>
+								)}
 							</div>
 						</div>
 						<div className="row u-margin-top">
@@ -69,7 +107,8 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 								<Field
 									as={Checkbox}
 									checked={values.generalConfig.hidden}
-									name="generalConfig.isQueryable"
+									id="generalConfig.hidden"
+									name="generalConfig.hidden"
 									label="Verborgen"
 								/>
 								<div className="u-text-light">
@@ -85,7 +124,8 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 								<Field
 									as={Checkbox}
 									checked={values.generalConfig.required}
-									name="generalConfig.isTranslate"
+									id="generalConfig.required"
+									name="generalConfig.required"
 									label="Aanpasbaar"
 								/>
 								<div className="u-text-light">

@@ -31,6 +31,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	 * Hooks
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [CTFields, setCTFields] = useState<ContentTypeFieldSchema[]>([]);
 	const { contentTypeUuid } = useParams();
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
@@ -52,11 +53,17 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		setInitialLoading(LoadingState.Loading);
 	}, [contentTypeLoadingState, fieldTypesLoadingState]);
 
+	useEffect(() => {
+		if (contentTypeLoadingState !== LoadingState.Loading && contentType?.fields.length) {
+			setCTFields(contentType.fields);
+		}
+	}, [contentType, contentTypeLoadingState]);
+
 	/**
 	 * Methods
 	 */
 	const getRequestBody = (
-		sectionData: ContentTypeFieldSchema | ContentTypeMetaSchema,
+		sectionData: ContentTypeFieldSchema[] | ContentTypeMetaSchema,
 		tab: Tab
 	): ContentTypeSchema | null => {
 		let body = null;
@@ -73,7 +80,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 			case CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents.name:
 				body = {
 					...contentType,
-					fields: [...(contentType?.fields || []), sectionData as ContentTypeFieldSchema],
+					fields: sectionData as ContentTypeFieldSchema[],
 				};
 				break;
 			case CONTENT_TYPE_DETAIL_TAB_MAP.sites.name:
@@ -91,7 +98,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	};
 
 	const updateCT = (
-		sectionData: ContentTypeFieldSchema | ContentTypeMetaSchema,
+		sectionData: ContentTypeFieldSchema[] | ContentTypeMetaSchema,
 		tab: Tab
 	): void => {
 		const newCT = getRequestBody(sectionData, tab);
@@ -118,8 +125,10 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detail}`) || null;
 
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
-			contentType,
 			fieldTypes,
+			contentType,
+			CTFields,
+			setCTFields,
 			onCancel: navigateToOverview,
 			onSubmit: updateCT,
 			routes: activeRoute?.routes,

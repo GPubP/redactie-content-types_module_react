@@ -2,6 +2,7 @@ import { FieldSchema, FormsAPI, FormSchema } from '@redactie/form-renderer-modul
 import Core from '@redactie/redactie-core';
 import React, { FC } from 'react';
 
+import { AutoSubmit } from '../../components';
 import { ContentTypesCCNewRouteProps } from '../../contentTypes.types';
 
 const ContentTypesCCConfig: FC<ContentTypesCCNewRouteProps> = ({ fieldTypeData, onSubmit }) => {
@@ -48,7 +49,11 @@ const ContentTypesCCConfig: FC<ContentTypesCCNewRouteProps> = ({ fieldTypeData, 
 			validationSchema={validationSchema}
 			errorMessages={{}}
 			onSubmit={onFormSubmit}
-		/>
+		>
+			{({ initialValues, submitForm, values }) => (
+				<AutoSubmit initialValues={initialValues} submitForm={submitForm} values={values} />
+			)}
+		</formsAPI.Form>
 	);
 };
 
