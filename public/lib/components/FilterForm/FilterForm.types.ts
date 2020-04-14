@@ -4,6 +4,6 @@ export interface FilterFormProps {
 	initialState: FilterFormState;
 	onCancel: () => void;
 	onSubmit: (values: FilterFormState) => void;
-	deleteActiveFilter: (values: any) => void;
+	deleteActiveFilter: (item: any) => void;
 	activeFilters: Array<object>;
 }

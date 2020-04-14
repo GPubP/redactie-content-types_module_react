@@ -70,9 +70,9 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 		});
 	};
 
-	const deleteFilter = ({ name }: FilterFormState): void => {
+	const deleteFilter = (item: any): void => {
 		//delete item from filterItems
-		const setFilter = filterItems?.filter(el => el.value !== name);
+		const setFilter = filterItems?.filter(el => el.value !== item.value);
 		setFilterItems(setFilter);
 		//get value array from filterItems
 		const names = setFilter.map(item => {
@@ -137,6 +137,15 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 
 		return (
 			<div className="u-container u-wrapper">
+				<div className="u-margin-top">
+					<FilterForm
+						initialState={generateFilterFormState()}
+						onCancel={deleteAllFilters}
+						onSubmit={onSubmit}
+						deleteActiveFilter={deleteFilter}
+						activeFilters={filterItems}
+					/>
+				</div>
 				<h5 className="u-margin-top">Resultaat ({contentTypesRows.length})</h5>
 				<Table
 					className="u-margin-top"
@@ -157,15 +166,6 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
-			<div className="u-margin-top">
-				<FilterForm
-					initialState={generateFilterFormState()}
-					onCancel={deleteAllFilters}
-					onSubmit={onSubmit}
-					deleteActiveFilter={deleteFilter}
-					activeFilters={filterItems}
-				/>
-			</div>
 			<DataLoader loadingState={initialLoading} render={renderOverview} />
 		</>
 	);
