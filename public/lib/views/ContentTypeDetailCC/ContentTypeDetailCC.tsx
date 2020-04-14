@@ -1,5 +1,10 @@
 import { Button, Card } from '@acpaas-ui/react-components';
-import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
+import {
+	ActionBar,
+	ActionBarContentSection,
+	Container,
+	Table,
+} from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
 import { pathOr } from 'ramda';
 import React, { FC, ReactElement } from 'react';
@@ -64,7 +69,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 			(cc: ContentTypeFieldSchema) => ({
 				path: generatePath(MODULE_PATHS.detailCCEdit, {
 					contentTypeUuid: contentType.uuid,
-					ccUuid: cc.uuid,
+					ccName: cc.name,
 				}),
 				label: cc.label,
 				name: cc.name,
@@ -124,18 +129,16 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	};
 
 	return (
-		<>
-			<div className="u-container u-wrapper">
-				<div className="row between-xs top-xs u-margin-bottom-lg">
-					<div className="col-xs-3">
-						<NavList items={CT_CC_NAV_LIST_ITEMS} />
-						<Button className="u-margin-top" iconLeft="plus" primary>
-							Sectie toevoegen
-						</Button>
-					</div>
-
-					<div className="col-xs-9">{renderDetail()}</div>
+		<Container>
+			<div className="row between-xs top-xs">
+				<div className="col-xs-3">
+					<NavList items={CT_CC_NAV_LIST_ITEMS} />
+					<Button className="u-margin-top" iconLeft="plus" primary>
+						Sectie toevoegen
+					</Button>
 				</div>
+
+				<div className="col-xs-9">{renderDetail()}</div>
 			</div>
 			<ActionBar className="o-action-bar--fixed" isOpen>
 				<ActionBarContentSection>
@@ -149,7 +152,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 					</div>
 				</ActionBarContentSection>
 			</ActionBar>
-		</>
+		</Container>
 	);
 };
 

@@ -1,5 +1,5 @@
 import { Button } from '@acpaas-ui/react-components';
-import { Table } from '@acpaas-ui/react-editorial-components';
+import { Container, Table } from '@acpaas-ui/react-editorial-components';
 import React, { FC, useEffect, useState } from 'react';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
@@ -131,20 +131,20 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 
 		return (
 			<>
-				<p>
+				<p className="u-margin-bottom">
 					Bepaal op welke sites dit content type geactiveerd mag worden. Opgelet, u kan
 					het content type enkel deactiveren wanneer er géén content items van dit type
 					meer bestaan binnen de desbetreffende site.
 				</p>
-				<Table className="u-margin-top" columns={sitesColumns} rows={sitesRows}></Table>
+				<Table columns={sitesColumns} rows={sitesRows}></Table>
 			</>
 		);
 	};
 
 	return (
-		<div className="u-container u-wrapper">
+		<Container>
 			<DataLoader loadingState={initialLoading} render={SitesTable} />
-		</div>
+		</Container>
 	);
 };
 

@@ -148,9 +148,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			<div className="u-margin-top">
-				<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
-			</div>
+			<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
 		</>
 	);
 };

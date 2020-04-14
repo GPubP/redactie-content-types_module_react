@@ -1,5 +1,9 @@
 import { Button, Card } from '@acpaas-ui/react-components';
-import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
+import {
+	ActionBar,
+	ActionBarContentSection,
+	Container,
+} from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import kebabCase from 'lodash.kebabcase';
 import { parse } from 'query-string';
@@ -125,9 +129,9 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 
 	return (
 		<>
-			<div className="u-container u-wrapper u-margin-top u-margin-bottom">
+			<Container>
 				<DataLoader loadingState={loadingState} render={renderCCNew} />
-			</div>
+			</Container>
 		</>
 	);
 };

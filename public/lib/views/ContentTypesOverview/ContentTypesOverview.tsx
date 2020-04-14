@@ -1,5 +1,6 @@
 import { Button } from '@acpaas-ui/react-components';
 import {
+	Container,
 	ContextHeader,
 	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
@@ -108,9 +109,9 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
-			<div className="u-container u-wrapper u-margin-top u-margin-bottom">
+			<Container>
 				<DataLoader loadingState={loadingState} render={renderOverview} />
-			</div>
+			</Container>
 		</>
 	);
 };

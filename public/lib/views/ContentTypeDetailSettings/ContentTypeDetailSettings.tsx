@@ -1,5 +1,9 @@
 import { Button, TextField } from '@acpaas-ui/react-components';
-import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
+import {
+	ActionBar,
+	ActionBarContentSection,
+	Container,
+} from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC } from 'react';
@@ -32,37 +36,35 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA}
 		>
 			{({ submitForm, values }) => (
-				<>
-					<div className="u-container u-wrapper u-margin-bottom-lg">
-						<div className="row">
-							<div className="col-xs-12 col-md-8 row middle-xs">
-								<div className="col-xs-12 col-md-8">
-									<Field as={TextField} label="Naam" name="meta.label" required />
-									<div className="u-text-light u-margin-top-xs">
-										Geef het content type een korte en duidelijke naam.
-									</div>
+				<Container>
+					<div className="row">
+						<div className="col-xs-12 col-md-8 row middle-xs">
+							<div className="col-xs-12 col-md-8">
+								<Field as={TextField} label="Naam" name="meta.label" required />
+								<div className="u-text-light u-margin-top-xs">
+									Geef het content type een korte en duidelijke naam.
 								</div>
+							</div>
 
-								<div className="col-xs-12 col-md-4 u-margin-top u-margin-bottom">
-									<div>
-										Systeemnaam: <b>{kebabCase(values.meta.label)}</b>
-									</div>
+							<div className="col-xs-12 col-md-4 u-margin-top u-margin-bottom">
+								<div>
+									Systeemnaam: <b>{kebabCase(values.meta.label)}</b>
 								</div>
 							</div>
 						</div>
-						<div className="row">
-							<div className="col-xs-12 row middle-xs u-margin-top">
-								<div className="col-xs-12">
-									<Field
-										as={TextField}
-										label="Beschrijving"
-										name="meta.description"
-										required
-									/>
-									<div className="u-text-light u-margin-top-xs">
-										Geef het content type een duidelijke beschrijving voor in
-										het overzicht.
-									</div>
+					</div>
+					<div className="row">
+						<div className="col-xs-12 row middle-xs u-margin-top">
+							<div className="col-xs-12">
+								<Field
+									as={TextField}
+									label="Beschrijving"
+									name="meta.description"
+									required
+								/>
+								<div className="u-text-light u-margin-top-xs">
+									Geef het content type een duidelijke beschrijving voor in het
+									overzicht.
 								</div>
 							</div>
 						</div>
@@ -83,7 +85,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 							</div>
 						</ActionBarContentSection>
 					</ActionBar>
-				</>
+				</Container>
 			)}
 		</Formik>
 	);
