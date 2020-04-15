@@ -5,7 +5,11 @@ import React, { FC } from 'react';
 import { AutoSubmit } from '../../components';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
 
-const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({ fieldTypeData, onSubmit }) => {
+const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
+	CTField,
+	fieldTypeData,
+	onSubmit,
+}) => {
 	/**
 	 * Methods
 	 */
@@ -45,6 +49,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({ fieldTypeData, onS
 
 	return (
 		<formsAPI.Form
+			initialValues={CTField.config}
 			schema={parsedFormSchema}
 			validationSchema={validationSchema}
 			errorMessages={{}}

@@ -5,23 +5,19 @@ import {
 	Container,
 } from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
-import React, { FC, ReactElement, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { NavList } from '../../components';
 import { MODULE_PATHS } from '../../contentTypes.const';
+import { generateFieldFromType, parseContentTypeField } from '../../contentTypes.helpers';
 import { ContentTypesCCRouteProps, ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import { useNavigate, useTenantContext } from '../../hooks';
 import { ContentTypeFieldSchema } from '../../services/contentTypes';
-import { ContentTypeUpdateActionTypes } from '../ContentTypeUpdate/ContentTypeUpdate.types';
+import { internalService } from '../../store/internal';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCEdit.const';
 
-const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({
-	contentType,
-	routes,
-	state,
-	dispatch,
-}) => {
+const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ contentType, routes, state }) => {
 	const { activeField, fields } = state;
 
 	/**
@@ -30,6 +26,13 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({
 	const [updatedField, setUpdatedField] = useState<ContentTypeFieldSchema | null>(null);
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
+
+	useEffect(() => {
+		if (activeField) {
+			const initialValues = parseContentTypeField(activeField);
+			setUpdatedField(generateFieldFromType(activeField.fieldType.data, initialValues));
+		}
+	}, [activeField]);
 
 	/**
 	 * Methods
@@ -43,21 +46,15 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({
 	};
 
 	const onFieldDelete = (): void => {
-		dispatch({
-			type: ContentTypeUpdateActionTypes.UPDATE_FIELDS,
-			payload: fields.filter(field => field.uuid !== activeField?.uuid),
-		});
+		internalService.updateFields(fields.filter(field => field.uuid !== activeField?.uuid));
 		navigateToOverview();
 	};
 
 	const onFieldSubmit = (): void => {
 		if (updatedField) {
-			dispatch({
-				type: ContentTypeUpdateActionTypes.UPDATE_FIELDS,
-				payload: state.fields.map(field =>
-					field.uuid === activeField?.uuid ? updatedField : field
-				),
-			});
+			internalService.updateFields(
+				fields.map(field => (field.uuid === activeField?.uuid ? updatedField : field))
+			);
 			navigateToOverview();
 		}
 	};
@@ -66,7 +63,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({
 	 * Render
 	 */
 	const renderChildRoutes = (): ReactElement | null => {
-		if (!activeField) {
+		if (!activeField || !updatedField) {
 			return null;
 		}
 
@@ -78,7 +75,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({
 			{
 				contentType,
 				CTField: updatedField,
-				fieldTypeData: (activeField?.fieldType as any).data,
+				fieldTypeData: activeField.fieldType.data,
 				routes: activeRoute?.routes,
 				onDelete: onFieldDelete,
 				onSubmit: onFieldChange,

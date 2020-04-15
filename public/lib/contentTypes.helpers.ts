@@ -1,7 +1,11 @@
-import { pathOr } from 'ramda';
+import { is, omit, pathOr } from 'ramda';
 
 import { CCSettingsFormState } from './contentTypes.types';
-import { ContentTypeCreate, ContentTypeFieldSchema } from './services/contentTypes';
+import {
+	ContentTypeCreate,
+	ContentTypeFieldResponse,
+	ContentTypeFieldSchema,
+} from './services/contentTypes';
 import { FieldTypeSchemaData } from './services/fieldTypes';
 
 export const generateEmptyContentType = (): ContentTypeCreate => ({
@@ -50,3 +54,19 @@ export const generateCCFormState = (
 		max: pathOr(1, ['generalConfig', 'max'], initialValues),
 	},
 });
+
+export const parseContentTypeField = (
+	field: ContentTypeFieldResponse | ContentTypeFieldSchema
+): ContentTypeFieldSchema => {
+	const dataType = is(String, field.dataType)
+		? (field.dataType as string)
+		: (field as ContentTypeFieldResponse).dataType._id;
+	const fieldType = is(String, field.fieldType)
+		? (field.fieldType as string)
+		: (field as ContentTypeFieldResponse).fieldType._id || '';
+	return {
+		...omit(['dataType', 'fieldType'], field),
+		dataType,
+		fieldType,
+	};
+};

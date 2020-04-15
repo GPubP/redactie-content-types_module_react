@@ -15,16 +15,15 @@ import { generateFieldFromType } from '../../contentTypes.helpers';
 import { ContentTypesCCRouteProps, ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
 import { ContentTypeFieldSchema } from '../../services/contentTypes';
-import { ContentTypeUpdateActionTypes } from '../ContentTypeUpdate/ContentTypeUpdate.types';
+import { internalService } from '../../store/internal';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCNew.const';
 
 const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 	contentType,
-	state,
-	dispatch,
 	location,
 	routes,
+	state,
 }) => {
 	const { fieldType: fieldTypeUuid, id: fieldTypeId, name } = parse(location.search);
 	const initalFieldValues = {
@@ -56,10 +55,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 
 	const onCTSubmit = (): void => {
 		if (CTField) {
-			dispatch({
-				type: ContentTypeUpdateActionTypes.UPDATE_FIELDS,
-				payload: [...state.fields, CTField],
-			});
+			internalService.updateFields([...state.fields, CTField]);
 			navigateToOverview();
 		}
 	};

@@ -6,15 +6,16 @@ import {
 	Table,
 } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
-import { pathOr } from 'ramda';
-import React, { FC, ReactElement, useEffect } from 'react';
+import { omit, pathOr } from 'ramda';
+import React, { FC, ReactElement } from 'react';
 
 import { FormCTNewCC, NavList } from '../../components';
 import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
+import { parseContentTypeField } from '../../contentTypes.helpers';
 import { ContentTypesDetailRouteProps, NewCCFormState } from '../../contentTypes.types';
 import { useNavigate } from '../../hooks';
-import { ContentTypeFieldSchema } from '../../services/contentTypes';
-import { ContentTypeUpdateActionTypes } from '../ContentTypeUpdate/ContentTypeUpdate.types';
+import { ContentTypeFieldResponse, ContentTypeFieldSchema } from '../../services/contentTypes';
+import { internalService } from '../../store/internal';
 
 import {
 	CONTENT_TYPE_COLUMNS,
@@ -26,10 +27,9 @@ import { ContentTypeDetailCCRow } from './ContentTypeDetailCC.types';
 const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	fieldTypes,
 	contentType,
-	state,
-	dispatch,
 	onCancel,
 	onSubmit,
+	state,
 }) => {
 	const fieldTypeOptions = fieldTypes.map(fieldType => ({
 		key: fieldType.uuid,
@@ -41,14 +41,6 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	 * Hooks
 	 */
 	const { navigate } = useNavigate();
-
-	useEffect(() => {
-		if (state.activeField) {
-			navigate(MODULE_PATHS.detailCCEdit, {
-				contentTypeUuid: contentType.uuid,
-			});
-		}
-	}, [contentType.uuid, navigate, state.activeField]);
 
 	/**
 	 * Methods
@@ -64,11 +56,13 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	};
 
 	const onCCSave = (): void => {
-		onSubmit(state.fields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
+		const cleanFields = state.fields.map(parseContentTypeField);
+		onSubmit(cleanFields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
 	};
 
-	const navigateToCC = (payload: ContentTypeFieldSchema): void => {
-		dispatch({ type: ContentTypeUpdateActionTypes.UPDATE_ACTIVE_FIELD, payload });
+	const navigateToCC = (activeField: ContentTypeFieldResponse): void => {
+		internalService.updateActiveField(activeField);
+		navigate(MODULE_PATHS.detailCCEdit, { contentTypeUuid: contentType.uuid });
 	};
 
 	/**
@@ -77,22 +71,20 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	const renderTableField = ({
 		value: fields,
 	}: {
-		value: ContentTypeFieldSchema[];
+		value: (ContentTypeFieldResponse | ContentTypeFieldSchema)[];
 	}): ReactElement => {
-		const contentTypeRows: ContentTypeDetailCCRow[] = (fields || []).map(
-			(cc: ContentTypeFieldSchema) => ({
-				navigate: () => {
-					navigateToCC(cc);
-				},
-				label: cc.label,
-				name: cc.name,
-				fieldType: pathOr('error', ['fieldType', 'data', 'label'])(cc),
-				multiple: typeof cc.generalConfig.max === 'number' && cc.generalConfig.max > 0,
-				required: !!cc.generalConfig.required,
-				translatable: !!cc.generalConfig.multiLanguage,
-				hidden: !!cc.generalConfig.hidden,
-			})
-		);
+		const contentTypeRows: ContentTypeDetailCCRow[] = (fields || []).map(cc => ({
+			navigate: () => {
+				navigateToCC(cc as ContentTypeFieldResponse);
+			},
+			label: cc.label,
+			name: cc.name,
+			fieldType: pathOr('error', ['fieldType', 'data', 'label'])(cc),
+			multiple: typeof cc.generalConfig.max === 'number' && cc.generalConfig.max > 0,
+			required: !!cc.generalConfig.required,
+			translatable: !!cc.generalConfig.multiLanguage,
+			hidden: !!cc.generalConfig.hidden,
+		}));
 
 		return (
 			<Table

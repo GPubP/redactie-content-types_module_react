@@ -1,6 +1,6 @@
-import { ContentTypeFieldSchema } from '../../services/contentTypes';
+import { ContentTypeFieldResponse, ContentTypeFieldSchema } from '../../services/contentTypes';
 
 export interface InternalState {
-	readonly activeField: ContentTypeFieldSchema | null;
-	readonly fields: ContentTypeFieldSchema[];
+	readonly activeField: ContentTypeFieldResponse | null;
+	readonly fields: (ContentTypeFieldResponse | ContentTypeFieldSchema)[];
 }

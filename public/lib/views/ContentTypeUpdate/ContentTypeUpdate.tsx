@@ -1,8 +1,10 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import { omit } from 'ramda';
-import React, { FC, ReactElement, useEffect, useReducer, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
 import {
@@ -20,20 +22,20 @@ import {
 	useTenantContext,
 } from '../../hooks';
 import {
+	ContentTypeFieldResponse,
 	ContentTypeFieldSchema,
 	ContentTypeMetaSchema,
 	ContentTypeSchema,
 } from '../../services/contentTypes';
+import { internalQuery, internalService } from '../../store/internal';
 import { LoadingState, Tab } from '../../types';
-
-import { contentTypeUpdateReducer, generateInitialState } from './ContentTypeUpdate.helpers';
-import { ContentTypeUpdateActionTypes } from './ContentTypeUpdate.types';
 
 const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) => {
 	/**
 	 * Hooks
 	 */
-	const [state, dispatch] = useReducer(contentTypeUpdateReducer, generateInitialState());
+	const [activeField, setActiveField] = useState<ContentTypeFieldResponse | null>(null);
+	const [fields, setFields] = useState<(ContentTypeFieldResponse | ContentTypeFieldSchema)[]>([]);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const { contentTypeUuid } = useParams();
 	const breadcrumbs = useRoutesBreadcrumbs();
@@ -58,12 +60,29 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 
 	useEffect(() => {
 		if (contentTypeLoadingState !== LoadingState.Loading && contentType?.fields.length) {
-			dispatch({
-				type: ContentTypeUpdateActionTypes.UPDATE_FIELDS,
-				payload: contentType.fields,
-			});
+			internalService.updateFields(contentType.fields);
 		}
 	}, [contentType, contentTypeLoadingState]);
+
+	useEffect(() => {
+		const destroyed$: Subject<boolean> = new Subject<boolean>();
+
+		internalQuery.activeField$.pipe(takeUntil(destroyed$)).subscribe(activeFieldSub => {
+			if (activeFieldSub) {
+				return setActiveField(activeFieldSub);
+			}
+		});
+		internalQuery.fields$.pipe(takeUntil(destroyed$)).subscribe(fieldsSub => {
+			if (fieldsSub) {
+				return setFields(fieldsSub);
+			}
+		});
+
+		return () => {
+			destroyed$.next(true);
+			destroyed$.complete();
+		};
+	}, []);
 
 	/**
 	 * Methods
@@ -133,11 +152,10 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
 			fieldTypes,
 			contentType,
-			state,
-			dispatch,
 			onCancel: navigateToOverview,
 			onSubmit: updateCT,
 			routes: activeRoute?.routes,
+			state: { activeField, fields },
 		});
 	};
 
