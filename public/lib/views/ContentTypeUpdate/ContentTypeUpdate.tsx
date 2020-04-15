@@ -117,7 +117,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		updateContentType(newCT);
 	};
 
-	const showTabs = !/\/nieuw\//.test(location.pathname);
+	const showTabs = !/\/(nieuw|bewerken)\//.test(location.pathname);
 
 	/**
 	 * Render

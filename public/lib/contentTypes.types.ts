@@ -34,9 +34,11 @@ export interface ContentTypesDetailRouteProps<Params = {}>
 	routes: ModuleRouteConfig[];
 }
 
-export interface ContentTypesCCNewRouteProps extends ContentTypesRouteProps {
+export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
 	CTField: ContentTypeFieldSchema;
+	contentType?: ContentTypeSchema;
 	fieldTypeData: FieldTypeSchemaData;
+	onDelete?: () => void;
 	onSubmit: (data: any) => void;
 }
 

@@ -7,13 +7,14 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
 import { pathOr } from 'ramda';
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useEffect } from 'react';
 
 import { FormCTNewCC, NavList } from '../../components';
 import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, NewCCFormState } from '../../contentTypes.types';
 import { useNavigate } from '../../hooks';
 import { ContentTypeFieldSchema } from '../../services/contentTypes';
+import { ContentTypeUpdateActionTypes } from '../ContentTypeUpdate/ContentTypeUpdate.types';
 
 import {
 	CONTENT_TYPE_COLUMNS,
@@ -26,6 +27,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	fieldTypes,
 	contentType,
 	state,
+	dispatch,
 	onCancel,
 	onSubmit,
 }) => {
@@ -38,7 +40,15 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	/**
 	 * Hooks
 	 */
-	const { generatePath, navigate } = useNavigate();
+	const { navigate } = useNavigate();
+
+	useEffect(() => {
+		if (state.activeField) {
+			navigate(MODULE_PATHS.detailCCEdit, {
+				contentTypeUuid: contentType.uuid,
+			});
+		}
+	}, [contentType.uuid, navigate, state.activeField]);
 
 	/**
 	 * Methods
@@ -57,6 +67,10 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		onSubmit(state.fields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
 	};
 
+	const navigateToCC = (payload: ContentTypeFieldSchema): void => {
+		dispatch({ type: ContentTypeUpdateActionTypes.UPDATE_ACTIVE_FIELD, payload });
+	};
+
 	/**
 	 * Render
 	 */
@@ -67,10 +81,9 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	}): ReactElement => {
 		const contentTypeRows: ContentTypeDetailCCRow[] = (fields || []).map(
 			(cc: ContentTypeFieldSchema) => ({
-				path: generatePath(MODULE_PATHS.detailCCEdit, {
-					contentTypeUuid: contentType.uuid,
-					ccName: cc.name,
-				}),
+				navigate: () => {
+					navigateToCC(cc);
+				},
 				label: cc.label,
 				name: cc.name,
 				fieldType: pathOr('error', ['fieldType', 'data', 'label'])(cc),

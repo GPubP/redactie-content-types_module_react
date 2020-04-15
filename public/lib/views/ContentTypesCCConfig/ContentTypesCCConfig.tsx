@@ -3,9 +3,9 @@ import Core from '@redactie/redactie-core';
 import React, { FC } from 'react';
 
 import { AutoSubmit } from '../../components';
-import { ContentTypesCCNewRouteProps } from '../../contentTypes.types';
+import { ContentTypesCCRouteProps } from '../../contentTypes.types';
 
-const ContentTypesCCConfig: FC<ContentTypesCCNewRouteProps> = ({ fieldTypeData, onSubmit }) => {
+const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({ fieldTypeData, onSubmit }) => {
 	/**
 	 * Methods
 	 */

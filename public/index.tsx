@@ -7,6 +7,7 @@ import { ContentTypesModuleProps } from './lib/contentTypes.types';
 import { TenantContext } from './lib/context';
 import {
 	ContentTypesCCConfig,
+	ContentTypesCCEdit,
 	ContentTypesCCNew,
 	ContentTypesCCSettings,
 	ContentTypesCCValidation,
@@ -41,7 +42,9 @@ const ContentTypesComponent: FC<ContentTypesModuleProps> = ({
 	}
 
 	if (
-		new RegExp(`/content-types/${uuidRegex}/content-componenten/nieuw$`).test(location.pathname)
+		new RegExp(`/content-types/${uuidRegex}/content-componenten/(nieuw|bewerken)$`).test(
+			location.pathname
+		)
 	) {
 		return <Redirect to={`${location.pathname}/instellingen${location.search}`} />;
 	}
@@ -111,7 +114,7 @@ Core.routes.register({
 				},
 				{
 					path: MODULE_PATHS.detailCCEdit,
-					component: ContentTypesCCNew,
+					component: ContentTypesCCEdit,
 					routes: [
 						{
 							path: MODULE_PATHS.detailCCEditSettings,

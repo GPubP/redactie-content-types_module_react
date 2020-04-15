@@ -2,9 +2,9 @@ import React, { FC } from 'react';
 
 import { FormCCSettings } from '../../components';
 import { generateCCFormState } from '../../contentTypes.helpers';
-import { CCSettingsFormState, ContentTypesCCNewRouteProps } from '../../contentTypes.types';
+import { CCSettingsFormState, ContentTypesCCRouteProps } from '../../contentTypes.types';
 
-const ContentTypesCCSettings: FC<ContentTypesCCNewRouteProps> = ({ CTField, onSubmit }) => {
+const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({ CTField, onDelete, onSubmit }) => {
 	/**
 	 * Render
 	 */

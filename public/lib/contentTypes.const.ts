@@ -30,7 +30,7 @@ export const CONTENT_DETAIL_TABS: Tab[] = [
 	CONTENT_TYPE_DETAIL_TAB_MAP.sites,
 ];
 
-const CC_EDIT_PATH = '/content-types/:contentTypeUuid/content-componenten/:ccUuid';
+const CC_EDIT_PATH = '/content-types/:contentTypeUuid/content-componenten/bewerken';
 const CC_NEW_PATH = '/content-types/:contentTypeUuid/content-componenten/nieuw';
 
 export const MODULE_PATHS = {

@@ -12,10 +12,7 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { DataLoader, NavList } from '../../components';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { generateFieldFromType } from '../../contentTypes.helpers';
-import {
-	ContentTypesCCNewRouteProps,
-	ContentTypesDetailRouteProps,
-} from '../../contentTypes.types';
+import { ContentTypesCCRouteProps, ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
 import { ContentTypeFieldSchema } from '../../services/contentTypes';
 import { ContentTypeUpdateActionTypes } from '../ContentTypeUpdate/ContentTypeUpdate.types';
@@ -85,7 +82,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 				fieldTypeData: fieldType,
 				routes: activeRoute?.routes,
 				onSubmit: onFieldTypeChange,
-			} as ContentTypesCCNewRouteProps
+			} as ContentTypesCCRouteProps
 		);
 	};
 
