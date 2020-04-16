@@ -23,16 +23,16 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = [
 		classList: ['u-text-right'],
 		disableSorting: true,
 		component(value: unknown, rowData: ContentTypesOverviewTableRow) {
-			const { contentTypeUuid, navigate } = rowData;
+			const { navigate, uuid } = rowData;
 
 			return (
 				<Button
 					ariaLabel="Edit"
 					icon="edit"
-					onClick={() => navigate(contentTypeUuid)}
+					onClick={() => navigate(uuid)}
 					type="primary"
 					transparent
-				></Button>
+				/>
 			);
 		},
 	},
