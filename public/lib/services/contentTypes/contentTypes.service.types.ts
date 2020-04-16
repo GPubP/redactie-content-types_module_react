@@ -1,6 +1,6 @@
 import { FieldTypeSchema, Operator } from '../fieldTypes';
 
-interface BaseContentType {
+export interface BaseContentTypeField {
 	uuid?: string;
 	label: string;
 	module: string;
@@ -17,12 +17,12 @@ interface BaseContentType {
 	};
 }
 
-export interface ContentTypeFieldSchema extends BaseContentType {
+export interface ContentTypeFieldSchema extends BaseContentTypeField {
 	dataType: string;
 	fieldType: string;
 }
 
-export interface ContentTypeFieldResponse extends BaseContentType {
+export interface ContentTypeFieldResponse extends BaseContentTypeField {
 	dataType: {
 		_id: string;
 		meta: {
@@ -71,7 +71,7 @@ export interface ContentTypeResponse {
 }
 
 export interface ContentTypesSchema {
-	data: ContentTypeSchema[];
+	data: ContentTypeResponse[];
 }
 
 export interface ContentTypeCreate {

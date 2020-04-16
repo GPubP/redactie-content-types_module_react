@@ -1,15 +1,14 @@
-import { ContentTypeFieldResponse, ContentTypeFieldSchema } from '../../services/contentTypes';
-
+import { ContentTypeField } from './internal.model';
 import { internalStore, InternalStore } from './internal.store';
 
 export class InternalService {
 	constructor(private store: InternalStore) {}
 
-	public updateActiveField(activeField: ContentTypeFieldResponse): void {
+	public updateActiveField(activeField: ContentTypeField): void {
 		this.store.update({ activeField });
 	}
 
-	public updateFields(fields: (ContentTypeFieldResponse | ContentTypeFieldSchema)[]): void {
+	public updateFields(fields: ContentTypeField[]): void {
 		this.store.update({ fields });
 	}
 }

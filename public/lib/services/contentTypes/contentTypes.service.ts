@@ -1,8 +1,12 @@
 import { api } from '../api';
 
-import { ContentTypeSchema, ContentTypesSchema } from './contentTypes.service.types';
+import {
+	ContentTypeResponse,
+	ContentTypeSchema,
+	ContentTypesSchema,
+} from './contentTypes.service.types';
 
-export const getContentTypes = async (): Promise<ContentTypeSchema[] | null> => {
+export const getContentTypes = async (): Promise<ContentTypeResponse[] | null> => {
 	try {
 		const response: ContentTypesSchema = await api.get('content/content-types').json();
 
@@ -13,9 +17,9 @@ export const getContentTypes = async (): Promise<ContentTypeSchema[] | null> => 
 	}
 };
 
-export const getContentType = async (uuid: string): Promise<ContentTypeSchema | null> => {
+export const getContentType = async (uuid: string): Promise<ContentTypeResponse | null> => {
 	try {
-		const response: ContentTypeSchema = await api.get(`content/content-types/${uuid}`).json();
+		const response: ContentTypeResponse = await api.get(`content/content-types/${uuid}`).json();
 
 		return response;
 	} catch (err) {
@@ -26,8 +30,8 @@ export const getContentType = async (uuid: string): Promise<ContentTypeSchema | 
 
 export const updateContentType = async (
 	contentType: ContentTypeSchema
-): Promise<ContentTypeSchema | null> => {
-	const response: ContentTypeSchema = await api
+): Promise<ContentTypeResponse | null> => {
+	const response: ContentTypeResponse = await api
 		.put(`content/content-types/${contentType.uuid}`, {
 			json: contentType,
 		})
@@ -38,8 +42,8 @@ export const updateContentType = async (
 
 export const createContentType = async (
 	contentType: ContentTypeSchema
-): Promise<ContentTypeSchema | null> => {
-	const response: ContentTypeSchema = await api
+): Promise<ContentTypeResponse | null> => {
+	const response: ContentTypeResponse = await api
 		.post('content/content-types', {
 			json: contentType,
 		})

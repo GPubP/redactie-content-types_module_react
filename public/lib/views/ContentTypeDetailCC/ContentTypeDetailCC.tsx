@@ -6,7 +6,7 @@ import {
 	Table,
 } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
-import { omit, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import React, { FC, ReactElement } from 'react';
 
 import { FormCTNewCC, NavList } from '../../components';
@@ -14,8 +14,7 @@ import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.co
 import { parseContentTypeField } from '../../contentTypes.helpers';
 import { ContentTypesDetailRouteProps, NewCCFormState } from '../../contentTypes.types';
 import { useNavigate } from '../../hooks';
-import { ContentTypeFieldResponse, ContentTypeFieldSchema } from '../../services/contentTypes';
-import { internalService } from '../../store/internal';
+import { ContentTypeField, internalService } from '../../store/internal';
 
 import {
 	CONTENT_TYPE_COLUMNS,
@@ -60,7 +59,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		onSubmit(cleanFields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
 	};
 
-	const navigateToCC = (activeField: ContentTypeFieldResponse): void => {
+	const navigateToCC = (activeField: ContentTypeField): void => {
 		internalService.updateActiveField(activeField);
 		navigate(MODULE_PATHS.detailCCEdit, { contentTypeUuid: contentType.uuid });
 	};
@@ -68,14 +67,10 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	/**
 	 * Render
 	 */
-	const renderTableField = ({
-		value: fields,
-	}: {
-		value: (ContentTypeFieldResponse | ContentTypeFieldSchema)[];
-	}): ReactElement => {
+	const renderTableField = ({ value: fields }: { value: ContentTypeField[] }): ReactElement => {
 		const contentTypeRows: ContentTypeDetailCCRow[] = (fields || []).map(cc => ({
 			navigate: () => {
-				navigateToCC(cc as ContentTypeFieldResponse);
+				navigateToCC(cc);
 			},
 			label: cc.label,
 			name: cc.name,

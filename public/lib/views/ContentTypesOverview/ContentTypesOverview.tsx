@@ -12,7 +12,7 @@ import { DataLoader } from '../../components';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesRouteProps } from '../../contentTypes.types';
 import { useNavigate, useRoutesBreadcrumbs } from '../../hooks';
-import { ContentTypeSchema, getContentTypes } from '../../services/contentTypes';
+import { ContentTypeResponse, getContentTypes } from '../../services/contentTypes';
 import { LoadingState } from '../../types';
 
 import { CONTENT_TYPE_OVERVIEW_COLUMNS } from './ContentTypesOverview.const';
@@ -23,7 +23,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	 * Hooks
 	 */
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [contentTypes, setContentTypes] = useState<ContentTypeSchema[] | null>(null);
+	const [contentTypes, setContentTypes] = useState<ContentTypeResponse[] | null>(null);
 	const { navigate } = useNavigate();
 	const breadcrumbs = useRoutesBreadcrumbs();
 

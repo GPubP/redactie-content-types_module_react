@@ -1,6 +1,17 @@
-import { ContentTypeFieldResponse, ContentTypeFieldSchema } from '../../services/contentTypes';
+import { BaseContentTypeField } from '../../services/contentTypes';
+import { FieldTypeSchemaData, FieldTypeSchemaMeta } from '../../services/fieldTypes';
+
+export interface ContentTypeField extends BaseContentTypeField {
+	dataType: string;
+	fieldType: {
+		_id?: string;
+		uuid?: string;
+		data: FieldTypeSchemaData;
+		meta?: FieldTypeSchemaMeta;
+	};
+}
 
 export interface InternalState {
-	readonly activeField: ContentTypeFieldResponse | null;
-	readonly fields: (ContentTypeFieldResponse | ContentTypeFieldSchema)[];
+	readonly activeField: ContentTypeField | null;
+	readonly fields: ContentTypeField[];
 }

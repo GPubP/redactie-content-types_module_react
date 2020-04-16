@@ -2,7 +2,7 @@ import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie
 
 import { ContentTypeFieldSchema, ContentTypeSchema } from './services/contentTypes';
 import { FieldTypeSchema, FieldTypeSchemaData, FieldTypeSchemaMeta } from './services/fieldTypes';
-import { InternalState } from './store/internal';
+import { ContentTypeField, InternalState } from './store/internal';
 import { Tab } from './types';
 
 export interface ContentTypesModuleProps extends RouteConfigComponentProps {
@@ -30,7 +30,7 @@ export interface ContentTypesDetailRouteProps<Params = {}>
 }
 
 export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
-	CTField: ContentTypeFieldSchema;
+	CTField: ContentTypeField;
 	contentType?: ContentTypeSchema;
 	fieldTypeData: FieldTypeSchemaData;
 	onDelete?: () => void;

@@ -22,20 +22,19 @@ import {
 	useTenantContext,
 } from '../../hooks';
 import {
-	ContentTypeFieldResponse,
 	ContentTypeFieldSchema,
 	ContentTypeMetaSchema,
 	ContentTypeSchema,
 } from '../../services/contentTypes';
-import { internalQuery, internalService } from '../../store/internal';
+import { ContentTypeField, internalQuery, internalService } from '../../store/internal';
 import { LoadingState, Tab } from '../../types';
 
 const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) => {
 	/**
 	 * Hooks
 	 */
-	const [activeField, setActiveField] = useState<ContentTypeFieldResponse | null>(null);
-	const [fields, setFields] = useState<(ContentTypeFieldResponse | ContentTypeFieldSchema)[]>([]);
+	const [activeField, setActiveField] = useState<ContentTypeField | null>(null);
+	const [fields, setFields] = useState<ContentTypeField[]>([]);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const { contentTypeUuid } = useParams();
 	const breadcrumbs = useRoutesBreadcrumbs();
@@ -60,7 +59,9 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 
 	useEffect(() => {
 		if (contentTypeLoadingState !== LoadingState.Loading && contentType?.fields.length) {
-			internalService.updateFields(contentType.fields);
+			internalService.updateFields(
+				contentType.fields.map(f => ({ ...f, dataType: f.dataType._id }))
+			);
 		}
 	}, [contentType, contentTypeLoadingState]);
 
