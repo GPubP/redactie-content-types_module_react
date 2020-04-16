@@ -1,5 +1,5 @@
 export interface ContentTypesOverviewTableRow {
-	contentTypeUuid: string;
+	uuid: string;
 	name: string;
 	description: string;
 	status: string;
