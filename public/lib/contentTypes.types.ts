@@ -45,6 +45,7 @@ export interface NewCCFormState {
 export interface CCSettingsFormState {
 	label: string;
 	name: string;
+	defaultValue: string;
 	config: {
 		guideline: string;
 	};

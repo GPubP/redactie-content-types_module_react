@@ -3,6 +3,7 @@ import { FieldTypeSchemaData, FieldTypeSchemaMeta } from '../../services/fieldTy
 
 export interface ContentTypeField extends BaseContentTypeField {
 	dataType: string;
+	defaultValue?: string;
 	fieldType: {
 		_id?: string;
 		uuid?: string;
