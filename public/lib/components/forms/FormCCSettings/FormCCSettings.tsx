@@ -35,6 +35,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 								<div className="col-xs-12 col-md-8">
 									<Field
 										as={TextField}
+										id="label"
 										label="Label"
 										name="label"
 										placeholder="Typ een label"
@@ -56,6 +57,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 							<div className="col-xs-12">
 								<Field
 									as={Textarea}
+									id="config.guideline"
 									label="Richtlijn (optioneel)"
 									name="config.guideline"
 								/>
@@ -68,6 +70,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 						<div className="row u-margin-top">
 							<div className="col-xs-12">
 								<RadioGroup
+									id="isMultiple"
 									name="isMultiple"
 									onChange={(e: ChangeEvent<HTMLInputElement>) =>
 										setIsMultiple(e.target.value === 'true')
@@ -85,6 +88,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 											<Field
 												as={TextField}
 												type="number"
+												id="generalConfig.min"
 												label="Min."
 												name="generalConfig.min"
 											/>
@@ -93,6 +97,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 											<Field
 												as={TextField}
 												type="number"
+												id="generalConfig.max"
 												label="Max."
 												name="generalConfig.max"
 											/>

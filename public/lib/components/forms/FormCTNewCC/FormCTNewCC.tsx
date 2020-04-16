@@ -13,6 +13,7 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({ fieldTypeOptions, formState, onSu
 					<div className="row u-margin-top u-margin-bottom">
 						<div className="col-xs-6">
 							<Field
+								id="fieldType"
 								label="Selecteer"
 								name="fieldType"
 								options={[FIELD_TYPES_DEFAULT_OPTION, ...fieldTypeOptions]}
@@ -26,6 +27,7 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({ fieldTypeOptions, formState, onSu
 						<div className="col-xs-6">
 							<Field
 								type="text"
+								id="name"
 								label="Naam"
 								name="name"
 								placeholder="Typ een naam"
