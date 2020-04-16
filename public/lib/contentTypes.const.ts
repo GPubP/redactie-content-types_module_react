@@ -47,10 +47,10 @@ export const MODULE_PATHS = {
 	detailCCNewSettings: `${CC_NEW_PATH}/instellingen`,
 	detailCCNewConfig: `${CC_NEW_PATH}/configuratie`,
 	detailCCNewValidation: `${CC_NEW_PATH}/validatie`,
-	detailCCNewDefaults: `${CC_NEW_PATH}/standaard-waarden`,
+	detailCCNewDefaults: `${CC_NEW_PATH}/standaard-waarde`,
 	detailCCEdit: CC_EDIT_PATH,
 	detailCCEditSettings: `${CC_EDIT_PATH}/instellingen`,
 	detailCCEditConfig: `${CC_EDIT_PATH}/configuratie`,
 	detailCCEditValidation: `${CC_EDIT_PATH}/validatie`,
-	detailCCEditDefaults: `${CC_EDIT_PATH}/standaard-waarden`,
+	detailCCEditDefaults: `${CC_EDIT_PATH}/standaard-waarde`,
 };

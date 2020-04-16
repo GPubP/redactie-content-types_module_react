@@ -119,21 +119,6 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 								</div>
 							</div>
 						</div>
-						<div className="row u-margin-top">
-							<div className="col-xs-12">
-								<Field
-									as={Checkbox}
-									checked={values.generalConfig.required}
-									id="generalConfig.required"
-									name="generalConfig.required"
-									label="Aanpasbaar"
-								/>
-								<div className="u-text-light">
-									Bepaal of deze content component aangepast mag worden door de
-									redacteur.
-								</div>
-							</div>
-						</div>
 					</>
 				);
 			}}
