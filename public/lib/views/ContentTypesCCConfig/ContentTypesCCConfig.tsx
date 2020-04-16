@@ -1,6 +1,6 @@
 import { FieldSchema, FormsAPI, FormSchema } from '@redactie/form-renderer-module';
 import Core from '@redactie/redactie-core';
-import React, { FC } from 'react';
+import React, { FC, ReactElement } from 'react';
 
 import { AutoSubmit } from '../../components';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
@@ -43,22 +43,35 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	/**
 	 * Render
 	 */
-	if (!formsAPI || parsedFormSchema.fields.length === 0) {
-		return <p>Er zijn geen configuratie mogelijkheden</p>;
-	}
+	const renderCCConfig = (): ReactElement => {
+		if (!formsAPI || parsedFormSchema.fields.length === 0) {
+			return <p>Er zijn geen configuratie mogelijkheden</p>;
+		}
+
+		return (
+			<formsAPI.Form
+				initialValues={CTField.config}
+				schema={parsedFormSchema}
+				validationSchema={validationSchema}
+				errorMessages={{}}
+				onSubmit={onFormSubmit}
+			>
+				{({ initialValues, submitForm, values }) => (
+					<AutoSubmit
+						initialValues={initialValues}
+						submitForm={submitForm}
+						values={values}
+					/>
+				)}
+			</formsAPI.Form>
+		);
+	};
 
 	return (
-		<formsAPI.Form
-			initialValues={CTField.config}
-			schema={parsedFormSchema}
-			validationSchema={validationSchema}
-			errorMessages={{}}
-			onSubmit={onFormSubmit}
-		>
-			{({ initialValues, submitForm, values }) => (
-				<AutoSubmit initialValues={initialValues} submitForm={submitForm} values={values} />
-			)}
-		</formsAPI.Form>
+		<>
+			<h6 className="u-margin-bottom">Configuratie</h6>
+			{renderCCConfig()}
+		</>
 	);
 };
 

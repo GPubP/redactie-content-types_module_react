@@ -30,8 +30,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 				return (
 					<>
 						<AutoSubmit />
-						<h6>Instellingen</h6>
-						<div className="row u-margin-top">
+						<div className="row">
 							<div className="col-xs-12 row middle-xs">
 								<div className="col-xs-12 col-md-8">
 									<Field
