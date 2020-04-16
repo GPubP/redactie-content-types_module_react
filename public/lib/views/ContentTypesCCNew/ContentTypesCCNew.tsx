@@ -14,8 +14,7 @@ import { MODULE_PATHS } from '../../contentTypes.const';
 import { generateFieldFromType } from '../../contentTypes.helpers';
 import { ContentTypesCCRouteProps, ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
-import { ContentTypeFieldSchema } from '../../services/contentTypes';
-import { internalService } from '../../store/internal';
+import { ContentTypeField, internalService } from '../../store/internal';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCNew.const';
 
@@ -35,7 +34,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 	/**
 	 * Hooks
 	 */
-	const [CTField, setCTField] = useState<ContentTypeFieldSchema | null>(null);
+	const [CTField, setCTField] = useState<ContentTypeField | null>(null);
 	const [loadingState, fieldType] = useFieldType(fieldTypeUuid as string | undefined);
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
@@ -54,13 +53,21 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 	};
 
 	const onCTSubmit = (): void => {
-		if (CTField) {
-			internalService.updateFields([...state.fields, CTField]);
+		if (CTField && fieldType) {
+			const populatedField: ContentTypeField = {
+				...CTField,
+				fieldType: {
+					_id: CTField.fieldType._id,
+					data: fieldType,
+				},
+			};
+
+			internalService.updateFields([...state.fields, populatedField]);
 			navigateToOverview();
 		}
 	};
 
-	const onFieldTypeChange = (data: ContentTypeFieldSchema): void => {
+	const onFieldTypeChange = (data: ContentTypeField): void => {
 		setCTField({ ...CTField, ...data });
 	};
 

@@ -7,13 +7,11 @@ import {
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
-import { NavList } from '../../components';
+import { DataLoader, NavList } from '../../components';
 import { MODULE_PATHS } from '../../contentTypes.const';
-import { generateFieldFromType, parseContentTypeField } from '../../contentTypes.helpers';
 import { ContentTypesCCRouteProps, ContentTypesDetailRouteProps } from '../../contentTypes.types';
-import { useNavigate, useTenantContext } from '../../hooks';
-import { ContentTypeFieldSchema } from '../../services/contentTypes';
-import { internalService } from '../../store/internal';
+import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
+import { ContentTypeField, internalService } from '../../store/internal';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCEdit.const';
 
@@ -23,16 +21,16 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ contentType, rou
 	/**
 	 * Hooks
 	 */
-	const [updatedField, setUpdatedField] = useState<ContentTypeFieldSchema | null>(null);
+	const [updatedField, setUpdatedField] = useState<ContentTypeField | null>(null);
+	const [loadingState, fieldType] = useFieldType(activeField?.fieldType.uuid);
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 
 	useEffect(() => {
-		if (activeField) {
-			const initialValues = parseContentTypeField(activeField);
-			setUpdatedField(generateFieldFromType(activeField.fieldType.data, initialValues));
+		if (activeField && fieldType) {
+			setUpdatedField(activeField);
 		}
-	}, [activeField]);
+	}, [activeField, fieldType]);
 
 	/**
 	 * Methods
@@ -41,8 +39,15 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ contentType, rou
 		navigate(MODULE_PATHS.detailCC, { contentTypeUuid: contentType.uuid });
 	};
 
-	const onFieldChange = (data: ContentTypeFieldSchema): void => {
-		setUpdatedField({ ...updatedField, ...data });
+	const onFieldChange = (data: ContentTypeField): void => {
+		setUpdatedField({
+			...updatedField,
+			...data,
+			config: {
+				...updatedField?.config,
+				...data.config,
+			},
+		});
 	};
 
 	const onFieldDelete = (): void => {
@@ -75,7 +80,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ contentType, rou
 			{
 				contentType,
 				CTField: updatedField,
-				fieldTypeData: activeField.fieldType.data,
+				fieldTypeData: fieldType,
 				routes: activeRoute?.routes,
 				onDelete: onFieldDelete,
 				onSubmit: onFieldChange,
@@ -83,38 +88,54 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ contentType, rou
 		);
 	};
 
-	return (
-		<Container>
-			<div className="u-margin-bottom-lg">
-				<div className="row between-xs top-xs">
-					<div className="col-xs-3">
-						<NavList
-							items={CC_NAV_LIST_ITEMS.map(listItem => ({
-								...listItem,
-								to: generatePath(listItem.to, {
-									contentTypeUuid: contentType.uuid,
-								}),
-							}))}
-						/>
-					</div>
+	const renderCCEdit = (): ReactElement | null => {
+		if (!fieldType) {
+			return null;
+		}
 
-					<div className="col-xs-9">
-						<Card>
-							<div className="u-margin">{renderChildRoutes()}</div>
-						</Card>
+		return (
+			<>
+				<div className="u-margin-bottom-lg">
+					<div className="row between-xs top-xs">
+						<div className="col-xs-3">
+							<NavList
+								items={CC_NAV_LIST_ITEMS.map(listItem => ({
+									...listItem,
+									to: generatePath(listItem.to, {
+										contentTypeUuid: contentType.uuid,
+									}),
+								}))}
+							/>
+						</div>
+
+						<div className="col-xs-9">
+							<Card>
+								<div className="u-margin">{renderChildRoutes()}</div>
+							</Card>
+						</div>
 					</div>
 				</div>
-			</div>
-			<ActionBar className="o-action-bar--fixed" isOpen>
-				<ActionBarContentSection>
-					<Button className="u-margin-right-xs" onClick={onFieldSubmit} type="success">
-						Bewaar
-					</Button>
-					<Button onClick={navigateToOverview} outline>
-						Annuleer
-					</Button>
-				</ActionBarContentSection>
-			</ActionBar>
+				<ActionBar className="o-action-bar--fixed" isOpen>
+					<ActionBarContentSection>
+						<Button
+							className="u-margin-right-xs"
+							onClick={onFieldSubmit}
+							type="success"
+						>
+							Bewaar
+						</Button>
+						<Button onClick={navigateToOverview} outline>
+							Annuleer
+						</Button>
+					</ActionBarContentSection>
+				</ActionBar>
+			</>
+		);
+	};
+
+	return (
+		<Container>
+			<DataLoader loadingState={loadingState} render={renderCCEdit} />
 		</Container>
 	);
 };
