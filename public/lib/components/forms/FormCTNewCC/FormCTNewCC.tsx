@@ -2,6 +2,7 @@ import { Button, Select, TextField } from '@acpaas-ui/react-components';
 import { Field, Formik } from 'formik';
 import React, { FC } from 'react';
 
+import { FIELD_TYPES_DEFAULT_OPTION } from './FormCTNewCC.const';
 import { FormCTNewCCProps } from './FormCTNewCC.types';
 
 const FormGeneralCC: FC<FormCTNewCCProps> = ({ fieldTypeOptions, formState, onSubmit }) => {
@@ -13,9 +14,8 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({ fieldTypeOptions, formState, onSu
 						<div className="col-xs-6">
 							<Field
 								label="Selecteer"
-								placeholder="Selecteer een content component"
 								name="fieldType"
-								options={fieldTypeOptions}
+								options={[FIELD_TYPES_DEFAULT_OPTION, ...fieldTypeOptions]}
 								as={Select}
 							/>
 							<div className="u-text-light u-margin-top-xs">

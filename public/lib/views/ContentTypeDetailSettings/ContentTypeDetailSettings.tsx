@@ -4,34 +4,31 @@ import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC } from 'react';
 
-import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
-import { useNavigate } from '../../hooks';
+import { CONTENT_TYPE_DETAIL_TAB_MAP } from '../../contentTypes.const';
+import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import { ContentTypeSchema } from '../../services/contentTypes';
 
 import { CT_SETTINGS_VALIDATION_SCHEMA } from './ContentTypeDetailSettings.const';
-import { ContenTypeDetailSettingsProps } from './ContentTypeDetailSettings.types';
 
-const ContentTypeSettings: FC<ContenTypeDetailSettingsProps> = ({ contentType, onSubmit }) => {
-	/**
-	 * Hooks
-	 */
-	const { navigate } = useNavigate();
+const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
+	contentType,
+	onCancel,
+	onSubmit,
+}) => {
 	/**
 	 * Methods
 	 */
-	const navigateToOverview = (): void => {
-		navigate(MODULE_PATHS.root);
+	const onFormSubmit = (value: ContentTypeSchema): void => {
+		onSubmit({ ...contentType.meta, ...value.meta }, CONTENT_TYPE_DETAIL_TAB_MAP.settings);
 	};
 
+	/**
+	 * Render
+	 */
 	return (
 		<Formik
 			initialValues={contentType}
-			onSubmit={(value: ContentTypeSchema) =>
-				onSubmit(
-					{ ...contentType.meta, ...value.meta },
-					CONTENT_TYPE_DETAIL_TAB_MAP.settings
-				)
-			}
+			onSubmit={onFormSubmit}
 			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA}
 		>
 			{({ submitForm, values }) => (
@@ -70,7 +67,7 @@ const ContentTypeSettings: FC<ContenTypeDetailSettingsProps> = ({ contentType, o
 							</div>
 						</div>
 					</div>
-					<ActionBar show>
+					<ActionBar className="o-action-bar--fixed" isOpen>
 						<ActionBarContentSection>
 							<div className="u-wrapper">
 								<Button
@@ -80,7 +77,7 @@ const ContentTypeSettings: FC<ContenTypeDetailSettingsProps> = ({ contentType, o
 								>
 									Bewaar en ga verder
 								</Button>
-								<Button onClick={navigateToOverview} outline>
+								<Button onClick={onCancel} outline>
 									Annuleer
 								</Button>
 							</div>

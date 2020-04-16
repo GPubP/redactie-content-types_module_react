@@ -22,18 +22,26 @@ const useContentType = (
 	const localUpdateContentType = (contentType: ContentTypeSchema): Promise<void> => {
 		setLoadingState(LoadingState.Loading);
 
-		return updateContentType(contentType).then(response => {
-			setContentType(response);
-			setLoadingState(LoadingState.Loaded);
-		});
+		return updateContentType(contentType)
+			.then(response => {
+				setContentType(response);
+				setLoadingState(LoadingState.Loaded);
+			})
+			.catch(() => {
+				setLoadingState(LoadingState.Error);
+			});
 	};
 	const localCreateContentType = (contentType: ContentTypeSchema): Promise<void> => {
 		setLoadingState(LoadingState.Loading);
 
-		return createContentType(contentType).then(response => {
-			setContentType(response);
-			setLoadingState(LoadingState.Loaded);
-		});
+		return createContentType(contentType)
+			.then(response => {
+				setContentType(response);
+				setLoadingState(LoadingState.Loaded);
+			})
+			.catch(() => {
+				setLoadingState(LoadingState.Error);
+			});
 	};
 
 	useEffect(() => {

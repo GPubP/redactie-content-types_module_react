@@ -6,7 +6,6 @@ import {
 	ContextHeaderTopSection,
 	Table,
 } from '@acpaas-ui/react-editorial-components';
-import { stringify } from 'query-string';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
@@ -126,7 +125,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 						<Button
 							ariaLabel="Edit"
 							icon="edit"
-							onClick={() => navigate(MODULE_PATHS.edit, { contentTypeUuid })}
+							onClick={() => navigate(MODULE_PATHS.detail, { contentTypeUuid })}
 							type="primary"
 							transparent
 						></Button>
@@ -152,7 +151,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					rows={contentTypesRows}
 					columns={contentTypesColumns}
 				/>
-			</div>
+			</>
 		);
 	};
 

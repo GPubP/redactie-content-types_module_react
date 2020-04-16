@@ -26,9 +26,17 @@ export const CONTENT_TYPE_COLUMNS = [
 	{
 		label: 'Naam',
 		value: 'label',
+		component(value: string, rowData: ContentTypeDetailCCRow) {
+			return (
+				<>
+					{value}
+					<p className="u-text-light">systeemnaam: [{rowData.name}]</p>
+				</>
+			);
+		},
 	},
 	{
-		label: 'type',
+		label: 'Type',
 		value: 'fieldType',
 	},
 	{
