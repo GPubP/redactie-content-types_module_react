@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, CardDescription, CardTitle } from '@acpaas-ui/react-components';
+import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import React, { FC } from 'react';
 
 import { FormCCSettings } from '../../components';
@@ -18,13 +18,13 @@ const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({ CTField, onDelet
 				}}
 			/>
 			{onDelete && (
-				<Card>
+				<Card className="u-margin-top">
 					<CardBody>
-						<CardTitle>Verwijderen</CardTitle>
-						<CardDescription>
+						<h6>Verwijderen</h6>
+						<p className="u-margin-top-xs u-margin-bottom">
 							Opgelet, indien u deze component verwijdert kan hij niet meer gebruikt
 							worden op het content
-						</CardDescription>
+						</p>
 						<Button iconLeft="trash" onClick={onDelete} type="danger">
 							Verwijderen
 						</Button>

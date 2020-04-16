@@ -10,7 +10,7 @@ import { IS_MULTIPLE_OPTIONS } from './FormCCSettings.const';
 import { FormCCSettingsProps } from './FormCCSettings.types';
 
 const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) => {
-	const [isMultiple, setIsMultiple] = useState(false);
+	const [isMultiple, setIsMultiple] = useState(initialValues.generalConfig.max > 1);
 
 	const onFormSubmit = (values: CCSettingsFormState): void => {
 		// Reset min and max to initial values if not muliple

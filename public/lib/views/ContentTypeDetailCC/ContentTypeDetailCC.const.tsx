@@ -31,9 +31,7 @@ export const CONTENT_TYPE_COLUMNS = [
 			const { navigate } = rowData;
 			return (
 				<>
-					<button type="button" onClick={navigate}>
-						{value}
-					</button>
+					<Link onClick={navigate}>{value}</Link>
 					<p className="u-text-light">systeemnaam: [{rowData.name}]</p>
 				</>
 			);

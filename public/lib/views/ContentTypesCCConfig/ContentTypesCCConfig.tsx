@@ -31,7 +31,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 					label: field.label,
 					type: field.fieldType?.data?.componentName,
 					config: field.config,
-					dataType: 'string',
+					dataType: field.dataType?._id,
 				})
 			) || [],
 	};
