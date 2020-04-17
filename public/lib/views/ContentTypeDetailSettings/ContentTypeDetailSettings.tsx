@@ -40,7 +40,13 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 					<div className="row">
 						<div className="col-xs-12 col-md-8 row middle-xs">
 							<div className="col-xs-12 col-md-8">
-								<Field as={TextField} label="Naam" name="meta.label" required />
+								<Field
+									as={TextField}
+									id="meta.label"
+									label="Naam"
+									name="meta.label"
+									required
+								/>
 								<div className="u-text-light u-margin-top-xs">
 									Geef het content type een korte en duidelijke naam.
 								</div>
@@ -58,6 +64,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 							<div className="col-xs-12">
 								<Field
 									as={TextField}
+									id="meta.description"
 									label="Beschrijving"
 									name="meta.description"
 									required

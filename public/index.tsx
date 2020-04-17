@@ -7,6 +7,7 @@ import { ContentTypesModuleProps } from './lib/contentTypes.types';
 import { TenantContext } from './lib/context';
 import {
 	ContentTypesCCConfig,
+	ContentTypesCCDefaults,
 	ContentTypesCCEdit,
 	ContentTypesCCNew,
 	ContentTypesCCSettings,
@@ -105,11 +106,10 @@ Core.routes.register({
 							path: MODULE_PATHS.detailCCNewValidation,
 							component: ContentTypesCCValidation,
 						},
-						// TODO: add edit CC defaults view
-						// {
-						// 	path: MODULE_PATHS.detailCCNewDefaults,
-						// 	component: () => null,
-						// },
+						{
+							path: MODULE_PATHS.detailCCNewDefaults,
+							component: ContentTypesCCDefaults,
+						},
 					],
 				},
 				{
@@ -128,11 +128,10 @@ Core.routes.register({
 							path: MODULE_PATHS.detailCCEditValidation,
 							component: ContentTypesCCValidation,
 						},
-						// TODO: add edit CC defaults view
-						// {
-						// 	path: MODULE_PATHS.detailCCEditDefaults,
-						// 	component: () => null,
-						// },
+						{
+							path: MODULE_PATHS.detailCCEditDefaults,
+							component: ContentTypesCCDefaults,
+						},
 					],
 				},
 				{

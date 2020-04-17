@@ -1,6 +1,6 @@
 import { FormsAPI } from '@redactie/form-renderer-module';
 import Core from '@redactie/redactie-core';
-import React, { FC } from 'react';
+import React, { FC, ReactElement } from 'react';
 
 import { ContentTypesCCValidationProps } from './ContentTypesCCValidation.types';
 
@@ -13,20 +13,33 @@ const ContentTypesCCValidation: FC<ContentTypesCCValidationProps> = ({ fieldData
 	/**
 	 * Render
 	 */
-	if (!formsAPI || !fieldData?.validators.length) {
-		return <p>Er zijn geen validatie mogelijkheden</p>;
-	}
+	const validationSchema = {
+		$schema: 'http://json-schema.org/draft-07/schema#',
+		type: 'object',
+		properties: {},
+	};
 
-	// TODO: show validation schema based on validators property
-	// return (
-	// 	<formsAPI.Form
-	// 		schema={}
-	// 		validationSchema={validationSchema}
-	// 		errorMessages={{}}
-	// 	/>
-	// );
+	const renderCCValidation = (): ReactElement => {
+		if (!formsAPI || !fieldData?.validators.length) {
+			return <p>Er zijn geen validatie mogelijkheden</p>;
+		}
 
-	return <p>Er zijn geen validatie mogelijkheden</p>;
+		// TODO: show validation schema based on validators property
+		return (
+			<formsAPI.Form
+				schema={{ fields: [] }}
+				validationSchema={validationSchema}
+				errorMessages={{}}
+			/>
+		);
+	};
+
+	return (
+		<>
+			<h6 className="u-margin-bottom">Validatie</h6>
+			{renderCCValidation()}
+		</>
+	);
 };
 
 export default ContentTypesCCValidation;

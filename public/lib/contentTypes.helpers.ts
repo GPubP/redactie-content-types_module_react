@@ -44,6 +44,7 @@ export const generateCCFormState = (
 ): CCSettingsFormState => ({
 	label: initialValues.label || '',
 	name: initialValues.name || '',
+	defaultValue: initialValues.defaultValue || '',
 	config: {
 		guideline: pathOr('', ['config', 'guideline'], initialValues),
 	},

@@ -1,4 +1,5 @@
 export { default as ContentTypesCCConfig } from './ContentTypesCCConfig/ContentTypesCCConfig';
+export { default as ContentTypesCCDefaults } from './ContentTypesCCDefaults/ContentTypesCCDefaults';
 export { default as ContentTypesCCEdit } from './ContentTypesCCEdit/ContentTypesCCEdit';
 export { default as ContentTypesCCNew } from './ContentTypesCCNew/ContentTypesCCNew';
 export { default as ContentTypesCCSettings } from './ContentTypesCCSettings/ContentTypesCCSettings';

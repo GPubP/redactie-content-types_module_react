@@ -30,12 +30,12 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 				return (
 					<>
 						<AutoSubmit />
-						<h6>Instellingen</h6>
-						<div className="row u-margin-top">
+						<div className="row">
 							<div className="col-xs-12 row middle-xs">
 								<div className="col-xs-12 col-md-8">
 									<Field
 										as={TextField}
+										id="label"
 										label="Label"
 										name="label"
 										placeholder="Typ een label"
@@ -57,6 +57,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 							<div className="col-xs-12">
 								<Field
 									as={Textarea}
+									id="config.guideline"
 									label="Richtlijn (optioneel)"
 									name="config.guideline"
 								/>
@@ -69,6 +70,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 						<div className="row u-margin-top">
 							<div className="col-xs-12">
 								<RadioGroup
+									id="isMultiple"
 									name="isMultiple"
 									onChange={(e: ChangeEvent<HTMLInputElement>) =>
 										setIsMultiple(e.target.value === 'true')
@@ -86,6 +88,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 											<Field
 												as={TextField}
 												type="number"
+												id="generalConfig.min"
 												label="Min."
 												name="generalConfig.min"
 											/>
@@ -94,6 +97,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 											<Field
 												as={TextField}
 												type="number"
+												id="generalConfig.max"
 												label="Max."
 												name="generalConfig.max"
 											/>
@@ -116,21 +120,6 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 									content componenten die een standaard waarde krijgen en als
 									&apos;niet aanpasbaar&apos; worden ingesteld worden onzichtbaar
 									voor de redacteur.
-								</div>
-							</div>
-						</div>
-						<div className="row u-margin-top">
-							<div className="col-xs-12">
-								<Field
-									as={Checkbox}
-									checked={values.generalConfig.required}
-									id="generalConfig.required"
-									name="generalConfig.required"
-									label="Aanpasbaar"
-								/>
-								<div className="u-text-light">
-									Bepaal of deze content component aangepast mag worden door de
-									redacteur.
 								</div>
 							</div>
 						</div>

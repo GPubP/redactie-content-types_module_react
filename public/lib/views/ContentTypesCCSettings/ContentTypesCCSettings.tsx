@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 
 import { FormCCSettings } from '../../components';
 import { generateCCFormState } from '../../contentTypes.helpers';
-import { CCSettingsFormState, ContentTypesCCRouteProps } from '../../contentTypes.types';
+import { ContentTypesCCRouteProps } from '../../contentTypes.types';
 
 const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({ CTField, onDelete, onSubmit }) => {
 	/**
@@ -11,12 +11,8 @@ const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({ CTField, onDelet
 	 */
 	return (
 		<>
-			<FormCCSettings
-				initialValues={generateCCFormState(CTField)}
-				onSubmit={(data: CCSettingsFormState) => {
-					onSubmit(data);
-				}}
-			/>
+			<h6 className="u-margin-bottom">Instellingen</h6>
+			<FormCCSettings initialValues={generateCCFormState(CTField)} onSubmit={onSubmit} />
 			{onDelete && (
 				<Card className="u-margin-top">
 					<CardBody>

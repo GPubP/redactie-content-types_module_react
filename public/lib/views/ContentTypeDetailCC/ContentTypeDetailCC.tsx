@@ -75,7 +75,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 			label: cc.label,
 			name: cc.name,
 			fieldType: pathOr('error', ['fieldType', 'data', 'label'])(cc),
-			multiple: typeof cc.generalConfig.max === 'number' && cc.generalConfig.max > 0,
+			multiple: Number(cc.generalConfig.max) > 0,
 			required: !!cc.generalConfig.required,
 			translatable: !!cc.generalConfig.multiLanguage,
 			hidden: !!cc.generalConfig.hidden,
