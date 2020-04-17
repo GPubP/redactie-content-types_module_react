@@ -24,7 +24,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 
 	const parsedFormSchema: FormSchema = {
 		fields:
-			fieldTypeData?.formSchema.fields.map(
+			(fieldTypeData?.formSchema.fields || []).map(
 				(field): FieldSchema => ({
 					name: field.name,
 					module: field.fieldType?.data?.module,
