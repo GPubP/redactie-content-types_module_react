@@ -166,8 +166,6 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	): void => {
 		const newCT = getRequestBody(sectionData, tab);
 
-		console.log(newCT);
-
 		if (!newCT) {
 			return;
 		}
