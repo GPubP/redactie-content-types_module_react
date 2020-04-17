@@ -55,20 +55,19 @@ const ContentTypeDetailExternal: FC<ContentTypesDetailRouteProps<ContentTypeDeta
 	/**
 	 * RENDER
 	 */
-
-	const renderTab = (): ReactElement | null => {
-		return (
-			activeTab?.component({
-				contentType: clone(contentType),
-				onSubmit: (values: ExternalTabValue) => onExternalTabSubmit(values),
-				onCancel: () => onCancel(),
-				updateContentType: () => null,
-				value: getExternalTabValue(activeTab),
-			}) || null
-		);
-	};
-
-	return <Container>{renderTab()}</Container>;
+	return (
+		<Container>
+			{activeTab ? (
+				<activeTab.component
+					contentType={clone(contentType)}
+					onSubmit={(values: ExternalTabValue) => onExternalTabSubmit(values)}
+					onCancel={() => onCancel()}
+					updateContentType={() => null}
+					value={getExternalTabValue(activeTab)}
+				></activeTab.component>
+			) : null}
+		</Container>
+	);
 };
 
 export default ContentTypeDetailExternal;
