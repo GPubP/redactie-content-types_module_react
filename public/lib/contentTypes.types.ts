@@ -2,6 +2,7 @@ import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie
 
 import { ContentTypeFieldSchema, ContentTypeSchema } from './services/contentTypes';
 import { FieldTypeSchema, FieldTypeSchemaData, FieldTypeSchemaMeta } from './services/fieldTypes';
+import { ContentTypeField, InternalState } from './store/internal';
 import { Tab } from './types';
 
 export interface ContentTypesModuleProps extends RouteConfigComponentProps {
@@ -22,19 +23,20 @@ export interface ContentTypesDetailRouteProps<Params = {}>
 	extends RouteConfigComponentProps<Params> {
 	fieldTypes: FieldTypeSchema[];
 	contentType: ContentTypeSchema;
-	CTFields: ContentTypeFieldSchema[];
-	setCTFields: (fields: ContentTypeFieldSchema[]) => void;
 	onCancel: () => void;
 	onSubmit: (
 		data: ContentTypeSchema | ContentTypeFieldSchema[] | FieldTypeSchemaMeta,
 		tab: Tab
 	) => void;
 	routes: ModuleRouteConfig[];
+	state: InternalState;
 }
 
-export interface ContentTypesCCNewRouteProps extends ContentTypesRouteProps {
-	CTField: ContentTypeFieldSchema;
+export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
+	CTField: ContentTypeField;
+	contentType?: ContentTypeSchema;
 	fieldTypeData: FieldTypeSchemaData;
+	onDelete?: () => void;
 	onSubmit: (data: any) => void;
 }
 

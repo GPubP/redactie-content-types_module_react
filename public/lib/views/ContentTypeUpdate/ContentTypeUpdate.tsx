@@ -3,6 +3,8 @@ import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
 import {
@@ -24,14 +26,16 @@ import {
 	ContentTypeMetaSchema,
 	ContentTypeSchema,
 } from '../../services/contentTypes';
+import { ContentTypeField, internalQuery, internalService } from '../../store/internal';
 import { LoadingState, Tab } from '../../types';
 
 const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) => {
 	/**
 	 * Hooks
 	 */
+	const [activeField, setActiveField] = useState<ContentTypeField | null>(null);
+	const [fields, setFields] = useState<ContentTypeField[]>([]);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const [CTFields, setCTFields] = useState<ContentTypeFieldSchema[]>([]);
 	const { contentTypeUuid } = useParams();
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
@@ -55,9 +59,31 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 
 	useEffect(() => {
 		if (contentTypeLoadingState !== LoadingState.Loading && contentType?.fields.length) {
-			setCTFields(contentType.fields);
+			internalService.updateFields(
+				contentType.fields.map(f => ({ ...f, dataType: f.dataType._id }))
+			);
 		}
 	}, [contentType, contentTypeLoadingState]);
+
+	useEffect(() => {
+		const destroyed$: Subject<boolean> = new Subject<boolean>();
+
+		internalQuery.activeField$.pipe(takeUntil(destroyed$)).subscribe(activeFieldSub => {
+			if (activeFieldSub) {
+				return setActiveField(activeFieldSub);
+			}
+		});
+		internalQuery.fields$.pipe(takeUntil(destroyed$)).subscribe(fieldsSub => {
+			if (fieldsSub) {
+				return setFields(fieldsSub);
+			}
+		});
+
+		return () => {
+			destroyed$.next(true);
+			destroyed$.complete();
+		};
+	}, []);
 
 	/**
 	 * Methods
@@ -111,7 +137,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		updateContentType(newCT);
 	};
 
-	const showTabs = !/\/nieuw\//.test(location.pathname);
+	const showTabs = !/\/(nieuw|bewerken)\//.test(location.pathname);
 
 	/**
 	 * Render
@@ -127,11 +153,10 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
 			fieldTypes,
 			contentType,
-			CTFields,
-			setCTFields,
 			onCancel: navigateToOverview,
 			onSubmit: updateCT,
 			routes: activeRoute?.routes,
+			state: { activeField, fields },
 		});
 	};
 
@@ -148,9 +173,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			<div className="u-margin-top">
-				<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
-			</div>
+			<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
 		</>
 	);
 };

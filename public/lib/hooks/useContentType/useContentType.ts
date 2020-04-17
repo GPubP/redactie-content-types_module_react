@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import {
+	ContentTypeResponse,
 	ContentTypeSchema,
 	createContentType,
 	getContentType,
@@ -12,19 +13,18 @@ const useContentType = (
 	uuid: string | null = null
 ): [
 	LoadingState,
-	ContentTypeSchema | null,
+	ContentTypeResponse | null,
 	(contentType: ContentTypeSchema) => Promise<void>,
 	(contentType: ContentTypeSchema) => Promise<void>
 ] => {
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [contentType, setContentType] = useState<ContentTypeSchema | null>(null);
+	const [contentType, setContentType] = useState<ContentTypeResponse | null>(null);
 
 	const localUpdateContentType = (contentType: ContentTypeSchema): Promise<void> => {
 		setLoadingState(LoadingState.Loading);
 
 		return updateContentType(contentType)
-			.then(response => {
-				setContentType(response);
+			.then(() => {
 				setLoadingState(LoadingState.Loaded);
 			})
 			.catch(() => {
@@ -35,8 +35,7 @@ const useContentType = (
 		setLoadingState(LoadingState.Loading);
 
 		return createContentType(contentType)
-			.then(response => {
-				setContentType(response);
+			.then(() => {
 				setLoadingState(LoadingState.Loaded);
 			})
 			.catch(() => {

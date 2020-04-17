@@ -1,5 +1,9 @@
 import { Button, Card } from '@acpaas-ui/react-components';
-import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
+import {
+	ActionBar,
+	ActionBarContentSection,
+	Container,
+} from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import kebabCase from 'lodash.kebabcase';
 import { parse } from 'query-string';
@@ -8,21 +12,17 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { DataLoader, NavList } from '../../components';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { generateFieldFromType } from '../../contentTypes.helpers';
-import {
-	ContentTypesCCNewRouteProps,
-	ContentTypesDetailRouteProps,
-} from '../../contentTypes.types';
+import { ContentTypesCCRouteProps, ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
-import { ContentTypeFieldSchema } from '../../services/contentTypes';
+import { ContentTypeField, internalService } from '../../store/internal';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCNew.const';
 
 const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 	contentType,
-	CTFields,
-	setCTFields,
 	location,
 	routes,
+	state,
 }) => {
 	const { fieldType: fieldTypeUuid, id: fieldTypeId, name } = parse(location.search);
 	const initalFieldValues = {
@@ -34,7 +34,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 	/**
 	 * Hooks
 	 */
-	const [CTField, setCTField] = useState<ContentTypeFieldSchema | null>(null);
+	const [CTField, setCTField] = useState<ContentTypeField | null>(null);
 	const [loadingState, fieldType] = useFieldType(fieldTypeUuid as string | undefined);
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
@@ -53,13 +53,21 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 	};
 
 	const onCTSubmit = (): void => {
-		if (CTField) {
-			setCTFields([...CTFields, CTField]);
+		if (CTField && fieldType) {
+			const populatedField: ContentTypeField = {
+				...CTField,
+				fieldType: {
+					_id: CTField.fieldType._id,
+					data: fieldType,
+				},
+			};
+
+			internalService.updateFields([...state.fields, populatedField]);
 			navigateToOverview();
 		}
 	};
 
-	const onFieldTypeChange = (data: ContentTypeFieldSchema): void => {
+	const onFieldTypeChange = (data: ContentTypeField): void => {
 		setCTField({ ...CTField, ...data });
 	};
 
@@ -77,7 +85,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 				fieldTypeData: fieldType,
 				routes: activeRoute?.routes,
 				onSubmit: onFieldTypeChange,
-			} as ContentTypesCCNewRouteProps
+			} as ContentTypesCCRouteProps
 		);
 	};
 
@@ -125,9 +133,9 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 
 	return (
 		<>
-			<div className="u-container u-wrapper u-margin-top u-margin-bottom">
+			<Container>
 				<DataLoader loadingState={loadingState} render={renderCCNew} />
-			</div>
+			</Container>
 		</>
 	);
 };

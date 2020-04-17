@@ -1,14 +1,20 @@
 import { Button, Card } from '@acpaas-ui/react-components';
-import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
+import {
+	ActionBar,
+	ActionBarContentSection,
+	Container,
+	Table,
+} from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
 import { pathOr } from 'ramda';
 import React, { FC, ReactElement } from 'react';
 
 import { FormCTNewCC, NavList } from '../../components';
 import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
+import { parseContentTypeField } from '../../contentTypes.helpers';
 import { ContentTypesDetailRouteProps, NewCCFormState } from '../../contentTypes.types';
 import { useNavigate } from '../../hooks';
-import { ContentTypeFieldSchema } from '../../services/contentTypes';
+import { ContentTypeField, internalService } from '../../store/internal';
 
 import {
 	CONTENT_TYPE_COLUMNS,
@@ -20,9 +26,9 @@ import { ContentTypeDetailCCRow } from './ContentTypeDetailCC.types';
 const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	fieldTypes,
 	contentType,
-	CTFields,
 	onCancel,
 	onSubmit,
+	state,
 }) => {
 	const fieldTypeOptions = fieldTypes.map(fieldType => ({
 		key: fieldType.uuid,
@@ -33,7 +39,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	/**
 	 * Hooks
 	 */
-	const { generatePath, navigate } = useNavigate();
+	const { navigate } = useNavigate();
 
 	/**
 	 * Methods
@@ -49,39 +55,38 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	};
 
 	const onCCSave = (): void => {
-		onSubmit(CTFields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
+		const cleanFields = state.fields.map(parseContentTypeField);
+		onSubmit(cleanFields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
+	};
+
+	const navigateToCC = (activeField: ContentTypeField): void => {
+		internalService.updateActiveField(activeField);
+		navigate(MODULE_PATHS.detailCCEdit, { contentTypeUuid: contentType.uuid });
 	};
 
 	/**
 	 * Render
 	 */
-	const renderTableField = ({
-		value: fields,
-	}: {
-		value: ContentTypeFieldSchema[];
-	}): ReactElement => {
-		const contentTypeRows: ContentTypeDetailCCRow[] = (fields || []).map(
-			(cc: ContentTypeFieldSchema) => ({
-				path: generatePath(MODULE_PATHS.detailCCEdit, {
-					contentTypeUuid: contentType.uuid,
-					ccUuid: cc.uuid,
-				}),
-				label: cc.label,
-				name: cc.name,
-				fieldType: pathOr('error', ['fieldType', 'data', 'label'])(cc),
-				multiple: typeof cc.generalConfig.max === 'number' && cc.generalConfig.max > 0,
-				required: !!cc.generalConfig.required,
-				translatable: !!cc.generalConfig.multiLanguage,
-				hidden: !!cc.generalConfig.hidden,
-			})
-		);
+	const renderTableField = ({ value: fields }: { value: ContentTypeField[] }): ReactElement => {
+		const contentTypeRows: ContentTypeDetailCCRow[] = (fields || []).map(cc => ({
+			navigate: () => {
+				navigateToCC(cc);
+			},
+			label: cc.label,
+			name: cc.name,
+			fieldType: pathOr('error', ['fieldType', 'data', 'label'])(cc),
+			multiple: typeof cc.generalConfig.max === 'number' && cc.generalConfig.max > 0,
+			required: !!cc.generalConfig.required,
+			translatable: !!cc.generalConfig.multiLanguage,
+			hidden: !!cc.generalConfig.hidden,
+		}));
 
 		return (
 			<Table
 				className="u-margin-top"
 				columns={CONTENT_TYPE_COLUMNS}
 				rows={contentTypeRows}
-				totalValues={CTFields.length}
+				totalValues={state.fields.length}
 			/>
 		);
 	};
@@ -89,7 +94,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	const renderTableForm = (): ReactElement => {
 		return (
 			<Formik
-				initialValues={{ fields: CTFields }}
+				initialValues={{ fields: state.fields }}
 				onSubmit={onCCSave}
 				validationSchema={CT_CC_VALIDATION_SCHEMA}
 			>
@@ -124,18 +129,16 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	};
 
 	return (
-		<>
-			<div className="u-container u-wrapper">
-				<div className="row between-xs top-xs u-margin-bottom-lg">
-					<div className="col-xs-3">
-						<NavList items={CT_CC_NAV_LIST_ITEMS} />
-						<Button className="u-margin-top" iconLeft="plus" primary>
-							Sectie toevoegen
-						</Button>
-					</div>
-
-					<div className="col-xs-9">{renderDetail()}</div>
+		<Container>
+			<div className="row between-xs top-xs">
+				<div className="col-xs-3">
+					<NavList items={CT_CC_NAV_LIST_ITEMS} />
+					<Button className="u-margin-top" iconLeft="plus" primary>
+						Sectie toevoegen
+					</Button>
 				</div>
+
+				<div className="col-xs-9">{renderDetail()}</div>
 			</div>
 			<ActionBar className="o-action-bar--fixed" isOpen>
 				<ActionBarContentSection>
@@ -149,7 +152,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 					</div>
 				</ActionBarContentSection>
 			</ActionBar>
-		</>
+		</Container>
 	);
 };
 

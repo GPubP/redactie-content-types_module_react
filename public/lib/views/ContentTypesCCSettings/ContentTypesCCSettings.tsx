@@ -1,20 +1,37 @@
+import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import React, { FC } from 'react';
 
 import { FormCCSettings } from '../../components';
 import { generateCCFormState } from '../../contentTypes.helpers';
-import { CCSettingsFormState, ContentTypesCCNewRouteProps } from '../../contentTypes.types';
+import { CCSettingsFormState, ContentTypesCCRouteProps } from '../../contentTypes.types';
 
-const ContentTypesCCSettings: FC<ContentTypesCCNewRouteProps> = ({ CTField, onSubmit }) => {
+const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({ CTField, onDelete, onSubmit }) => {
 	/**
 	 * Render
 	 */
 	return (
-		<FormCCSettings
-			initialValues={generateCCFormState(CTField)}
-			onSubmit={(data: CCSettingsFormState) => {
-				onSubmit(data);
-			}}
-		/>
+		<>
+			<FormCCSettings
+				initialValues={generateCCFormState(CTField)}
+				onSubmit={(data: CCSettingsFormState) => {
+					onSubmit(data);
+				}}
+			/>
+			{onDelete && (
+				<Card className="u-margin-top">
+					<CardBody>
+						<h6>Verwijderen</h6>
+						<p className="u-margin-top-xs u-margin-bottom">
+							Opgelet, indien u deze component verwijdert kan hij niet meer gebruikt
+							worden op het content
+						</p>
+						<Button iconLeft="trash" onClick={onDelete} type="danger">
+							Verwijderen
+						</Button>
+					</CardBody>
+				</Card>
+			)}
+		</>
 	);
 };
 

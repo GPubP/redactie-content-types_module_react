@@ -3,14 +3,14 @@ import { SearchParams } from '../api/api.service.types';
 
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from './contentTypes.service.cont';
 import {
+	ContentTypeResponse,
 	ContentTypeSchema,
-	ContentTypesDataSchema,
 	ContentTypesSchema,
 } from './contentTypes.service.types';
 
 export const getContentTypes = async (
 	searchParams: SearchParams = DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
-): Promise<ContentTypesDataSchema | null> => {
+): Promise<ContentTypeResponse[] | null> => {
 	try {
 		const response: ContentTypesSchema = await api
 			.get(`content/content-types?${parseSearchParams(searchParams)}`)
@@ -20,18 +20,16 @@ export const getContentTypes = async (
 			throw new Error('Failed to get content-types');
 		}
 
-		return {
-			data: response.data,
-		};
+		return response.data;
 	} catch (err) {
 		console.error(err);
 		return null;
 	}
 };
 
-export const getContentType = async (uuid: string): Promise<ContentTypeSchema | null> => {
+export const getContentType = async (uuid: string): Promise<ContentTypeResponse | null> => {
 	try {
-		const response: ContentTypeSchema = await api.get(`content/content-types/${uuid}`).json();
+		const response: ContentTypeResponse = await api.get(`content/content-types/${uuid}`).json();
 
 		return response;
 	} catch (err) {
@@ -42,8 +40,8 @@ export const getContentType = async (uuid: string): Promise<ContentTypeSchema | 
 
 export const updateContentType = async (
 	contentType: ContentTypeSchema
-): Promise<ContentTypeSchema | null> => {
-	const response: ContentTypeSchema = await api
+): Promise<ContentTypeResponse | null> => {
+	const response: ContentTypeResponse = await api
 		.put(`content/content-types/${contentType.uuid}`, {
 			json: contentType,
 		})
@@ -54,8 +52,8 @@ export const updateContentType = async (
 
 export const createContentType = async (
 	contentType: ContentTypeSchema
-): Promise<ContentTypeSchema | null> => {
-	const response: ContentTypeSchema = await api
+): Promise<ContentTypeResponse | null> => {
+	const response: ContentTypeResponse = await api
 		.post('content/content-types', {
 			json: contentType,
 		})

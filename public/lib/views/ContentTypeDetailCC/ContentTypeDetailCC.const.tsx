@@ -1,3 +1,4 @@
+import { Link } from '@acpaas-ui/react-components';
 import React from 'react';
 import { array, object, string } from 'yup';
 
@@ -27,9 +28,10 @@ export const CONTENT_TYPE_COLUMNS = [
 		label: 'Naam',
 		value: 'label',
 		component(value: string, rowData: ContentTypeDetailCCRow) {
+			const { navigate } = rowData;
 			return (
 				<>
-					{value}
+					<Link onClick={navigate}>{value}</Link>
 					<p className="u-text-light">systeemnaam: [{rowData.name}]</p>
 				</>
 			);

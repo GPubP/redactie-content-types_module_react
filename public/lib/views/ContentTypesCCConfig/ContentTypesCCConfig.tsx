@@ -3,9 +3,13 @@ import Core from '@redactie/redactie-core';
 import React, { FC } from 'react';
 
 import { AutoSubmit } from '../../components';
-import { ContentTypesCCNewRouteProps } from '../../contentTypes.types';
+import { ContentTypesCCRouteProps } from '../../contentTypes.types';
 
-const ContentTypesCCConfig: FC<ContentTypesCCNewRouteProps> = ({ fieldTypeData, onSubmit }) => {
+const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
+	CTField,
+	fieldTypeData,
+	onSubmit,
+}) => {
 	/**
 	 * Methods
 	 */
@@ -27,7 +31,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCNewRouteProps> = ({ fieldTypeData, 
 					label: field.label,
 					type: field.fieldType?.data?.componentName,
 					config: field.config,
-					dataType: 'string',
+					dataType: field.dataType?._id,
 				})
 			) || [],
 	};
@@ -45,6 +49,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCNewRouteProps> = ({ fieldTypeData, 
 
 	return (
 		<formsAPI.Form
+			initialValues={CTField.config}
 			schema={parsedFormSchema}
 			validationSchema={validationSchema}
 			errorMessages={{}}

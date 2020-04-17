@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Button } from '@acpaas-ui/react-components';
 import {
+	Container,
 	ContextHeader,
 	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
@@ -15,10 +16,12 @@ import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesRouteProps, FilterFormState } from '../../contentTypes.types';
 import { useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import useContentTypes from '../../hooks/useContentTypes/useContentTypes';
-import { ContentTypeSchema } from '../../services/contentTypes';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../services/contentTypes/contentTypes.service.cont';
 import { FilterItemSchema } from '../../services/filterItems/filterItems.service.types';
 import { LoadingState } from '../../types';
+
+import { CONTENT_TYPE_OVERVIEW_COLUMNS } from './ContentTypesOverview.const';
+import { ContentTypesOverviewTableRow } from './ContentTypesOverview.types';
 
 const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	/**
@@ -92,47 +95,13 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 			return null;
 		}
 
-		const contentTypesRows = contentTypes.data.map(contentType => ({
+		const contentTypesRows: ContentTypesOverviewTableRow[] = contentTypes.map(contentType => ({
 			uuid: contentType.uuid,
 			name: contentType.meta.label,
 			description: contentType.meta.description,
-			status: contentType.meta.status,
+			status: contentType.meta.status || 'N/A',
+			navigate: contentTypeUuid => navigate(MODULE_PATHS.detail, { contentTypeUuid }),
 		}));
-
-		const contentTypesColumns = [
-			{
-				label: 'Naam',
-				value: 'name',
-			},
-			{
-				label: 'Gebruikt op',
-				value: 'description',
-				disableSorting: true,
-			},
-			{
-				label: 'Status',
-				value: 'status',
-				disableSorting: true,
-			},
-			{
-				label: '',
-				classList: ['u-text-right'],
-				disableSorting: true,
-				component(value: unknown, rowData: ContentTypeSchema) {
-					const { uuid: contentTypeUuid } = rowData;
-
-					return (
-						<Button
-							ariaLabel="Edit"
-							icon="edit"
-							onClick={() => navigate(MODULE_PATHS.detail, { contentTypeUuid })}
-							type="primary"
-							transparent
-						></Button>
-					);
-				},
-			},
-		];
 
 		return (
 			<div className="u-container u-wrapper">
@@ -149,7 +118,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 				<Table
 					className="u-margin-top"
 					rows={contentTypesRows}
-					columns={contentTypesColumns}
+					columns={CONTENT_TYPE_OVERVIEW_COLUMNS}
 				/>
 			</div>
 		);
@@ -165,7 +134,9 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
-			<DataLoader loadingState={initialLoading} render={renderOverview} />
+			<Container>
+				<DataLoader loadingState={initialLoading} render={renderOverview} />
+			</Container>
 		</>
 	);
 };

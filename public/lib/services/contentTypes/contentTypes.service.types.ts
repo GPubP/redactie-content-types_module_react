@@ -1,12 +1,10 @@
-import { Operator } from '../fieldTypes';
+import { FieldTypeSchema, Operator } from '../fieldTypes';
 
-export interface ContentTypeFieldSchema {
+export interface BaseContentTypeField {
 	uuid?: string;
 	label: string;
 	module: string;
 	name: string;
-	dataType: string;
-	fieldType: string;
 	config: any;
 	validators: string[];
 	operators: Operator[];
@@ -17,6 +15,29 @@ export interface ContentTypeFieldSchema {
 		min?: number;
 		max?: number;
 	};
+}
+
+export interface ContentTypeFieldSchema extends BaseContentTypeField {
+	dataType: string;
+	fieldType: string;
+}
+
+export interface ContentTypeFieldResponse extends BaseContentTypeField {
+	dataType: {
+		_id: string;
+		meta: {
+			createdAt: string;
+			deleted: boolean;
+			lastModified: string;
+		};
+		data: {
+			label: string;
+			type: string;
+			semanticType: string;
+		};
+		uuid: string;
+	};
+	fieldType: FieldTypeSchema;
 }
 
 export interface ContentTypeMetaSchema {
@@ -45,8 +66,15 @@ export interface ContentTypesDataSchema {
 	data: ContentTypeSchema[];
 }
 
+export interface ContentTypeResponse {
+	_id: string;
+	uuid: string;
+	fields: ContentTypeFieldResponse[];
+	meta: ContentTypeMetaSchema;
+}
+
 export interface ContentTypesSchema {
-	data: ContentTypeSchema[];
+	data: ContentTypeResponse[];
 }
 
 export interface ContentTypeCreate {
