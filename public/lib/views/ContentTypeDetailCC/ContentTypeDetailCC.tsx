@@ -39,7 +39,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	/**
 	 * Hooks
 	 */
-	const { navigate } = useNavigate();
+	const { navigate, generatePath } = useNavigate();
 
 	/**
 	 * Methods
@@ -59,18 +59,14 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		onSubmit(cleanFields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
 	};
 
-	const navigateToCC = (activeField: ContentTypeField): void => {
-		internalService.updateActiveField(activeField);
-		navigate(MODULE_PATHS.detailCCEdit, { contentTypeUuid: contentType.uuid });
-	};
-
 	/**
 	 * Render
 	 */
 	const renderTableField = ({ value: fields }: { value: ContentTypeField[] }): ReactElement => {
 		const contentTypeRows: ContentTypeDetailCCRow[] = (fields || []).map(cc => ({
-			navigate: () => {
-				navigateToCC(cc);
+			path: generatePath(MODULE_PATHS.detailCCEdit, { contentTypeUuid: contentType.uuid }),
+			setActiveField: () => {
+				internalService.updateActiveField(cc);
 			},
 			label: cc.label,
 			name: cc.name,

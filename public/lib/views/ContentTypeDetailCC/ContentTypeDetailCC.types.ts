@@ -1,5 +1,6 @@
 export interface ContentTypeDetailCCRow {
-	navigate: () => void;
+	path: string;
+	setActiveField: () => void;
 	label: string;
 	name: string;
 	fieldType: string;
