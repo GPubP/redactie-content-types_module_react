@@ -151,7 +151,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					rows={contentTypesRows}
 					columns={contentTypesColumns}
 				/>
-			</>
+			</div>
 		);
 	};
 
