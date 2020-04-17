@@ -25,9 +25,12 @@ import {
 	ContentTypeFieldSchema,
 	ContentTypeMetaSchema,
 	ContentTypeSchema,
+	ModuleSettings,
 } from '../../services/contentTypes';
+import { useExternalTabstFacade } from '../../store/api/externalTabs/externalTabs.facade';
 import { ContentTypeField, internalQuery, internalService } from '../../store/internal';
-import { LoadingState, Tab } from '../../types';
+import { LoadingState, Tab, TabTypes } from '../../types';
+import { ExternalTabValue } from '../ContentTypeDetailExternal/ContentTypeDetailExternal.types';
 
 const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) => {
 	/**
@@ -42,7 +45,8 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	const [contentTypeLoadingState, contentType, updateContentType] = useContentType(
 		contentTypeUuid
 	);
-	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, location.pathname);
+	const [{ all: externalTabs, active: activeExternalTab }] = useExternalTabstFacade();
+	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, externalTabs, location.pathname);
 	const { navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 
@@ -88,33 +92,66 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	/**
 	 * Methods
 	 */
+	const upsertExternalToBody = (
+		ct: ContentTypeSchema,
+		sectionData: ExternalTabValue,
+		tab: Tab
+	): ContentTypeSchema => {
+		const oldModulesConfig = ct?.modulesConfig || [];
+		const moduleConfigIndex = (oldModulesConfig || []).findIndex(c => c.name === tab.name);
+		const moduleConfig: ModuleSettings = oldModulesConfig[moduleConfigIndex] || {
+			name: tab.name,
+			label: activeExternalTab?.label,
+		};
+		moduleConfig.config = (sectionData as ExternalTabValue).config;
+		moduleConfig.validationSchema = (sectionData as ExternalTabValue).validationSchema;
+
+		const newModulesConfig = [...oldModulesConfig];
+
+		if (moduleConfigIndex >= 0) {
+			newModulesConfig[moduleConfigIndex] = moduleConfig;
+		} else {
+			newModulesConfig.push(moduleConfig);
+		}
+
+		return {
+			...ct,
+			modulesConfig: newModulesConfig,
+		};
+	};
 	const getRequestBody = (
-		sectionData: ContentTypeFieldSchema[] | ContentTypeMetaSchema,
+		sectionData: ContentTypeFieldSchema[] | ContentTypeMetaSchema | ExternalTabValue,
 		tab: Tab
 	): ContentTypeSchema | null => {
 		let body = null;
-		switch (tab.name) {
-			case CONTENT_TYPE_DETAIL_TAB_MAP.settings.name:
-				body = {
-					...contentType,
-					meta: {
-						...contentType?.meta,
-						...(sectionData as ContentTypeMetaSchema),
-					},
-				};
-				break;
-			case CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents.name:
-				body = {
-					...contentType,
-					fields: sectionData as ContentTypeFieldSchema[],
-				};
-				break;
-			case CONTENT_TYPE_DETAIL_TAB_MAP.sites.name:
-				// TODO: move sites update here
-				return null;
-			default:
-				return null;
+
+		if (tab.type === TabTypes.EXTERNAL) {
+			body = upsertExternalToBody(contentType as any, sectionData as ExternalTabValue, tab);
+		} else {
+			switch (tab.name) {
+				case CONTENT_TYPE_DETAIL_TAB_MAP.settings.name:
+					body = {
+						...contentType,
+						meta: {
+							...contentType?.meta,
+							...(sectionData as ContentTypeMetaSchema),
+						},
+					};
+					break;
+				case CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents.name:
+					body = {
+						...contentType,
+						fields: sectionData as ContentTypeFieldSchema[],
+					};
+					break;
+				case CONTENT_TYPE_DETAIL_TAB_MAP.sites.name:
+					// TODO: move sites update here
+					return null;
+				default:
+					return null;
+			}
 		}
+
 		// Remove properties
 		return omit(['errorMessages', 'validateSchema'], body) as ContentTypeSchema;
 	};
@@ -128,6 +165,8 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		tab: Tab
 	): void => {
 		const newCT = getRequestBody(sectionData, tab);
+
+		console.log(newCT);
 
 		if (!newCT) {
 			return;

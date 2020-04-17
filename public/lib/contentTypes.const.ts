@@ -1,4 +1,4 @@
-import { Tab } from './types';
+import { Tab, TabTypes } from './types';
 
 export const BREADCRUMB_OPTIONS = {
 	excludePaths: ['/', '/:tenantId'],
@@ -10,16 +10,19 @@ export const CONTENT_TYPE_DETAIL_TAB_MAP: {
 	settings: {
 		name: 'Instellingen',
 		target: 'instellingen',
+		type: TabTypes.INTERNAL,
 		active: true,
 	},
 	contentComponents: {
 		name: 'Content Componenten',
 		target: 'content-componenten',
+		type: TabTypes.INTERNAL,
 		active: false,
 	},
 	sites: {
 		name: 'Sites',
 		target: 'sites',
+		type: TabTypes.INTERNAL,
 		active: false,
 	},
 };
@@ -42,6 +45,7 @@ export const MODULE_PATHS = {
 	detailSettings: '/content-types/:contentTypeUuid/instellingen',
 	detailCC: '/content-types/:contentTypeUuid/content-componenten',
 	detailSites: '/content-types/:contentTypeUuid/sites',
+	detailExternal: '/content-types/:contentTypeUuid/:tab',
 	editCC: '/content-types/:contentTypeUuid/bewerken',
 	detailCCNew: CC_NEW_PATH,
 	detailCCNewSettings: `${CC_NEW_PATH}/instellingen`,

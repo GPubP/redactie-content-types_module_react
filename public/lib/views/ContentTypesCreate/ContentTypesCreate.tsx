@@ -29,7 +29,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const [contentTypeLoadingState, contentType, , createContentType] = useContentType();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
-	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, location.pathname);
+	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, [], location.pathname);
 	const { generatePath, navigate } = useNavigate();
 
 	useEffect(() => {

@@ -1,7 +1,10 @@
+import { Button } from '@acpaas-ui/react-components';
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
+import { ContentTypeAPI } from './lib/api/api.types';
+import { registerContentTypeAPI } from './lib/api/index';
 import { MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesModuleProps } from './lib/contentTypes.types';
 import { TenantContext } from './lib/context';
@@ -19,6 +22,8 @@ import {
 	ContentTypesOverview,
 	ContentTypesUpdate,
 } from './lib/views';
+import ContentTypeDetailExternal from './lib/views/ContentTypeDetailExternal/ContentTypeDetailExternal';
+import { ExternalTabProps } from './lib/views/ContentTypeDetailExternal/ContentTypeDetailExternal.types';
 
 const ContentTypesComponent: FC<ContentTypesModuleProps> = ({
 	route,
@@ -146,7 +151,13 @@ Core.routes.register({
 					path: MODULE_PATHS.detailSites,
 					component: ContentTypesDetailSites,
 				},
+				{
+					path: MODULE_PATHS.detailExternal,
+					component: ContentTypeDetailExternal,
+				},
 			],
 		},
 	],
 });
+
+registerContentTypeAPI();
