@@ -1,11 +1,11 @@
 import { Container } from '@acpaas-ui/react-editorial-components';
 import { clone } from 'ramda';
-import React, { FC, ReactElement, useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 
 import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import { mapExternalTabToTab } from '../../helpers/mapExternalTabToTab/mapExternalTabToTab';
-import { ExternalTabModel } from '../../store/api/externalTabs';
 import { useExternalTabstFacade } from '../../store/api/externalTabs/externalTabs.facade';
+import { Tab } from '../../types';
 
 import { ContentTypeDetailMatchProps, ExternalTabValue } from './ContentTypeDetailExternal.types';
 
@@ -37,13 +37,13 @@ const ContentTypeDetailExternal: FC<ContentTypesDetailRouteProps<ContentTypeDeta
 
 		onSubmit(value, mapExternalTabToTab(activeTab));
 	};
-	const getExternalTabValue = (activeTab: ExternalTabModel): ExternalTabValue => {
+	const getExternalTabValue = (activeTab: Tab): ExternalTabValue => {
 		if (!contentType) {
 			return { config: {}, validationSchema: {} };
 		}
 
 		const moduleSettings = contentType.modulesConfig.find(
-			moduleConfig => moduleConfig.name === activeTab.name
+			moduleConfig => moduleConfig.name === activeTab.id
 		);
 
 		return {
@@ -63,7 +63,7 @@ const ContentTypeDetailExternal: FC<ContentTypesDetailRouteProps<ContentTypeDeta
 					onSubmit={(values: ExternalTabValue) => onExternalTabSubmit(values)}
 					onCancel={() => onCancel()}
 					updateContentType={() => null}
-					value={getExternalTabValue(activeTab)}
+					value={getExternalTabValue(mapExternalTabToTab(activeTab))}
 				></activeTab.component>
 			) : null}
 		</Container>
