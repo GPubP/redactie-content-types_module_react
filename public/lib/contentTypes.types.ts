@@ -4,6 +4,7 @@ import { ContentTypeFieldSchema, ContentTypeSchema } from './services/contentTyp
 import { FieldTypeSchema, FieldTypeSchemaData, FieldTypeSchemaMeta } from './services/fieldTypes';
 import { ContentTypeField, InternalState } from './store/internal';
 import { Tab } from './types';
+import { ExternalTabValue } from './views/ContentTypeDetailExternal/ContentTypeDetailExternal.types';
 
 export interface ContentTypesModuleProps extends RouteConfigComponentProps {
 	basePath: string;
@@ -25,7 +26,7 @@ export interface ContentTypesDetailRouteProps<Params = {}>
 	contentType: ContentTypeSchema;
 	onCancel: () => void;
 	onSubmit: (
-		data: ContentTypeSchema | ContentTypeFieldSchema[] | FieldTypeSchemaMeta,
+		data: ContentTypeSchema | ContentTypeFieldSchema[] | FieldTypeSchemaMeta | ExternalTabValue,
 		tab: Tab
 	) => void;
 	routes: ModuleRouteConfig[];

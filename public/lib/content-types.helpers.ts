@@ -18,7 +18,7 @@ export const generateSettingsFormState = (): ContentTypeSchema => ({
 		description: '',
 		label: '',
 	},
-	uuid: 'e',
+	modulesConfig: [],
 });
 
 export const generateFilterFormState = (): FilterFormState => ({

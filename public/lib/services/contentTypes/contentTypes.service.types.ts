@@ -1,5 +1,16 @@
 import { FieldTypeSchema, Operator } from '../fieldTypes';
 
+export type ValidationSchema = Record<string, any>;
+
+export interface ModuleSettings {
+	uuid?: string;
+	label: string;
+	name: string;
+	module?: string;
+	config: Record<string, any>;
+	validationSchema?: ValidationSchema;
+}
+
 export interface BaseContentTypeField {
 	uuid?: string;
 	label: string;
@@ -58,8 +69,9 @@ export interface ContentTypeMetaSchema {
 
 export interface ContentTypeSchema {
 	_id: string;
-	uuid: string;
+	uuid?: string;
 	fields: ContentTypeFieldSchema[];
+	modulesConfig: ModuleSettings[];
 	meta: ContentTypeMetaSchema;
 }
 export interface ContentTypesDataSchema {
@@ -70,6 +82,7 @@ export interface ContentTypeResponse {
 	_id: string;
 	uuid: string;
 	fields: ContentTypeFieldResponse[];
+	modulesConfig: ModuleSettings[];
 	meta: ContentTypeMetaSchema;
 }
 
@@ -79,6 +92,7 @@ export interface ContentTypesSchema {
 
 export interface ContentTypeCreate {
 	fields: ContentTypeFieldSchema[];
+	modulesConfig: ModuleSettings[];
 	meta: {
 		label: string;
 		description: string;

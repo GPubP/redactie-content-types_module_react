@@ -7,6 +7,7 @@ import { ContentTypeField } from './store/internal';
 
 export const generateEmptyContentType = (): ContentTypeCreate => ({
 	fields: [],
+	modulesConfig: [],
 	meta: {
 		safeLabel: '',
 		description: '',
