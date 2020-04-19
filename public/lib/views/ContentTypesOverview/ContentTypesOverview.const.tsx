@@ -6,7 +6,7 @@ import { ContentTypesOverviewTableRow } from './ContentTypesOverview.types';
 export const CONTENT_TYPE_OVERVIEW_COLUMNS = [
 	{
 		label: 'Naam',
-		value: 'name',
+		value: 'label',
 	},
 	{
 		label: 'Gebruikt op',

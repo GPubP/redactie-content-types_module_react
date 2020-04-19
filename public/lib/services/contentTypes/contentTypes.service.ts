@@ -10,17 +10,17 @@ import {
 
 export const getContentTypes = async (
 	searchParams: SearchParams = DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
-): Promise<ContentTypeResponse[] | null> => {
+): Promise<ContentTypesSchema | null> => {
 	try {
 		const response: ContentTypesSchema = await api
 			.get(`content/content-types?${parseSearchParams(searchParams)}`)
 			.json();
 
-		if (!response.data) {
+		if (!response) {
 			throw new Error('Failed to get content-types');
 		}
 
-		return response.data;
+		return response;
 	} catch (err) {
 		console.error(err);
 		return null;
