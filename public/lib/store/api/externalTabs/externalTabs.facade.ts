@@ -11,7 +11,7 @@ export const useExternalTabstFacade = (): [
 	{ all: ExternalTabModel[]; active: ExternalTabModel | null },
 	ExternalTabsService['activate']
 ] => {
-	const activate = (name: ID) => externalTabsService.activate(name);
+	const activate = (name: ID): void => externalTabsService.activate(name);
 
 	const [all, setTabs] = useState<ExternalTabModel[]>([]);
 	const [active, setActive] = useState<ExternalTabModel | null>(null);

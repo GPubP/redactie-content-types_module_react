@@ -66,10 +66,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 		const emptyFilter: [] = [];
 		setFilterItems(emptyFilter);
 		//delete search param from api call
-		setContentTypesSearchParams({
-			skip: 1,
-			limit: 10,
-		});
+		setContentTypesSearchParams(DEFAULT_CONTENT_TYPES_SEARCH_PARAMS);
 	};
 
 	const deleteFilter = (item: any): void => {

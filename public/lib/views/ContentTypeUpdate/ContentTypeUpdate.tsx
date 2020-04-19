@@ -98,9 +98,9 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		tab: Tab
 	): ContentTypeSchema => {
 		const oldModulesConfig = ct?.modulesConfig || [];
-		const moduleConfigIndex = (oldModulesConfig || []).findIndex(c => c.name === tab.name);
+		const moduleConfigIndex = (oldModulesConfig || []).findIndex(c => c.name === tab.id);
 		const moduleConfig: ModuleSettings = oldModulesConfig[moduleConfigIndex] || {
-			name: tab.name,
+			name: tab.id,
 			label: activeExternalTab?.label,
 		};
 		moduleConfig.config = (sectionData as ExternalTabValue).config;
