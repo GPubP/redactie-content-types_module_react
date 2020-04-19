@@ -161,3 +161,5 @@ Core.routes.register({
 });
 
 registerContentTypeAPI();
+
+export * from './lib/api/api.types';
