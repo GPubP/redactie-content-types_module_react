@@ -59,6 +59,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 				fieldType: {
 					_id: CTField.fieldType._id,
 					data: fieldType,
+					uuid: fieldTypeUuid as string | undefined,
 				},
 			};
 
