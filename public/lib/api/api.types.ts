@@ -10,3 +10,4 @@ export { ExternalTabProps } from '../views/ContentTypeDetailExternal/ContentType
 export interface ContentTypeAPI {
 	registerCTDetailTab: (name: string, options: ExternalTabOptions) => void;
 }
+export { ExternalTabOptions };

@@ -33,7 +33,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	const { generatePath, navigate } = useNavigate();
 
 	useEffect(() => {
-		if (contentType) {
+		if (contentType?.uuid) {
 			navigate(MODULE_PATHS.detailCC, { contentTypeUuid: contentType.uuid });
 		}
 		if (

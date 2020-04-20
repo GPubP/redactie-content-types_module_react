@@ -2,6 +2,13 @@ import { FieldTypeSchema, Operator } from '../fieldTypes';
 
 export type ValidationSchema = Record<string, any>;
 
+export interface ContentTypePaging {
+	total: number;
+	moreResults: boolean;
+	limit: number;
+	skip: number;
+}
+
 export interface ModuleSettings {
 	uuid?: string;
 	label: string;
@@ -88,6 +95,7 @@ export interface ContentTypeResponse {
 
 export interface ContentTypesSchema {
 	data: ContentTypeResponse[];
+	paging: ContentTypePaging;
 }
 
 export interface ContentTypeCreate {
