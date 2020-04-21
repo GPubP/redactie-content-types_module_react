@@ -3,6 +3,22 @@ export interface Operator {
 	value: string;
 }
 
+export interface DataTypeSchema {
+	_id: string;
+	meta: {
+		createdAt: string;
+		deleted: boolean;
+		lastModified: string;
+		created: string;
+	};
+	data: {
+		label: string;
+		type: string;
+		semanticType: string;
+	};
+	uuid: string;
+}
+
 export interface FieldTypeSchemaData {
 	label: string;
 	name: string;
@@ -13,7 +29,7 @@ export interface FieldTypeSchemaData {
 	formSchema: {
 		fields: any[];
 	};
-	dataType: string;
+	dataType: DataTypeSchema;
 	generalConfig: {
 		isQueryable: boolean;
 		isTranslate: boolean;
@@ -31,7 +47,7 @@ export interface FieldTypeSchemaMeta {
 }
 
 export interface FieldTypeSchema {
-	_id?: string;
+	_id: string;
 	uuid: string;
 	data: FieldTypeSchemaData;
 	meta: FieldTypeSchemaMeta;
