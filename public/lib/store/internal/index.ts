@@ -1,3 +1,4 @@
+export * from './internal.facades';
 export * from './internal.model';
 export * from './internal.query';
 export * from './internal.service';
