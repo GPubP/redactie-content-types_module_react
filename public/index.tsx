@@ -1,9 +1,7 @@
-import { Button } from '@acpaas-ui/react-components';
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { ContentTypeAPI } from './lib/api/api.types';
 import { registerContentTypeAPI } from './lib/api/index';
 import { MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesModuleProps } from './lib/contentTypes.types';
@@ -23,7 +21,6 @@ import {
 	ContentTypesUpdate,
 } from './lib/views';
 import ContentTypeDetailExternal from './lib/views/ContentTypeDetailExternal/ContentTypeDetailExternal';
-import { ExternalTabProps } from './lib/views/ContentTypeDetailExternal/ContentTypeDetailExternal.types';
 
 const ContentTypesComponent: FC<ContentTypesModuleProps> = ({
 	route,

@@ -60,10 +60,8 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	}, [contentTypeLoadingState, fieldTypesLoadingState]);
 
 	useEffect(() => {
-		if (contentTypeLoadingState !== LoadingState.Loading && contentType?.fields.length) {
-			internalService.updateFields(
-				contentType.fields.map(f => ({ ...f, dataType: f.dataType._id }))
-			);
+		if (contentTypeLoadingState !== LoadingState.Loading && contentType?.fields) {
+			internalService.updateFields(contentType.fields);
 		}
 	}, [contentType, contentTypeLoadingState]);
 
@@ -81,8 +79,8 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 			name: tab.id,
 			label: activeExternalTab?.label,
 		};
-		moduleConfig.config = (sectionData as ExternalTabValue).config;
-		moduleConfig.validationSchema = (sectionData as ExternalTabValue).validationSchema;
+		moduleConfig.config = sectionData.config;
+		moduleConfig.validationSchema = sectionData.validationSchema;
 
 		const newModulesConfig = [...oldModulesConfig];
 
