@@ -44,13 +44,14 @@ const ContentTypesComponent: FC<ContentTypesModuleProps> = ({
 		return <Redirect to={`${location.pathname}/instellingen`} />;
 	}
 
-	if (
-		new RegExp(`/content-types/${uuidRegex}/content-componenten/(nieuw|bewerken)$`).test(
-			location.pathname
-		)
-	) {
-		return <Redirect to={`${location.pathname}/instellingen${location.search}`} />;
-	}
+	// Temp disable redirect to prevent reset of updated content components
+	// if (
+	// 	new RegExp(`/content-types/${uuidRegex}/content-componenten/(nieuw|bewerken)$`).test(
+	// 		location.pathname
+	// 	)
+	// ) {
+	// 	return <Redirect to={`${location.pathname}/instellingen`} />;
+	// }
 
 	return (
 		<TenantContext.Provider value={{ tenantId }}>
