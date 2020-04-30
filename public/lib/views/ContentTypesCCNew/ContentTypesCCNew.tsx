@@ -5,11 +5,13 @@ import {
 	Container,
 } from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import kebabCase from 'lodash.kebabcase';
 import { parse } from 'query-string';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader, NavList } from '../../components';
+import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { generateFieldFromType } from '../../contentTypes.helpers';
 import { ContentTypesCCRouteProps, ContentTypesDetailRouteProps } from '../../contentTypes.types';
@@ -38,6 +40,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 	const [loadingState, fieldType] = useFieldType(fieldTypeUuid as string | undefined);
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
+	const [t] = useCoreTranslation();
 
 	useEffect(() => {
 		if (fieldType && !CTField) {
@@ -120,10 +123,10 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 				<ActionBar className="o-action-bar--fixed" isOpen>
 					<ActionBarContentSection>
 						<Button className="u-margin-right-xs" onClick={onCTSubmit} type="success">
-							Bewaar
+							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
 						</Button>
 						<Button onClick={navigateToOverview} outline>
-							Annuleer
+							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
 					</ActionBarContentSection>
 				</ActionBar>

@@ -4,10 +4,12 @@ import {
 	ActionBarContentSection,
 	Container,
 } from '@acpaas-ui/react-editorial-components';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC } from 'react';
 
+import { useCoreTranslation } from '../../connectors/translations';
 import { CONTENT_TYPE_DETAIL_TAB_MAP } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import { ContentTypeSchema } from '../../services/contentTypes';
@@ -19,6 +21,11 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	onCancel,
 	onSubmit,
 }) => {
+	/**
+	 * Hooks
+	 */
+	const [t] = useCoreTranslation();
+
 	/**
 	 * Methods
 	 */
@@ -54,7 +61,8 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 
 							<div className="col-xs-12 col-md-4 u-margin-top u-margin-bottom">
 								<div>
-									Systeemnaam: <b>{kebabCase(values.meta.label)}</b>
+									{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
+									<b>{kebabCase(values.meta.label)}</b>
 								</div>
 							</div>
 						</div>
@@ -84,10 +92,10 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 									onClick={submitForm}
 									type="success"
 								>
-									Bewaar en ga verder
+									{t(CORE_TRANSLATIONS['BUTTON_SAVE-NEXT'])}
 								</Button>
 								<Button onClick={onCancel} outline>
-									Annuleer
+									{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 								</Button>
 							</div>
 						</ActionBarContentSection>

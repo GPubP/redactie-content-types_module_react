@@ -5,9 +5,11 @@ import {
 	Container,
 } from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader, NavList } from '../../components';
+import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps, ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
@@ -25,6 +27,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ contentType, rou
 	const [loadingState, fieldType] = useFieldType(activeField?.fieldType.uuid);
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
+	const [t] = useCoreTranslation();
 
 	useEffect(() => {
 		if (activeField && fieldType) {
@@ -122,10 +125,10 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ contentType, rou
 							onClick={onFieldSubmit}
 							type="success"
 						>
-							Bewaar
+							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
 						</Button>
 						<Button onClick={navigateToOverview} outline>
-							Annuleer
+							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
 					</ActionBarContentSection>
 				</ActionBar>
