@@ -29,7 +29,7 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 						// TODO: should be fixed in form renderer
 						// Pass empty options for fields that need it
 						config: fieldTypeData.defaultConfig || { options: [] },
-						dataType: fieldTypeData.dataType.data.type as FieldDataType,
+						dataType: CTField.dataType.data.type as FieldDataType,
 					},
 			  ]
 			: [],
