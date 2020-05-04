@@ -1,9 +1,7 @@
-import { Button } from '@acpaas-ui/react-components';
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { ContentTypeAPI } from './lib/api/api.types';
 import { registerContentTypeAPI } from './lib/api/index';
 import { MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesModuleProps } from './lib/contentTypes.types';
@@ -23,7 +21,6 @@ import {
 	ContentTypesUpdate,
 } from './lib/views';
 import ContentTypeDetailExternal from './lib/views/ContentTypeDetailExternal/ContentTypeDetailExternal';
-import { ExternalTabProps } from './lib/views/ContentTypeDetailExternal/ContentTypeDetailExternal.types';
 
 const ContentTypesComponent: FC<ContentTypesModuleProps> = ({
 	route,
@@ -47,13 +44,14 @@ const ContentTypesComponent: FC<ContentTypesModuleProps> = ({
 		return <Redirect to={`${location.pathname}/instellingen`} />;
 	}
 
-	if (
-		new RegExp(`/content-types/${uuidRegex}/content-componenten/(nieuw|bewerken)$`).test(
-			location.pathname
-		)
-	) {
-		return <Redirect to={`${location.pathname}/instellingen${location.search}`} />;
-	}
+	// Temp disable redirect to prevent reset of updated content components
+	// if (
+	// 	new RegExp(`/content-types/${uuidRegex}/content-componenten/(nieuw|bewerken)$`).test(
+	// 		location.pathname
+	// 	)
+	// ) {
+	// 	return <Redirect to={`${location.pathname}/instellingen`} />;
+	// }
 
 	return (
 		<TenantContext.Provider value={{ tenantId }}>

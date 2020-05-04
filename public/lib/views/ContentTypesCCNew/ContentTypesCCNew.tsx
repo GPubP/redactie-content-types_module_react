@@ -1,4 +1,4 @@
-import { Button, Card } from '@acpaas-ui/react-components';
+import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import {
 	ActionBar,
 	ActionBarContentSection,
@@ -6,66 +6,42 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import kebabCase from 'lodash.kebabcase';
-import { parse } from 'query-string';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
-import { DataLoader, NavList } from '../../components';
-import { useCoreTranslation } from '../../connectors/translations';
+import { NavList } from '../../components';
 import { MODULE_PATHS } from '../../contentTypes.const';
-import { generateFieldFromType } from '../../contentTypes.helpers';
 import { ContentTypesCCRouteProps, ContentTypesDetailRouteProps } from '../../contentTypes.types';
-import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
+import { useNavigate, useTenantContext } from '../../hooks';
 import { ContentTypeField, internalService } from '../../store/internal';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCNew.const';
 
-const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
-	contentType,
-	location,
-	routes,
-	state,
-}) => {
-	const { fieldType: fieldTypeUuid, id: fieldTypeId, name } = parse(location.search);
-	const initalFieldValues = {
-		name: kebabCase((name as string | undefined) || ''),
-		label: (name as string | undefined) || '',
-		fieldType: fieldTypeId as string | undefined,
-	};
-
+const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, routes, state }) => {
+	const { contentTypeUuid } = match.params;
 	/**
 	 * Hooks
 	 */
 	const [CTField, setCTField] = useState<ContentTypeField | null>(null);
-	const [loadingState, fieldType] = useFieldType(fieldTypeUuid as string | undefined);
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
 
 	useEffect(() => {
-		if (fieldType && !CTField) {
-			setCTField(generateFieldFromType(fieldType, initalFieldValues));
+		if (state.activeField) {
+			setCTField(state.activeField);
 		}
-	}, [fieldType, CTField, initalFieldValues]);
+	}, [state.activeField]);
 
 	/**
 	 * Methods
 	 */
 	const navigateToOverview = (): void => {
-		navigate(MODULE_PATHS.detailCC, { contentTypeUuid: contentType.uuid });
+		navigate(MODULE_PATHS.detailCC, { contentTypeUuid });
 	};
 
 	const onCTSubmit = (): void => {
-		if (CTField && fieldType) {
-			const populatedField: ContentTypeField = {
-				...CTField,
-				fieldType: {
-					_id: CTField.fieldType._id,
-					data: fieldType,
-				},
-			};
-
-			internalService.updateFields([...state.fields, populatedField]);
+		if (CTField) {
+			internalService.updateFields([...state.fields, CTField]);
 			navigateToOverview();
 		}
 	};
@@ -85,37 +61,34 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 			activeRoute?.routes as ModuleRouteConfig[],
 			{
 				CTField,
-				fieldTypeData: fieldType,
+				fieldTypeData: CTField?.fieldType.data,
 				routes: activeRoute?.routes,
 				onSubmit: onFieldTypeChange,
 			} as ContentTypesCCRouteProps
 		);
 	};
 
-	const renderCCNew = (): ReactElement => {
-		return (
-			<>
+	if (!CTField) {
+		return null;
+	}
+
+	return (
+		<>
+			<Container>
 				<div className="u-margin-bottom-lg">
 					<div className="row between-xs top-xs">
 						<div className="col-xs-3">
 							<NavList
 								items={CC_NAV_LIST_ITEMS.map(listItem => ({
 									...listItem,
-									to: generatePath(
-										`${listItem.to}?fieldType=:fieldType&name=:name`,
-										{
-											contentTypeUuid: contentType.uuid,
-											fieldType: fieldTypeUuid as string,
-											name: name as string,
-										}
-									),
+									to: generatePath(listItem.to, { contentTypeUuid }),
 								}))}
 							/>
 						</div>
 
 						<div className="col-xs-9">
 							<Card>
-								<div className="u-margin">{renderChildRoutes()}</div>
+								<CardBody>{renderChildRoutes()}</CardBody>
 							</Card>
 						</div>
 					</div>
@@ -130,14 +103,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 						</Button>
 					</ActionBarContentSection>
 				</ActionBar>
-			</>
-		);
-	};
-
-	return (
-		<>
-			<Container>
-				<DataLoader loadingState={loadingState} render={renderCCNew} />
 			</Container>
 		</>
 	);

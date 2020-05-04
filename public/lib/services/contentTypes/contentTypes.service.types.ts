@@ -1,4 +1,4 @@
-import { FieldTypeSchema, Operator } from '../fieldTypes';
+import { DataTypeSchema, FieldTypeSchema, Operator } from '../fieldTypes';
 
 export type ValidationSchema = Record<string, any>;
 
@@ -24,6 +24,7 @@ export interface BaseContentTypeField {
 	module: string;
 	name: string;
 	config: any;
+	defaultValue?: any;
 	validators: string[];
 	operators: Operator[];
 	generalConfig: {
@@ -41,20 +42,7 @@ export interface ContentTypeFieldSchema extends BaseContentTypeField {
 }
 
 export interface ContentTypeFieldResponse extends BaseContentTypeField {
-	dataType: {
-		_id: string;
-		meta: {
-			createdAt: string;
-			deleted: boolean;
-			lastModified: string;
-		};
-		data: {
-			label: string;
-			type: string;
-			semanticType: string;
-		};
-		uuid: string;
-	};
+	dataType: DataTypeSchema;
 	fieldType: FieldTypeSchema;
 }
 

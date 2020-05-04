@@ -3,8 +3,6 @@ import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 import DataLoader from '../../components/DataLoader/DataLoader';
 import {
@@ -28,7 +26,7 @@ import {
 	ModuleSettings,
 } from '../../services/contentTypes';
 import { useExternalTabstFacade } from '../../store/api/externalTabs/externalTabs.facade';
-import { ContentTypeField, internalQuery, internalService } from '../../store/internal';
+import { internalService, useActiveFieldFacade, useFieldsFacade } from '../../store/internal';
 import { LoadingState, Tab, TabTypes } from '../../types';
 import { ExternalTabValue } from '../ContentTypeDetailExternal/ContentTypeDetailExternal.types';
 
@@ -36,9 +34,9 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	/**
 	 * Hooks
 	 */
-	const [activeField, setActiveField] = useState<ContentTypeField | null>(null);
-	const [fields, setFields] = useState<ContentTypeField[]>([]);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const activeField = useActiveFieldFacade();
+	const fields = useFieldsFacade();
 	const { contentTypeUuid } = useParams();
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
@@ -62,32 +60,10 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	}, [contentTypeLoadingState, fieldTypesLoadingState]);
 
 	useEffect(() => {
-		if (contentTypeLoadingState !== LoadingState.Loading && contentType?.fields.length) {
-			internalService.updateFields(
-				contentType.fields.map(f => ({ ...f, dataType: f.dataType._id }))
-			);
+		if (contentTypeLoadingState !== LoadingState.Loading && contentType?.fields) {
+			internalService.updateFields(contentType.fields);
 		}
 	}, [contentType, contentTypeLoadingState]);
-
-	useEffect(() => {
-		const destroyed$: Subject<boolean> = new Subject<boolean>();
-
-		internalQuery.activeField$.pipe(takeUntil(destroyed$)).subscribe(activeFieldSub => {
-			if (activeFieldSub) {
-				return setActiveField(activeFieldSub);
-			}
-		});
-		internalQuery.fields$.pipe(takeUntil(destroyed$)).subscribe(fieldsSub => {
-			if (fieldsSub) {
-				return setFields(fieldsSub);
-			}
-		});
-
-		return () => {
-			destroyed$.next(true);
-			destroyed$.complete();
-		};
-	}, []);
 
 	/**
 	 * Methods
@@ -103,8 +79,8 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 			name: tab.id,
 			label: activeExternalTab?.label,
 		};
-		moduleConfig.config = (sectionData as ExternalTabValue).config;
-		moduleConfig.validationSchema = (sectionData as ExternalTabValue).validationSchema;
+		moduleConfig.config = sectionData.config;
+		moduleConfig.validationSchema = sectionData.validationSchema;
 
 		const newModulesConfig = [...oldModulesConfig];
 

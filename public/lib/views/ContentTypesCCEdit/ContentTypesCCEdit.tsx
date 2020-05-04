@@ -17,7 +17,8 @@ import { ContentTypeField, internalService } from '../../store/internal';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCEdit.const';
 
-const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ contentType, routes, state }) => {
+const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, state }) => {
+	const { contentTypeUuid } = match.params;
 	const { activeField, fields } = state;
 
 	/**
@@ -39,7 +40,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ contentType, rou
 	 * Methods
 	 */
 	const navigateToOverview = (): void => {
-		navigate(MODULE_PATHS.detailCC, { contentTypeUuid: contentType.uuid });
+		navigate(MODULE_PATHS.detailCC, { contentTypeUuid });
 	};
 
 	const onFieldChange = (data: ContentTypeField): void => {
@@ -81,7 +82,6 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ contentType, rou
 		return Core.routes.render(
 			activeRoute?.routes as ModuleRouteConfig[],
 			{
-				contentType,
 				CTField: updatedField,
 				fieldTypeData: fieldType,
 				routes: activeRoute?.routes,
@@ -104,9 +104,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ contentType, rou
 							<NavList
 								items={CC_NAV_LIST_ITEMS.map(listItem => ({
 									...listItem,
-									to: generatePath(listItem.to, {
-										contentTypeUuid: contentType.uuid,
-									}),
+									to: generatePath(listItem.to, { contentTypeUuid }),
 								}))}
 							/>
 						</div>

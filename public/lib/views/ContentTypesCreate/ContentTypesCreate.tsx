@@ -79,6 +79,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 			fieldTypes,
 			routes: activeRoute?.routes,
 			contentType: contentType || generateEmptyContentType(),
+			onCancel: () => navigate(MODULE_PATHS.admin),
 			onSubmit: (sectionData: any, tab: Tab) => upsertCT(sectionData, tab),
 		});
 	};

@@ -1,5 +1,5 @@
 import { Checkbox } from '@acpaas-ui/react-components';
-import { FormsAPI, FormSchema } from '@redactie/form-renderer-module';
+import { FieldDataType, FormsAPI, FormSchema } from '@redactie/form-renderer-module';
 import Core from '@redactie/redactie-core';
 import { Field, Formik } from 'formik';
 import React, { FC, ReactElement } from 'react';
@@ -26,8 +26,10 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 						module: fieldTypeData.module,
 						label: CTField.label,
 						type: fieldTypeData.componentName,
-						config: fieldTypeData.defaultConfig || {},
-						dataType: 'string', // TODO: should be dynamic
+						// TODO: should be fixed in form renderer
+						// Pass empty options for fields that need it
+						config: fieldTypeData.defaultConfig || { options: [] },
+						dataType: CTField.dataType.data.type as FieldDataType,
 					},
 			  ]
 			: [],
