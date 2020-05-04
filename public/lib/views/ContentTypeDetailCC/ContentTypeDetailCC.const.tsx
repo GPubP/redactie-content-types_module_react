@@ -42,7 +42,7 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 		},
 	},
 	{
-		label: CORE_TRANSLATIONS.TABLE_TYPE,
+		label: t(CORE_TRANSLATIONS.TABLE_TYPE),
 		value: 'fieldType',
 	},
 	{
