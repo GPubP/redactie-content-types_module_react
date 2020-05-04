@@ -9,6 +9,7 @@ import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18n
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { NavList } from '../../components';
+import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps, ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import { useNavigate, useTenantContext } from '../../hooks';
