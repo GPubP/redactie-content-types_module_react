@@ -1,6 +1,6 @@
 {
 	"name": "@redactie/content-types-module",
-	"version": "0.7.0-1",
+	"version": "0.7.0",
 	"description": "redactie content types module",
 	"main": "dist/redactie-content-types-module.umd.js",
 	"module": "dist/redactie-content-types-module.umd.js",
@@ -88,12 +88,12 @@
 		"typescript-plugin-css-modules": "2.1.2",
 		"webpack": "4.41.5",
 		"webpack-bundle-analyzer": "3.6.1",
-    "webpack-cli": "3.3.10",
+		"webpack-cli": "3.3.10",
 		"formik": "2.1.4",
 		"ky": "0.17.0",
-    "yup": "0.28.3",
+		"yup": "0.28.3",
 		"ramda": "0.27.0"
-  },
+	},
 	"dependencies": {
 		"lodash.debounce": "^4.0.8",
 		"lodash.kebabcase": "4.1.1",
