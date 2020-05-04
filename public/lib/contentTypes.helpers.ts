@@ -2,7 +2,7 @@ import { pathOr } from 'ramda';
 
 import { CCSettingsFormState } from './contentTypes.types';
 import { ContentTypeCreate, ContentTypeFieldSchema } from './services/contentTypes';
-import { FieldTypeSchemaData } from './services/fieldTypes';
+import { FieldTypeSchema } from './services/fieldTypes';
 import { ContentTypeField } from './store/internal';
 
 export const generateEmptyContentType = (): ContentTypeCreate => ({
@@ -17,13 +17,12 @@ export const generateEmptyContentType = (): ContentTypeCreate => ({
 });
 
 export const generateFieldFromType = (
-	fieldType: FieldTypeSchemaData,
+	fieldType: FieldTypeSchema,
 	initialValues: Partial<ContentTypeFieldSchema> = {}
 ): ContentTypeField => ({
 	label: '',
-	module: fieldType.module || '',
+	module: fieldType.data.module || '',
 	name: '',
-	dataType: fieldType.dataType || '',
 	config: {},
 	validators: [],
 	operators: [],
@@ -34,10 +33,8 @@ export const generateFieldFromType = (
 		max: 1,
 	},
 	...initialValues,
-	fieldType: {
-		_id: initialValues.fieldType,
-		data: fieldType,
-	},
+	dataType: fieldType.data.dataType,
+	fieldType,
 });
 
 export const generateCCFormState = (
@@ -60,6 +57,7 @@ export const generateCCFormState = (
 export const parseContentTypeField = (field: ContentTypeField): ContentTypeFieldSchema => {
 	return {
 		...field,
-		fieldType: field.fieldType._id || '',
+		dataType: field.dataType._id,
+		fieldType: field.fieldType?._id,
 	};
 };

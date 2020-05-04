@@ -6,12 +6,14 @@ import {
 	Table,
 } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
+import kebabCase from 'lodash.kebabcase';
 import { pathOr } from 'ramda';
 import React, { FC, ReactElement } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { FormCTNewCC, NavList } from '../../components';
 import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
-import { parseContentTypeField } from '../../contentTypes.helpers';
+import { generateFieldFromType, parseContentTypeField } from '../../contentTypes.helpers';
 import { ContentTypesDetailRouteProps, NewCCFormState } from '../../contentTypes.types';
 import { useNavigate } from '../../hooks';
 import { ContentTypeField, internalService } from '../../store/internal';
@@ -25,7 +27,6 @@ import { ContentTypeDetailCCRow } from './ContentTypeDetailCC.types';
 
 const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	fieldTypes,
-	contentType,
 	onCancel,
 	onSubmit,
 	state,
@@ -39,19 +40,21 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	/**
 	 * Hooks
 	 */
+	const { contentTypeUuid } = useParams();
 	const { navigate, generatePath } = useNavigate();
 
 	/**
 	 * Methods
 	 */
 	const onCCFormSubmit = ({ name, fieldType }: NewCCFormState): void => {
-		const currentFieldType = fieldTypes.find(ft => ft.uuid === fieldType);
-		navigate(`${MODULE_PATHS.detailCCNew}?fieldType=:fieldType&id=:id&name=:name`, {
-			contentTypeUuid: contentType.uuid,
-			id: currentFieldType?._id || '',
-			name,
-			fieldType,
-		});
+		const selectedFieldType = fieldTypes.find(ft => ft.uuid === fieldType);
+		if (!selectedFieldType) {
+			return;
+		}
+
+		const initialValues = { label: name, name: kebabCase(name) };
+		internalService.updateActiveField(generateFieldFromType(selectedFieldType, initialValues));
+		navigate(MODULE_PATHS.detailCCNew, { contentTypeUuid });
 	};
 
 	const onCCSave = (): void => {
@@ -64,7 +67,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	 */
 	const renderTableField = ({ value: fields }: { value: ContentTypeField[] }): ReactElement => {
 		const contentTypeRows: ContentTypeDetailCCRow[] = (fields || []).map(cc => ({
-			path: generatePath(MODULE_PATHS.detailCCEdit, { contentTypeUuid: contentType.uuid }),
+			path: generatePath(MODULE_PATHS.detailCCEdit, { contentTypeUuid }),
 			setActiveField: () => {
 				internalService.updateActiveField(cc);
 			},

@@ -26,7 +26,9 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 						module: fieldTypeData.module,
 						label: CTField.label,
 						type: fieldTypeData.componentName,
-						config: fieldTypeData.defaultConfig || {},
+						// TODO: should be fixed in form renderer
+						// Pass empty options for fields that need it
+						config: fieldTypeData.defaultConfig || { options: [] },
 						dataType: 'string', // TODO: should be dynamic
 					},
 			  ]

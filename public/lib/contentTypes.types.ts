@@ -20,7 +20,7 @@ export interface ContentTypesRouteProps<Params = {}> extends RouteConfigComponen
 	routes: ModuleRouteConfig[];
 }
 
-export interface ContentTypesDetailRouteProps<Params = {}>
+export interface ContentTypesDetailRouteProps<Params = { contentTypeUuid: string }>
 	extends RouteConfigComponentProps<Params> {
 	fieldTypes: FieldTypeSchema[];
 	contentType: ContentTypeSchema;
@@ -35,7 +35,6 @@ export interface ContentTypesDetailRouteProps<Params = {}>
 
 export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
 	CTField: ContentTypeField;
-	contentType?: ContentTypeSchema;
 	fieldTypeData: FieldTypeSchemaData;
 	onDelete?: () => void;
 	onSubmit: (data: any) => void;
