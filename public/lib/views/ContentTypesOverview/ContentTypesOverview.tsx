@@ -7,10 +7,12 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
 import FilterForm from '../../components/FilterForm/FilterForm';
+import { useCoreTranslation } from '../../connectors/translations';
 import { generateFilterFormState } from '../../content-types.helpers';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesRouteProps, FilterFormState } from '../../contentTypes.types';
@@ -36,6 +38,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	const [loadingState, contentTypes] = useContentTypes(contentTypesSearchParams);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
+	const [t] = useCoreTranslation();
 
 	useEffect(() => {
 		if (loadingState === LoadingState.Loaded || loadingState === LoadingState.Error) {
@@ -134,7 +137,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 				</div>
 				<PaginatedTable
 					className="u-margin-top"
-					columns={CONTENT_TYPE_OVERVIEW_COLUMNS}
+					columns={CONTENT_TYPE_OVERVIEW_COLUMNS(t)}
 					rows={contentTypesRows}
 					currentPage={
 						Math.ceil(
@@ -158,7 +161,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
 					<Button iconLeft="plus" onClick={() => navigate(MODULE_PATHS.create)}>
-						Nieuwe maken
+						{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
 					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>

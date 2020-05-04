@@ -1,11 +1,13 @@
 import { Button } from '@acpaas-ui/react-components';
+import { TranslateFunc } from '@redactie/translations-module';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React from 'react';
 
 import { ContentTypesOverviewTableRow } from './ContentTypesOverview.types';
 
-export const CONTENT_TYPE_OVERVIEW_COLUMNS = [
+export const CONTENT_TYPE_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
-		label: 'Naam',
+		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
 	},
 	{
@@ -14,7 +16,7 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = [
 		disableSorting: true,
 	},
 	{
-		label: 'Status',
+		label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 		value: 'status',
 		disableSorting: true,
 	},

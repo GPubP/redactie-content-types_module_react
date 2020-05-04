@@ -1,3 +1,5 @@
+import { TranslateFunc } from '@redactie/translations-module';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { array, object, string } from 'yup';
@@ -23,9 +25,9 @@ export const CT_CC_VALIDATION_SCHEMA = object().shape({
 	),
 });
 
-export const CONTENT_TYPE_COLUMNS = [
+export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 	{
-		label: 'Naam',
+		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
 		component(value: string, rowData: ContentTypeDetailCCRow) {
 			const { path, setActiveField } = rowData;
@@ -40,7 +42,7 @@ export const CONTENT_TYPE_COLUMNS = [
 		},
 	},
 	{
-		label: 'Type',
+		label: CORE_TRANSLATIONS.TABLE_TYPE,
 		value: 'fieldType',
 	},
 	{

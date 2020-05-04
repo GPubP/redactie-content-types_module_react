@@ -5,6 +5,7 @@ import {
 	Container,
 } from '@acpaas-ui/react-editorial-components';
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { NavList } from '../../components';
@@ -23,6 +24,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, routes, st
 	const [CTField, setCTField] = useState<ContentTypeField | null>(null);
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
+	const [t] = useCoreTranslation();
 
 	useEffect(() => {
 		if (state.activeField) {
@@ -94,10 +96,10 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, routes, st
 				<ActionBar className="o-action-bar--fixed" isOpen>
 					<ActionBarContentSection>
 						<Button className="u-margin-right-xs" onClick={onCTSubmit} type="success">
-							Bewaar
+							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
 						</Button>
 						<Button onClick={navigateToOverview} outline>
-							Annuleer
+							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
 					</ActionBarContentSection>
 				</ActionBar>

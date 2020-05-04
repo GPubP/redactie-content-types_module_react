@@ -1,11 +1,16 @@
 import { Button, Select, TextField } from '@acpaas-ui/react-components';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { Field, Formik } from 'formik';
 import React, { FC } from 'react';
+
+import { useCoreTranslation } from '../../../connectors/translations';
 
 import { FIELD_TYPES_DEFAULT_OPTION } from './FormCTNewCC.const';
 import { FormCTNewCCProps } from './FormCTNewCC.types';
 
 const FormGeneralCC: FC<FormCTNewCCProps> = ({ fieldTypeOptions, formState, onSubmit }) => {
+	const [t] = useCoreTranslation();
+
 	return (
 		<Formik initialValues={formState} onSubmit={onSubmit}>
 			{({ submitForm }) => (
@@ -41,7 +46,7 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({ fieldTypeOptions, formState, onSu
 					</div>
 
 					<Button onClick={submitForm} outline>
-						Toevoegen
+						{t(CORE_TRANSLATIONS.BUTTON_ADD)}
 					</Button>
 				</>
 			)}

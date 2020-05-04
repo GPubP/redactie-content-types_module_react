@@ -1,8 +1,10 @@
 import { Checkbox, RadioGroup, Textarea, TextField } from '@acpaas-ui/react-components';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { ChangeEvent, FC, useState } from 'react';
 
+import { useCoreTranslation } from '../../../connectors/translations';
 import { CCSettingsFormState } from '../../../contentTypes.types';
 import AutoSubmit from '../AutoSubmit/AutoSubmit';
 
@@ -11,6 +13,7 @@ import { FormCCSettingsProps } from './FormCCSettings.types';
 
 const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) => {
 	const [isMultiple, setIsMultiple] = useState(initialValues.generalConfig.max > 1);
+	const [t] = useCoreTranslation();
 
 	const onFormSubmit = (values: CCSettingsFormState): void => {
 		// Reset min and max to initial values if not muliple
@@ -48,7 +51,8 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 
 								<div className="col-xs-12 col-md-4 u-margin-top-xs u-margin-bottom">
 									<div>
-										Systeemnaam: <b>{kebabCase(values.label)}</b>
+										{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
+										<b>{kebabCase(values.label)}</b>
 									</div>
 								</div>
 							</div>

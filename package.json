@@ -87,16 +87,17 @@
 		"typescript-plugin-css-modules": "2.1.2",
 		"webpack": "4.41.5",
 		"webpack-bundle-analyzer": "3.6.1",
-		"webpack-cli": "3.3.10"
-	},
-	"dependencies": {
+    "webpack-cli": "3.3.10",
 		"formik": "2.1.4",
 		"ky": "0.17.0",
+    "yup": "0.28.3",
+		"ramda": "0.27.0"
+  },
+	"dependencies": {
+		"@redactie/translations-module": "^0.2.0",
 		"lodash.debounce": "^4.0.8",
 		"lodash.kebabcase": "4.1.1",
-		"query-string": "^6.12.0",
-		"ramda": "0.27.0",
-		"yup": "0.28.3"
+		"query-string": "^6.12.0"
 	},
 	"author": "Maarten De Weerdt",
 	"license": "ISC"

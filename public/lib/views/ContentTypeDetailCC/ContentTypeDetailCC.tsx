@@ -5,6 +5,7 @@ import {
 	Container,
 	Table,
 } from '@acpaas-ui/react-editorial-components';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { pathOr } from 'ramda';
@@ -12,6 +13,7 @@ import React, { FC, ReactElement } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { FormCTNewCC, NavList } from '../../components';
+import { useCoreTranslation } from '../../connectors/translations';
 import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
 import { generateFieldFromType, parseContentTypeField } from '../../contentTypes.helpers';
 import { ContentTypesDetailRouteProps, NewCCFormState } from '../../contentTypes.types';
@@ -42,6 +44,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	 */
 	const { contentTypeUuid } = useParams();
 	const { navigate, generatePath } = useNavigate();
+	const [t] = useCoreTranslation();
 
 	/**
 	 * Methods
@@ -83,7 +86,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		return (
 			<Table
 				className="u-margin-top"
-				columns={CONTENT_TYPE_COLUMNS}
+				columns={CONTENT_TYPE_COLUMNS(t)}
 				rows={contentTypeRows}
 				totalValues={state.fields.length}
 			/>
@@ -143,10 +146,10 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 				<ActionBarContentSection>
 					<div className="u-wrapper">
 						<Button className="u-margin-right-xs" onClick={onCCSave} type="success">
-							Bewaar
+							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
 						</Button>
 						<Button onClick={onCancel} outline>
-							Annuleer
+							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
 					</div>
 				</ActionBarContentSection>
