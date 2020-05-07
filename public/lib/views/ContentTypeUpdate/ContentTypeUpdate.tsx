@@ -38,15 +38,25 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	const activeField = useActiveFieldFacade();
 	const fields = useFieldsFacade();
 	const { contentTypeUuid } = useParams();
-	const breadcrumbs = useRoutesBreadcrumbs();
+	const { navigate, generatePath } = useNavigate();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 	const [contentTypeLoadingState, contentType, updateContentType] = useContentType(
 		contentTypeUuid
 	);
 	const [{ all: externalTabs, active: activeExternalTab }] = useExternalTabstFacade();
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, externalTabs, location.pathname);
-	const { navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
+	const breadcrumbs = useRoutesBreadcrumbs(
+		[
+			{
+				name: 'Content types',
+				target: generatePath(MODULE_PATHS.admin),
+			},
+		],
+		{
+			contentTypeName: contentType?.meta.label,
+		}
+	);
 
 	useEffect(() => {
 		if (

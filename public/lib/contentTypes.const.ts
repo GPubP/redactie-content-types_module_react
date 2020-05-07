@@ -37,6 +37,7 @@ const CC_EDIT_PATH = '/content-types/:contentTypeUuid/content-componenten/bewerk
 const CC_NEW_PATH = '/content-types/:contentTypeUuid/content-componenten/nieuw';
 
 export const MODULE_PATHS = {
+	dashboard: '/dashboard',
 	root: '/content-types',
 	admin: '/content-types/beheer',
 	create: '/content-types/aanmaken',

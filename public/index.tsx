@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { registerContentTypeAPI } from './lib/api/index';
+import { ContentTypeDetailBreadcrumb } from './lib/components';
 import { MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesModuleProps } from './lib/contentTypes.types';
 import { TenantContext } from './lib/context';
@@ -45,13 +46,13 @@ const ContentTypesComponent: FC<ContentTypesModuleProps> = ({
 	}
 
 	// Temp disable redirect to prevent reset of updated content components
-	// if (
-	// 	new RegExp(`/content-types/${uuidRegex}/content-componenten/(nieuw|bewerken)$`).test(
-	// 		location.pathname
-	// 	)
-	// ) {
-	// 	return <Redirect to={`${location.pathname}/instellingen`} />;
-	// }
+	if (
+		new RegExp(`/content-types/${uuidRegex}/content-componenten/(nieuw|bewerken)$`).test(
+			location.pathname
+		)
+	) {
+		return <Redirect to={`${location.pathname}/instellingen`} />;
+	}
 
 	return (
 		<TenantContext.Provider value={{ tenantId }}>
@@ -66,6 +67,7 @@ const ContentTypesComponent: FC<ContentTypesModuleProps> = ({
 Core.routes.register({
 	path: MODULE_PATHS.root,
 	component: ContentTypesComponent,
+	breadcrumb: null,
 	navigation: {
 		label: 'Structuur',
 	},
@@ -82,6 +84,7 @@ Core.routes.register({
 		{
 			path: MODULE_PATHS.create,
 			component: ContentTypesCreate,
+			breadcrumb: null,
 			routes: [
 				{
 					path: MODULE_PATHS.createSettings,
@@ -91,10 +94,12 @@ Core.routes.register({
 		},
 		{
 			path: MODULE_PATHS.detail,
+			breadcrumb: ContentTypeDetailBreadcrumb,
 			component: ContentTypesUpdate,
 			routes: [
 				{
 					path: MODULE_PATHS.detailCCNew,
+					breadcrumb: null,
 					component: ContentTypesCCNew,
 					routes: [
 						{
@@ -117,6 +122,7 @@ Core.routes.register({
 				},
 				{
 					path: MODULE_PATHS.detailCCEdit,
+					breadcrumb: null,
 					component: ContentTypesCCEdit,
 					routes: [
 						{
