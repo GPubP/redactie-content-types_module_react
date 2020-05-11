@@ -26,11 +26,16 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	 * Hooks
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const breadcrumbs = useRoutesBreadcrumbs();
+	const { generatePath, navigate } = useNavigate();
+	const breadcrumbs = useRoutesBreadcrumbs([
+		{
+			name: 'Content types',
+			target: generatePath(MODULE_PATHS.admin),
+		},
+	]);
 	const [contentTypeLoadingState, contentType, , createContentType] = useContentType();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, [], location.pathname);
-	const { generatePath, navigate } = useNavigate();
 
 	useEffect(() => {
 		if (contentType?.uuid) {
