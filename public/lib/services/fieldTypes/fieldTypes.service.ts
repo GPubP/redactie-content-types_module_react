@@ -1,10 +1,16 @@
-import { api } from '../api';
+import api, { parseSearchParams } from '../api/api.service';
+import { SearchParams } from '../api/api.service.types';
 
+import { DEFAULT_FIELD_TYPES_SEARCH_PARAMS } from './fieldTypes.service.const';
 import { FieldTypeSchema, FieldTypeSchemaData } from './fieldTypes.service.types';
 
-export const getFieldTypes = async (): Promise<FieldTypeSchema[] | null> => {
+export const getFieldTypes = async (
+	searchParams: SearchParams = DEFAULT_FIELD_TYPES_SEARCH_PARAMS
+): Promise<FieldTypeSchema[] | null> => {
 	try {
-		const response: any = await api.get('content/field-types').json();
+		const response: any = await api
+			.get(`content/field-types?${parseSearchParams(searchParams)}`)
+			.json();
 
 		return response.data;
 	} catch (err) {
