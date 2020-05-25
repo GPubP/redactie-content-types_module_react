@@ -1,7 +1,7 @@
 export interface SearchParams {
 	skip: number;
 	limit: number;
-	search?: Array<string>;
+	search?: string;
 	sort?: string;
 	direction?: number;
 }

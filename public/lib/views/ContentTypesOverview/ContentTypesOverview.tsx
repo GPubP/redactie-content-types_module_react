@@ -19,17 +19,26 @@ import { ContentTypesRouteProps, FilterFormState } from '../../contentTypes.type
 import { useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import useContentTypes from '../../hooks/useContentTypes/useContentTypes';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../services/contentTypes/contentTypes.service.cont';
-import { FilterItemSchema } from '../../services/filterItems/filterItems.service.types';
 import { LoadingState } from '../../types';
 
-import { CONTENT_TYPE_OVERVIEW_COLUMNS } from './ContentTypesOverview.const';
-import { ContentTypesOverviewTableRow, OrderBy } from './ContentTypesOverview.types';
+import {
+	CONTENT_INITIAL_FILTER_STATE,
+	CONTENT_TYPE_OVERVIEW_COLUMNS,
+} from './ContentTypesOverview.const';
+import {
+	ContentTypesOverviewTableRow,
+	FilterItemSchema,
+	OrderBy,
+} from './ContentTypesOverview.types';
 
 const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	/**
 	 * Hooks
 	 */
 	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
+	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
+		CONTENT_INITIAL_FILTER_STATE
+	);
 	const [contentTypesSearchParams, setContentTypesSearchParams] = useState(
 		DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
 	);
@@ -49,19 +58,33 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	/**
 	 * Functions
 	 */
-	const onSubmit = ({ name }: FilterFormState): void => {
+	const createFilterItems = ({
+		name,
+	}: FilterFormState): {
+		filters: FilterItemSchema[];
+	} => {
+		const filters = [
+			{
+				filterKey: 'search',
+				valuePrefix: 'Zoekterm',
+				value: name,
+			},
+		];
+
+		return {
+			filters: [...filters].filter(item => !!item.value),
+		};
+	};
+
+	const onSubmit = (filterFormState: FilterFormState): void => {
 		//add item to filterItems for Taglist
-		const request = { label: name, value: name };
-		const setFilter = filterItems?.concat(request);
-		setFilterItems(setFilter);
-		//get value array from filterItems
-		const names = setFilter.map(item => {
-			return item['value'];
-		});
-		//add array to searchParams
+		setFilterFormState(filterFormState);
+		const filterItems = createFilterItems(filterFormState);
+		setFilterItems(filterItems.filters);
+		//add value to searchParams
 		setContentTypesSearchParams({
 			...contentTypesSearchParams,
-			search: names,
+			search: filterFormState.name,
 			skip: 0,
 		});
 	};
@@ -72,21 +95,18 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 		setFilterItems(emptyFilter);
 		//delete search param from api call
 		setContentTypesSearchParams(DEFAULT_CONTENT_TYPES_SEARCH_PARAMS);
+		setFilterFormState(CONTENT_INITIAL_FILTER_STATE);
 	};
 
 	const deleteFilter = (item: any): void => {
 		//delete item from filterItems
 		const setFilter = filterItems?.filter(el => el.value !== item.value);
 		setFilterItems(setFilter);
-		//get value array from filterItems
-		const names = setFilter.map(item => {
-			return item['value'];
-		});
-		//add array to searchParams
-		setContentTypesSearchParams({
-			...contentTypesSearchParams,
-			search: names,
-			skip: 0,
+		//set empty searchParams
+		setContentTypesSearchParams(DEFAULT_CONTENT_TYPES_SEARCH_PARAMS);
+		setFilterFormState({
+			...filterFormState,
+			[item.filterKey]: '',
 		});
 	};
 
