@@ -5,6 +5,10 @@ import React from 'react';
 
 import { ContentTypesOverviewTableRow } from './ContentTypesOverview.types';
 
+export const CONTENT_INITIAL_FILTER_STATE = {
+	name: '',
+};
+
 export const CONTENT_TYPE_OVERVIEW_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
