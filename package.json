@@ -4,7 +4,7 @@
 	"description": "redactie content types module",
 	"main": "dist/redactie-content-types-module.umd.js",
 	"module": "dist/redactie-content-types-module.umd.js",
-	"types": "dist/index.d.ts",
+	"types": "dist/public/index.d.ts",
 	"jsnext:main": "dist/redactie-content-types-module.umd.js",
 	"scripts": {
 		"build:types": "tsc --emitDeclarationOnly",
@@ -44,6 +44,7 @@
 		"@redactie/form-renderer-module": "^0.2.0",
 		"@redactie/module-webpack-plugin": "2.0.0",
 		"@redactie/redactie-core": "^1.9.0",
+		"@redactie/roles-rights-module": "^0.3.0-7",
 		"@redactie/translations-module": "^0.3.0",
 		"@testing-library/jest-dom": "5.0.2",
 		"@testing-library/react": "9.4.0",

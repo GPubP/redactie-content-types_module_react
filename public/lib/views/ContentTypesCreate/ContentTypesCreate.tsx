@@ -1,9 +1,8 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
-import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import DataLoader from '../../components/DataLoader/DataLoader';
+import { DataLoader, RenderChildRoutes } from '../../components';
 import {
 	CONTENT_DETAIL_TABS,
 	CONTENT_TYPE_DETAIL_TAB_MAP,
@@ -17,6 +16,7 @@ import {
 	useFieldTypes,
 	useNavigate,
 	useRoutesBreadcrumbs,
+	useTenantContext,
 } from '../../hooks';
 import { ContentTypeMetaSchema, ContentTypeSchema } from '../../services/contentTypes';
 import { LoadingState, Tab } from '../../types';
@@ -36,6 +36,13 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	const [contentTypeLoadingState, contentType, , createContentType] = useContentType();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, [], location.pathname);
+	const { tenantId } = useTenantContext();
+	const guardsMeta = useMemo(
+		() => ({
+			tenantId,
+		}),
+		[tenantId]
+	);
 
 	useEffect(() => {
 		if (contentType?.uuid) {
@@ -80,13 +87,21 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		const activeRoute =
 			routes.find(item => item.path === generatePath(MODULE_PATHS.create)) || null;
 
-		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
+		const extraOptions = {
 			fieldTypes,
 			routes: activeRoute?.routes,
 			contentType: contentType || generateEmptyContentType(),
 			onCancel: () => navigate(MODULE_PATHS.admin),
 			onSubmit: (sectionData: any, tab: Tab) => upsertCT(sectionData, tab),
-		});
+		};
+
+		return (
+			<RenderChildRoutes
+				routes={activeRoute?.routes}
+				guardsMeta={guardsMeta}
+				extraOptions={extraOptions}
+			/>
+		);
 	};
 
 	return (

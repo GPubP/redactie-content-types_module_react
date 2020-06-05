@@ -4,14 +4,13 @@ import {
 	ActionBarContentSection,
 	Container,
 } from '@acpaas-ui/react-editorial-components';
-import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
-import { DataLoader, NavList } from '../../components';
+import { DataLoader, NavList, RenderChildRoutes } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
-import { ContentTypesCCRouteProps, ContentTypesDetailRouteProps } from '../../contentTypes.types';
+import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
 import { ContentTypeField, internalService } from '../../store/internal';
 
@@ -29,6 +28,12 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, s
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
+	const guardsMeta = useMemo(
+		() => ({
+			tenantId,
+		}),
+		[tenantId]
+	);
 
 	useEffect(() => {
 		if (activeField && fieldType) {
@@ -79,15 +84,20 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, s
 		const activeRoute =
 			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detailCCEdit}`) || null;
 
-		return Core.routes.render(
-			activeRoute?.routes as ModuleRouteConfig[],
-			{
-				CTField: updatedField,
-				fieldTypeData: fieldType,
-				routes: activeRoute?.routes,
-				onDelete: onFieldDelete,
-				onSubmit: onFieldChange,
-			} as ContentTypesCCRouteProps
+		const extraOptions = {
+			CTField: updatedField,
+			fieldTypeData: fieldType,
+			routes: activeRoute?.routes,
+			onDelete: onFieldDelete,
+			onSubmit: onFieldChange,
+		};
+
+		return (
+			<RenderChildRoutes
+				routes={activeRoute?.routes}
+				guardsMeta={guardsMeta}
+				extraOptions={extraOptions}
+			/>
 		);
 	};
 

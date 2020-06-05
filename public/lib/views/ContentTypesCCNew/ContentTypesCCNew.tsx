@@ -4,14 +4,13 @@ import {
 	ActionBarContentSection,
 	Container,
 } from '@acpaas-ui/react-editorial-components';
-import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
-import { NavList } from '../../components';
+import { NavList, RenderChildRoutes } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
-import { ContentTypesCCRouteProps, ContentTypesDetailRouteProps } from '../../contentTypes.types';
+import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import { useNavigate, useTenantContext } from '../../hooks';
 import { ContentTypeField, internalService } from '../../store/internal';
 
@@ -26,6 +25,12 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, routes, st
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
+	const guardsMeta = useMemo(
+		() => ({
+			tenantId,
+		}),
+		[tenantId]
+	);
 
 	useEffect(() => {
 		if (state.activeField) {
@@ -58,14 +63,19 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, routes, st
 		const activeRoute =
 			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detailCCNew}`) || null;
 
-		return Core.routes.render(
-			activeRoute?.routes as ModuleRouteConfig[],
-			{
-				CTField,
-				fieldTypeData: CTField?.fieldType.data,
-				routes: activeRoute?.routes,
-				onSubmit: onFieldTypeChange,
-			} as ContentTypesCCRouteProps
+		const extraOptions = {
+			CTField,
+			fieldTypeData: CTField?.fieldType.data,
+			routes: activeRoute?.routes,
+			onSubmit: onFieldTypeChange,
+		};
+
+		return (
+			<RenderChildRoutes
+				routes={activeRoute?.routes}
+				guardsMeta={guardsMeta}
+				extraOptions={extraOptions}
+			/>
 		);
 	};
 
