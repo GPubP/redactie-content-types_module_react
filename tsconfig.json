@@ -28,6 +28,6 @@
   },
   "include": [
     "public",
-    "node_modules/@redactie"
+    "node_modules/@redactie/translations-module"
   ]
 }

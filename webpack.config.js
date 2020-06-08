@@ -19,7 +19,7 @@ module.exports = env => {
 				{
 					test: /\.ts(x)?$/,
 					use: 'ts-loader',
-					include: [/public/, /node_modules\/@redactie/],
+					include: [/public/, /node_modules\/@redactie\/translations-module/],
 				},
 				{
 					test: /\.s[ac]ss$/i,
