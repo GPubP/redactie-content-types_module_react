@@ -12,6 +12,7 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
 import FilterForm from '../../components/FilterForm/FilterForm';
+import rolesRightsConnector from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
 import { generateFilterFormState } from '../../content-types.helpers';
 import { MODULE_PATHS } from '../../contentTypes.const';
@@ -47,13 +48,20 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	const [loadingState, contentTypes] = useContentTypes(contentTypesSearchParams);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
+	const [
+		mySecurityRightsLoadingState,
+		mySecurityrights,
+	] = rolesRightsConnector.api.hooks.useMySecurityRightsForTenant(true);
 	const [t] = useCoreTranslation();
 
 	useEffect(() => {
-		if (loadingState === LoadingState.Loaded || loadingState === LoadingState.Error) {
+		if (
+			loadingState !== LoadingState.Loading &&
+			mySecurityRightsLoadingState !== LoadingState.Loading
+		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [loadingState]);
+	}, [loadingState, mySecurityRightsLoadingState]);
 
 	/**
 	 * Functions
@@ -157,7 +165,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 				</div>
 				<PaginatedTable
 					className="u-margin-top"
-					columns={CONTENT_TYPE_OVERVIEW_COLUMNS(t)}
+					columns={CONTENT_TYPE_OVERVIEW_COLUMNS(t, mySecurityrights)}
 					rows={contentTypesRows}
 					currentPage={
 						Math.ceil(

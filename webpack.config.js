@@ -62,6 +62,7 @@ module.exports = env => {
 			'rxjs/operators': 'rxjs/operators',
 			'@redactie/redactie-core': '@redactie/redactie-core',
 			'react-router-guards': 'react-router-guards',
+			'@redactie/roles-rights-module': '@redactie/roles-rights-module',
 			'@acpaas-ui/react-components': '@acpaas-ui/react-components',
 			'@acpaas-ui/react-editorial-components': '@acpaas-ui/react-editorial-components',
 		},

@@ -1,10 +1,9 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
-import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import { omit } from 'ramda';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import DataLoader from '../../components/DataLoader/DataLoader';
+import { DataLoader, RenderChildRoutes } from '../../components';
 import {
 	CONTENT_DETAIL_TABS,
 	CONTENT_TYPE_DETAIL_TAB_MAP,
@@ -56,6 +55,12 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		{
 			contentTypeName: contentType?.meta.label,
 		}
+	);
+	const guardsMeta = useMemo(
+		() => ({
+			tenantId,
+		}),
+		[tenantId]
 	);
 
 	useEffect(() => {
@@ -173,14 +178,22 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		const activeRoute =
 			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detail}`) || null;
 
-		return Core.routes.render(activeRoute?.routes as ModuleRouteConfig[], {
+		const extraOptions = {
 			fieldTypes,
 			contentType,
 			onCancel: navigateToOverview,
 			onSubmit: updateCT,
 			routes: activeRoute?.routes,
 			state: { activeField, fields },
-		});
+		};
+
+		return (
+			<RenderChildRoutes
+				routes={activeRoute?.routes}
+				guardsMeta={guardsMeta}
+				extraOptions={extraOptions}
+			/>
+		);
 	};
 
 	return (

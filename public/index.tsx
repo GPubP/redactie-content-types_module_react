@@ -1,9 +1,10 @@
-import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
-import React, { FC } from 'react';
+import Core from '@redactie/redactie-core';
+import React, { FC, useMemo } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { registerContentTypeAPI } from './lib/api/index';
-import { ContentTypeDetailBreadcrumb } from './lib/components';
+import { ContentTypeDetailBreadcrumb, RenderChildRoutes } from './lib/components';
+import rolesRightsConnector from './lib/connectors/rolesRights';
 import { MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesModuleProps } from './lib/contentTypes.types';
 import { TenantContext } from './lib/context';
@@ -23,12 +24,19 @@ import {
 } from './lib/views';
 import ContentTypeDetailExternal from './lib/views/ContentTypeDetailExternal/ContentTypeDetailExternal';
 
-const ContentTypesComponent: FC<ContentTypesModuleProps> = ({
-	route,
-	match,
-	location,
-	tenantId,
-}) => {
+const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, location, tenantId }) => {
+	const guardsMeta = useMemo(
+		() => ({
+			tenantId,
+		}),
+		[tenantId]
+	);
+	const extraOptions = useMemo(
+		() => ({
+			routes: route.routes,
+		}),
+		[route.routes]
+	);
 	const uuidRegex = '\\b[0-9a-f]{8}\\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\\b[0-9a-f]{12}\\b';
 
 	// if path is /content-types, redirect to /content-types/beheer
@@ -56,113 +64,146 @@ const ContentTypesComponent: FC<ContentTypesModuleProps> = ({
 
 	return (
 		<TenantContext.Provider value={{ tenantId }}>
-			{Core.routes.render(route.routes as ModuleRouteConfig[], {
-				basePath: match.url,
-				routes: route.routes,
-			})}
+			<RenderChildRoutes
+				routes={route.routes}
+				guardsMeta={guardsMeta}
+				extraOptions={extraOptions}
+			/>
 		</TenantContext.Provider>
 	);
 };
 
-Core.routes.register({
-	path: MODULE_PATHS.root,
-	component: ContentTypesComponent,
-	breadcrumb: null,
-	navigation: {
-		label: 'Structuur',
-	},
-	exact: true,
-	routes: [
-		{
-			path: MODULE_PATHS.admin,
-			component: ContentTypesOverview,
-			navigation: {
-				label: 'Content types',
-				parentPath: MODULE_PATHS.root,
+if (rolesRightsConnector.api) {
+	Core.routes.register({
+		path: MODULE_PATHS.root,
+		component: ContentTypesComponent,
+		breadcrumb: null,
+		guardOptions: {
+			guards: [
+				rolesRightsConnector.api.guards.securityRightsTenantGuard([
+					rolesRightsConnector.securityRights.read,
+				]),
+			],
+		},
+		navigation: {
+			label: 'Structuur',
+			canShown: [
+				rolesRightsConnector.api.canShowns.securityRightsTenantCanShown([
+					rolesRightsConnector.securityRights.read,
+				]),
+			],
+		},
+		exact: true,
+		routes: [
+			{
+				path: MODULE_PATHS.admin,
+				component: ContentTypesOverview,
+				navigation: {
+					label: 'Content types',
+					parentPath: MODULE_PATHS.root,
+				},
 			},
-		},
-		{
-			path: MODULE_PATHS.create,
-			component: ContentTypesCreate,
-			breadcrumb: null,
-			routes: [
-				{
-					path: MODULE_PATHS.createSettings,
-					component: ContentTypesDetailSettings,
-				},
-			],
-		},
-		{
-			path: MODULE_PATHS.detail,
-			breadcrumb: ContentTypeDetailBreadcrumb,
-			component: ContentTypesUpdate,
-			routes: [
-				{
-					path: MODULE_PATHS.detailCCNew,
-					breadcrumb: null,
-					component: ContentTypesCCNew,
-					routes: [
-						{
-							path: MODULE_PATHS.detailCCNewSettings,
-							component: ContentTypesCCSettings,
-						},
-						{
-							path: MODULE_PATHS.detailCCNewConfig,
-							component: ContentTypesCCConfig,
-						},
-						{
-							path: MODULE_PATHS.detailCCNewValidation,
-							component: ContentTypesCCValidation,
-						},
-						{
-							path: MODULE_PATHS.detailCCNewDefaults,
-							component: ContentTypesCCDefaults,
-						},
+			{
+				path: MODULE_PATHS.create,
+				component: ContentTypesCreate,
+				breadcrumb: null,
+				guardOptions: {
+					guards: [
+						rolesRightsConnector.api.guards.securityRightsTenantGuard([
+							rolesRightsConnector.securityRights.create,
+						]),
 					],
 				},
-				{
-					path: MODULE_PATHS.detailCCEdit,
-					breadcrumb: null,
-					component: ContentTypesCCEdit,
-					routes: [
-						{
-							path: MODULE_PATHS.detailCCEditSettings,
-							component: ContentTypesCCSettings,
-						},
-						{
-							path: MODULE_PATHS.detailCCEditConfig,
-							component: ContentTypesCCConfig,
-						},
-						{
-							path: MODULE_PATHS.detailCCEditValidation,
-							component: ContentTypesCCValidation,
-						},
-						{
-							path: MODULE_PATHS.detailCCEditDefaults,
-							component: ContentTypesCCDefaults,
-						},
+				routes: [
+					{
+						path: MODULE_PATHS.createSettings,
+						component: ContentTypesDetailSettings,
+					},
+				],
+			},
+			{
+				path: MODULE_PATHS.detail,
+				breadcrumb: ContentTypeDetailBreadcrumb,
+				guardOptions: {
+					guards: [
+						rolesRightsConnector.api.guards.securityRightsTenantGuard([
+							rolesRightsConnector.securityRights.update,
+						]),
 					],
 				},
-				{
-					path: MODULE_PATHS.detailSettings,
-					component: ContentTypesDetailSettings,
-				},
-				{
-					path: MODULE_PATHS.detailCC,
-					component: ContentTypesDetailCC,
-				},
-				{
-					path: MODULE_PATHS.detailSites,
-					component: ContentTypesDetailSites,
-				},
-				{
-					path: MODULE_PATHS.detailExternal,
-					component: ContentTypeDetailExternal,
-				},
-			],
-		},
-	],
-});
+				component: ContentTypesUpdate,
+				routes: [
+					{
+						path: MODULE_PATHS.detailCCNew,
+						breadcrumb: null,
+						component: ContentTypesCCNew,
+						routes: [
+							{
+								path: MODULE_PATHS.detailCCNewSettings,
+								component: ContentTypesCCSettings,
+							},
+							{
+								path: MODULE_PATHS.detailCCNewConfig,
+								component: ContentTypesCCConfig,
+							},
+							{
+								path: MODULE_PATHS.detailCCNewValidation,
+								component: ContentTypesCCValidation,
+							},
+							{
+								path: MODULE_PATHS.detailCCNewDefaults,
+								component: ContentTypesCCDefaults,
+							},
+						],
+					},
+					{
+						path: MODULE_PATHS.detailCCEdit,
+						breadcrumb: null,
+						component: ContentTypesCCEdit,
+						routes: [
+							{
+								path: MODULE_PATHS.detailCCEditSettings,
+								component: ContentTypesCCSettings,
+							},
+							{
+								path: MODULE_PATHS.detailCCEditConfig,
+								component: ContentTypesCCConfig,
+							},
+							{
+								path: MODULE_PATHS.detailCCEditValidation,
+								component: ContentTypesCCValidation,
+							},
+							{
+								path: MODULE_PATHS.detailCCEditDefaults,
+								component: ContentTypesCCDefaults,
+							},
+						],
+					},
+					{
+						path: MODULE_PATHS.detailSettings,
+						component: ContentTypesDetailSettings,
+					},
+					{
+						path: MODULE_PATHS.detailCC,
+						component: ContentTypesDetailCC,
+					},
+					{
+						path: MODULE_PATHS.detailSites,
+						component: ContentTypesDetailSites,
+					},
+					{
+						path: MODULE_PATHS.detailExternal,
+						component: ContentTypeDetailExternal,
+					},
+				],
+			},
+		],
+	});
+} else {
+	throw new Error(
+		`Content types Module can't resolve the following dependency: ${rolesRightsConnector.apiName}, please add the module to the dependency list.`
+	);
+}
 
 registerContentTypeAPI();
 

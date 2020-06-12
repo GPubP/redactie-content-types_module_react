@@ -7,7 +7,6 @@ import { Tab } from './types';
 import { ExternalTabValue } from './views/ContentTypeDetailExternal/ContentTypeDetailExternal.types';
 
 export interface ContentTypesModuleProps extends RouteConfigComponentProps {
-	basePath: string;
 	routes: ModuleRouteConfig[];
 	tenantId: string;
 }
@@ -16,7 +15,6 @@ export interface FilterFormState {
 	name: string;
 }
 export interface ContentTypesRouteProps<Params = {}> extends RouteConfigComponentProps<Params> {
-	basePath: string;
 	routes: ModuleRouteConfig[];
 }
 
