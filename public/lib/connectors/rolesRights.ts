@@ -5,7 +5,7 @@ class RolesRightsConnector {
 	public apiName = 'roles-rights-module';
 	public securityRights = {
 		create: 'content-types_create',
-		update: 'content-typs_update',
+		update: 'content-types_update',
 		read: 'content-types_read',
 	};
 	public api: RolesRightsModuleAPI;

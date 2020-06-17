@@ -1,7 +1,10 @@
 import api, { parseSearchParams } from '../api/api.service';
 import { SearchParams } from '../api/api.service.types';
 
-import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from './contentTypes.service.cont';
+import {
+	CONTENT_TYPES_PREFIX_URL,
+	DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
+} from './contentTypes.service.cont';
 import {
 	ContentTypeResponse,
 	ContentTypeSchema,
@@ -13,7 +16,7 @@ export const getContentTypes = async (
 ): Promise<ContentTypesSchema | null> => {
 	try {
 		const response: ContentTypesSchema = await api
-			.get(`content/content-types?${parseSearchParams(searchParams)}`)
+			.get(`${CONTENT_TYPES_PREFIX_URL}?${parseSearchParams(searchParams)}`)
 			.json();
 
 		if (!response) {
@@ -29,7 +32,9 @@ export const getContentTypes = async (
 
 export const getContentType = async (uuid: string): Promise<ContentTypeResponse | null> => {
 	try {
-		const response: ContentTypeResponse = await api.get(`content/content-types/${uuid}`).json();
+		const response: ContentTypeResponse = await api
+			.get(`${CONTENT_TYPES_PREFIX_URL}/${uuid}`)
+			.json();
 
 		return response;
 	} catch (err) {
@@ -42,7 +47,7 @@ export const updateContentType = async (
 	contentType: ContentTypeSchema
 ): Promise<ContentTypeResponse | null> => {
 	const response: ContentTypeResponse = await api
-		.put(`content/content-types/${contentType.uuid}`, {
+		.put(`${CONTENT_TYPES_PREFIX_URL}/${contentType.uuid}`, {
 			json: contentType,
 		})
 		.json();
@@ -54,7 +59,7 @@ export const createContentType = async (
 	contentType: ContentTypeSchema
 ): Promise<ContentTypeResponse | null> => {
 	const response: ContentTypeResponse = await api
-		.post('content/content-types', {
+		.post(CONTENT_TYPES_PREFIX_URL, {
 			json: contentType,
 		})
 		.json();

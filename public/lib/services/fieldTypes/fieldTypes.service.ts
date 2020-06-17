@@ -1,7 +1,10 @@
 import api, { parseSearchParams } from '../api/api.service';
 import { SearchParams } from '../api/api.service.types';
 
-import { DEFAULT_FIELD_TYPES_SEARCH_PARAMS } from './fieldTypes.service.const';
+import {
+	DEFAULT_FIELD_TYPES_SEARCH_PARAMS,
+	FIELD_TYPES_PREFIX_URL,
+} from './fieldTypes.service.const';
 import { FieldTypeSchema, FieldTypeSchemaData } from './fieldTypes.service.types';
 
 export const getFieldTypes = async (
@@ -9,7 +12,7 @@ export const getFieldTypes = async (
 ): Promise<FieldTypeSchema[] | null> => {
 	try {
 		const response: any = await api
-			.get(`content/field-types?${parseSearchParams(searchParams)}`)
+			.get(`${FIELD_TYPES_PREFIX_URL}?${parseSearchParams(searchParams)}`)
 			.json();
 
 		return response.data;
@@ -21,7 +24,7 @@ export const getFieldTypes = async (
 
 export const getFieldType = async (uuid: string): Promise<FieldTypeSchemaData | null> => {
 	try {
-		const response: FieldTypeSchema = await api.get(`content/field-types/${uuid}`).json();
+		const response: FieldTypeSchema = await api.get(`${FIELD_TYPES_PREFIX_URL}/${uuid}`).json();
 
 		return response.data;
 	} catch (err) {
