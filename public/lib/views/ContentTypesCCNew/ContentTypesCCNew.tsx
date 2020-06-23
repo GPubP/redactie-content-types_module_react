@@ -108,7 +108,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, routes, st
 				<ActionBar className="o-action-bar--fixed" isOpen>
 					<ActionBarContentSection>
 						<div className="u-wrapper row end-xs">
-							<Button onClick={navigateToOverview} outline>
+							<Button onClick={navigateToOverview} negative>
 								{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 							</Button>
 							<Button

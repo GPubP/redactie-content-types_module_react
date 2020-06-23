@@ -87,7 +87,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 					<ActionBar className="o-action-bar--fixed" isOpen>
 						<ActionBarContentSection>
 							<div className="u-wrapper row end-xs">
-								<Button onClick={onCancel} outline>
+								<Button onClick={onCancel} negative>
 									{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 								</Button>
 								<Button
