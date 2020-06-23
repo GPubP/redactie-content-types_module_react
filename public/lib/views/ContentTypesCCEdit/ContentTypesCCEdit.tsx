@@ -76,7 +76,6 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, s
 	/**
 	 * Render
 	 */
-
 	const renderChildRoutes = (): ReactElement | null => {
 		if (!activeField || !updatedField) {
 			return null;
