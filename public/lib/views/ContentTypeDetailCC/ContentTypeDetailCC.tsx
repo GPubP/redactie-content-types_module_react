@@ -144,12 +144,12 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 			</div>
 			<ActionBar className="o-action-bar--fixed" isOpen>
 				<ActionBarContentSection>
-					<div className="u-wrapper">
-						<Button className="u-margin-right-xs" onClick={onCCSave} type="success">
-							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
-						</Button>
+					<div className="u-wrapper row end-xs">
 						<Button onClick={onCancel} outline>
 							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
+						</Button>
+						<Button className="u-margin-left-xs" onClick={onCCSave} type="success">
+							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
 						</Button>
 					</div>
 				</ActionBarContentSection>

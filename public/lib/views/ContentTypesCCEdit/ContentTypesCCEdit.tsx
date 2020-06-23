@@ -128,16 +128,18 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, s
 				</div>
 				<ActionBar className="o-action-bar--fixed" isOpen>
 					<ActionBarContentSection>
-						<Button
-							className="u-margin-right-xs"
-							onClick={onFieldSubmit}
-							type="success"
-						>
-							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
-						</Button>
-						<Button onClick={navigateToOverview} outline>
-							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
-						</Button>
+						<div className="u-wrapper row end-xs">
+							<Button onClick={navigateToOverview} outline>
+								{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
+							</Button>
+							<Button
+								className="u-margin-left-xs"
+								onClick={onFieldSubmit}
+								type="success"
+							>
+								{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
+							</Button>
+						</div>
 					</ActionBarContentSection>
 				</ActionBar>
 			</>
