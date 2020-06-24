@@ -1,6 +1,6 @@
+// import { akitaDevtools } from '@datorama/akita';
 import Core from '@redactie/redactie-core';
 import React, { FC, useMemo } from 'react';
-import { Redirect } from 'react-router-dom';
 
 import { registerContentTypeAPI } from './lib/api/index';
 import { ContentTypeDetailBreadcrumb, RenderChildRoutes } from './lib/components';
@@ -24,7 +24,9 @@ import {
 } from './lib/views';
 import ContentTypeDetailExternal from './lib/views/ContentTypeDetailExternal/ContentTypeDetailExternal';
 
-const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, location, tenantId }) => {
+// akitaDevtools();
+
+const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, tenantId }) => {
 	const guardsMeta = useMemo(
 		() => ({
 			tenantId,
@@ -37,30 +39,6 @@ const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, location, t
 		}),
 		[route.routes]
 	);
-	const uuidRegex = '\\b[0-9a-f]{8}\\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\\b[0-9a-f]{12}\\b';
-
-	// if path is /content-types, redirect to /content-types/beheer
-	if (/\/content-types$/.test(location.pathname)) {
-		return <Redirect to={`/${tenantId}${MODULE_PATHS.admin}`} />;
-	}
-
-	// if path is /content-types/aanmaken, redirect to /content-types/aanmaken/instellingen
-	if (/\/content-types\/aanmaken$/.test(location.pathname)) {
-		return <Redirect to={`/${tenantId}${MODULE_PATHS.createSettings}`} />;
-	}
-
-	if (new RegExp(`/content-types/${uuidRegex}$`).test(location.pathname)) {
-		return <Redirect to={`${location.pathname}/instellingen`} />;
-	}
-
-	// Temp disable redirect to prevent reset of updated content components
-	// if (
-	// 	new RegExp(`/content-types/${uuidRegex}/content-componenten/(nieuw|bewerken)$`).test(
-	// 		location.pathname
-	// 	)
-	// ) {
-	// 	return <Redirect to={`${location.pathname}/instellingen`} />;
-	// }
 
 	return (
 		<TenantContext.Provider value={{ tenantId }}>
@@ -93,7 +71,7 @@ if (rolesRightsConnector.api) {
 				]),
 			],
 		},
-		exact: true,
+		redirect: MODULE_PATHS.admin,
 		routes: [
 			{
 				path: MODULE_PATHS.admin,
@@ -107,6 +85,7 @@ if (rolesRightsConnector.api) {
 				path: MODULE_PATHS.create,
 				component: ContentTypesCreate,
 				breadcrumb: null,
+				redirect: MODULE_PATHS.createSettings,
 				guardOptions: {
 					guards: [
 						rolesRightsConnector.api.guards.securityRightsTenantGuard([
@@ -132,11 +111,13 @@ if (rolesRightsConnector.api) {
 					],
 				},
 				component: ContentTypesUpdate,
+				redirect: MODULE_PATHS.detailSettings,
 				routes: [
 					{
 						path: MODULE_PATHS.detailCCNew,
 						breadcrumb: null,
 						component: ContentTypesCCNew,
+						redirect: MODULE_PATHS.detailCCNewSettings,
 						routes: [
 							{
 								path: MODULE_PATHS.detailCCNewSettings,
@@ -160,6 +141,7 @@ if (rolesRightsConnector.api) {
 						path: MODULE_PATHS.detailCCEdit,
 						breadcrumb: null,
 						component: ContentTypesCCEdit,
+						redirect: MODULE_PATHS.detailCCEditSettings,
 						routes: [
 							{
 								path: MODULE_PATHS.detailCCEditSettings,

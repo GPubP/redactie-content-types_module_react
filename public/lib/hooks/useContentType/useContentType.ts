@@ -24,7 +24,8 @@ const useContentType = (
 		setLoadingState(LoadingState.Loading);
 
 		return updateContentType(contentType)
-			.then(() => {
+			.then(result => {
+				setContentType(result);
 				setLoadingState(LoadingState.Loaded);
 			})
 			.catch(() => {

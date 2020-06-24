@@ -153,7 +153,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 		);
 
 		return (
-			<div className="u-container u-wrapper">
+			<>
 				<div className="u-margin-top">
 					<FilterForm
 						initialState={generateFilterFormState()}
@@ -179,7 +179,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					totalValues={contentTypes?.paging?.total || 0}
 					loading={loadingState === LoadingState.Loading}
 				></PaginatedTable>
-			</div>
+			</>
 		);
 	};
 

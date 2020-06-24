@@ -6,6 +6,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { NavList, RenderChildRoutes } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
@@ -59,6 +60,10 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, routes, st
 	/**
 	 * Render
 	 */
+	if (!CTField && !state.activeField) {
+		return <Redirect to={generatePath(MODULE_PATHS.detailCC, { contentTypeUuid })} />;
+	}
+
 	const renderChildRoutes = (): ReactElement | null => {
 		const activeRoute =
 			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detailCCNew}`) || null;
@@ -78,10 +83,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, routes, st
 			/>
 		);
 	};
-
-	if (!CTField) {
-		return null;
-	}
 
 	return (
 		<>
@@ -106,12 +107,18 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, routes, st
 				</div>
 				<ActionBar className="o-action-bar--fixed" isOpen>
 					<ActionBarContentSection>
-						<Button className="u-margin-right-xs" onClick={onCTSubmit} type="success">
-							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
-						</Button>
-						<Button onClick={navigateToOverview} outline>
-							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
-						</Button>
+						<div className="u-wrapper row end-xs">
+							<Button onClick={navigateToOverview} negative>
+								{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
+							</Button>
+							<Button
+								className="u-margin-left-xs"
+								onClick={onCTSubmit}
+								type="success"
+							>
+								{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
+							</Button>
+						</div>
 					</ActionBarContentSection>
 				</ActionBar>
 			</Container>
