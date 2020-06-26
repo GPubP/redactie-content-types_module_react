@@ -17,6 +17,7 @@ export const generateSettingsFormState = (): ContentTypeSchema => ({
 		safeLabel: '',
 		description: '',
 		label: '',
+		canBeFiltered: true,
 	},
 	modulesConfig: [],
 });
