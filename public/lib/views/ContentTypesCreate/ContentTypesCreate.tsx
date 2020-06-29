@@ -67,6 +67,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 				createContentType({
 					...generateEmptyContentType(),
 					meta: {
+						canBeFiltered: true,
 						...(sectionData as ContentTypeMetaSchema),
 					},
 				} as ContentTypeSchema);

@@ -60,6 +60,7 @@ export interface ContentTypeMetaSchema {
 	deleted: false;
 	status?: string;
 	lastEditor: string;
+	canBeFiltered: boolean;
 }
 
 export interface ContentTypeSchema {
