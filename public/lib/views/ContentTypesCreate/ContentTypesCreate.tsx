@@ -18,7 +18,8 @@ import {
 	useRoutesBreadcrumbs,
 	useTenantContext,
 } from '../../hooks';
-import { ContentTypeMetaSchema, ContentTypeSchema } from '../../services/contentTypes';
+import { ContentTypeCreateRequest, ContentTypeMetaSchema } from '../../services/contentTypes';
+import { contentTypesFacade } from '../../store/contentTypes';
 import { LoadingState, Tab } from '../../types';
 
 const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) => {
@@ -33,7 +34,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 			target: generatePath(MODULE_PATHS.admin),
 		},
 	]);
-	const [contentTypeLoadingState, contentType, , createContentType] = useContentType();
+	const [contentTypeLoadingState, contentType] = useContentType();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, [], location.pathname);
 	const { tenantId } = useTenantContext();
@@ -64,13 +65,13 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	const upsertCT = (sectionData: any, tab: Tab): void => {
 		switch (tab.name) {
 			case CONTENT_TYPE_DETAIL_TAB_MAP.settings.name:
-				createContentType({
+				contentTypesFacade.createContentType({
 					...generateEmptyContentType(),
 					meta: {
-						canBeFiltered: true,
 						...(sectionData as ContentTypeMetaSchema),
+						canBeFiltered: true,
 					},
-				} as ContentTypeSchema);
+				} as ContentTypeCreateRequest);
 				break;
 		}
 	};

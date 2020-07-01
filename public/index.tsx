@@ -1,4 +1,4 @@
-// import { akitaDevtools } from '@datorama/akita';
+import { akitaDevtools } from '@datorama/akita';
 import Core from '@redactie/redactie-core';
 import React, { FC, useMemo } from 'react';
 
@@ -24,7 +24,7 @@ import {
 } from './lib/views';
 import ContentTypeDetailExternal from './lib/views/ContentTypeDetailExternal/ContentTypeDetailExternal';
 
-// akitaDevtools();
+akitaDevtools();
 
 const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, tenantId }) => {
 	const guardsMeta = useMemo(

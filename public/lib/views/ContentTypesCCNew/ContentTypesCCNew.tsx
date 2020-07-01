@@ -13,7 +13,7 @@ import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import { useNavigate, useTenantContext } from '../../hooks';
-import { ContentTypeField, internalService } from '../../store/internal';
+import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCNew.const';
 
@@ -22,7 +22,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, routes, st
 	/**
 	 * Hooks
 	 */
-	const [CTField, setCTField] = useState<ContentTypeField | null>(null);
+	const [CTField, setCTField] = useState<ContentTypeFieldDetailModel | null>(null);
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
@@ -48,12 +48,12 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, routes, st
 
 	const onCTSubmit = (): void => {
 		if (CTField) {
-			internalService.updateFields([...state.fields, CTField]);
+			contentTypesFacade.addField(CTField);
 			navigateToOverview();
 		}
 	};
 
-	const onFieldTypeChange = (data: ContentTypeField): void => {
+	const onFieldTypeChange = (data: ContentTypeFieldDetailModel): void => {
 		setCTField({ ...CTField, ...data });
 	};
 

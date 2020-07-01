@@ -1,8 +1,8 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 
-import { ContentTypeFieldSchema, ContentTypeSchema } from './services/contentTypes';
+import { ContentTypeSchema } from './services/contentTypes';
 import { FieldTypeSchema, FieldTypeSchemaData, FieldTypeSchemaMeta } from './services/fieldTypes';
-import { ContentTypeField, InternalState } from './store/internal';
+import { ContentTypeFieldDetailModel } from './store/contentTypes';
 import { Tab } from './types';
 import { ExternalTabValue } from './views/ContentTypeDetailExternal/ContentTypeDetailExternal.types';
 
@@ -24,15 +24,22 @@ export interface ContentTypesDetailRouteProps<Params = { contentTypeUuid: string
 	contentType: ContentTypeSchema;
 	onCancel: () => void;
 	onSubmit: (
-		data: ContentTypeSchema | ContentTypeFieldSchema[] | FieldTypeSchemaMeta | ExternalTabValue,
+		data:
+			| ContentTypeSchema
+			| ContentTypeFieldDetailModel[]
+			| FieldTypeSchemaMeta
+			| ExternalTabValue,
 		tab: Tab
 	) => void;
 	routes: ModuleRouteConfig[];
-	state: InternalState;
+	state: {
+		readonly activeField: ContentTypeFieldDetailModel | null;
+		readonly fields: ContentTypeFieldDetailModel[];
+	};
 }
 
 export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
-	CTField: ContentTypeField;
+	CTField: ContentTypeFieldDetailModel;
 	fieldTypeData: FieldTypeSchemaData;
 	onDelete?: () => void;
 	onSubmit: (data: any) => void;

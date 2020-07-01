@@ -12,18 +12,18 @@ import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
-import { ContentTypeField, internalService } from '../../store/internal';
+import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCEdit.const';
 
 const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, state }) => {
 	const { contentTypeUuid } = match.params;
-	const { activeField, fields } = state;
+	const { activeField } = state;
 
 	/**
 	 * Hooks
 	 */
-	const [updatedField, setUpdatedField] = useState<ContentTypeField | null>(null);
+	const [updatedField, setUpdatedField] = useState<ContentTypeFieldDetailModel | null>(null);
 	const [loadingState, fieldType] = useFieldType(activeField?.fieldType.uuid);
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
@@ -48,7 +48,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, s
 		navigate(MODULE_PATHS.detailCC, { contentTypeUuid });
 	};
 
-	const onFieldChange = (data: ContentTypeField): void => {
+	const onFieldChange = (data: ContentTypeFieldDetailModel): void => {
 		setUpdatedField({
 			...updatedField,
 			...data,
@@ -60,15 +60,15 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, s
 	};
 
 	const onFieldDelete = (): void => {
-		internalService.updateFields(fields.filter(field => field.uuid !== activeField?.uuid));
-		navigateToOverview();
+		if (activeField?.uuid) {
+			contentTypesFacade.deleteField(activeField.uuid);
+			navigateToOverview();
+		}
 	};
 
 	const onFieldSubmit = (): void => {
 		if (updatedField) {
-			internalService.updateFields(
-				fields.map(field => (field.uuid === activeField?.uuid ? updatedField : field))
-			);
+			contentTypesFacade.updateField(updatedField);
 			navigateToOverview();
 		}
 	};
