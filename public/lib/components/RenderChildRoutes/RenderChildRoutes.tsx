@@ -3,7 +3,11 @@ import React, { FC } from 'react';
 
 import { RenderChildRoutesProps } from './RenderChildRoutes.types';
 
-const RenderChildRoutes: FC<RenderChildRoutesProps> = ({ routes, guardsMeta, extraOptions }) => {
+const RenderChildRoutes: FC<RenderChildRoutesProps> = ({
+	routes,
+	guardsMeta = {},
+	extraOptions = {},
+}) => {
 	return (
 		<>
 			{Core.routes.render(

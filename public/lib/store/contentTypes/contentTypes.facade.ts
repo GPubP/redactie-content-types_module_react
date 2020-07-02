@@ -5,26 +5,29 @@ import {
 	ContentTypesApiService,
 	ContentTypeUpdateRequest,
 } from '../../services/contentTypes';
+import { BaseEntityFacade } from '../shared';
 
 import { ContentTypeFieldDetailModel } from './contentTypes.model';
 import { ContentTypesQuery, contentTypesQuery } from './contentTypes.query';
 import { ContentTypesStore, contentTypesStore } from './contentTypes.store';
 
-export class ContentTypesFacade {
+export class ContentTypesFacade extends BaseEntityFacade<
+	ContentTypesStore,
+	ContentTypesApiService,
+	ContentTypesQuery
+> {
 	constructor(
-		private store: ContentTypesStore,
-		private service: ContentTypesApiService,
-		private query: ContentTypesQuery
-	) {}
+		store: ContentTypesStore,
+		service: ContentTypesApiService,
+		query: ContentTypesQuery
+	) {
+		super(store, service, query);
+	}
 
 	public readonly meta$ = this.query.meta$;
 	public readonly contentTypes$ = this.query.contentTypes$;
 	public readonly contentType$ = this.query.contentType$;
 	public readonly activeField$ = this.query.activeField$;
-	public readonly isFetching$ = this.query.isFetching$;
-	public readonly isCreating$ = this.query.isCreating$;
-	public readonly isUpdating$ = this.query.isUpdating$;
-	public readonly error$ = this.query.error$;
 
 	public getContentTypes(payload: SearchParams): void {
 		this.store.setIsFetching(true);
@@ -32,22 +35,15 @@ export class ContentTypesFacade {
 		this.service
 			.getContentTypes(payload)
 			.then(response => {
-				this.store.setIsFetching(false);
-
 				if (response) {
-					const meta = response.paging;
-
-					this.store.update({
-						meta,
-					});
-
 					this.store.set(response.data);
+					this.store.update({
+						meta: response.paging,
+					});
 				}
 			})
-			.catch(error => {
-				this.store.setIsFetching(false);
-				this.store.setError(error);
-			});
+			.catch(error => this.store.setError(error))
+			.finally(() => this.store.setIsFetching(false));
 	}
 
 	public getContentType(uuid: string): void {
@@ -55,17 +51,14 @@ export class ContentTypesFacade {
 		this.service
 			.getContentType(uuid)
 			.then(response => {
-				this.store.setIsFetching(false);
 				if (response) {
 					this.store.update({
 						contentType: response,
 					});
 				}
 			})
-			.catch(error => {
-				this.store.setIsFetching(false);
-				this.store.setError(error);
-			});
+			.catch(error => this.store.setError(error))
+			.finally(() => this.store.setIsFetching(false));
 	}
 
 	public createContentType(payload: ContentTypeCreateRequest): void {
@@ -79,12 +72,15 @@ export class ContentTypesFacade {
 						contentType: response,
 					});
 				}
-				this.store.setIsCreating(false);
 			})
-			.catch(error => {
-				this.store.setIsCreating(false);
-				this.store.setError(error);
-			});
+			.catch(error => this.store.setError(error))
+			.finally(() => this.store.setIsCreating(false));
+	}
+
+	public clearContentType(): void {
+		this.store.update({
+			contentType: undefined,
+		});
 	}
 
 	public updateContentType(payload: ContentTypeUpdateRequest): void {
@@ -94,16 +90,22 @@ export class ContentTypesFacade {
 			.updateContentType(payload)
 			.then(response => {
 				if (response) {
+					const { contentType } = this.store.getValue();
+					const fields = this.service.parseContentTypeFields(
+						response.fields,
+						contentType?.fields || []
+					);
+
 					this.store.update({
-						contentType: response,
+						contentType: {
+							...response,
+							fields,
+						},
 					});
 				}
-				this.store.setIsUpdating(false);
 			})
-			.catch(error => {
-				this.store.setIsUpdating(false);
-				this.store.setError(error);
-			});
+			.catch(error => this.store.setError(error))
+			.finally(() => this.store.setIsUpdating(false));
 	}
 
 	public setActiveField(payload: ContentTypeFieldDetailModel): void {

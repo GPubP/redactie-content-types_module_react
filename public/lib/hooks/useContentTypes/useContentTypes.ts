@@ -1,8 +1,8 @@
 import { useObservable } from '@mindspace-io/react';
 
+import { LoadingState } from '../../contentTypes.types';
 import { ContentTypePaging } from '../../services/contentTypes';
 import { ContentTypeModel, contentTypesFacade } from '../../store/contentTypes';
-import { LoadingState } from '../../types';
 
 const useContentTypes = (): [
 	LoadingState,

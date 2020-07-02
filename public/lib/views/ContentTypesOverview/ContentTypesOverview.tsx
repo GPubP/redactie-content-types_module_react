@@ -16,11 +16,10 @@ import rolesRightsConnector from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
 import { generateFilterFormState } from '../../content-types.helpers';
 import { MODULE_PATHS } from '../../contentTypes.const';
-import { ContentTypesRouteProps, FilterFormState } from '../../contentTypes.types';
+import { ContentTypesRouteProps, FilterFormState, LoadingState } from '../../contentTypes.types';
 import { useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../services/contentTypes/contentTypes.service.cont';
 import { contentTypesFacade } from '../../store/contentTypes';
-import { LoadingState } from '../../types';
 
 import {
 	CONTENT_INITIAL_FILTER_STATE,
@@ -147,7 +146,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 		}
 
 		const contentTypesRows: ContentTypesOverviewTableRow[] = contentTypes.map(contentType => ({
-			uuid: contentType.uuid,
+			uuid: contentType.uuid as string,
 			label: contentType.meta.label,
 			description: contentType.meta.description,
 			status: contentType.meta.status || 'N/A',

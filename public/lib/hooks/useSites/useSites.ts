@@ -1,27 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useObservable } from '@mindspace-io/react';
 
-import { getSites, SitesDataSchema } from '../../services/sites';
-import { LoadingState } from '../../types';
+import { LoadingState } from '../../contentTypes.types';
+import { SiteModel, sitesFacade } from '../../store/sites';
 
-const useSites = (): [LoadingState, SitesDataSchema | null] => {
-	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [sites, setSites] = useState<SitesDataSchema | null>(null);
+const useSites = (): [LoadingState, SiteModel[]] => {
+	const [loading] = useObservable(sitesFacade.isFetching$, LoadingState.Loading);
+	const [fieldTypes] = useObservable(sitesFacade.sites$, []);
+	const [error] = useObservable(sitesFacade.error$, null);
 
-	useEffect(() => {
-		setLoadingState(LoadingState.Loading);
-		getSites()
-			.then(result => {
-				if (result?.data.length) {
-					setSites(result);
-				}
-				setLoadingState(LoadingState.Loaded);
-			})
-			.catch(() => {
-				setLoadingState(LoadingState.Error);
-			});
-	}, []);
+	const loadingState = error ? LoadingState.Error : loading;
 
-	return [loadingState, sites];
+	return [loadingState, fieldTypes];
 };
 
 export default useSites;

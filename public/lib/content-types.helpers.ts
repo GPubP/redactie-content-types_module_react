@@ -1,7 +1,7 @@
 import { FilterFormState } from './contentTypes.types';
-import { ContentTypeSchema } from './services/contentTypes';
+import { ContentTypeModel } from './store/contentTypes';
 
-export const generateSettingsFormState = (): ContentTypeSchema => ({
+export const generateSettingsFormState = (): ContentTypeModel => ({
 	_id: '',
 	fields: [],
 	meta: {

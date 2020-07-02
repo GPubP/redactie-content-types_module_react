@@ -17,7 +17,7 @@ import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/con
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCNew.const';
 
-const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, routes, state }) => {
+const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, route }) => {
 	const { contentTypeUuid } = match.params;
 	/**
 	 * Hooks
@@ -65,19 +65,15 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, routes, st
 	}
 
 	const renderChildRoutes = (): ReactElement | null => {
-		const activeRoute =
-			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detailCCNew}`) || null;
-
 		const extraOptions = {
 			CTField,
 			fieldTypeData: CTField?.fieldType.data,
-			routes: activeRoute?.routes,
 			onSubmit: onFieldTypeChange,
 		};
 
 		return (
 			<RenderChildRoutes
-				routes={activeRoute?.routes}
+				routes={route.routes}
 				guardsMeta={guardsMeta}
 				extraOptions={extraOptions}
 			/>

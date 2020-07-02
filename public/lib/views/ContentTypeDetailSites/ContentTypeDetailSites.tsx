@@ -6,10 +6,10 @@ import React, { FC, useEffect, useState } from 'react';
 import DataLoader from '../../components/DataLoader/DataLoader';
 import SiteStatus from '../../components/SiteStatus/SiteStatus';
 import { useCoreTranslation } from '../../connectors/translations';
-import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
-import useSites from '../../hooks/useSites/useSites';
-import { SiteSchema, SitesDetailRequestBody, updateSite } from '../../services/sites';
-import { LoadingState } from '../../types';
+import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
+import { useSites } from '../../hooks';
+import { Site, SitesDetailRequestBody } from '../../services/sites';
+import { sitesFacade } from '../../store/sites';
 
 import { SitesRowData } from './ContentTypeSites.types';
 
@@ -26,8 +26,8 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 		setInitialLoading(LoadingState.Loading);
 	}, [sites, sitesLoading]);
 
-	const getOgSite = (siteUuid: string): SiteSchema | undefined =>
-		sites?.data.find((s: SiteSchema) => s.uuid === siteUuid);
+	const getOgSite = (siteUuid: string): Site | undefined =>
+		sites?.find((s: Site) => s.uuid === siteUuid);
 
 	const setCTsOnSites = (siteUuid: string): void => {
 		const ogSite = getOgSite(siteUuid);
@@ -37,12 +37,12 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 		}
 
 		const updateBody: SitesDetailRequestBody = {
-			...(ogSite as SiteSchema).data,
+			...(ogSite as Site).data,
 			contentTypes: ogSite.data.contentTypes.concat(contentType._id),
 		};
 
 		// TODO: quick user sites module and stores
-		updateSite(ogSite.uuid, updateBody).then(() => window.location.reload());
+		sitesFacade.updateSite(ogSite.uuid, updateBody);
 	};
 
 	const removeCTsFromSites = (siteUuid: string): void => {
@@ -53,14 +53,14 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 		}
 
 		const updateBody: SitesDetailRequestBody = {
-			...(ogSite as SiteSchema).data,
+			...(ogSite as Site).data,
 			contentTypes: ogSite.data.contentTypes.filter(
 				(ctId: string) => ctId !== contentType._id
 			),
 		};
 
 		// TODO: use sites module and stores
-		updateSite(ogSite.uuid, updateBody).then(() => window.location.reload());
+		sitesFacade.updateSite(ogSite.uuid, updateBody);
 	};
 
 	const SitesTable = (): React.ReactElement | null => {
@@ -68,8 +68,8 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			return null;
 		}
 
-		const sitesRows: SitesRowData[] = sites.data.map(
-			(site: SiteSchema): SitesRowData => ({
+		const sitesRows: SitesRowData[] = sites.map(
+			(site: Site): SitesRowData => ({
 				uuid: site.uuid,
 				name: site.data.name,
 				description: site.data.description,

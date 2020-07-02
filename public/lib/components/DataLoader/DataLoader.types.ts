@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { LoadingState } from '../../types';
+import { LoadingState } from '../../contentTypes.types';
 
 export interface DataLoaderProps {
 	errorMessage?: string;

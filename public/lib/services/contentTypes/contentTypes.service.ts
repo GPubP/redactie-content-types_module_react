@@ -9,21 +9,34 @@ import {
 import {
 	ContentTypeCreateRequest,
 	ContentTypeDetailResponse,
-	ContentTypeFieldDetailResponse,
-	ContentTypeFieldResponse,
+	ContentTypeField,
+	ContentTypeFieldDetail,
+	ContentTypeResponse,
 	ContentTypesResponse,
 	ContentTypeUpdateRequest,
 } from './contentTypes.service.types';
 
 export class ContentTypesApiService {
-	private parseContentTypeDetailFields(
-		fields: ContentTypeFieldDetailResponse[]
-	): ContentTypeFieldResponse[] {
+	private parseContentTypeDetailFields(fields: ContentTypeFieldDetail[]): ContentTypeField[] {
 		return fields.map(field => ({
 			...field,
-			dataType: field.dataType.uuid,
-			fieldType: field.fieldType.uuid,
+			dataType: field.dataType._id,
+			fieldType: field.fieldType._id,
 		}));
+	}
+
+	public parseContentTypeFields(
+		fields: ContentTypeField[],
+		detailedFields: ContentTypeFieldDetail[]
+	): ContentTypeFieldDetail[] {
+		return fields.map((field, index) => {
+			const dField = detailedFields[index];
+			return {
+				...field,
+				dataType: dField?.dataType || field.dataType,
+				fieldType: dField?.fieldType || field.fieldType,
+			};
+		}) as ContentTypeFieldDetail[];
 	}
 
 	public async getContentTypes(
@@ -60,12 +73,12 @@ export class ContentTypesApiService {
 
 	public async updateContentType(
 		contentType: ContentTypeUpdateRequest
-	): Promise<ContentTypeDetailResponse | null> {
+	): Promise<ContentTypeResponse | null> {
 		const data = {
 			...contentType,
 			fields: this.parseContentTypeDetailFields(contentType.fields),
 		};
-		const response: ContentTypeDetailResponse = await api
+		const response: ContentTypeResponse = await api
 			.put(`${CONTENT_TYPES_PREFIX_URL}/${contentType.uuid}`, {
 				json: data,
 			})

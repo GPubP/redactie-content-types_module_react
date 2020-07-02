@@ -1,29 +1,17 @@
-import { EntityState } from '@datorama/akita';
-
 import {
 	ContentTypeDetailResponse,
-	ContentTypeFieldDetailResponse,
+	ContentTypeFieldDetail,
 	ContentTypePaging,
 	ContentTypeResponse,
 } from '../../services/contentTypes';
+import { BaseEntityState } from '../shared';
 
 export type ContentTypeModel = ContentTypeResponse;
 export type ContentTypeDetailModel = ContentTypeDetailResponse;
-export type ContentTypeFieldDetailModel = ContentTypeFieldDetailResponse;
+export type ContentTypeFieldDetailModel = ContentTypeFieldDetail;
 
-export interface ContentTypesState extends EntityState<ContentTypeModel, string> {
+export interface ContentTypesState extends BaseEntityState<ContentTypeModel, string> {
 	meta?: ContentTypePaging;
 	contentType?: ContentTypeDetailModel;
 	activeField?: ContentTypeFieldDetailModel;
-	isFetching: boolean;
-	isCreating: boolean;
-	isUpdating: boolean;
 }
-
-export const createInitialSitesState = (): ContentTypesState => ({
-	loading: false,
-	isFetching: false,
-	isCreating: false,
-	isUpdating: false,
-	isActivating: false,
-});

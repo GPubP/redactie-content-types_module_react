@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 
+import { Tab } from '../../contentTypes.types';
 import { mapExternalTabToTab } from '../../helpers/mapExternalTabToTab/mapExternalTabToTab';
 import { ExternalTabModel } from '../../store/api/externalTabs';
-import { Tab } from '../../types';
 
 const useActiveTabs = (tabs: Tab[], externalTabs: ExternalTabModel[], pathname: string): Tab[] => {
 	const activeTabs = useMemo(() => {

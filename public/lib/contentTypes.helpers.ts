@@ -1,9 +1,9 @@
 import { pathOr } from 'ramda';
 
 import { CCSettingsFormState } from './contentTypes.types';
-import { ContentTypeCreateRequest, ContentTypeFieldSchema } from './services/contentTypes';
-import { FieldTypeSchema } from './services/fieldTypes';
+import { ContentTypeCreateRequest } from './services/contentTypes';
 import { ContentTypeFieldDetailModel } from './store/contentTypes';
+import { FieldTypeModel } from './store/fieldTypes';
 
 export const generateEmptyContentType = (): ContentTypeCreateRequest => ({
 	fields: [],
@@ -17,8 +17,8 @@ export const generateEmptyContentType = (): ContentTypeCreateRequest => ({
 });
 
 export const generateFieldFromType = (
-	fieldType: FieldTypeSchema,
-	initialValues: Partial<ContentTypeFieldSchema> = {}
+	fieldType: FieldTypeModel,
+	initialValues: Partial<ContentTypeFieldDetailModel> = {}
 ): ContentTypeFieldDetailModel => ({
 	label: '',
 	module: fieldType.data.module || '',

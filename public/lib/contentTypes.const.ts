@@ -1,4 +1,4 @@
-import { Tab, TabTypes } from './types';
+import { Tab, TabTypes } from './contentTypes.types';
 
 export const BREADCRUMB_OPTIONS = {
 	excludePaths: ['/', '/:tenantId'],

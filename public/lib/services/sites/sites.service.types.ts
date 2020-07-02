@@ -1,10 +1,10 @@
-export interface SitesDetailRequestBody {
-	name: string;
-	description: string;
-	contentTypes: string[];
-}
+/**
+ * =========================
+ * Base types
+ * =========================
+ */
 
-export interface SiteSchema {
+export interface Site {
 	uuid: string;
 	data: {
 		name: string;
@@ -19,19 +19,39 @@ export interface SiteSchema {
 	};
 }
 
-export interface SitesDataSchema {
-	meta: SitesMetaSchema;
-	data: SiteSchema[];
+export interface SitesData {
+	meta: SitesMeta;
+	data: Site[];
 }
 
-export interface SitesMetaSchema {
+export interface SitesMeta {
 	size: string;
 	totalElements: number;
 	totalPages: number;
 	number: string;
 }
 
-export interface SitesSchema {
-	_embedded: SiteSchema[];
-	_page: SitesMetaSchema;
+/**
+ * =========================
+ * Response types
+ * - Define all response interfaces coming from the server
+ * =========================
+ */
+
+export interface SitesResponse {
+	_embedded: Site[];
+	_page: SitesMeta;
+}
+
+/**
+ * =========================
+ * Request types
+ * - Define all request interfaces that are send to the server
+ * =========================
+ */
+
+export interface SitesDetailRequestBody {
+	name: string;
+	description: string;
+	contentTypes: string[];
 }

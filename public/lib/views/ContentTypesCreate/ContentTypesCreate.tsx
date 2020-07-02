@@ -1,5 +1,5 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
@@ -9,7 +9,7 @@ import {
 	MODULE_PATHS,
 } from '../../contentTypes.const';
 import { generateEmptyContentType } from '../../contentTypes.helpers';
-import { ContentTypesRouteProps } from '../../contentTypes.types';
+import { ContentTypesRouteProps, LoadingState, Tab } from '../../contentTypes.types';
 import {
 	useActiveTabs,
 	useContentType,
@@ -18,11 +18,10 @@ import {
 	useRoutesBreadcrumbs,
 	useTenantContext,
 } from '../../hooks';
-import { ContentTypeCreateRequest, ContentTypeMetaSchema } from '../../services/contentTypes';
+import { ContentTypeCreateRequest, ContentTypeMeta } from '../../services/contentTypes';
 import { contentTypesFacade } from '../../store/contentTypes';
-import { LoadingState, Tab } from '../../types';
 
-const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) => {
+const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => {
 	/**
 	 * Hooks
 	 */
@@ -44,6 +43,12 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		}),
 		[tenantId]
 	);
+
+	useEffect(() => {
+		// Clear current active content type before creating a new one
+		// Removing this line of code will trigger a redirect when there is a content type set
+		contentTypesFacade.clearContentType();
+	}, []);
 
 	useEffect(() => {
 		if (contentType?.uuid) {
@@ -68,7 +73,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 				contentTypesFacade.createContentType({
 					...generateEmptyContentType(),
 					meta: {
-						...(sectionData as ContentTypeMetaSchema),
+						...(sectionData as ContentTypeMeta),
 						canBeFiltered: true,
 					},
 				} as ContentTypeCreateRequest);
@@ -77,21 +82,11 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	};
 
 	/**
-	 * Methods
-	 */
-	//  Don't show tabs on new CC page
-	const showTabs = !/\/nieuw\//.test(location.pathname);
-
-	/**
 	 * Render
 	 */
-	const renderChildRoutes = (): any => {
-		const activeRoute =
-			routes.find(item => item.path === generatePath(MODULE_PATHS.create)) || null;
-
+	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
 			fieldTypes,
-			routes: activeRoute?.routes,
 			contentType: contentType || generateEmptyContentType(),
 			onCancel: () => navigate(MODULE_PATHS.admin),
 			onSubmit: (sectionData: any, tab: Tab) => upsertCT(sectionData, tab),
@@ -99,7 +94,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 
 		return (
 			<RenderChildRoutes
-				routes={activeRoute?.routes}
+				routes={route.routes}
 				guardsMeta={guardsMeta}
 				extraOptions={extraOptions}
 			/>
@@ -109,7 +104,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	return (
 		<>
 			<ContextHeader
-				tabs={showTabs ? activeTabs.slice(0, 1) : undefined}
+				tabs={activeTabs.slice(0, 1)}
 				linkProps={(props: any) => ({
 					...props,
 					to: generatePath(`${MODULE_PATHS.create}/${props.href}`),

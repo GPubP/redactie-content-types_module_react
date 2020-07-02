@@ -13,10 +13,11 @@ import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
+import { fieldTypesFacade } from '../../store/fieldTypes';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCEdit.const';
 
-const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, state }) => {
+const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, route }) => {
 	const { contentTypeUuid } = match.params;
 	const { activeField } = state;
 
@@ -24,7 +25,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, s
 	 * Hooks
 	 */
 	const [updatedField, setUpdatedField] = useState<ContentTypeFieldDetailModel | null>(null);
-	const [loadingState, fieldType] = useFieldType(activeField?.fieldType.uuid);
+	const [loadingState, fieldType] = useFieldType();
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
@@ -40,6 +41,12 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, s
 			setUpdatedField(activeField);
 		}
 	}, [activeField, fieldType]);
+
+	useEffect(() => {
+		if (activeField?.fieldType.uuid) {
+			fieldTypesFacade.getFieldType(activeField.fieldType.uuid);
+		}
+	}, [activeField]);
 
 	/**
 	 * Methods
@@ -81,20 +88,16 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, s
 			return null;
 		}
 
-		const activeRoute =
-			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detailCCEdit}`) || null;
-
 		const extraOptions = {
 			CTField: updatedField,
 			fieldTypeData: fieldType,
-			routes: activeRoute?.routes,
 			onDelete: onFieldDelete,
 			onSubmit: onFieldChange,
 		};
 
 		return (
 			<RenderChildRoutes
-				routes={activeRoute?.routes}
+				routes={route.routes}
 				guardsMeta={guardsMeta}
 				extraOptions={extraOptions}
 			/>

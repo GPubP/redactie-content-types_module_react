@@ -1,9 +1,7 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 
-import { ContentTypeSchema } from './services/contentTypes';
-import { FieldTypeSchema, FieldTypeSchemaData, FieldTypeSchemaMeta } from './services/fieldTypes';
-import { ContentTypeFieldDetailModel } from './store/contentTypes';
-import { Tab } from './types';
+import { FieldType, FieldTypeData, FieldTypeMeta } from './services/fieldTypes';
+import { ContentTypeDetailModel, ContentTypeFieldDetailModel } from './store/contentTypes';
 import { ExternalTabValue } from './views/ContentTypeDetailExternal/ContentTypeDetailExternal.types';
 
 export interface ContentTypesModuleProps extends RouteConfigComponentProps {
@@ -20,18 +18,17 @@ export interface ContentTypesRouteProps<Params = {}> extends RouteConfigComponen
 
 export interface ContentTypesDetailRouteProps<Params = { contentTypeUuid: string }>
 	extends RouteConfigComponentProps<Params> {
-	fieldTypes: FieldTypeSchema[];
-	contentType: ContentTypeSchema;
+	fieldTypes: FieldType[];
+	contentType: ContentTypeDetailModel;
 	onCancel: () => void;
 	onSubmit: (
 		data:
-			| ContentTypeSchema
+			| ContentTypeDetailModel
 			| ContentTypeFieldDetailModel[]
-			| FieldTypeSchemaMeta
+			| FieldTypeMeta
 			| ExternalTabValue,
 		tab: Tab
 	) => void;
-	routes: ModuleRouteConfig[];
 	state: {
 		readonly activeField: ContentTypeFieldDetailModel | null;
 		readonly fields: ContentTypeFieldDetailModel[];
@@ -40,7 +37,7 @@ export interface ContentTypesDetailRouteProps<Params = { contentTypeUuid: string
 
 export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
 	CTField: ContentTypeFieldDetailModel;
-	fieldTypeData: FieldTypeSchemaData;
+	fieldTypeData: FieldTypeData;
 	onDelete?: () => void;
 	onSubmit: (data: any) => void;
 }
@@ -63,4 +60,24 @@ export interface CCSettingsFormState {
 		min: number;
 		max: number;
 	};
+}
+
+export interface Tab {
+	id?: string;
+	name: string;
+	target: string;
+	active: boolean;
+	type: TabTypes;
+	disabled?: boolean;
+}
+
+export enum TabTypes {
+	'INTERNAL',
+	'EXTERNAL',
+}
+
+export enum LoadingState {
+	Loading = 'loading',
+	Loaded = 'loaded',
+	Error = 'error',
 }
