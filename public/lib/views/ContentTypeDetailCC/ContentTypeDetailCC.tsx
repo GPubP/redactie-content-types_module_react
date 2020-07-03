@@ -9,7 +9,7 @@ import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18n
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { pathOr } from 'ramda';
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { FormCTNewCC, NavList } from '../../components';
@@ -28,12 +28,15 @@ import {
 import { ContentTypeDetailCCRow } from './ContentTypeDetailCC.types';
 
 const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
+	presets,
 	fieldTypes,
 	onCancel,
 	onSubmit,
 	state,
 }) => {
-	const fieldTypeOptions = fieldTypes.map(fieldType => ({
+	const fields = useMemo(() => [...fieldTypes, ...presets], [fieldTypes, presets]);
+
+	const fieldTypeOptions = fields.map(fieldType => ({
 		key: fieldType.uuid,
 		value: fieldType.uuid,
 		label: fieldType?.data?.label,
@@ -56,6 +59,17 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		}
 
 		const initialValues = { label: name, name: kebabCase(name) };
+
+		// - get selected field type
+		// - this can be a preset or a field type
+		// - a preset holds a fieldType and a preset with fields
+
+		// Je maakt een field op basis van een fieldgroup => de preset bevat een fieldType
+		// Je zet het actieve field op basis van het nieuwe field
+		// Navigeer naar nieuwe content component aanmaken pagina
+
+		//
+
 		contentTypesFacade.setActiveField(generateFieldFromType(selectedFieldType, initialValues));
 		navigate(MODULE_PATHS.detailCCNew, { contentTypeUuid });
 	};

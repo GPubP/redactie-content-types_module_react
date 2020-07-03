@@ -1,6 +1,7 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 
 import { FieldType, FieldTypeData, FieldTypeMeta } from './services/fieldTypes';
+import { Preset } from './services/presets';
 import { ContentTypeDetailModel, ContentTypeFieldDetailModel } from './store/contentTypes';
 import { ExternalTabValue } from './views/ContentTypeDetailExternal/ContentTypeDetailExternal.types';
 
@@ -18,6 +19,7 @@ export interface ContentTypesRouteProps<Params = {}> extends RouteConfigComponen
 
 export interface ContentTypesDetailRouteProps<Params = { contentTypeUuid: string }>
 	extends RouteConfigComponentProps<Params> {
+	presets: Preset[];
 	fieldTypes: FieldType[];
 	contentType: ContentTypeDetailModel;
 	onCancel: () => void;

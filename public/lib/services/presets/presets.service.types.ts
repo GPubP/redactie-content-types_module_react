@@ -30,6 +30,7 @@ export interface BasePreset<T> {
 		name: string;
 		label: string;
 		defaultConfig: Record<string, any>;
+		fieldType: string;
 		generalConfig: {
 			isQueryable: boolean;
 			isTranslate: boolean;

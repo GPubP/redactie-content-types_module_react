@@ -16,6 +16,7 @@ import {
 	useContentType,
 	useFieldTypes,
 	useNavigate,
+	usePresets,
 	useRoutesBreadcrumbs,
 	useTenantContext,
 } from '../../hooks';
@@ -41,6 +42,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const { contentTypeUuid } = useParams();
 	const { navigate, generatePath } = useNavigate();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
+	const [presetsLoadingState, presets] = usePresets();
 	const [contentTypeLoadingState, contentType] = useContentType();
 	const [{ all: externalTabs, active: activeExternalTab }] = useExternalTabstFacade();
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, externalTabs, location.pathname);
@@ -63,8 +65,17 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		[tenantId]
 	);
 
+	const state = useMemo(
+		() => ({
+			activeField,
+			fields: contentType?.fields,
+		}),
+		[activeField, contentType]
+	);
+
 	useEffect(() => {
 		if (
+			presetsLoadingState !== LoadingState.Loading &&
 			fieldTypesLoadingState !== LoadingState.Loading &&
 			contentTypeLoadingState !== LoadingState.Loading
 		) {
@@ -72,13 +83,19 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [contentTypeLoadingState, fieldTypesLoadingState]);
+	}, [presetsLoadingState, contentTypeLoadingState, fieldTypesLoadingState]);
 
 	useEffect(() => {
 		if (contentTypeUuid) {
 			contentTypesFacade.getContentType(contentTypeUuid);
 		}
 	}, [contentTypeUuid]);
+
+	useEffect(() => {
+		return () => {
+			console.log('destroy parant');
+		};
+	}, []);
 
 	/**
 	 * Methods
@@ -179,11 +196,12 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		}
 
 		const extraOptions = {
+			presets,
 			fieldTypes,
 			contentType,
 			onCancel: navigateToOverview,
 			onSubmit: updateCT,
-			state: { activeField, fields: contentType.fields },
+			state,
 		};
 
 		return (

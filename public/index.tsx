@@ -9,6 +9,7 @@ import { MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesModuleProps } from './lib/contentTypes.types';
 import { TenantContext } from './lib/context';
 import { fieldTypesFacade } from './lib/store/fieldTypes';
+import { presetsFacade } from './lib/store/presets';
 import { sitesFacade } from './lib/store/sites';
 import {
 	ContentTypesCCConfig,
@@ -31,6 +32,7 @@ akitaDevtools();
 const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, tenantId }) => {
 	useEffect(() => {
 		fieldTypesFacade.getFieldTypes();
+		presetsFacade.getPresets();
 		sitesFacade.getSites();
 	}, []);
 
