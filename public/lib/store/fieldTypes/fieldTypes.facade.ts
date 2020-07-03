@@ -13,7 +13,6 @@ export class FieldTypesFacade extends BaseEntityFacade<
 		super(store, service, query);
 	}
 
-	public readonly meta$ = this.query.meta$;
 	public readonly fieldTypes$ = this.query.fieldTypes$;
 	public readonly fieldType$ = this.query.fieldType$;
 
