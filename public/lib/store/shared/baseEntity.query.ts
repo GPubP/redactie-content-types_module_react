@@ -4,9 +4,10 @@ import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { LoadingState } from '../../contentTypes.types';
 
 import { BaseEntityState } from './baseEntity.state';
+import { BaseEntityStore } from './baseEntity.store';
 
-export class BaseEntityQuery<S extends BaseEntityState<any, any>> extends QueryEntity<S> {
-	constructor(protected store: any, options?: QueryConfigOptions) {
+export class BaseEntityQuery<S extends BaseEntityState<unknown, unknown>> extends QueryEntity<S> {
+	constructor(protected store: BaseEntityStore<S>, options?: QueryConfigOptions) {
 		super(store, options);
 	}
 
