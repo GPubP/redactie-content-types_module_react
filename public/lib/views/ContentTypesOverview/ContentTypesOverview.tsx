@@ -16,11 +16,10 @@ import rolesRightsConnector from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
 import { generateFilterFormState } from '../../content-types.helpers';
 import { MODULE_PATHS } from '../../contentTypes.const';
-import { ContentTypesRouteProps, FilterFormState } from '../../contentTypes.types';
-import { useNavigate, useRoutesBreadcrumbs } from '../../hooks';
-import useContentTypes from '../../hooks/useContentTypes/useContentTypes';
+import { ContentTypesRouteProps, FilterFormState, LoadingState } from '../../contentTypes.types';
+import { useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../services/contentTypes/contentTypes.service.cont';
-import { LoadingState } from '../../types';
+import { contentTypesFacade } from '../../store/contentTypes';
 
 import {
 	CONTENT_INITIAL_FILTER_STATE,
@@ -45,7 +44,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	);
 	const { navigate } = useNavigate();
 	const breadcrumbs = useRoutesBreadcrumbs();
-	const [loadingState, contentTypes] = useContentTypes(contentTypesSearchParams);
+	const [loadingState, contentTypes, meta] = useContentTypes();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
 	const [
@@ -62,6 +61,10 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 			setInitialLoading(LoadingState.Loaded);
 		}
 	}, [loadingState, mySecurityRightsLoadingState]);
+
+	useEffect(() => {
+		contentTypesFacade.getContentTypes(contentTypesSearchParams);
+	}, [contentTypesSearchParams]);
 
 	/**
 	 * Functions
@@ -138,19 +141,17 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	 * Render
 	 */
 	const renderOverview = (): ReactElement | null => {
-		if (!contentTypes?.data) {
+		if (!contentTypes || !meta) {
 			return null;
 		}
 
-		const contentTypesRows: ContentTypesOverviewTableRow[] = contentTypes.data.map(
-			contentType => ({
-				uuid: contentType.uuid,
-				label: contentType.meta.label,
-				description: contentType.meta.description,
-				status: contentType.meta.status || 'N/A',
-				navigate: contentTypeUuid => navigate(MODULE_PATHS.detail, { contentTypeUuid }),
-			})
-		);
+		const contentTypesRows: ContentTypesOverviewTableRow[] = contentTypes.map(contentType => ({
+			uuid: contentType.uuid as string,
+			label: contentType.meta.label,
+			description: contentType.meta.description,
+			status: contentType.meta.status || 'N/A',
+			navigate: contentTypeUuid => navigate(MODULE_PATHS.detail, { contentTypeUuid }),
+		}));
 
 		return (
 			<>
@@ -168,15 +169,13 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					columns={CONTENT_TYPE_OVERVIEW_COLUMNS(t, mySecurityrights)}
 					rows={contentTypesRows}
 					currentPage={
-						Math.ceil(
-							contentTypes.paging.skip / DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit
-						) + 1
+						Math.ceil(meta.skip / DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit) + 1
 					}
 					itemsPerPage={DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
 					activeSorting={activeSorting}
-					totalValues={contentTypes?.paging?.total || 0}
+					totalValues={meta.total || 0}
 					loading={loadingState === LoadingState.Loading}
 				></PaginatedTable>
 			</>

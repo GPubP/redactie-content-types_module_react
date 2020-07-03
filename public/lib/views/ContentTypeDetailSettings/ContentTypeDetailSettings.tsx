@@ -12,14 +12,14 @@ import React, { FC } from 'react';
 import { useCoreTranslation } from '../../connectors/translations';
 import { CONTENT_TYPE_DETAIL_TAB_MAP } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
-import { ContentTypeSchema } from '../../services/contentTypes';
+import { ContentTypeDetailModel } from '../../store/contentTypes';
 
 import { CT_SETTINGS_VALIDATION_SCHEMA } from './ContentTypeDetailSettings.const';
 
 const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
-	contentType,
 	onCancel,
 	onSubmit,
+	contentType,
 }) => {
 	/**
 	 * Hooks
@@ -29,13 +29,14 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	/**
 	 * Methods
 	 */
-	const onFormSubmit = (value: ContentTypeSchema): void => {
-		onSubmit({ ...contentType.meta, ...value.meta }, CONTENT_TYPE_DETAIL_TAB_MAP.settings);
+	const onFormSubmit = (value: ContentTypeDetailModel): void => {
+		onSubmit({ ...contentType?.meta, ...value.meta }, CONTENT_TYPE_DETAIL_TAB_MAP.settings);
 	};
 
 	/**
 	 * Render
 	 */
+
 	return (
 		<Formik
 			initialValues={contentType}

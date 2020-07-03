@@ -12,19 +12,20 @@ import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
 import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
-import { ContentTypeField, internalService } from '../../store/internal';
+import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
+import { fieldTypesFacade } from '../../store/fieldTypes';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCEdit.const';
 
-const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, state }) => {
+const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, route }) => {
 	const { contentTypeUuid } = match.params;
-	const { activeField, fields } = state;
+	const { activeField } = state;
 
 	/**
 	 * Hooks
 	 */
-	const [updatedField, setUpdatedField] = useState<ContentTypeField | null>(null);
-	const [loadingState, fieldType] = useFieldType(activeField?.fieldType.uuid);
+	const [updatedField, setUpdatedField] = useState<ContentTypeFieldDetailModel | null>(null);
+	const [loadingState, fieldType] = useFieldType();
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
@@ -41,6 +42,12 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, s
 		}
 	}, [activeField, fieldType]);
 
+	useEffect(() => {
+		if (activeField?.fieldType.uuid) {
+			fieldTypesFacade.getFieldType(activeField.fieldType.uuid);
+		}
+	}, [activeField]);
+
 	/**
 	 * Methods
 	 */
@@ -48,7 +55,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, s
 		navigate(MODULE_PATHS.detailCC, { contentTypeUuid });
 	};
 
-	const onFieldChange = (data: ContentTypeField): void => {
+	const onFieldChange = (data: ContentTypeFieldDetailModel): void => {
 		setUpdatedField({
 			...updatedField,
 			...data,
@@ -60,15 +67,15 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, s
 	};
 
 	const onFieldDelete = (): void => {
-		internalService.updateFields(fields.filter(field => field.uuid !== activeField?.uuid));
-		navigateToOverview();
+		if (activeField?.uuid) {
+			contentTypesFacade.deleteField(activeField.uuid);
+			navigateToOverview();
+		}
 	};
 
 	const onFieldSubmit = (): void => {
 		if (updatedField) {
-			internalService.updateFields(
-				fields.map(field => (field.uuid === activeField?.uuid ? updatedField : field))
-			);
+			contentTypesFacade.updateField(updatedField);
 			navigateToOverview();
 		}
 	};
@@ -81,20 +88,16 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, routes, s
 			return null;
 		}
 
-		const activeRoute =
-			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detailCCEdit}`) || null;
-
 		const extraOptions = {
 			CTField: updatedField,
 			fieldTypeData: fieldType,
-			routes: activeRoute?.routes,
 			onDelete: onFieldDelete,
 			onSubmit: onFieldChange,
 		};
 
 		return (
 			<RenderChildRoutes
-				routes={activeRoute?.routes}
+				routes={route.routes}
 				guardsMeta={guardsMeta}
 				extraOptions={extraOptions}
 			/>

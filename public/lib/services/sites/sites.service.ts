@@ -1,43 +1,42 @@
 import apiService from '../api/api.service';
 
-import {
-	SiteSchema,
-	SitesDataSchema,
-	SitesDetailRequestBody,
-	SitesSchema,
-} from './sites.service.types';
+import { Site, SitesData, SitesDetailRequestBody, SitesResponse } from './sites.service.types';
 
-export const getSites = async (): Promise<SitesDataSchema | null> => {
-	try {
-		const response: SitesSchema = await apiService.get('sites/v1/sites').json();
+export class SitesApiService {
+	public async getSites(): Promise<SitesData | null> {
+		try {
+			const response: SitesResponse = await apiService.get('sites/v1/sites').json();
 
-		if (!response._embedded) {
-			throw new Error('Failed to get sites');
+			if (!response._embedded) {
+				throw new Error('Failed to get sites');
+			}
+
+			return {
+				meta: response._page,
+				data: response._embedded,
+			};
+		} catch (err) {
+			console.error(err);
+			return null;
 		}
-
-		return {
-			meta: response._page,
-			data: response._embedded,
-		};
-	} catch (err) {
-		console.error(err);
-		return null;
 	}
-};
 
-export const updateSite = async (id: string, body: SitesDetailRequestBody): Promise<any> => {
-	try {
-		const response: SiteSchema = await apiService
-			.put(`sites/v1/sites/${id}`, { json: body })
-			.json();
+	public async updateSite(id: string, body: SitesDetailRequestBody): Promise<Site | null> {
+		try {
+			const response: Site = await apiService
+				.put(`sites/v1/sites/${id}`, { json: body })
+				.json();
 
-		if (!response.data) {
-			throw new Error(`Failed to update site with id: ${id}`);
+			if (!response.data) {
+				throw new Error(`Failed to update site with id: ${id}`);
+			}
+
+			return response;
+		} catch (err) {
+			console.error(err);
+			return null;
 		}
-
-		return response;
-	} catch (err) {
-		console.error(err);
-		return null;
 	}
-};
+}
+
+export const sitesApiService = new SitesApiService();

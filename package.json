@@ -97,6 +97,7 @@
 		"yup": "0.28.3"
 	},
 	"dependencies": {
+		"@mindspace-io/react": "^1.1.6",
 		"lodash.debounce": "^4.0.8",
 		"lodash.kebabcase": "4.1.1",
 		"query-string": "^6.12.0"

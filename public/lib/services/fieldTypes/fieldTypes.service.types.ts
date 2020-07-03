@@ -1,9 +1,15 @@
+/**
+ * =========================
+ * Base types
+ * =========================
+ */
+
 export interface Operator {
 	label: string;
 	value: string;
 }
 
-export interface DataTypeSchema {
+export interface DataType {
 	_id: string;
 	meta: {
 		createdAt: string;
@@ -19,7 +25,7 @@ export interface DataTypeSchema {
 	uuid: string;
 }
 
-export interface FieldTypeSchemaData {
+export interface FieldTypeData {
 	label: string;
 	name: string;
 	componentName: string;
@@ -29,7 +35,7 @@ export interface FieldTypeSchemaData {
 	formSchema: {
 		fields: any[];
 	};
-	dataType: DataTypeSchema;
+	dataType: DataType;
 	generalConfig: {
 		isQueryable: boolean;
 		isTranslate: boolean;
@@ -39,20 +45,27 @@ export interface FieldTypeSchemaData {
 	module: string;
 }
 
-export interface FieldTypeSchemaMeta {
+export interface FieldTypeMeta {
 	created: string;
 	lastModified: string;
 	lastEditor: string;
 	deleted: boolean;
 }
 
-export interface FieldTypeSchema {
+export interface FieldType {
 	_id: string;
 	uuid: string;
-	data: FieldTypeSchemaData;
-	meta: FieldTypeSchemaMeta;
+	data: FieldTypeData;
+	meta: FieldTypeMeta;
 }
 
-export type FieldTypesSchema = {
-	data: FieldTypeSchema[];
+/**
+ * =========================
+ * Response types
+ * - Define all response interfaces coming from the server
+ * =========================
+ */
+
+export type FieldTypesResponse = {
+	data: FieldType[];
 };

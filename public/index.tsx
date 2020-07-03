@@ -1,6 +1,6 @@
-// import { akitaDevtools } from '@datorama/akita';
+import { akitaDevtools } from '@datorama/akita';
 import Core from '@redactie/redactie-core';
-import React, { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 
 import { registerContentTypeAPI } from './lib/api/index';
 import { ContentTypeDetailBreadcrumb, RenderChildRoutes } from './lib/components';
@@ -8,6 +8,8 @@ import rolesRightsConnector from './lib/connectors/rolesRights';
 import { MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesModuleProps } from './lib/contentTypes.types';
 import { TenantContext } from './lib/context';
+import { fieldTypesFacade } from './lib/store/fieldTypes';
+import { sitesFacade } from './lib/store/sites';
 import {
 	ContentTypesCCConfig,
 	ContentTypesCCDefaults,
@@ -24,29 +26,24 @@ import {
 } from './lib/views';
 import ContentTypeDetailExternal from './lib/views/ContentTypeDetailExternal/ContentTypeDetailExternal';
 
-// akitaDevtools();
+akitaDevtools();
 
 const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, tenantId }) => {
+	useEffect(() => {
+		fieldTypesFacade.getFieldTypes();
+		sitesFacade.getSites();
+	}, []);
+
 	const guardsMeta = useMemo(
 		() => ({
 			tenantId,
 		}),
 		[tenantId]
 	);
-	const extraOptions = useMemo(
-		() => ({
-			routes: route.routes,
-		}),
-		[route.routes]
-	);
 
 	return (
 		<TenantContext.Provider value={{ tenantId }}>
-			<RenderChildRoutes
-				routes={route.routes}
-				guardsMeta={guardsMeta}
-				extraOptions={extraOptions}
-			/>
+			<RenderChildRoutes routes={route.routes} guardsMeta={guardsMeta} />
 		</TenantContext.Provider>
 	);
 };

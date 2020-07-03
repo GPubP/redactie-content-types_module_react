@@ -1,33 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useObservable } from '@mindspace-io/react';
 
-import { FieldTypeSchemaData, getFieldType } from '../../services/fieldTypes';
-import { LoadingState } from '../../types';
+import { LoadingState } from '../../contentTypes.types';
+import { FieldTypeDetailModel, fieldTypesFacade } from '../../store/fieldTypes';
 
-const useFieldType = (uuid: string | undefined): [LoadingState, FieldTypeSchemaData | null] => {
-	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [fieldType, setFieldType] = useState<FieldTypeSchemaData | null>(null);
+const useFieldType = (): [LoadingState, FieldTypeDetailModel | null | undefined] => {
+	const [loading] = useObservable(fieldTypesFacade.isFetching$, LoadingState.Loading);
+	const [fieldType] = useObservable(fieldTypesFacade.fieldType$, null);
+	const [error] = useObservable(fieldTypesFacade.error$, null);
 
-	useEffect(() => {
-		if (loadingState === LoadingState.Loaded && fieldType) {
-			return;
-		}
-
-		if (!uuid) {
-			return setLoadingState(LoadingState.Error);
-		}
-
-		getFieldType(uuid)
-			.then(result => {
-				if (result) {
-					setFieldType(result);
-				}
-
-				setLoadingState(LoadingState.Loaded);
-			})
-			.catch(() => {
-				setLoadingState(LoadingState.Error);
-			});
-	}, [fieldType, loadingState, uuid]);
+	const loadingState = error ? LoadingState.Error : loading;
 
 	return [loadingState, fieldType];
 };

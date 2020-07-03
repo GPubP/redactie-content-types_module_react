@@ -1,23 +1,12 @@
-import { DataTypeSchema, FieldTypeSchema, Operator } from '../fieldTypes';
+import { DataType, FieldType, Operator } from '../fieldTypes';
+
+/**
+ * =========================
+ * Base types
+ * =========================
+ */
 
 export type ValidationSchema = Record<string, any>;
-
-export interface ContentTypePaging {
-	total: number;
-	moreResults: boolean;
-	limit: number;
-	skip: number;
-}
-
-export interface ModuleSettings {
-	uuid?: string;
-	label: string;
-	name: string;
-	module?: string;
-	config: Record<string, any>;
-	validationSchema?: ValidationSchema;
-}
-
 export interface BaseContentTypeField {
 	uuid?: string;
 	label: string;
@@ -35,18 +24,13 @@ export interface BaseContentTypeField {
 		max?: number;
 	};
 }
-
-export interface ContentTypeFieldSchema extends BaseContentTypeField {
-	dataType: string;
-	fieldType: string;
+export interface ContentTypePaging {
+	total: number;
+	moreResults: boolean;
+	limit: number;
+	skip: number;
 }
-
-export interface ContentTypeFieldResponse extends BaseContentTypeField {
-	dataType: DataTypeSchema;
-	fieldType: FieldTypeSchema;
-}
-
-export interface ContentTypeMetaSchema {
+export interface ContentTypeMeta {
 	label: string;
 	safeLabel: string;
 	description: string;
@@ -62,33 +46,59 @@ export interface ContentTypeMetaSchema {
 	lastEditor: string;
 	canBeFiltered: boolean;
 }
+export interface ModuleSettings {
+	uuid?: string;
+	label: string;
+	name: string;
+	module?: string;
+	config: Record<string, any>;
+	validationSchema?: ValidationSchema;
+}
 
-export interface ContentTypeSchema {
+export interface ContentTypeFieldDetail extends BaseContentTypeField {
+	dataType: DataType;
+	fieldType: FieldType;
+}
+export interface ContentTypeField extends BaseContentTypeField {
+	dataType: string;
+	fieldType: string;
+}
+
+/**
+ * =========================
+ * Response types
+ * - Define all response interfaces coming from the server
+ * =========================
+ */
+
+export interface ContentTypeBase<T> {
 	_id: string;
 	uuid?: string;
-	fields: ContentTypeFieldSchema[];
+	fields: T[];
 	modulesConfig: ModuleSettings[];
-	meta: ContentTypeMetaSchema;
-}
-export interface ContentTypesDataSchema {
-	data: ContentTypeSchema[];
+	meta: ContentTypeMeta;
 }
 
-export interface ContentTypeResponse {
-	_id: string;
-	uuid: string;
-	fields: ContentTypeFieldResponse[];
-	modulesConfig: ModuleSettings[];
-	meta: ContentTypeMetaSchema;
-}
+export type ContentTypeResponse = ContentTypeBase<ContentTypeField>;
 
-export interface ContentTypesSchema {
+export type ContentTypeDetailResponse = ContentTypeBase<ContentTypeFieldDetail>;
+
+export interface ContentTypesResponse {
 	data: ContentTypeResponse[];
 	paging: ContentTypePaging;
 }
 
-export interface ContentTypeCreate {
-	fields: ContentTypeFieldSchema[];
+/**
+ * =========================
+ * Request types
+ * - Define all request interfaces that are send to the server
+ * =========================
+ */
+
+export type ContentTypeUpdateRequest = ContentTypeBase<ContentTypeFieldDetail>;
+
+export interface ContentTypeCreateRequest {
+	fields: ContentTypeField[];
 	modulesConfig: ModuleSettings[];
 	meta: {
 		label: string;

@@ -1,5 +1,5 @@
-import { ContentTypeSchema } from '../../api/api.types';
 import { ModuleSettings } from '../../services/contentTypes';
+import { ContentTypeDetailModel } from '../../store/contentTypes';
 
 export interface ContentTypeDetailMatchProps {
 	tab: string;
@@ -11,10 +11,10 @@ export interface ExternalTabValue {
 }
 
 export interface ExternalTabProps {
-	contentType: ContentTypeSchema; // = deep clone
+	contentType: ContentTypeDetailModel; // = deep clone
 	value: ExternalTabValue;
 
 	onSubmit: (value: ExternalTabValue) => void;
 	onCancel: () => void;
-	updateContentType: (e: ContentTypeSchema) => void;
+	updateContentType: (e: ContentTypeDetailModel) => void;
 }

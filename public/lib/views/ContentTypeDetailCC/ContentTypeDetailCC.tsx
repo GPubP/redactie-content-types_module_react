@@ -15,10 +15,10 @@ import { useParams } from 'react-router-dom';
 import { FormCTNewCC, NavList } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
-import { generateFieldFromType, parseContentTypeField } from '../../contentTypes.helpers';
+import { generateFieldFromType } from '../../contentTypes.helpers';
 import { ContentTypesDetailRouteProps, NewCCFormState } from '../../contentTypes.types';
 import { useNavigate } from '../../hooks';
-import { ContentTypeField, internalService } from '../../store/internal';
+import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
 
 import {
 	CONTENT_TYPE_COLUMNS,
@@ -56,28 +56,31 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		}
 
 		const initialValues = { label: name, name: kebabCase(name) };
-		internalService.updateActiveField(generateFieldFromType(selectedFieldType, initialValues));
+		contentTypesFacade.setActiveField(generateFieldFromType(selectedFieldType, initialValues));
 		navigate(MODULE_PATHS.detailCCNew, { contentTypeUuid });
 	};
 
 	const onCCSave = (): void => {
-		const cleanFields = state.fields.map(parseContentTypeField);
-		onSubmit(cleanFields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
+		onSubmit(state.fields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
 	};
 
 	/**
 	 * Render
 	 */
-	const renderTableField = ({ value: fields }: { value: ContentTypeField[] }): ReactElement => {
+	const renderTableField = ({
+		value: fields,
+	}: {
+		value: ContentTypeFieldDetailModel[];
+	}): ReactElement => {
 		const contentTypeRows: ContentTypeDetailCCRow[] = (fields || []).map(cc => ({
 			path: generatePath(MODULE_PATHS.detailCCEdit, { contentTypeUuid }),
 			setActiveField: () => {
-				internalService.updateActiveField(cc);
+				contentTypesFacade.setActiveField(cc);
 			},
 			label: cc.label,
 			name: cc.name,
 			fieldType: pathOr('error', ['fieldType', 'data', 'label'])(cc),
-			multiple: Number(cc.generalConfig.max) > 0,
+			multiple: Number(cc.generalConfig.max) > 1,
 			required: !!cc.generalConfig.required,
 			translatable: !!cc.generalConfig.multiLanguage,
 			hidden: !!cc.generalConfig.hidden,

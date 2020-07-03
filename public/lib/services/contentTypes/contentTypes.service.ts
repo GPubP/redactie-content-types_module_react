@@ -7,63 +7,97 @@ import {
 	DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
 } from './contentTypes.service.cont';
 import {
+	ContentTypeCreateRequest,
+	ContentTypeDetailResponse,
+	ContentTypeField,
+	ContentTypeFieldDetail,
 	ContentTypeResponse,
-	ContentTypeSchema,
-	ContentTypesSchema,
+	ContentTypesResponse,
+	ContentTypeUpdateRequest,
 } from './contentTypes.service.types';
 
-export const getContentTypes = async (
-	searchParams: SearchParams = DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
-): Promise<ContentTypesSchema | null> => {
-	try {
-		const response: ContentTypesSchema = await api
-			.get(`${CONTENT_TYPES_PROXY_PREFIX_URL}?${parseSearchParams(searchParams)}`)
-			.json();
+export class ContentTypesApiService {
+	private parseContentTypeDetailFields(fields: ContentTypeFieldDetail[]): ContentTypeField[] {
+		return fields.map(field => ({
+			...field,
+			dataType: field.dataType._id,
+			fieldType: field.fieldType._id,
+		}));
+	}
 
-		if (!response) {
-			throw new Error('Failed to get content-types');
+	public parseContentTypeFields(
+		fields: ContentTypeField[],
+		detailedFields: ContentTypeFieldDetail[]
+	): ContentTypeFieldDetail[] {
+		return fields.map((field, index) => {
+			const dField = detailedFields[index];
+			return {
+				...field,
+				dataType: dField?.dataType || field.dataType,
+				fieldType: dField?.fieldType || field.fieldType,
+			};
+		}) as ContentTypeFieldDetail[];
+	}
+
+	public async getContentTypes(
+		searchParams: SearchParams = DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
+	): Promise<ContentTypesResponse | null> {
+		try {
+			const response: ContentTypesResponse = await api
+				.get(`${CONTENT_TYPES_PROXY_PREFIX_URL}?${parseSearchParams(searchParams)}`)
+				.json();
+
+			if (!response) {
+				throw new Error('Failed to get content-types');
+			}
+
+			return response;
+		} catch (err) {
+			console.error(err);
+			return null;
 		}
-
-		return response;
-	} catch (err) {
-		console.error(err);
-		return null;
 	}
-};
 
-export const getContentType = async (uuid: string): Promise<ContentTypeResponse | null> => {
-	try {
+	public async getContentType(uuid: string): Promise<ContentTypeDetailResponse | null> {
+		try {
+			const response: ContentTypeDetailResponse = await api
+				.get(`${CONTENT_TYPES_PROXY_PREFIX_URL}/${uuid}`)
+				.json();
+
+			return response;
+		} catch (err) {
+			console.error(err);
+			return null;
+		}
+	}
+
+	public async updateContentType(
+		contentType: ContentTypeUpdateRequest
+	): Promise<ContentTypeResponse | null> {
+		const data = {
+			...contentType,
+			fields: this.parseContentTypeDetailFields(contentType.fields),
+		};
 		const response: ContentTypeResponse = await api
-			.get(`${CONTENT_TYPES_PROXY_PREFIX_URL}/${uuid}`)
+			.put(`${CONTENT_TYPES_PREFIX_URL}/${contentType.uuid}`, {
+				json: data,
+			})
 			.json();
 
 		return response;
-	} catch (err) {
-		console.error(err);
-		return null;
 	}
-};
 
-export const updateContentType = async (
-	contentType: ContentTypeSchema
-): Promise<ContentTypeResponse | null> => {
-	const response: ContentTypeResponse = await api
-		.put(`${CONTENT_TYPES_PREFIX_URL}/${contentType.uuid}`, {
-			json: contentType,
-		})
-		.json();
+	public async createContentType(
+		contentType: ContentTypeCreateRequest
+	): Promise<ContentTypeDetailResponse | null> {
+		const response: ContentTypeDetailResponse = await api
+			.post(CONTENT_TYPES_PREFIX_URL, {
+				json: contentType,
+			})
+			.json();
 
-	return response;
-};
+		return response;
+	}
+}
 
-export const createContentType = async (
-	contentType: ContentTypeSchema
-): Promise<ContentTypeResponse | null> => {
-	const response: ContentTypeResponse = await api
-		.post(CONTENT_TYPES_PREFIX_URL, {
-			json: contentType,
-		})
-		.json();
-
-	return response;
-};
+export const contentTypesApiService = new ContentTypesApiService();

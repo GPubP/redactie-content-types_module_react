@@ -9,8 +9,9 @@ import {
 	CONTENT_TYPE_DETAIL_TAB_MAP,
 	MODULE_PATHS,
 } from '../../contentTypes.const';
-import { ContentTypesRouteProps } from '../../contentTypes.types';
+import { ContentTypesRouteProps, LoadingState, Tab, TabTypes } from '../../contentTypes.types';
 import {
+	useActiveField,
 	useActiveTabs,
 	useContentType,
 	useFieldTypes,
@@ -19,29 +20,28 @@ import {
 	useTenantContext,
 } from '../../hooks';
 import {
-	ContentTypeFieldSchema,
-	ContentTypeMetaSchema,
-	ContentTypeSchema,
+	ContentTypeMeta,
+	ContentTypeUpdateRequest,
 	ModuleSettings,
 } from '../../services/contentTypes';
 import { useExternalTabstFacade } from '../../store/api/externalTabs/externalTabs.facade';
-import { internalService, useActiveFieldFacade, useFieldsFacade } from '../../store/internal';
-import { LoadingState, Tab, TabTypes } from '../../types';
+import {
+	ContentTypeDetailModel,
+	ContentTypeFieldDetailModel,
+	contentTypesFacade,
+} from '../../store/contentTypes';
 import { ExternalTabValue } from '../ContentTypeDetailExternal/ContentTypeDetailExternal.types';
 
-const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) => {
+const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => {
 	/**
 	 * Hooks
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const activeField = useActiveFieldFacade();
-	const fields = useFieldsFacade();
+	const activeField = useActiveField();
 	const { contentTypeUuid } = useParams();
 	const { navigate, generatePath } = useNavigate();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
-	const [contentTypeLoadingState, contentType, updateContentType] = useContentType(
-		contentTypeUuid
-	);
+	const [contentTypeLoadingState, contentType] = useContentType();
 	const [{ all: externalTabs, active: activeExternalTab }] = useExternalTabstFacade();
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, externalTabs, location.pathname);
 	const { tenantId } = useTenantContext();
@@ -75,19 +75,19 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	}, [contentTypeLoadingState, fieldTypesLoadingState]);
 
 	useEffect(() => {
-		if (contentTypeLoadingState !== LoadingState.Loading && contentType?.fields) {
-			internalService.updateFields(contentType.fields);
+		if (contentTypeUuid) {
+			contentTypesFacade.getContentType(contentTypeUuid);
 		}
-	}, [contentType, contentTypeLoadingState]);
+	}, [contentTypeUuid]);
 
 	/**
 	 * Methods
 	 */
 	const upsertExternalToBody = (
-		ct: ContentTypeSchema,
+		ct: ContentTypeDetailModel,
 		sectionData: ExternalTabValue,
 		tab: Tab
-	): ContentTypeSchema => {
+	): ContentTypeDetailModel => {
 		const oldModulesConfig = ct?.modulesConfig || [];
 		const moduleConfigIndex = (oldModulesConfig || []).findIndex(c => c.name === tab.id);
 		const moduleConfig: ModuleSettings = oldModulesConfig[moduleConfigIndex] || {
@@ -111,13 +111,17 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		};
 	};
 	const getRequestBody = (
-		sectionData: ContentTypeFieldSchema[] | ContentTypeMetaSchema | ExternalTabValue,
+		sectionData: ContentTypeFieldDetailModel[] | ContentTypeMeta | ExternalTabValue,
 		tab: Tab
-	): ContentTypeSchema | null => {
+	): ContentTypeUpdateRequest | null => {
 		let body = null;
 
+		if (!contentType) {
+			return null;
+		}
+
 		if (tab.type === TabTypes.EXTERNAL) {
-			body = upsertExternalToBody(contentType as any, sectionData as ExternalTabValue, tab);
+			body = upsertExternalToBody(contentType, sectionData as ExternalTabValue, tab);
 		} else {
 			switch (tab.name) {
 				case CONTENT_TYPE_DETAIL_TAB_MAP.settings.name:
@@ -125,14 +129,14 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 						...contentType,
 						meta: {
 							...contentType?.meta,
-							...(sectionData as ContentTypeMetaSchema),
+							...(sectionData as ContentTypeMeta),
 						},
 					};
 					break;
 				case CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents.name:
 					body = {
 						...contentType,
-						fields: sectionData as ContentTypeFieldSchema[],
+						fields: sectionData as ContentTypeFieldDetailModel[],
 					};
 					break;
 				case CONTENT_TYPE_DETAIL_TAB_MAP.sites.name:
@@ -144,7 +148,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 		}
 
 		// Remove properties
-		return omit(['errorMessages', 'validateSchema'], body) as ContentTypeSchema;
+		return omit(['errorMessages', 'validateSchema'], body) as ContentTypeUpdateRequest;
 	};
 
 	const navigateToOverview = (): void => {
@@ -152,7 +156,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 	};
 
 	const updateCT = (
-		sectionData: ContentTypeFieldSchema[] | ContentTypeMetaSchema,
+		sectionData: ContentTypeFieldDetailModel[] | ContentTypeMeta,
 		tab: Tab
 	): void => {
 		const newCT = getRequestBody(sectionData, tab);
@@ -161,8 +165,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 			return;
 		}
 
-		// TODO: fix with store integration
-		updateContentType(newCT);
+		contentTypesFacade.updateContentType(newCT);
 	};
 
 	const showTabs = !/\/(nieuw|bewerken)\//.test(location.pathname);
@@ -175,21 +178,17 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, routes }) =>
 			return null;
 		}
 
-		const activeRoute =
-			routes.find(item => item.path === `/${tenantId}${MODULE_PATHS.detail}`) || null;
-
 		const extraOptions = {
 			fieldTypes,
 			contentType,
 			onCancel: navigateToOverview,
 			onSubmit: updateCT,
-			routes: activeRoute?.routes,
-			state: { activeField, fields },
+			state: { activeField, fields: contentType.fields },
 		};
 
 		return (
 			<RenderChildRoutes
-				routes={activeRoute?.routes}
+				routes={route.routes}
 				guardsMeta={guardsMeta}
 				extraOptions={extraOptions}
 			/>

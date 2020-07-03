@@ -2,10 +2,9 @@ import { Container } from '@acpaas-ui/react-editorial-components';
 import { clone } from 'ramda';
 import React, { FC, useEffect } from 'react';
 
-import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
+import { ContentTypesDetailRouteProps, Tab } from '../../contentTypes.types';
 import { mapExternalTabToTab } from '../../helpers/mapExternalTabToTab/mapExternalTabToTab';
 import { useExternalTabstFacade } from '../../store/api/externalTabs/externalTabs.facade';
-import { Tab } from '../../types';
 
 import { ContentTypeDetailMatchProps, ExternalTabValue } from './ContentTypeDetailExternal.types';
 

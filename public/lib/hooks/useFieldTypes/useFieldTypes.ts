@@ -1,27 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useObservable } from '@mindspace-io/react';
 
-import { FieldTypeSchema } from '../../services/fieldTypes';
-import { getFieldTypes } from '../../services/fieldTypes/fieldTypes.service';
-import { LoadingState } from '../../types';
+import { LoadingState } from '../../contentTypes.types';
+import { FieldTypeModel, fieldTypesFacade } from '../../store/fieldTypes';
 
-const useFieldTypes = (): [LoadingState, FieldTypeSchema[] | null] => {
-	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [fieldTypes, setFieldTypes] = useState<FieldTypeSchema[] | null>(null);
+const useFieldTypes = (): [LoadingState, FieldTypeModel[]] => {
+	const [loading] = useObservable(fieldTypesFacade.isFetching$, LoadingState.Loading);
+	const [fieldTypes] = useObservable(fieldTypesFacade.fieldTypes$, []);
+	const [error] = useObservable(fieldTypesFacade.error$, null);
 
-	useEffect(() => {
-		setLoadingState(LoadingState.Loading);
-		getFieldTypes()
-			.then(result => {
-				if (Array.isArray(result) && result.length) {
-					setFieldTypes(result);
-				}
-
-				setLoadingState(LoadingState.Loaded);
-			})
-			.catch(() => {
-				setLoadingState(LoadingState.Error);
-			});
-	}, []);
+	const loadingState = error ? LoadingState.Error : loading;
 
 	return [loadingState, fieldTypes];
 };

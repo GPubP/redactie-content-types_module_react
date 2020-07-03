@@ -1,11 +1,11 @@
 import { pathOr } from 'ramda';
 
 import { CCSettingsFormState } from './contentTypes.types';
-import { ContentTypeCreate, ContentTypeFieldSchema } from './services/contentTypes';
-import { FieldTypeSchema } from './services/fieldTypes';
-import { ContentTypeField } from './store/internal';
+import { ContentTypeCreateRequest } from './services/contentTypes';
+import { ContentTypeFieldDetailModel } from './store/contentTypes';
+import { FieldTypeModel } from './store/fieldTypes';
 
-export const generateEmptyContentType = (): ContentTypeCreate => ({
+export const generateEmptyContentType = (): ContentTypeCreateRequest => ({
 	fields: [],
 	modulesConfig: [],
 	meta: {
@@ -17,9 +17,9 @@ export const generateEmptyContentType = (): ContentTypeCreate => ({
 });
 
 export const generateFieldFromType = (
-	fieldType: FieldTypeSchema,
-	initialValues: Partial<ContentTypeFieldSchema> = {}
-): ContentTypeField => ({
+	fieldType: FieldTypeModel,
+	initialValues: Partial<ContentTypeFieldDetailModel> = {}
+): ContentTypeFieldDetailModel => ({
 	label: '',
 	module: fieldType.data.module || '',
 	name: '',
@@ -38,7 +38,7 @@ export const generateFieldFromType = (
 });
 
 export const generateCCFormState = (
-	initialValues: Partial<ContentTypeField> = {}
+	initialValues: Partial<ContentTypeFieldDetailModel> = {}
 ): CCSettingsFormState => ({
 	label: initialValues.label || '',
 	name: initialValues.name || '',
@@ -53,11 +53,3 @@ export const generateCCFormState = (
 		max: pathOr(1, ['generalConfig', 'max'], initialValues),
 	},
 });
-
-export const parseContentTypeField = (field: ContentTypeField): ContentTypeFieldSchema => {
-	return {
-		...field,
-		dataType: field.dataType._id,
-		fieldType: field.fieldType?._id,
-	};
-};

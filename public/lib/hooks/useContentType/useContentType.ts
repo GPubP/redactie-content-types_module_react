@@ -1,70 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useObservable } from '@mindspace-io/react';
 
-import {
-	ContentTypeResponse,
-	ContentTypeSchema,
-	createContentType,
-	getContentType,
-	updateContentType,
-} from '../../services/contentTypes';
-import { LoadingState } from '../../types';
+import { LoadingState } from '../../contentTypes.types';
+import { ContentTypeDetailModel, contentTypesFacade } from '../../store/contentTypes';
 
-const useContentType = (
-	uuid: string | null = null
-): [
-	LoadingState,
-	ContentTypeResponse | null,
-	(contentType: ContentTypeSchema) => Promise<void>,
-	(contentType: ContentTypeSchema) => Promise<void>
-] => {
-	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [contentType, setContentType] = useState<ContentTypeResponse | null>(null);
+const useContentType = (): [LoadingState, ContentTypeDetailModel | null | undefined] => {
+	const [loading] = useObservable(contentTypesFacade.isFetching$, LoadingState.Loading);
+	const [contentType] = useObservable(contentTypesFacade.contentType$, null);
+	const [error] = useObservable(contentTypesFacade.error$, null);
 
-	const localUpdateContentType = (contentType: ContentTypeSchema): Promise<void> => {
-		setLoadingState(LoadingState.Loading);
+	const loadingState = error ? LoadingState.Error : loading;
 
-		return updateContentType(contentType)
-			.then(result => {
-				setContentType(result);
-				setLoadingState(LoadingState.Loaded);
-			})
-			.catch(() => {
-				setLoadingState(LoadingState.Error);
-			});
-	};
-	const localCreateContentType = (contentType: ContentTypeSchema): Promise<void> => {
-		setLoadingState(LoadingState.Loading);
-
-		return createContentType(contentType)
-			.then((contentType: ContentTypeResponse | null) => {
-				setContentType(contentType);
-				setLoadingState(LoadingState.Loaded);
-			})
-			.catch(() => {
-				setLoadingState(LoadingState.Error);
-			});
-	};
-
-	useEffect(() => {
-		if (!uuid) {
-			return setLoadingState(LoadingState.Error);
-		}
-
-		setLoadingState(LoadingState.Loading);
-		getContentType(uuid as string)
-			.then(result => {
-				if (result) {
-					setContentType(result);
-				}
-
-				setLoadingState(LoadingState.Loaded);
-			})
-			.catch(() => {
-				setLoadingState(LoadingState.Error);
-			});
-	}, [uuid]);
-
-	return [loadingState, contentType, localUpdateContentType, localCreateContentType];
+	return [loadingState, contentType];
 };
 
 export default useContentType;
