@@ -100,6 +100,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	const renderTableForm = (): ReactElement => {
 		return (
 			<Formik
+				enableReinitialize={true}
 				initialValues={{ fields: state.fields }}
 				onSubmit={onCCSave}
 				validationSchema={CT_CC_VALIDATION_SCHEMA}
