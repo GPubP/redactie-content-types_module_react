@@ -20,9 +20,9 @@ export const generateFieldFromType = (
 	fieldType: FieldTypeModel,
 	initialValues: Partial<ContentTypeFieldDetailModel> = {}
 ): ContentTypeFieldDetailModel => ({
-	uuid: 'new_' +Math.random()
+	uuid: `new_${Math.random()
 		.toString(36)
-		.substr(2, 9),
+		.substr(2, 9)}`,
 	label: '',
 	module: fieldType.data.module || '',
 	name: '',
