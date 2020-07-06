@@ -55,9 +55,14 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 			return;
 		}
 
-		const initialValues = { label: name, name: kebabCase(name) };
-		contentTypesFacade.setActiveField(generateFieldFromType(selectedFieldType, initialValues));
-		navigate(MODULE_PATHS.detailCCNew, { contentTypeUuid });
+		// const initialValues = { label: name, name: kebabCase(name) };
+		// contentTypesFacade.setActiveField(generateFieldFromType(selectedFieldType, initialValues));
+		navigate(
+			`${MODULE_PATHS.detailCCNewSettings}?fieldType=${selectedFieldType.uuid}&name=${name}`,
+			{
+				contentTypeUuid,
+			}
+		);
 	};
 
 	const onCCSave = (): void => {
@@ -73,10 +78,10 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		value: ContentTypeFieldDetailModel[];
 	}): ReactElement => {
 		const contentTypeRows: ContentTypeDetailCCRow[] = (fields || []).map(cc => ({
-			path: generatePath(MODULE_PATHS.detailCCEdit, { contentTypeUuid }),
-			setActiveField: () => {
-				contentTypesFacade.setActiveField(cc);
-			},
+			path: generatePath(MODULE_PATHS.detailCCEdit, {
+				contentTypeUuid,
+				contentComponentUuid: cc.uuid,
+			}),
 			label: cc.label,
 			name: cc.name,
 			fieldType: pathOr('error', ['fieldType', 'data', 'label'])(cc),

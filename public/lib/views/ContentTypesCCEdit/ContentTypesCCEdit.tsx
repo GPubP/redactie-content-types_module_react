@@ -18,8 +18,8 @@ import { fieldTypesFacade } from '../../store/fieldTypes';
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCEdit.const';
 
 const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, route }) => {
-	const { contentTypeUuid } = match.params;
-	const { activeField } = state;
+	const { contentTypeUuid, contentComponentUuid } = match.params;
+	const { activeField, fields } = state;
 
 	/**
 	 * Hooks
@@ -35,6 +35,15 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 		}),
 		[tenantId]
 	);
+
+	useEffect(() => {
+		if (contentComponentUuid && Array.isArray(fields)) {
+			const activeField = fields.find(field => field.uuid === contentComponentUuid);
+			if (activeField) {
+				contentTypesFacade.setActiveField(activeField);
+			}
+		}
+	}, [contentComponentUuid, fields]);
 
 	useEffect(() => {
 		if (activeField && fieldType) {
@@ -117,7 +126,10 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 							<NavList
 								items={CC_NAV_LIST_ITEMS.map(listItem => ({
 									...listItem,
-									to: generatePath(listItem.to, { contentTypeUuid }),
+									to: generatePath(listItem.to, {
+										contentTypeUuid,
+										contentComponentUuid,
+									}),
 								}))}
 							/>
 						</div>

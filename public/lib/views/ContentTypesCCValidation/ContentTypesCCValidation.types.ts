@@ -1,5 +1,5 @@
-import { FieldTypeDetailModel } from '../../store/fieldTypes';
+import { FieldTypeData } from '../../services/fieldTypes';
 
 export interface ContentTypesCCValidationProps {
-	fieldData?: FieldTypeDetailModel;
+	fieldData?: FieldTypeData;
 }

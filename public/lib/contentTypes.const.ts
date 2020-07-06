@@ -33,7 +33,8 @@ export const CONTENT_DETAIL_TABS: Tab[] = [
 	CONTENT_TYPE_DETAIL_TAB_MAP.sites,
 ];
 
-const CC_EDIT_PATH = '/content-types/:contentTypeUuid/content-componenten/bewerken';
+const CC_EDIT_PATH =
+	'/content-types/:contentTypeUuid/content-componenten/:contentComponentUuid/bewerken';
 const CC_NEW_PATH = '/content-types/:contentTypeUuid/content-componenten/nieuw';
 
 export const MODULE_PATHS = {
@@ -47,7 +48,6 @@ export const MODULE_PATHS = {
 	detailCC: '/content-types/:contentTypeUuid/content-componenten',
 	detailSites: '/content-types/:contentTypeUuid/sites',
 	detailExternal: '/content-types/:contentTypeUuid/:tab',
-	editCC: '/content-types/:contentTypeUuid/bewerken',
 	detailCCNew: CC_NEW_PATH,
 	detailCCNewSettings: `${CC_NEW_PATH}/instellingen`,
 	detailCCNewConfig: `${CC_NEW_PATH}/configuratie`,

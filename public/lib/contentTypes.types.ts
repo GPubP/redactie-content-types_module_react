@@ -16,8 +16,9 @@ export interface ContentTypesRouteProps<Params = {}> extends RouteConfigComponen
 	routes: ModuleRouteConfig[];
 }
 
-export interface ContentTypesDetailRouteProps<Params = { contentTypeUuid: string }>
-	extends RouteConfigComponentProps<Params> {
+export interface ContentTypesDetailRouteProps<
+	Params = { contentTypeUuid: string; contentComponentUuid: string }
+> extends RouteConfigComponentProps<Params> {
 	fieldTypes: FieldType[];
 	contentType: ContentTypeDetailModel;
 	onCancel: () => void;

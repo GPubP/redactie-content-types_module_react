@@ -5,7 +5,7 @@ import {
 	DEFAULT_FIELD_TYPES_SEARCH_PARAMS,
 	FIELD_TYPES_PREFIX_URL,
 } from './fieldTypes.service.const';
-import { FieldType, FieldTypeData, FieldTypesResponse } from './fieldTypes.service.types';
+import { FieldType, FieldTypesResponse } from './fieldTypes.service.types';
 
 export class FieldTypesApiService {
 	public async getFieldTypes(
@@ -23,11 +23,11 @@ export class FieldTypesApiService {
 		}
 	}
 
-	public async getFieldType(uuid: string): Promise<FieldTypeData | null> {
+	public async getFieldType(uuid: string): Promise<FieldType | null> {
 		try {
 			const response: FieldType = await api.get(`${FIELD_TYPES_PREFIX_URL}/${uuid}`).json();
 
-			return response.data;
+			return response;
 		} catch (err) {
 			console.error(err);
 			return null;
