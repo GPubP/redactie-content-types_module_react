@@ -10,6 +10,7 @@ export class BaseEntityStore<
 	constructor(
 		initialState: Partial<S> = {
 			loading: false,
+			isFetchingOne: false,
 			isFetching: false,
 			isUpdating: false,
 			isCreating: false,
@@ -22,6 +23,12 @@ export class BaseEntityStore<
 	public setIsFetching(isFetching = false): void {
 		this.update({
 			isFetching,
+		} as Partial<S>);
+	}
+
+	public setIsFetchingOne(isFetchingOne = false): void {
+		this.update({
+			isFetchingOne,
 		} as Partial<S>);
 	}
 

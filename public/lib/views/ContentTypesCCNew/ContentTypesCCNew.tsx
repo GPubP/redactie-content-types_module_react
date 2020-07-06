@@ -68,6 +68,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 		const extraOptions = {
 			CTField,
 			fieldTypeData: CTField?.fieldType.data,
+			preset: CTField?.config.preset,
 			onSubmit: onFieldTypeChange,
 		};
 

@@ -9,8 +9,6 @@ import { ContentTypesStore, contentTypesStore } from './contentTypes.store';
 export class ContentTypesQuery extends BaseEntityQuery<ContentTypesState> {
 	constructor(protected store: ContentTypesStore) {
 		super(store);
-
-		this.meta$.subscribe(console.log);
 	}
 
 	public meta$ = this.select(state => state.meta).pipe(

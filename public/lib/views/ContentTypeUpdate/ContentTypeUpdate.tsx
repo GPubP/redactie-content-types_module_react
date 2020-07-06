@@ -91,12 +91,6 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		}
 	}, [contentTypeUuid]);
 
-	useEffect(() => {
-		return () => {
-			console.log('destroy parant');
-		};
-	}, []);
-
 	/**
 	 * Methods
 	 */

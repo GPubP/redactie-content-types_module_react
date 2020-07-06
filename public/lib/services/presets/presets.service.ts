@@ -13,9 +13,16 @@ export class PresetsApiService {
 				.get(`${PRESETS_PREFIX_URL}?${parseSearchParams(searchParams)}`)
 				.json();
 
-			return response.data;
+			return response.data.map(preset => ({
+				...preset,
+				data: {
+					...preset.data,
+					// TODO: remove this when it is returned from the server
+					fieldType: '5e848366b88e3f0122747224',
+				},
+			}));
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 			return null;
 		}
 	}
@@ -24,7 +31,7 @@ export class PresetsApiService {
 		try {
 			return await api.get(`${PRESETS_PREFIX_URL}/${uuid}`).json();
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 			return null;
 		}
 	}

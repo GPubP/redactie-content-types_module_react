@@ -1,4 +1,4 @@
-import { presetsApiService, PresetsApiService } from '../../services/presets';
+import { presetsApiService, PresetsApiService, Preset, PresetDetail } from '../../services/presets';
 import { BaseEntityFacade } from '../shared';
 
 import { PresetsQuery, presetsQuery } from './presets.query';
@@ -26,10 +26,10 @@ export class PresetsFacade extends BaseEntityFacade<PresetsStore, PresetsApiServ
 			.finally(() => this.store.setIsFetching(false));
 	}
 
-	public getPreset(uuid: string): void {
-		this.store.setIsFetching(true);
+	public getPreset(uuid: string): Promise<PresetDetail | null> {
+		this.store.setIsFetchingOne(true);
 
-		this.service
+		return this.service
 			.getPreset(uuid)
 			.then(response => {
 				if (response) {
@@ -37,9 +37,13 @@ export class PresetsFacade extends BaseEntityFacade<PresetsStore, PresetsApiServ
 						fieldType: response,
 					});
 				}
+				return response;
 			})
-			.catch(error => this.store.setError(error))
-			.finally(() => this.store.setIsFetching(false));
+			.catch(error => {
+				this.store.setError(error);
+				return error;
+			})
+			.finally(() => this.store.setIsFetchingOne(false));
 	}
 }
 

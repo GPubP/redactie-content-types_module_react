@@ -10,3 +10,4 @@ export { default as useFieldTypes } from './useFieldTypes/useFieldTypes';
 export { default as useFieldType } from './useFieldType/useFieldType';
 export { default as useSites } from './useSites/useSites';
 export { default as usePresets } from './usePresets/usePresets';
+export { default as usePreset } from './usePreset/usePreset';

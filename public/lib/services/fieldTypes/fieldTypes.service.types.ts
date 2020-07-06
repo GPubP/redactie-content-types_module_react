@@ -32,6 +32,7 @@ export interface FieldTypeData {
 	validators: any[];
 	defaultValidatorValues: any[];
 	defaultConfig: any;
+	fieldType?: string;
 	formSchema: {
 		fields: any[];
 	};

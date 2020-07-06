@@ -48,12 +48,6 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 		}
 	}, [activeField]);
 
-	useEffect(() => {
-		return () => {
-			console.log('destyroy');
-		};
-	}, []);
-
 	/**
 	 * Methods
 	 */

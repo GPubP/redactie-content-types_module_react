@@ -25,12 +25,13 @@ export interface Validator {
 }
 
 export interface BasePreset<T> {
+	_id: string;
 	uuid: string;
 	data: {
 		name: string;
 		label: string;
 		defaultConfig: Record<string, any>;
-		fieldType: string;
+		fieldType?: string;
 		generalConfig: {
 			isQueryable: boolean;
 			isTranslate: boolean;

@@ -18,7 +18,9 @@ import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.co
 import { generateFieldFromType } from '../../contentTypes.helpers';
 import { ContentTypesDetailRouteProps, NewCCFormState } from '../../contentTypes.types';
 import { useNavigate } from '../../hooks';
+import { FieldType } from '../../services/fieldTypes';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
+import { presetsFacade } from '../../store/presets';
 
 import {
 	CONTENT_TYPE_COLUMNS,
@@ -53,24 +55,33 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	 * Methods
 	 */
 	const onCCFormSubmit = ({ name, fieldType }: NewCCFormState): void => {
-		const selectedFieldType = fieldTypes.find(ft => ft.uuid === fieldType);
+		const selectedFieldType = fields.find(ft => ft.uuid === fieldType);
 		if (!selectedFieldType) {
 			return;
 		}
 
 		const initialValues = { label: name, name: kebabCase(name) };
 
-		// - get selected field type
-		// - this can be a preset or a field type
-		// - a preset holds a fieldType and a preset with fields
+		// Check if the selected fieldType is based on a preset
+		// Only presets have a fieldType prop available on the data object
+		const fieldTypeIsPreset = !!selectedFieldType?.data.fieldType;
+		const workingFieldType = fieldTypeIsPreset
+			? (fields.find(ft => ft._id === selectedFieldType?.data.fieldType) as FieldType)
+			: (selectedFieldType as FieldType);
 
-		// Je maakt een field op basis van een fieldgroup => de preset bevat een fieldType
-		// Je zet het actieve field op basis van het nieuwe field
-		// Navigeer naar nieuwe content component aanmaken pagina
+		if (fieldTypeIsPreset) {
+			// fetch the preset detail
+			presetsFacade.getPreset(selectedFieldType.uuid).then(presetDetail => {
+				if (presetDetail) {
+					contentTypesFacade.setActiveField(
+						generateFieldFromType(workingFieldType, initialValues, presetDetail.uuid)
+					);
+					navigate(MODULE_PATHS.detailCCNew, { contentTypeUuid });
+				}
+			});
+		}
 
-		//
-
-		contentTypesFacade.setActiveField(generateFieldFromType(selectedFieldType, initialValues));
+		contentTypesFacade.setActiveField(generateFieldFromType(workingFieldType, initialValues));
 		navigate(MODULE_PATHS.detailCCNew, { contentTypeUuid });
 	};
 

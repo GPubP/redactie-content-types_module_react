@@ -4,7 +4,7 @@ import { LoadingState } from '../../contentTypes.types';
 import { FieldTypeDetailModel, fieldTypesFacade } from '../../store/fieldTypes';
 
 const useFieldType = (): [LoadingState, FieldTypeDetailModel | null | undefined] => {
-	const [loading] = useObservable(fieldTypesFacade.isFetching$, LoadingState.Loading);
+	const [loading] = useObservable(fieldTypesFacade.isFetchingOne$, LoadingState.Loading);
 	const [fieldType] = useObservable(fieldTypesFacade.fieldType$, null);
 	const [error] = useObservable(fieldTypesFacade.error$, null);
 
