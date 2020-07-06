@@ -23,6 +23,9 @@ export class BaseEntityQuery<S extends BaseEntityState<unknown, unknown>> extend
 	public isFetching$ = this.select(state => state.isFetching).pipe(
 		map(this.convertBoolToLoadingState)
 	);
+	public isFetchingOne$ = this.select(state => state.isFetchingOne).pipe(
+		map(this.convertBoolToLoadingState)
+	);
 	public isCreating$ = this.select(state => state.isCreating).pipe(
 		map(this.convertBoolToLoadingState)
 	);

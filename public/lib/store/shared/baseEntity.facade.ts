@@ -8,6 +8,7 @@ export class BaseEntityFacade<
 	constructor(protected store: S, protected service: SE, protected query: Q) {}
 
 	public readonly isFetching$ = this.query.isFetching$;
+	public readonly isFetchingOne$ = this.query.isFetchingOne$;
 	public readonly isCreating$ = this.query.isCreating$;
 	public readonly isUpdating$ = this.query.isUpdating$;
 	public readonly error$ = this.query.error$;

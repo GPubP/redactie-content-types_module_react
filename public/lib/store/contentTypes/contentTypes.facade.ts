@@ -47,7 +47,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	}
 
 	public getContentType(uuid: string): void {
-		this.store.setIsFetching(true);
+		this.store.setIsFetchingOne(true);
 		this.service
 			.getContentType(uuid)
 			.then(response => {
@@ -58,7 +58,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 				}
 			})
 			.catch(error => this.store.setError(error))
-			.finally(() => this.store.setIsFetching(false));
+			.finally(() => this.store.setIsFetchingOne(false));
 	}
 
 	public createContentType(payload: ContentTypeCreateRequest): void {

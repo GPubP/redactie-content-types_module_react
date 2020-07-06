@@ -13,6 +13,7 @@ export class BaseEntityStore<
 			isFetching: false,
 			isUpdating: false,
 			isCreating: false,
+			isFetchingOne: false,
 		} as Partial<S>,
 		options?: Partial<StoreConfigOptions>
 	) {
@@ -22,6 +23,12 @@ export class BaseEntityStore<
 	public setIsFetching(isFetching = false): void {
 		this.update({
 			isFetching,
+		} as Partial<S>);
+	}
+
+	public setIsFetchingOne(isFetchingOne = false): void {
+		this.update({
+			isFetchingOne,
 		} as Partial<S>);
 	}
 
