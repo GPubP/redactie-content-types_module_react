@@ -7,7 +7,6 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { Field, Formik } from 'formik';
-import kebabCase from 'lodash.kebabcase';
 import { pathOr } from 'ramda';
 import React, { FC, ReactElement } from 'react';
 import { useParams } from 'react-router-dom';
@@ -15,10 +14,9 @@ import { useParams } from 'react-router-dom';
 import { FormCTNewCC, NavList } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
-import { generateFieldFromType } from '../../contentTypes.helpers';
 import { ContentTypesDetailRouteProps, NewCCFormState } from '../../contentTypes.types';
 import { useNavigate } from '../../hooks';
-import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
+import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
 
 import {
 	CONTENT_TYPE_COLUMNS,
