@@ -1,7 +1,12 @@
 import { Tab, TabTypes } from './contentTypes.types';
 
 export const BREADCRUMB_OPTIONS = {
-	excludePaths: ['/', '/:tenantId'],
+	excludePaths: [
+		'/',
+		'/:tenantId',
+		'/:tenantId/content-types/:contentTypeUuid/content-componenten/:contentComponentUuid',
+		'/:tenantId/content-types/:contentTypeUuid/content-componenten/:contentComponentUuid/bewerken',
+	],
 };
 
 export const CONTENT_TYPE_DETAIL_TAB_MAP: {
