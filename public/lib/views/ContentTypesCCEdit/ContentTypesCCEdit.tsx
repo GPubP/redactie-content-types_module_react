@@ -10,7 +10,7 @@ import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { DataLoader, NavList, RenderChildRoutes } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
-import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
+import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
 import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
 import { fieldTypesFacade } from '../../store/fieldTypes';
@@ -25,7 +25,8 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 	 * Hooks
 	 */
 	const [updatedField, setUpdatedField] = useState<ContentTypeFieldDetailModel | null>(null);
-	const [loadingState, fieldType] = useFieldType();
+	const [fieldTypeLoading, fieldType] = useFieldType();
+	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
@@ -35,6 +36,14 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 		}),
 		[tenantId]
 	);
+
+	useEffect(() => {
+		if (fieldTypeLoading !== LoadingState.Loading && fieldType) {
+			return setInitialLoading(LoadingState.Loaded);
+		}
+
+		setInitialLoading(LoadingState.Loading);
+	}, [fieldTypeLoading, fieldType]);
 
 	useEffect(() => {
 		if (contentComponentUuid && Array.isArray(fields)) {
@@ -99,7 +108,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 
 		const extraOptions = {
 			CTField: updatedField,
-			fieldTypeData: fieldType,
+			fieldTypeData: fieldType?.data,
 			onDelete: onFieldDelete,
 			onSubmit: onFieldChange,
 		};
@@ -114,10 +123,6 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 	};
 
 	const renderCCEdit = (): ReactElement | null => {
-		if (!fieldType) {
-			return null;
-		}
-
 		return (
 			<>
 				<div className="u-margin-bottom-lg">
@@ -163,7 +168,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 
 	return (
 		<Container>
-			<DataLoader loadingState={loadingState} render={renderCCEdit} />
+			<DataLoader loadingState={initialLoading} render={renderCCEdit} />
 		</Container>
 	);
 };

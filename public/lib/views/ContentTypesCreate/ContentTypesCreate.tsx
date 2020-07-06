@@ -56,13 +56,15 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		}
 		if (
 			fieldTypesLoadingState !== LoadingState.Loading &&
-			contentTypeLoadingState !== LoadingState.Loading
+			contentTypeLoadingState !== LoadingState.Loading &&
+			contentType &&
+			fieldTypes
 		) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [contentType, contentTypeLoadingState, fieldTypesLoadingState, navigate]);
+	}, [contentType, fieldTypes, contentTypeLoadingState, fieldTypesLoadingState, navigate]);
 
 	/**
 	 * Methods

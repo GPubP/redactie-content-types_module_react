@@ -53,8 +53,6 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 			return;
 		}
 
-		// const initialValues = { label: name, name: kebabCase(name) };
-		// contentTypesFacade.setActiveField(generateFieldFromType(selectedFieldType, initialValues));
 		navigate(
 			`${MODULE_PATHS.detailCCNewSettings}?fieldType=${selectedFieldType.uuid}&name=${name}`,
 			{
