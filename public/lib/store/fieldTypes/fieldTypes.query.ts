@@ -11,9 +11,6 @@ export class FieldTypesQuery extends BaseEntityQuery<FieldTypesState> {
 		super(store);
 	}
 
-	public meta$ = this.select(state => state.meta).pipe(
-		filter(meta => !isNil(meta), distinctUntilChanged())
-	);
 	public fieldTypes$ = this.selectAll();
 	public fieldType$ = this.select(state => state.fieldType).pipe(
 		filter(fieldType => !isNil(fieldType), distinctUntilChanged())

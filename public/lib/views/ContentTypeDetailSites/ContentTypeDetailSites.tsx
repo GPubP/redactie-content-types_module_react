@@ -19,7 +19,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 	const [t] = useCoreTranslation();
 
 	useEffect(() => {
-		if (sitesLoading === LoadingState.Loaded) {
+		if (sitesLoading !== LoadingState.Loading && sites) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 

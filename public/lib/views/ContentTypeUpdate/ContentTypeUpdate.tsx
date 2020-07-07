@@ -66,13 +66,15 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	useEffect(() => {
 		if (
 			fieldTypesLoadingState !== LoadingState.Loading &&
-			contentTypeLoadingState !== LoadingState.Loading
+			contentTypeLoadingState !== LoadingState.Loading &&
+			contentType &&
+			fieldTypes
 		) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [contentTypeLoadingState, fieldTypesLoadingState]);
+	}, [contentTypeLoadingState, fieldTypesLoadingState, contentType, fieldTypes]);
 
 	useEffect(() => {
 		if (contentTypeUuid) {
@@ -174,16 +176,12 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	 * Render
 	 */
 	const renderChildRoutes = (): ReactElement | null => {
-		if (!contentType) {
-			return null;
-		}
-
 		const extraOptions = {
 			fieldTypes,
 			contentType,
 			onCancel: navigateToOverview,
 			onSubmit: updateCT,
-			state: { activeField, fields: contentType.fields },
+			state: { activeField, fields: contentType?.fields || [] },
 		};
 
 		return (

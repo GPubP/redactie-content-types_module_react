@@ -13,7 +13,6 @@ export class FieldTypesFacade extends BaseEntityFacade<
 		super(store, service, query);
 	}
 
-	public readonly meta$ = this.query.meta$;
 	public readonly fieldTypes$ = this.query.fieldTypes$;
 	public readonly fieldType$ = this.query.fieldType$;
 
@@ -32,7 +31,7 @@ export class FieldTypesFacade extends BaseEntityFacade<
 	}
 
 	public getFieldType(uuid: string): void {
-		this.store.setIsFetching(true);
+		this.store.setIsFetchingOne(true);
 
 		this.service
 			.getFieldType(uuid)
@@ -44,7 +43,7 @@ export class FieldTypesFacade extends BaseEntityFacade<
 				}
 			})
 			.catch(error => this.store.setError(error))
-			.finally(() => this.store.setIsFetching(false));
+			.finally(() => this.store.setIsFetchingOne(false));
 	}
 }
 

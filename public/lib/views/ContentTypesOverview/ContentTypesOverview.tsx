@@ -44,7 +44,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	);
 	const { navigate } = useNavigate();
 	const breadcrumbs = useRoutesBreadcrumbs();
-	const [loadingState, contentTypes, meta] = useContentTypes();
+	const [loadingContentTypes, contentTypes, meta] = useContentTypes();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
 	const [
@@ -55,12 +55,15 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 
 	useEffect(() => {
 		if (
-			loadingState !== LoadingState.Loading &&
-			mySecurityRightsLoadingState !== LoadingState.Loading
+			loadingContentTypes !== LoadingState.Loading &&
+			mySecurityRightsLoadingState !== LoadingState.Loading &&
+			contentTypes &&
+			mySecurityrights &&
+			meta
 		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [loadingState, mySecurityRightsLoadingState]);
+	}, [loadingContentTypes, meta, contentTypes, mySecurityrights, mySecurityRightsLoadingState]);
 
 	useEffect(() => {
 		contentTypesFacade.getContentTypes(contentTypesSearchParams);
@@ -141,10 +144,9 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	 * Render
 	 */
 	const renderOverview = (): ReactElement | null => {
-		if (!contentTypes || !meta) {
+		if (!meta) {
 			return null;
 		}
-
 		const contentTypesRows: ContentTypesOverviewTableRow[] = contentTypes.map(contentType => ({
 			uuid: contentType.uuid as string,
 			label: contentType.meta.label,
@@ -176,7 +178,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					orderBy={handleOrderBy}
 					activeSorting={activeSorting}
 					totalValues={meta.total || 0}
-					loading={loadingState === LoadingState.Loading}
+					loading={loadingContentTypes === LoadingState.Loading}
 				></PaginatedTable>
 			</>
 		);

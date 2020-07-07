@@ -23,7 +23,6 @@ const ContentTypesCCValidation: FC<ContentTypesCCValidationProps> = ({ fieldData
 		if (!formsAPI || !fieldData?.validators.length) {
 			return <p>Er zijn geen validatie mogelijkheden</p>;
 		}
-
 		// TODO: show validation schema based on validators property
 		return (
 			<formsAPI.Form

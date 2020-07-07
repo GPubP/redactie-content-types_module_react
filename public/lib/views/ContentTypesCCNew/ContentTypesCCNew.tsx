@@ -5,15 +5,17 @@ import {
 	Container,
 } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
+import kebabCase from 'lodash.kebabcase';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
-import { Redirect } from 'react-router-dom';
 
 import { NavList, RenderChildRoutes } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
+import { generateFieldFromType } from '../../contentTypes.helpers';
 import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
-import { useNavigate, useTenantContext } from '../../hooks';
+import { useFieldType, useNavigate, useQuery, useTenantContext } from '../../hooks';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
+import { fieldTypesFacade } from '../../store/fieldTypes';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCNew.const';
 
@@ -23,6 +25,10 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 	 * Hooks
 	 */
 	const [CTField, setCTField] = useState<ContentTypeFieldDetailModel | null>(null);
+	const query = useQuery();
+	const fieldTypeUuid = query.get('fieldType');
+	const name = query.get('name');
+	const [, fieldType] = useFieldType();
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
@@ -32,6 +38,19 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 		}),
 		[tenantId]
 	);
+
+	useEffect(() => {
+		if (fieldTypeUuid) {
+			fieldTypesFacade.getFieldType(fieldTypeUuid);
+		}
+	}, [fieldTypeUuid]);
+
+	useEffect(() => {
+		if (fieldType) {
+			const initialValues = { label: name || '', name: kebabCase(name || '') };
+			contentTypesFacade.setActiveField(generateFieldFromType(fieldType, initialValues));
+		}
+	}, [fieldType, name]);
 
 	useEffect(() => {
 		if (state.activeField) {
@@ -61,7 +80,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 	 * Render
 	 */
 	if (!CTField && !state.activeField) {
-		return <Redirect to={generatePath(MODULE_PATHS.detailCC, { contentTypeUuid })} />;
+		return null;
 	}
 
 	const renderChildRoutes = (): ReactElement | null => {
