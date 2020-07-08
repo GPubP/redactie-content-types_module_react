@@ -8,14 +8,15 @@ import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18n
 import kebabCase from 'lodash.kebabcase';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
-import { NavList, RenderChildRoutes } from '../../components';
+import { DataLoader, NavList, RenderChildRoutes } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { generateFieldFromType } from '../../contentTypes.helpers';
-import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
-import { useFieldType, useNavigate, useQuery, useTenantContext } from '../../hooks';
+import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
+import { useFieldType, useNavigate, usePreset, useQuery, useTenantContext } from '../../hooks';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
 import { fieldTypesFacade } from '../../store/fieldTypes';
+import { presetsFacade } from '../../store/presets';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCNew.const';
 
@@ -24,11 +25,14 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 	/**
 	 * Hooks
 	 */
+	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [CTField, setCTField] = useState<ContentTypeFieldDetailModel | null>(null);
 	const query = useQuery();
 	const fieldTypeUuid = query.get('fieldType');
+	const presetUuid = query.get('preset');
 	const name = query.get('name');
-	const [, fieldType] = useFieldType();
+	const [fieldTypeLoadingState, fieldType] = useFieldType();
+	const [presetLoadingState, preset] = usePreset();
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
@@ -40,11 +44,43 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 	);
 
 	useEffect(() => {
-		if (fieldTypeUuid) {
+		if (
+			fieldTypeLoadingState !== LoadingState.Loading &&
+			presetLoadingState !== LoadingState.Loading &&
+			CTField &&
+			state.activeField
+		) {
+			return setInitialLoading(LoadingState.Loaded);
+		}
+	}, [presetLoadingState, fieldTypeLoadingState, CTField, state.activeField]);
+
+	/**
+	 * Get preset or fieldType based on the input of the
+	 * query parameters
+	 */
+	useEffect(() => {
+		if (!presetUuid && fieldTypeUuid) {
 			fieldTypesFacade.getFieldType(fieldTypeUuid);
 		}
-	}, [fieldTypeUuid]);
 
+		if (!fieldTypeUuid && presetUuid) {
+			presetsFacade.getPreset(presetUuid);
+		}
+	}, [fieldTypeUuid, presetUuid]);
+
+	/**
+	 * Get the fieldType from a preset when it exists
+	 */
+	useEffect(() => {
+		if (preset) {
+			fieldTypesFacade.getFieldType(preset.data.fieldType as string);
+		}
+	}, [preset]);
+
+	/**
+	 * Generate a new field based on the selected fieldtype and
+	 * make it the active working field in the store
+	 */
 	useEffect(() => {
 		if (fieldType) {
 			const initialValues = { label: name || '', name: kebabCase(name || '') };
@@ -79,15 +115,11 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 	/**
 	 * Render
 	 */
-	if (!CTField && !state.activeField) {
-		return null;
-	}
-
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
 			CTField,
 			fieldTypeData: CTField?.fieldType.data,
-			preset: CTField?.config.preset,
+			preset: preset,
 			onSubmit: onFieldTypeChange,
 		};
 
@@ -116,7 +148,12 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 
 						<div className="col-xs-9">
 							<Card>
-								<CardBody>{renderChildRoutes()}</CardBody>
+								<CardBody>
+									<DataLoader
+										loadingState={initialLoading}
+										render={renderChildRoutes}
+									/>
+								</CardBody>
 							</Card>
 						</div>
 					</div>

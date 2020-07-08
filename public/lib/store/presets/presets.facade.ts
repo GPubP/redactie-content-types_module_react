@@ -34,7 +34,7 @@ export class PresetsFacade extends BaseEntityFacade<PresetsStore, PresetsApiServ
 			.then(response => {
 				if (response) {
 					this.store.update({
-						fieldType: response,
+						preset: response,
 					});
 				}
 				return response;

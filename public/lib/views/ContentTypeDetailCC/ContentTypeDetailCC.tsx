@@ -56,36 +56,17 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 			return;
 		}
 
-		// const initialValues = { label: name, name: kebabCase(name) };
+		// check if selectedfieldType is a preset or a fieldType
+		// send the fieldtype or preset with a query parameter
+		// Only presets have a fieldType prop available on the data object
+		const fieldTypeIsPreset = !!selectedFieldType?.data.fieldType;
+		const queryParams = fieldTypeIsPreset
+			? `?preset=${selectedFieldType.uuid}&name=${name}`
+			: `?fieldType=${selectedFieldType.uuid}&name=${name}`;
 
-		// // Check if the selected fieldType is based on a preset
-		// // Only presets have a fieldType prop available on the data object
-		// const fieldTypeIsPreset = !!selectedFieldType?.data.fieldType;
-		// const workingFieldType = fieldTypeIsPreset
-		// 	? (fields.find(ft => ft._id === selectedFieldType?.data.fieldType) as FieldType)
-		// 	: (selectedFieldType as FieldType);
-
-		// if (fieldTypeIsPreset) {
-		// 	// fetch the preset detail
-		// 	presetsFacade.getPreset(selectedFieldType.uuid).then(presetDetail => {
-		// 		if (presetDetail) {
-		// 			contentTypesFacade.setActiveField(
-		// 				generateFieldFromType(workingFieldType, initialValues, presetDetail.uuid)
-		// 			);
-		// 			navigate(MODULE_PATHS.detailCCNew, { contentTypeUuid });
-		// 		}
-		// 	});
-		// }
-
-		// contentTypesFacade.setActiveField(generateFieldFromType(workingFieldType, initialValues));
-		// navigate(MODULE_PATHS.detailCCNew, { contentTypeUuid });
-
-		navigate(
-			`${MODULE_PATHS.detailCCNewSettings}?fieldType=${selectedFieldType.uuid}&name=${name}`,
-			{
-				contentTypeUuid,
-			}
-		);
+		navigate(`${MODULE_PATHS.detailCCNewSettings}${queryParams}`, {
+			contentTypeUuid,
+		});
 	};
 
 	const onCCSave = (): void => {
