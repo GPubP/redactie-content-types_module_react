@@ -7,7 +7,6 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { Field, Formik } from 'formik';
-import kebabCase from 'lodash.kebabcase';
 import { pathOr } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
@@ -15,12 +14,9 @@ import { useParams } from 'react-router-dom';
 import { FormCTNewCC, NavList } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
-import { generateFieldFromType } from '../../contentTypes.helpers';
 import { ContentTypesDetailRouteProps, NewCCFormState } from '../../contentTypes.types';
 import { useNavigate } from '../../hooks';
-import { FieldType } from '../../services/fieldTypes';
-import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
-import { presetsFacade } from '../../store/presets';
+import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
 
 import {
 	CONTENT_TYPE_COLUMNS,
@@ -60,29 +56,36 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 			return;
 		}
 
-		const initialValues = { label: name, name: kebabCase(name) };
+		// const initialValues = { label: name, name: kebabCase(name) };
 
-		// Check if the selected fieldType is based on a preset
-		// Only presets have a fieldType prop available on the data object
-		const fieldTypeIsPreset = !!selectedFieldType?.data.fieldType;
-		const workingFieldType = fieldTypeIsPreset
-			? (fields.find(ft => ft._id === selectedFieldType?.data.fieldType) as FieldType)
-			: (selectedFieldType as FieldType);
+		// // Check if the selected fieldType is based on a preset
+		// // Only presets have a fieldType prop available on the data object
+		// const fieldTypeIsPreset = !!selectedFieldType?.data.fieldType;
+		// const workingFieldType = fieldTypeIsPreset
+		// 	? (fields.find(ft => ft._id === selectedFieldType?.data.fieldType) as FieldType)
+		// 	: (selectedFieldType as FieldType);
 
-		if (fieldTypeIsPreset) {
-			// fetch the preset detail
-			presetsFacade.getPreset(selectedFieldType.uuid).then(presetDetail => {
-				if (presetDetail) {
-					contentTypesFacade.setActiveField(
-						generateFieldFromType(workingFieldType, initialValues, presetDetail.uuid)
-					);
-					navigate(MODULE_PATHS.detailCCNew, { contentTypeUuid });
-				}
-			});
-		}
+		// if (fieldTypeIsPreset) {
+		// 	// fetch the preset detail
+		// 	presetsFacade.getPreset(selectedFieldType.uuid).then(presetDetail => {
+		// 		if (presetDetail) {
+		// 			contentTypesFacade.setActiveField(
+		// 				generateFieldFromType(workingFieldType, initialValues, presetDetail.uuid)
+		// 			);
+		// 			navigate(MODULE_PATHS.detailCCNew, { contentTypeUuid });
+		// 		}
+		// 	});
+		// }
 
-		contentTypesFacade.setActiveField(generateFieldFromType(workingFieldType, initialValues));
-		navigate(MODULE_PATHS.detailCCNew, { contentTypeUuid });
+		// contentTypesFacade.setActiveField(generateFieldFromType(workingFieldType, initialValues));
+		// navigate(MODULE_PATHS.detailCCNew, { contentTypeUuid });
+
+		navigate(
+			`${MODULE_PATHS.detailCCNewSettings}?fieldType=${selectedFieldType.uuid}&name=${name}`,
+			{
+				contentTypeUuid,
+			}
+		);
 	};
 
 	const onCCSave = (): void => {
@@ -98,10 +101,10 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		value: ContentTypeFieldDetailModel[];
 	}): ReactElement => {
 		const contentTypeRows: ContentTypeDetailCCRow[] = (fields || []).map(cc => ({
-			path: generatePath(MODULE_PATHS.detailCCEdit, { contentTypeUuid }),
-			setActiveField: () => {
-				contentTypesFacade.setActiveField(cc);
-			},
+			path: generatePath(MODULE_PATHS.detailCCEdit, {
+				contentTypeUuid,
+				contentComponentUuid: cc.uuid,
+			}),
 			label: cc.label,
 			name: cc.name,
 			fieldType: pathOr('error', ['fieldType', 'data', 'label'])(cc),
@@ -124,6 +127,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	const renderTableForm = (): ReactElement => {
 		return (
 			<Formik
+				enableReinitialize={true}
 				initialValues={{ fields: state.fields }}
 				onSubmit={onCCSave}
 				validationSchema={CT_CC_VALIDATION_SCHEMA}

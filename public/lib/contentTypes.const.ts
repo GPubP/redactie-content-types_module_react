@@ -1,7 +1,12 @@
 import { Tab, TabTypes } from './contentTypes.types';
 
 export const BREADCRUMB_OPTIONS = {
-	excludePaths: ['/', '/:tenantId'],
+	excludePaths: [
+		'/',
+		'/:tenantId',
+		'/:tenantId/content-types/:contentTypeUuid/content-componenten/:contentComponentUuid',
+		'/:tenantId/content-types/:contentTypeUuid/content-componenten/:contentComponentUuid/bewerken',
+	],
 };
 
 export const CONTENT_TYPE_DETAIL_TAB_MAP: {
@@ -33,7 +38,8 @@ export const CONTENT_DETAIL_TABS: Tab[] = [
 	CONTENT_TYPE_DETAIL_TAB_MAP.sites,
 ];
 
-const CC_EDIT_PATH = '/content-types/:contentTypeUuid/content-componenten/bewerken';
+const CC_EDIT_PATH =
+	'/content-types/:contentTypeUuid/content-componenten/:contentComponentUuid/bewerken';
 const CC_NEW_PATH = '/content-types/:contentTypeUuid/content-componenten/nieuw';
 
 export const MODULE_PATHS = {
@@ -47,7 +53,6 @@ export const MODULE_PATHS = {
 	detailCC: '/content-types/:contentTypeUuid/content-componenten',
 	detailSites: '/content-types/:contentTypeUuid/sites',
 	detailExternal: '/content-types/:contentTypeUuid/:tab',
-	editCC: '/content-types/:contentTypeUuid/bewerken',
 	detailCCNew: CC_NEW_PATH,
 	detailCCNewSettings: `${CC_NEW_PATH}/instellingen`,
 	detailCCNewConfig: `${CC_NEW_PATH}/configuratie`,

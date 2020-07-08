@@ -68,7 +68,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const state = useMemo(
 		() => ({
 			activeField,
-			fields: contentType?.fields,
+			fields: contentType?.fields || [],
 		}),
 		[activeField, contentType]
 	);
@@ -77,13 +77,23 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		if (
 			presetsLoadingState !== LoadingState.Loading &&
 			fieldTypesLoadingState !== LoadingState.Loading &&
-			contentTypeLoadingState !== LoadingState.Loading
+			contentTypeLoadingState !== LoadingState.Loading &&
+			contentType &&
+			fieldTypes &&
+			presets
 		) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [presetsLoadingState, contentTypeLoadingState, fieldTypesLoadingState]);
+	}, [
+		presetsLoadingState,
+		contentTypeLoadingState,
+		fieldTypesLoadingState,
+		contentType,
+		fieldTypes,
+		presets,
+	]);
 
 	useEffect(() => {
 		if (contentTypeUuid) {
@@ -185,10 +195,6 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	 * Render
 	 */
 	const renderChildRoutes = (): ReactElement | null => {
-		if (!contentType) {
-			return null;
-		}
-
 		const extraOptions = {
 			presets,
 			fieldTypes,

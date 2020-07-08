@@ -30,12 +30,10 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
 		component(value: string, rowData: ContentTypeDetailCCRow) {
-			const { path, setActiveField } = rowData;
+			const { path } = rowData;
 			return (
 				<>
-					<Link to={path} onClick={() => setActiveField()}>
-						{value}
-					</Link>
+					<Link to={path}>{value}</Link>
 					<p className="u-text-light">systeemnaam: [{rowData.name}]</p>
 				</>
 			);
