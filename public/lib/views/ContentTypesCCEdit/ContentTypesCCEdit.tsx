@@ -1,4 +1,4 @@
-import { Button, Card } from '@acpaas-ui/react-components';
+import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import {
 	ActionBar,
 	ActionBarContentSection,
@@ -153,7 +153,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 
 						<div className="col-xs-9">
 							<Card>
-								<div className="u-margin">{renderChildRoutes()}</div>
+								<CardBody>{renderChildRoutes()}</CardBody>
 							</Card>
 						</div>
 					</div>

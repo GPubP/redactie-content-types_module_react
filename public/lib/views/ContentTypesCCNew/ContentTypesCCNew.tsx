@@ -139,50 +139,45 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 		);
 	};
 
-	return (
+	const renderCCNew = (): ReactElement | null => (
 		<>
-			<Container>
-				<div className="u-margin-bottom-lg">
-					<div className="row between-xs top-xs">
-						<div className="col-xs-3">
-							<NavList
-								items={CC_NAV_LIST_ITEMS.map(listItem => ({
-									...listItem,
-									to: generatePath(listItem.to, { contentTypeUuid }),
-								}))}
-							/>
-						</div>
+			<div className="u-margin-bottom-lg">
+				<div className="row between-xs top-xs">
+					<div className="col-xs-3">
+						<NavList
+							items={CC_NAV_LIST_ITEMS.map(listItem => ({
+								...listItem,
+								to: generatePath(listItem.to, { contentTypeUuid }),
+							}))}
+						/>
+					</div>
 
-						<div className="col-xs-9">
-							<Card>
-								<CardBody>
-									<DataLoader
-										loadingState={initialLoading}
-										render={renderChildRoutes}
-									/>
-								</CardBody>
-							</Card>
-						</div>
+					<div className="col-xs-9">
+						<Card>
+							<CardBody>{renderChildRoutes()}</CardBody>
+						</Card>
 					</div>
 				</div>
-				<ActionBar className="o-action-bar--fixed" isOpen>
-					<ActionBarContentSection>
-						<div className="u-wrapper row end-xs">
-							<Button onClick={navigateToOverview} negative>
-								{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
-							</Button>
-							<Button
-								className="u-margin-left-xs"
-								onClick={onCTSubmit}
-								type="success"
-							>
-								{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
-							</Button>
-						</div>
-					</ActionBarContentSection>
-				</ActionBar>
-			</Container>
+			</div>
+			<ActionBar className="o-action-bar--fixed" isOpen>
+				<ActionBarContentSection>
+					<div className="u-wrapper row end-xs">
+						<Button onClick={navigateToOverview} negative>
+							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
+						</Button>
+						<Button className="u-margin-left-xs" onClick={onCTSubmit} type="success">
+							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
+						</Button>
+					</div>
+				</ActionBarContentSection>
+			</ActionBar>
 		</>
+	);
+
+	return (
+		<Container>
+			<DataLoader loadingState={initialLoading} render={renderCCNew} />
+		</Container>
 	);
 };
 
