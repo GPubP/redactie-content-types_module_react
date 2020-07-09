@@ -20,11 +20,10 @@ const ContentTypesCCValidation: FC<ContentTypesCCValidationProps> = ({ fieldData
 	};
 
 	const renderCCValidation = (): ReactElement => {
+		console.log(preset, 'preset');
 		if (!formsAPI || !fieldData?.validators.length) {
 			return <p>Er zijn geen validatie mogelijkheden</p>;
 		}
-
-		console.log(preset, 'preset');
 
 		// CREATE FORM FROM PRESET ----------------------------
 		// loop door alle fields in preset

@@ -11,9 +11,10 @@ import { DataLoader, NavList, RenderChildRoutes } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
-import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
+import { useFieldType, useNavigate, useTenantContext, usePreset } from '../../hooks';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
 import { fieldTypesFacade } from '../../store/fieldTypes';
+import { presetsFacade } from '../../store/presets';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCEdit.const';
 
@@ -24,9 +25,10 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 	/**
 	 * Hooks
 	 */
+	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [updatedField, setUpdatedField] = useState<ContentTypeFieldDetailModel | null>(null);
 	const [fieldTypeLoading, fieldType] = useFieldType();
-	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [presetLoading, preset] = usePreset();
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
@@ -38,12 +40,22 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 	);
 
 	useEffect(() => {
-		if (fieldTypeLoading !== LoadingState.Loading && fieldType) {
+		presetsFacade.clearPreset();
+		fieldTypesFacade.clearFieldType();
+	}, []);
+
+	useEffect(() => {
+		if (
+			fieldTypeLoading !== LoadingState.Loading &&
+			presetLoading !== LoadingState.Loading &&
+			fieldType &&
+			updatedField
+		) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [fieldTypeLoading, fieldType]);
+	}, [fieldTypeLoading, fieldType, presetLoading, preset, updatedField]);
 
 	useEffect(() => {
 		if (contentComponentUuid && Array.isArray(fields)) {
@@ -63,6 +75,9 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 	useEffect(() => {
 		if (activeField?.fieldType.uuid) {
 			fieldTypesFacade.getFieldType(activeField.fieldType.uuid);
+		}
+		if (activeField?.preset?.uuid) {
+			presetsFacade.getPreset(activeField.preset.uuid);
 		}
 	}, [activeField]);
 
@@ -102,13 +117,10 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 	 * Render
 	 */
 	const renderChildRoutes = (): ReactElement | null => {
-		if (!activeField || !updatedField) {
-			return null;
-		}
-
 		const extraOptions = {
 			CTField: updatedField,
 			fieldTypeData: fieldType?.data,
+			preset,
 			onDelete: onFieldDelete,
 			onSubmit: onFieldChange,
 		};

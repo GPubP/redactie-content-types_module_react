@@ -17,6 +17,11 @@ export class FieldTypesFacade extends BaseEntityFacade<
 	public readonly fieldType$ = this.query.fieldType$;
 
 	public getFieldTypes(): void {
+		const { isFetching } = this.query.getValue();
+		if (isFetching) {
+			return;
+		}
+
 		this.store.setIsFetching(true);
 
 		this.service
@@ -31,6 +36,11 @@ export class FieldTypesFacade extends BaseEntityFacade<
 	}
 
 	public getFieldType(uuid: string): void {
+		const { isFetchingOne } = this.query.getValue();
+		if (isFetchingOne) {
+			return;
+		}
+
 		this.store.setIsFetchingOne(true);
 
 		this.service
@@ -44,6 +54,12 @@ export class FieldTypesFacade extends BaseEntityFacade<
 			})
 			.catch(error => this.store.setError(error))
 			.finally(() => this.store.setIsFetchingOne(false));
+	}
+
+	public clearFieldType(): void {
+		this.store.update({
+			fieldType: undefined,
+		});
 	}
 }
 

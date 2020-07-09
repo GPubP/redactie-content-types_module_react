@@ -13,6 +13,10 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 	public readonly sites$ = this.query.sites$;
 
 	public getSites(): void {
+		const { isFetching } = this.query.getValue();
+		if (isFetching) {
+			return;
+		}
 		this.store.setIsFetching(true);
 
 		this.service
@@ -30,6 +34,10 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 	}
 
 	public updateSite(uuid: string, body: SitesDetailRequestBody): void {
+		const { isFetchingOne } = this.query.getValue();
+		if (isFetchingOne) {
+			return;
+		}
 		this.store.setIsUpdating(true);
 
 		this.service

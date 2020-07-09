@@ -13,6 +13,10 @@ export class PresetsFacade extends BaseEntityFacade<PresetsStore, PresetsApiServ
 	public readonly preset$ = this.query.preset$;
 
 	public getPresets(): void {
+		const { isFetching } = this.query.getValue();
+		if (isFetching) {
+			return;
+		}
 		this.store.setIsFetching(true);
 
 		this.service
@@ -27,6 +31,10 @@ export class PresetsFacade extends BaseEntityFacade<PresetsStore, PresetsApiServ
 	}
 
 	public getPreset(uuid: string): Promise<PresetDetail | null> {
+		const { isFetchingOne } = this.query.getValue();
+		if (isFetchingOne) {
+			return Promise.resolve(null);
+		}
 		this.store.setIsFetchingOne(true);
 
 		return this.service
@@ -44,6 +52,12 @@ export class PresetsFacade extends BaseEntityFacade<PresetsStore, PresetsApiServ
 				return error;
 			})
 			.finally(() => this.store.setIsFetchingOne(false));
+	}
+
+	public clearPreset(): void {
+		this.store.update({
+			preset: undefined,
+		});
 	}
 }
 

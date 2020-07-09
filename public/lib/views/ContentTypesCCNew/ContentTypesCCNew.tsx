@@ -44,6 +44,11 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 	);
 
 	useEffect(() => {
+		presetsFacade.clearPreset();
+		fieldTypesFacade.clearFieldType();
+	}, []);
+
+	useEffect(() => {
 		if (
 			fieldTypeLoadingState !== LoadingState.Loading &&
 			presetLoadingState !== LoadingState.Loading &&
@@ -84,9 +89,11 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 	useEffect(() => {
 		if (fieldType) {
 			const initialValues = { label: name || '', name: kebabCase(name || '') };
-			contentTypesFacade.setActiveField(generateFieldFromType(fieldType, initialValues));
+			contentTypesFacade.setActiveField(
+				generateFieldFromType(fieldType, initialValues, preset || undefined)
+			);
 		}
-	}, [fieldType, name]);
+	}, [fieldType, name, preset]);
 
 	useEffect(() => {
 		if (state.activeField) {

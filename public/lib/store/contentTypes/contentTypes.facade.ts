@@ -30,6 +30,11 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	public readonly activeField$ = this.query.activeField$;
 
 	public getContentTypes(payload: SearchParams): void {
+		const { isFetching } = this.query.getValue();
+		if (isFetching) {
+			return;
+		}
+
 		this.store.setIsFetching(true);
 
 		this.service
@@ -47,6 +52,11 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	}
 
 	public getContentType(uuid: string): void {
+		const { isFetchingOne } = this.query.getValue();
+		if (isFetchingOne) {
+			return;
+		}
+
 		this.store.setIsFetchingOne(true);
 		this.service
 			.getContentType(uuid)

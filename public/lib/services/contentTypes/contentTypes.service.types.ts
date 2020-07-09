@@ -1,5 +1,5 @@
 import { DataType, FieldType, Operator } from '../fieldTypes';
-import { PresetDetail } from '../presets';
+import { Preset, PresetDetail } from '../presets';
 
 /**
  * =========================
@@ -59,7 +59,7 @@ export interface ModuleSettings {
 export interface ContentTypeFieldDetail extends BaseContentTypeField {
 	dataType: DataType;
 	fieldType: FieldType;
-	preset?: string;
+	preset?: Preset | PresetDetail;
 }
 export interface ContentTypeField extends BaseContentTypeField {
 	dataType: string;
