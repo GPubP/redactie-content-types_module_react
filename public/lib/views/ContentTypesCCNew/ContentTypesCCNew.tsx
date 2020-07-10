@@ -20,7 +20,13 @@ import { presetsFacade } from '../../store/presets';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCNew.const';
 
-const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, route }) => {
+const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
+	match,
+	state,
+	route,
+	fieldTypes,
+	history,
+}) => {
 	const { contentTypeUuid } = match.params;
 	/**
 	 * Hooks
@@ -78,7 +84,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 	 */
 	useEffect(() => {
 		if (preset) {
-			fieldTypesFacade.getFieldType(preset.data.fieldType as string);
+			fieldTypesFacade.getFieldType(preset.data.fieldType.uuid);
 		}
 	}, [preset]);
 
@@ -116,7 +122,19 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 	};
 
 	const onFieldTypeChange = (data: ContentTypeFieldDetailModel): void => {
-		setCTField({ ...CTField, ...data });
+		// TODO: Why not just update the active field instead of holding the state inside the CTField
+		setCTField({
+			...CTField,
+			...data,
+			config: {
+				...CTField?.config,
+				...data.config,
+			},
+			generalConfig: {
+				...CTField?.generalConfig,
+				...data.generalConfig,
+			},
+		});
 	};
 
 	/**
@@ -126,6 +144,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 		const extraOptions = {
 			CTField,
 			fieldTypeData: CTField?.fieldType.data,
+			fieldTypes,
 			preset: preset,
 			onSubmit: onFieldTypeChange,
 		};
@@ -147,7 +166,9 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 						<NavList
 							items={CC_NAV_LIST_ITEMS.map(listItem => ({
 								...listItem,
-								to: generatePath(listItem.to, { contentTypeUuid }),
+								to: generatePath(`${listItem.to}${history.location.search}`, {
+									contentTypeUuid,
+								}),
 							}))}
 						/>
 					</div>

@@ -18,7 +18,12 @@ import { presetsFacade } from '../../store/presets';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCEdit.const';
 
-const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, route }) => {
+const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({
+	match,
+	state,
+	route,
+	fieldTypes,
+}) => {
 	const { contentTypeUuid, contentComponentUuid } = match.params;
 	const { activeField, fields } = state;
 
@@ -121,6 +126,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 			CTField: updatedField,
 			fieldTypeData: fieldType?.data,
 			preset,
+			fieldTypes,
 			onDelete: onFieldDelete,
 			onSubmit: onFieldChange,
 		};

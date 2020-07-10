@@ -15,11 +15,6 @@ export class PresetsApiService {
 
 			return response.data.map(preset => ({
 				...preset,
-				data: {
-					...preset.data,
-					// TODO: remove this when it is returned from the server
-					fieldType: '5e848366b88e3f0122747224',
-				},
 			}));
 		} catch (err) {
 			console.error(err);
@@ -33,11 +28,6 @@ export class PresetsApiService {
 
 			return {
 				...response,
-				data: {
-					...response.data,
-					// TODO: remove this when it is returned from the server
-					fieldType: '07d930ac-6094-45de-a53d-c57f4dd0fdb6',
-				},
 			};
 		} catch (err) {
 			console.error(err);

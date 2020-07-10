@@ -7,6 +7,28 @@ import { Preset, PresetDetail } from '../presets';
  * =========================
  */
 
+export interface ValidationCheck {
+	key: string;
+	val: unknown;
+	err: string;
+}
+
+export interface ValicationCheckWithFields {
+	type: string;
+	fields: ValidationCheckField[];
+}
+
+export interface ValidationCheckField {
+	name: string;
+	type: string;
+	checks: ValidationCheck[];
+}
+
+export interface Validation {
+	type: string;
+	checks: ValidationCheck[] | ValicationCheckWithFields[];
+}
+
 export type ValidationSchema = Record<string, any>;
 export interface BaseContentTypeField {
 	uuid?: string;
@@ -17,6 +39,7 @@ export interface BaseContentTypeField {
 	defaultValue?: any;
 	validators: string[];
 	operators: Operator[];
+	validation?: Validation;
 	generalConfig: {
 		multiLanguage?: boolean;
 		required?: boolean;

@@ -1,7 +1,7 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 
 import { FieldType, FieldTypeData, FieldTypeMeta } from './services/fieldTypes';
-import { Preset } from './services/presets';
+import { Preset, PresetDetail } from './services/presets';
 import { ContentTypeDetailModel, ContentTypeFieldDetailModel } from './store/contentTypes';
 import { ExternalTabValue } from './views/ContentTypeDetailExternal/ContentTypeDetailExternal.types';
 
@@ -41,6 +41,8 @@ export interface ContentTypesDetailRouteProps<
 export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
 	CTField: ContentTypeFieldDetailModel;
 	fieldTypeData: FieldTypeData;
+	preset?: PresetDetail;
+	fieldTypes: FieldType[];
 	onDelete?: () => void;
 	onSubmit: (data: any) => void;
 }
