@@ -52,8 +52,8 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	}
 
 	public getContentType(uuid: string): void {
-		const { isFetchingOne } = this.query.getValue();
-		if (isFetchingOne) {
+		const { isFetchingOne, contentType } = this.query.getValue();
+		if (isFetchingOne || contentType?.uuid === uuid) {
 			return;
 		}
 
@@ -118,12 +118,6 @@ export class ContentTypesFacade extends BaseEntityFacade<
 			.finally(() => this.store.setIsUpdating(false));
 	}
 
-	public setActiveField(payload: ContentTypeFieldDetailModel): void {
-		this.store.update({
-			activeField: payload,
-		});
-	}
-
 	public addField(field: ContentTypeFieldDetailModel): void {
 		const { contentType } = this.query.getValue();
 		if (contentType) {
@@ -160,6 +154,54 @@ export class ContentTypesFacade extends BaseEntityFacade<
 				},
 			});
 		}
+	}
+
+	/**
+	 *
+	 * Active Field actions
+	 */
+
+	public setActiveField(payload: ContentTypeFieldDetailModel): void {
+		this.store.update({
+			activeField: payload,
+		});
+	}
+
+	public updateActiveField(payload: Partial<ContentTypeFieldDetailModel>): void {
+		this.store.update(state => {
+			if (state.activeField) {
+				return {
+					...state,
+					activeField: {
+						...state.activeField,
+						...payload,
+						generalConfig: {
+							...state.activeField.generalConfig,
+							...payload.generalConfig,
+						},
+						config: {
+							...state.activeField.config,
+							...payload.config,
+						},
+						validation: {
+							...state.activeField.validation,
+							...payload.validation,
+						},
+						defaultValue: {
+							...state.activeField.defaultValue,
+							...payload.defaultValue,
+						},
+					},
+				};
+			}
+			return state;
+		});
+	}
+
+	public clearActiveField(): void {
+		this.store.update({
+			activeField: undefined,
+		});
 	}
 }
 

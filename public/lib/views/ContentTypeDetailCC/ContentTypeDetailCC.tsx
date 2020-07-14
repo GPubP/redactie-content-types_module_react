@@ -28,9 +28,9 @@ import { ContentTypeDetailCCRow } from './ContentTypeDetailCC.types';
 const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	presets,
 	fieldTypes,
+	contentType,
 	onCancel,
 	onSubmit,
-	state,
 }) => {
 	const fields = useMemo(() => [...fieldTypes, ...presets], [fieldTypes, presets]);
 
@@ -70,7 +70,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	};
 
 	const onCCSave = (): void => {
-		onSubmit(state.fields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
+		onSubmit(contentType.fields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
 	};
 
 	/**
@@ -100,7 +100,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 				className="u-margin-top"
 				columns={CONTENT_TYPE_COLUMNS(t)}
 				rows={contentTypeRows}
-				totalValues={state.fields.length}
+				totalValues={contentType.fields.length}
 			/>
 		);
 	};
@@ -109,7 +109,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		return (
 			<Formik
 				enableReinitialize={true}
-				initialValues={{ fields: state.fields }}
+				initialValues={{ fields: contentType.fields }}
 				onSubmit={onCCSave}
 				validationSchema={CT_CC_VALIDATION_SCHEMA}
 			>

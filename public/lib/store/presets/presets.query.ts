@@ -1,5 +1,4 @@
-import { isNil } from '@datorama/akita';
-import { distinctUntilChanged, filter } from 'rxjs/operators';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 import { BaseEntityQuery } from '../shared';
 
@@ -12,9 +11,7 @@ export class PresetsQuery extends BaseEntityQuery<PresetsState> {
 	}
 
 	public presets$ = this.selectAll();
-	public preset$ = this.select(state => state.preset).pipe(
-		filter(preset => !isNil(preset), distinctUntilChanged())
-	);
+	public preset$ = this.select(state => state.preset).pipe(distinctUntilChanged());
 }
 
 export const presetsQuery = new PresetsQuery(presetsStore);

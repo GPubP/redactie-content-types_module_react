@@ -9,6 +9,12 @@ export const BREADCRUMB_OPTIONS = {
 	],
 };
 
+export const DEFAULT_VALIDATION_SCHEMA = {
+	$schema: 'http://json-schema.org/draft-07/schema#',
+	type: 'object',
+	properties: {},
+};
+
 export const CONTENT_TYPE_DETAIL_TAB_MAP: {
 	[key in 'settings' | 'contentComponents' | 'sites']: Tab;
 } = {

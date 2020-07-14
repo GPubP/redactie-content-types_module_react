@@ -65,14 +65,6 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		[tenantId]
 	);
 
-	const state = useMemo(
-		() => ({
-			activeField,
-			fields: contentType?.fields || [],
-		}),
-		[activeField, contentType]
-	);
-
 	useEffect(() => {
 		if (
 			presetsLoadingState !== LoadingState.Loading &&
@@ -199,9 +191,9 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			presets,
 			fieldTypes,
 			contentType,
+			activeField,
 			onCancel: navigateToOverview,
 			onSubmit: updateCT,
-			state,
 		};
 
 		return (

@@ -1,3 +1,4 @@
+import { FieldType } from '../fieldTypes';
 /**
  * =========================
  * Base types
@@ -24,14 +25,14 @@ export interface Validator {
 	};
 }
 
-export interface BasePreset<T> {
+export interface BasePreset<T, F> {
 	_id: string;
 	uuid: string;
 	data: {
 		name: string;
 		label: string;
 		defaultConfig: Record<string, any>;
-		fieldType?: string;
+		fieldType: F;
 		generalConfig: {
 			isQueryable: boolean;
 			isTranslate: boolean;
@@ -53,9 +54,9 @@ export interface BasePreset<T> {
 	};
 }
 
-export type Preset = BasePreset<string>;
+export type Preset = BasePreset<string, string>;
 
-export type PresetDetail = BasePreset<Validator>;
+export type PresetDetail = BasePreset<Validator, FieldType>;
 
 /**
  * =========================

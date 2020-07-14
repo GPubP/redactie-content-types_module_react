@@ -20,13 +20,17 @@ import { presetsFacade } from '../../store/presets';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCNew.const';
 
-const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, route }) => {
+const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
+	match,
+	activeField,
+	route,
+	history,
+}) => {
 	const { contentTypeUuid } = match.params;
 	/**
 	 * Hooks
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const [CTField, setCTField] = useState<ContentTypeFieldDetailModel | null>(null);
 	const query = useQuery();
 	const fieldTypeUuid = query.get('fieldType');
 	const presetUuid = query.get('preset');
@@ -51,13 +55,11 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 	useEffect(() => {
 		if (
 			fieldTypeLoadingState !== LoadingState.Loading &&
-			presetLoadingState !== LoadingState.Loading &&
-			CTField &&
-			state.activeField
+			presetLoadingState !== LoadingState.Loading
 		) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
-	}, [presetLoadingState, fieldTypeLoadingState, CTField, state.activeField]);
+	}, [presetLoadingState, fieldTypeLoadingState]);
 
 	/**
 	 * Get preset or fieldType based on the input of the
@@ -78,7 +80,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 	 */
 	useEffect(() => {
 		if (preset) {
-			fieldTypesFacade.getFieldType(preset.data.fieldType as string);
+			fieldTypesFacade.getFieldType(preset.data.fieldType.uuid);
 		}
 	}, [preset]);
 
@@ -95,12 +97,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 		}
 	}, [fieldType, name, preset]);
 
-	useEffect(() => {
-		if (state.activeField) {
-			setCTField(state.activeField);
-		}
-	}, [state.activeField]);
-
 	/**
 	 * Methods
 	 */
@@ -109,14 +105,14 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 	};
 
 	const onCTSubmit = (): void => {
-		if (CTField) {
-			contentTypesFacade.addField(CTField);
+		if (activeField) {
+			contentTypesFacade.addField(activeField);
 			navigateToOverview();
 		}
 	};
 
 	const onFieldTypeChange = (data: ContentTypeFieldDetailModel): void => {
-		setCTField({ ...CTField, ...data });
+		contentTypesFacade.updateActiveField(data);
 	};
 
 	/**
@@ -124,8 +120,8 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 	 */
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
-			CTField,
-			fieldTypeData: CTField?.fieldType.data,
+			CTField: activeField,
+			fieldTypeData: activeField?.fieldType.data,
 			preset: preset,
 			onSubmit: onFieldTypeChange,
 		};
@@ -147,7 +143,9 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, state, rou
 						<NavList
 							items={CC_NAV_LIST_ITEMS.map(listItem => ({
 								...listItem,
-								to: generatePath(listItem.to, { contentTypeUuid }),
+								to: generatePath(`${listItem.to}${history.location.search}`, {
+									contentTypeUuid,
+								}),
 							}))}
 						/>
 					</div>

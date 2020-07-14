@@ -2,7 +2,7 @@ import { pathOr } from 'ramda';
 
 import { CCSettingsFormState } from './contentTypes.types';
 import { ContentTypeCreateRequest } from './services/contentTypes';
-import { Preset, PresetDetail } from './services/presets';
+import { PresetDetail } from './services/presets';
 import { ContentTypeFieldDetailModel } from './store/contentTypes';
 import { FieldTypeModel } from './store/fieldTypes';
 
@@ -20,7 +20,7 @@ export const generateEmptyContentType = (): ContentTypeCreateRequest => ({
 export const generateFieldFromType = (
 	fieldType: FieldTypeModel,
 	initialValues: Partial<ContentTypeFieldDetailModel> = {},
-	preset?: Preset | PresetDetail
+	preset?: PresetDetail
 ): ContentTypeFieldDetailModel => ({
 	uuid: `new_${Math.random()
 		.toString(36)
@@ -28,7 +28,13 @@ export const generateFieldFromType = (
 	label: '',
 	module: fieldType.data.module || '',
 	name: '',
-	config: {},
+	config: {
+		fields: preset
+			? preset.data?.fields.map(field => ({
+					...field.field,
+			  }))
+			: [],
+	},
 	validators: [],
 	operators: [],
 	generalConfig: {

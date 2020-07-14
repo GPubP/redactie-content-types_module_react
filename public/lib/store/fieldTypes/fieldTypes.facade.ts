@@ -36,8 +36,8 @@ export class FieldTypesFacade extends BaseEntityFacade<
 	}
 
 	public getFieldType(uuid: string): void {
-		const { isFetchingOne } = this.query.getValue();
-		if (isFetchingOne) {
+		const { isFetchingOne, fieldType } = this.query.getValue();
+		if (isFetchingOne || fieldType?.uuid === uuid) {
 			return;
 		}
 

@@ -1,5 +1,4 @@
-import { isNil } from '@datorama/akita';
-import { distinctUntilChanged, filter } from 'rxjs/operators';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 import { BaseEntityQuery } from '../shared';
 
@@ -12,9 +11,7 @@ export class FieldTypesQuery extends BaseEntityQuery<FieldTypesState> {
 	}
 
 	public fieldTypes$ = this.selectAll();
-	public fieldType$ = this.select(state => state.fieldType).pipe(
-		filter(fieldType => !isNil(fieldType), distinctUntilChanged())
-	);
+	public fieldType$ = this.select(state => state.fieldType).pipe(distinctUntilChanged());
 }
 
 export const fieldTypesQuery = new FieldTypesQuery(fieldTypesStore);
