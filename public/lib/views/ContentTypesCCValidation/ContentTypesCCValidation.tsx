@@ -18,7 +18,6 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	CTField,
 	fieldTypeData,
 	preset,
-	fieldTypes,
 	onSubmit,
 }) => {
 	/**
@@ -52,7 +51,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 			}, {} as FormValues);
 		}
 
-		if (validation) {
+		if (validation && Array.isArray(validation.checks) && validation.checks.length > 0) {
 			return reduceChecks(validation.checks);
 		}
 	}, [CTField]);
@@ -76,17 +75,19 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 							const validators = data[field.field?.name];
 							if (validators) {
 								fields.push({
-									type:
-										field.field?.dataType?.data?.type ||
-										fieldTypes.find(f => f._id === field.field?.fieldType)?.data
-											?.dataType?.data?.type,
+									type: field.field?.dataType?.data?.type,
 									name: field.field?.name,
 									checks: Object.keys(validators).map(key => {
 										const val = validators[key];
 										return {
 											key,
-											val,
-											err: 'something went wrong',
+											val:
+												val === 'true'
+													? true
+													: val === 'false'
+													? false
+													: val,
+											err: 'Gelieve een geldige url in te vullen',
 										};
 									}),
 								});
@@ -117,10 +118,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 							name: `${field.field.name}.${validatorField.name}`,
 							module: validatorField.fieldType?.data?.module || 'core',
 							label: validatorField.label,
-							type:
-								validatorField.fieldType?.data?.componentName ||
-								fieldTypes.find(field => field._id === validatorField.fieldType)
-									?.data.componentName,
+							type: validatorField.fieldType?.data?.componentName,
 							config: validatorField.config,
 							dataType: validatorField.dataType?.data?.type,
 						});
@@ -138,10 +136,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 						name: validatorField.name,
 						module: validatorField.fieldType?.data?.module || 'core',
 						label: validatorField.label,
-						type:
-							validatorField.fieldType?.data?.componentName ||
-							fieldTypes.find(field => field._id === validatorField.fieldType)?.data
-								.componentName,
+						type: validatorField.fieldType?.data?.componentName,
 						config: validatorField.config,
 						dataType: validatorField.dataType?.data?.type,
 					}));
@@ -157,8 +152,42 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 		return !!fieldTypeData?.validators?.length;
 	};
 
+	const createConfig = (data: FormValues, preset?: PresetDetail): Record<string, any> => {
+		return preset
+			? Object.keys(data).reduce(
+					(acc, fieldName) => {
+						const isRequired =
+							data[fieldName].required === 'true' ||
+							data[fieldName].required === true;
+
+						return {
+							...acc,
+							fields: acc.fields.map((field: any) => {
+								if (field.name === fieldName && isRequired) {
+									return {
+										...field,
+										generalConfig: {
+											...field.generalConfig,
+											required: true,
+										},
+									};
+								}
+								return field;
+							}),
+						};
+					},
+					{
+						...CTField.config,
+					}
+			  )
+			: {};
+	};
+
 	const onFormSubmit = (data: FormValues): void => {
-		onSubmit({ validation: createValidationChecksFromFormData(data, fieldTypeData, preset) });
+		onSubmit({
+			validation: createValidationChecksFromFormData(data, fieldTypeData, preset),
+			config: createConfig(data, preset),
+		});
 	};
 
 	/**

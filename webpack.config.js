@@ -60,6 +60,7 @@ module.exports = env => {
 			yup: 'yup',
 			rxjs: 'rxjs',
 			'rxjs/operators': 'rxjs/operators',
+			'@redactie/utils': '@redactie/utils',
 			'@redactie/redactie-core': '@redactie/redactie-core',
 			'@redactie/react-router-guards': '@redactie/react-router-guards',
 			'@redactie/roles-rights-module': '@redactie/roles-rights-module',

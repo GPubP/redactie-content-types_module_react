@@ -57,7 +57,6 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		if (
 			fieldTypesLoadingState !== LoadingState.Loading &&
 			contentTypeLoadingState !== LoadingState.Loading &&
-			contentType &&
 			fieldTypes
 		) {
 			return setInitialLoading(LoadingState.Loaded);

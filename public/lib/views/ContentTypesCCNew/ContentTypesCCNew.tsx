@@ -22,9 +22,8 @@ import { CC_NAV_LIST_ITEMS } from './ContentTypesCCNew.const';
 
 const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 	match,
-	state,
+	activeField,
 	route,
-	fieldTypes,
 	history,
 }) => {
 	const { contentTypeUuid } = match.params;
@@ -32,7 +31,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 	 * Hooks
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const [CTField, setCTField] = useState<ContentTypeFieldDetailModel | null>(null);
 	const query = useQuery();
 	const fieldTypeUuid = query.get('fieldType');
 	const presetUuid = query.get('preset');
@@ -57,13 +55,11 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 	useEffect(() => {
 		if (
 			fieldTypeLoadingState !== LoadingState.Loading &&
-			presetLoadingState !== LoadingState.Loading &&
-			CTField &&
-			state.activeField
+			presetLoadingState !== LoadingState.Loading
 		) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
-	}, [presetLoadingState, fieldTypeLoadingState, CTField, state.activeField]);
+	}, [presetLoadingState, fieldTypeLoadingState]);
 
 	/**
 	 * Get preset or fieldType based on the input of the
@@ -101,12 +97,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 		}
 	}, [fieldType, name, preset]);
 
-	useEffect(() => {
-		if (state.activeField) {
-			setCTField(state.activeField);
-		}
-	}, [state.activeField]);
-
 	/**
 	 * Methods
 	 */
@@ -115,26 +105,14 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 	};
 
 	const onCTSubmit = (): void => {
-		if (CTField) {
-			contentTypesFacade.addField(CTField);
+		if (activeField) {
+			contentTypesFacade.addField(activeField);
 			navigateToOverview();
 		}
 	};
 
 	const onFieldTypeChange = (data: ContentTypeFieldDetailModel): void => {
-		// TODO: Why not just update the active field instead of holding the state inside the CTField
-		setCTField({
-			...CTField,
-			...data,
-			config: {
-				...CTField?.config,
-				...data.config,
-			},
-			generalConfig: {
-				...CTField?.generalConfig,
-				...data.generalConfig,
-			},
-		});
+		contentTypesFacade.updateActiveField(data);
 	};
 
 	/**
@@ -142,9 +120,8 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 	 */
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
-			CTField,
-			fieldTypeData: CTField?.fieldType.data,
-			fieldTypes,
+			CTField: activeField,
+			fieldTypeData: activeField?.fieldType.data,
 			preset: preset,
 			onSubmit: onFieldTypeChange,
 		};

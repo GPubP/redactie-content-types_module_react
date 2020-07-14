@@ -2,7 +2,7 @@ import { pathOr } from 'ramda';
 
 import { CCSettingsFormState } from './contentTypes.types';
 import { ContentTypeCreateRequest } from './services/contentTypes';
-import { Preset, PresetDetail } from './services/presets';
+import { PresetDetail } from './services/presets';
 import { ContentTypeFieldDetailModel } from './store/contentTypes';
 import { FieldTypeModel } from './store/fieldTypes';
 

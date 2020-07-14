@@ -1,4 +1,4 @@
-import { presetsApiService, PresetsApiService, Preset, PresetDetail } from '../../services/presets';
+import { PresetDetail, PresetsApiService, presetsApiService } from '../../services/presets';
 import { BaseEntityFacade } from '../shared';
 
 import { PresetsQuery, presetsQuery } from './presets.query';
@@ -31,8 +31,8 @@ export class PresetsFacade extends BaseEntityFacade<PresetsStore, PresetsApiServ
 	}
 
 	public getPreset(uuid: string): Promise<PresetDetail | null> {
-		const { isFetchingOne } = this.query.getValue();
-		if (isFetchingOne) {
+		const { isFetchingOne, preset } = this.query.getValue();
+		if (isFetchingOne || preset?.uuid === uuid) {
 			return Promise.resolve(null);
 		}
 		this.store.setIsFetchingOne(true);
