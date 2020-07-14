@@ -4,7 +4,7 @@ import { LoadingState } from '../../contentTypes.types';
 import { ContentTypeDetailModel, contentTypesFacade } from '../../store/contentTypes';
 
 const useContentType = (): [LoadingState, ContentTypeDetailModel | null | undefined] => {
-	const [loading] = useObservable(contentTypesFacade.isFetching$, LoadingState.Loading);
+	const [loading] = useObservable(contentTypesFacade.isFetchingOne$, LoadingState.Loading);
 	const [contentType] = useObservable(contentTypesFacade.contentType$, null);
 	const [error] = useObservable(contentTypesFacade.error$, null);
 

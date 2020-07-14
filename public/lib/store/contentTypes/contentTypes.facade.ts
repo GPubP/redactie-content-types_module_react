@@ -30,6 +30,11 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	public readonly activeField$ = this.query.activeField$;
 
 	public getContentTypes(payload: SearchParams): void {
+		const { isFetching } = this.query.getValue();
+		if (isFetching) {
+			return;
+		}
+
 		this.store.setIsFetching(true);
 
 		this.service
@@ -47,6 +52,11 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	}
 
 	public getContentType(uuid: string): void {
+		const { isFetchingOne, contentType } = this.query.getValue();
+		if (isFetchingOne || contentType?.uuid === uuid) {
+			return;
+		}
+
 		this.store.setIsFetchingOne(true);
 		this.service
 			.getContentType(uuid)
@@ -108,12 +118,6 @@ export class ContentTypesFacade extends BaseEntityFacade<
 			.finally(() => this.store.setIsUpdating(false));
 	}
 
-	public setActiveField(payload: ContentTypeFieldDetailModel): void {
-		this.store.update({
-			activeField: payload,
-		});
-	}
-
 	public addField(field: ContentTypeFieldDetailModel): void {
 		const { contentType } = this.query.getValue();
 		if (contentType) {
@@ -150,6 +154,54 @@ export class ContentTypesFacade extends BaseEntityFacade<
 				},
 			});
 		}
+	}
+
+	/**
+	 *
+	 * Active Field actions
+	 */
+
+	public setActiveField(payload: ContentTypeFieldDetailModel): void {
+		this.store.update({
+			activeField: payload,
+		});
+	}
+
+	public updateActiveField(payload: Partial<ContentTypeFieldDetailModel>): void {
+		this.store.update(state => {
+			if (state.activeField) {
+				return {
+					...state,
+					activeField: {
+						...state.activeField,
+						...payload,
+						generalConfig: {
+							...state.activeField.generalConfig,
+							...payload.generalConfig,
+						},
+						config: {
+							...state.activeField.config,
+							...payload.config,
+						},
+						validation: {
+							...state.activeField.validation,
+							...payload.validation,
+						},
+						defaultValue: {
+							...state.activeField.defaultValue,
+							...payload.defaultValue,
+						},
+					},
+				};
+			}
+			return state;
+		});
+	}
+
+	public clearActiveField(): void {
+		this.store.update({
+			activeField: undefined,
+		});
 	}
 }
 

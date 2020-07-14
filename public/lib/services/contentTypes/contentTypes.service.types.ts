@@ -1,10 +1,33 @@
 import { DataType, FieldType, Operator } from '../fieldTypes';
+import { Preset, PresetDetail } from '../presets';
 
 /**
  * =========================
  * Base types
  * =========================
  */
+
+export interface ValidationCheck {
+	key: string;
+	val: unknown;
+	err: string;
+}
+
+export interface ValicationCheckWithFields {
+	type: string;
+	fields: ValidationCheckField[];
+}
+
+export interface ValidationCheckField {
+	name: string;
+	type: string;
+	checks: ValidationCheck[];
+}
+
+export interface Validation {
+	type: string;
+	checks: ValidationCheck[] | ValicationCheckWithFields[];
+}
 
 export type ValidationSchema = Record<string, any>;
 export interface BaseContentTypeField {
@@ -16,6 +39,7 @@ export interface BaseContentTypeField {
 	defaultValue?: any;
 	validators: string[];
 	operators: Operator[];
+	validation?: Validation;
 	generalConfig: {
 		multiLanguage?: boolean;
 		required?: boolean;
@@ -58,6 +82,7 @@ export interface ModuleSettings {
 export interface ContentTypeFieldDetail extends BaseContentTypeField {
 	dataType: DataType;
 	fieldType: FieldType;
+	preset?: Preset | PresetDetail;
 }
 export interface ContentTypeField extends BaseContentTypeField {
 	dataType: string;

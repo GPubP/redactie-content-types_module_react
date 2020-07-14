@@ -10,10 +10,10 @@ export class BaseEntityStore<
 	constructor(
 		initialState: Partial<S> = {
 			loading: false,
+			isFetchingOne: false,
 			isFetching: false,
 			isUpdating: false,
 			isCreating: false,
-			isFetchingOne: false,
 		} as Partial<S>,
 		options?: Partial<StoreConfigOptions>
 	) {

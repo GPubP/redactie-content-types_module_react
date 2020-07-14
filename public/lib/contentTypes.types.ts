@@ -1,6 +1,7 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 
 import { FieldType, FieldTypeData, FieldTypeMeta } from './services/fieldTypes';
+import { Preset, PresetDetail } from './services/presets';
 import { ContentTypeDetailModel, ContentTypeFieldDetailModel } from './store/contentTypes';
 import { ExternalTabValue } from './views/ContentTypeDetailExternal/ContentTypeDetailExternal.types';
 
@@ -12,15 +13,17 @@ export interface ContentTypesModuleProps extends RouteConfigComponentProps {
 export interface FilterFormState {
 	name: string;
 }
-export interface ContentTypesRouteProps<Params = {}> extends RouteConfigComponentProps<Params> {
+export interface ContentTypesRouteProps<Params = { contentTypeUuid: string }>
+	extends RouteConfigComponentProps<Params> {
 	routes: ModuleRouteConfig[];
 }
 
 export interface ContentTypesDetailRouteProps<
 	Params = { contentTypeUuid: string; contentComponentUuid: string }
 > extends RouteConfigComponentProps<Params> {
-	fieldTypes: FieldType[];
-	contentType: ContentTypeDetailModel;
+	readonly presets: Preset[];
+	readonly fieldTypes: FieldType[];
+	readonly contentType: ContentTypeDetailModel;
 	onCancel: () => void;
 	onSubmit: (
 		data:
@@ -30,15 +33,13 @@ export interface ContentTypesDetailRouteProps<
 			| ExternalTabValue,
 		tab: Tab
 	) => void;
-	state: {
-		readonly activeField: ContentTypeFieldDetailModel | null;
-		readonly fields: ContentTypeFieldDetailModel[];
-	};
+	readonly activeField: ContentTypeFieldDetailModel | null;
 }
 
 export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
-	CTField: ContentTypeFieldDetailModel;
-	fieldTypeData: FieldTypeData;
+	readonly CTField: ContentTypeFieldDetailModel;
+	readonly fieldTypeData: FieldTypeData;
+	readonly preset?: PresetDetail;
 	onDelete?: () => void;
 	onSubmit: (data: any) => void;
 }

@@ -8,7 +8,7 @@ import {
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { Field, Formik } from 'formik';
 import { pathOr } from 'ramda';
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { FormCTNewCC, NavList } from '../../components';
@@ -26,12 +26,15 @@ import {
 import { ContentTypeDetailCCRow } from './ContentTypeDetailCC.types';
 
 const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
+	presets,
 	fieldTypes,
+	contentType,
 	onCancel,
 	onSubmit,
-	state,
 }) => {
-	const fieldTypeOptions = fieldTypes.map(fieldType => ({
+	const fields = useMemo(() => [...fieldTypes, ...presets], [fieldTypes, presets]);
+
+	const fieldTypeOptions = fields.map(fieldType => ({
 		key: fieldType.uuid,
 		value: fieldType.uuid,
 		label: fieldType?.data?.label,
@@ -48,21 +51,26 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	 * Methods
 	 */
 	const onCCFormSubmit = ({ name, fieldType }: NewCCFormState): void => {
-		const selectedFieldType = fieldTypes.find(ft => ft.uuid === fieldType);
+		const selectedFieldType = fields.find(ft => ft.uuid === fieldType);
 		if (!selectedFieldType) {
 			return;
 		}
 
-		navigate(
-			`${MODULE_PATHS.detailCCNewSettings}?fieldType=${selectedFieldType.uuid}&name=${name}`,
-			{
-				contentTypeUuid,
-			}
-		);
+		// check if selectedfieldType is a preset or a fieldType
+		// send the fieldtype or preset with a query parameter
+		// Only presets have a fieldType prop available on the data object
+		const fieldTypeIsPreset = !!selectedFieldType?.data.fieldType;
+		const queryParams = fieldTypeIsPreset
+			? `?preset=${selectedFieldType.uuid}&name=${name}`
+			: `?fieldType=${selectedFieldType.uuid}&name=${name}`;
+
+		navigate(`${MODULE_PATHS.detailCCNewSettings}${queryParams}`, {
+			contentTypeUuid,
+		});
 	};
 
 	const onCCSave = (): void => {
-		onSubmit(state.fields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
+		onSubmit(contentType.fields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
 	};
 
 	/**
@@ -92,7 +100,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 				className="u-margin-top"
 				columns={CONTENT_TYPE_COLUMNS(t)}
 				rows={contentTypeRows}
-				totalValues={state.fields.length}
+				totalValues={contentType.fields.length}
 			/>
 		);
 	};
@@ -101,7 +109,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		return (
 			<Formik
 				enableReinitialize={true}
-				initialValues={{ fields: state.fields }}
+				initialValues={{ fields: contentType.fields }}
 				onSubmit={onCCSave}
 				validationSchema={CT_CC_VALIDATION_SCHEMA}
 			>

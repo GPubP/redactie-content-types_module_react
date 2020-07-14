@@ -16,6 +16,7 @@ import {
 	useContentType,
 	useFieldTypes,
 	useNavigate,
+	usePresets,
 	useRoutesBreadcrumbs,
 	useTenantContext,
 } from '../../hooks';
@@ -41,6 +42,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const { contentTypeUuid } = useParams();
 	const { navigate, generatePath } = useNavigate();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
+	const [presetsLoadingState, presets] = usePresets();
 	const [contentTypeLoadingState, contentType] = useContentType();
 	const [{ all: externalTabs, active: activeExternalTab }] = useExternalTabstFacade();
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, externalTabs, location.pathname);
@@ -65,16 +67,25 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 
 	useEffect(() => {
 		if (
+			presetsLoadingState !== LoadingState.Loading &&
 			fieldTypesLoadingState !== LoadingState.Loading &&
 			contentTypeLoadingState !== LoadingState.Loading &&
 			contentType &&
-			fieldTypes
+			fieldTypes &&
+			presets
 		) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [contentTypeLoadingState, fieldTypesLoadingState, contentType, fieldTypes]);
+	}, [
+		presetsLoadingState,
+		contentTypeLoadingState,
+		fieldTypesLoadingState,
+		contentType,
+		fieldTypes,
+		presets,
+	]);
 
 	useEffect(() => {
 		if (contentTypeUuid) {
@@ -177,11 +188,12 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	 */
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
+			presets,
 			fieldTypes,
 			contentType,
+			activeField,
 			onCancel: navigateToOverview,
 			onSubmit: updateCT,
-			state: { activeField, fields: contentType?.fields || [] },
 		};
 
 		return (

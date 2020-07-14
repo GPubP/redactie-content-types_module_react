@@ -1,4 +1,4 @@
-import { Button, Card } from '@acpaas-ui/react-components';
+import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import {
 	ActionBar,
 	ActionBarContentSection,
@@ -11,25 +11,32 @@ import { DataLoader, NavList, RenderChildRoutes } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
-import { useFieldType, useNavigate, useTenantContext } from '../../hooks';
+import { useFieldType, useNavigate, usePreset, useTenantContext } from '../../hooks';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
 import { fieldTypesFacade } from '../../store/fieldTypes';
+import { presetsFacade } from '../../store/presets';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCEdit.const';
 
-const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, route }) => {
+const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({
+	match,
+	activeField,
+	contentType,
+	route,
+}) => {
 	const { contentTypeUuid, contentComponentUuid } = match.params;
-	const { activeField, fields } = state;
 
 	/**
 	 * Hooks
 	 */
-	const [updatedField, setUpdatedField] = useState<ContentTypeFieldDetailModel | null>(null);
-	const [fieldTypeLoading, fieldType] = useFieldType();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [fieldTypeLoading, fieldType] = useFieldType();
+	const [presetLoading, preset] = usePreset();
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
+	const activeFieldFTUuid = useMemo(() => activeField?.fieldType.uuid, [activeField]);
+	const activeFieldPSUuid = useMemo(() => activeField?.preset?.uuid, [activeField]);
 	const guardsMeta = useMemo(
 		() => ({
 			tenantId,
@@ -38,33 +45,41 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 	);
 
 	useEffect(() => {
-		if (fieldTypeLoading !== LoadingState.Loading && fieldType) {
+		if (
+			fieldTypeLoading !== LoadingState.Loading &&
+			presetLoading !== LoadingState.Loading &&
+			fieldType
+		) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [fieldTypeLoading, fieldType]);
+	}, [fieldTypeLoading, fieldType, presetLoading]);
 
 	useEffect(() => {
-		if (contentComponentUuid && Array.isArray(fields)) {
-			const activeField = fields.find(field => field.uuid === contentComponentUuid);
+		if (contentComponentUuid && Array.isArray(contentType.fields)) {
+			const activeField = contentType.fields.find(
+				field => field.uuid === contentComponentUuid
+			);
 			if (activeField) {
 				contentTypesFacade.setActiveField(activeField);
 			}
 		}
-	}, [contentComponentUuid, fields]);
+	}, [contentComponentUuid, contentType.fields]);
 
 	useEffect(() => {
-		if (activeField && fieldType) {
-			setUpdatedField(activeField);
+		if (activeFieldFTUuid) {
+			fieldTypesFacade.getFieldType(activeFieldFTUuid);
+		} else {
+			fieldTypesFacade.clearFieldType();
 		}
-	}, [activeField, fieldType]);
 
-	useEffect(() => {
-		if (activeField?.fieldType.uuid) {
-			fieldTypesFacade.getFieldType(activeField.fieldType.uuid);
+		if (activeFieldPSUuid) {
+			presetsFacade.getPreset(activeFieldPSUuid);
+		} else {
+			presetsFacade.clearPreset();
 		}
-	}, [activeField]);
+	}, [activeFieldFTUuid, activeFieldPSUuid]);
 
 	/**
 	 * Methods
@@ -74,26 +89,20 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 	};
 
 	const onFieldChange = (data: ContentTypeFieldDetailModel): void => {
-		setUpdatedField({
-			...updatedField,
-			...data,
-			config: {
-				...updatedField?.config,
-				...data.config,
-			},
-		});
+		contentTypesFacade.updateActiveField(data);
 	};
 
 	const onFieldDelete = (): void => {
 		if (activeField?.uuid) {
 			contentTypesFacade.deleteField(activeField.uuid);
+			contentTypesFacade.clearActiveField();
 			navigateToOverview();
 		}
 	};
 
 	const onFieldSubmit = (): void => {
-		if (updatedField) {
-			contentTypesFacade.updateField(updatedField);
+		if (activeField) {
+			contentTypesFacade.updateField(activeField);
 			navigateToOverview();
 		}
 	};
@@ -102,13 +111,10 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 	 * Render
 	 */
 	const renderChildRoutes = (): ReactElement | null => {
-		if (!activeField || !updatedField) {
-			return null;
-		}
-
 		const extraOptions = {
-			CTField: updatedField,
+			CTField: activeField,
 			fieldTypeData: fieldType?.data,
+			preset,
 			onDelete: onFieldDelete,
 			onSubmit: onFieldChange,
 		};
@@ -141,7 +147,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, state, ro
 
 						<div className="col-xs-9">
 							<Card>
-								<div className="u-margin">{renderChildRoutes()}</div>
+								<CardBody>{renderChildRoutes()}</CardBody>
 							</Card>
 						</div>
 					</div>
