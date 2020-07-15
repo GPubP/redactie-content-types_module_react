@@ -5,8 +5,9 @@ import { AutoSubmit } from '../../components';
 import formRendererConnector from '../../connectors/formRenderer';
 import { DEFAULT_VALIDATION_SCHEMA } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
-import { generateValidationChecks } from '../../helpers';
+import { generateFRFieldFromCTField, generateValidationChecks } from '../../helpers';
 import {
+	Field,
 	ValicationCheckWithFields,
 	ValidationCheck,
 	ValidationCheckField,
@@ -60,42 +61,38 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	 *
 	 * Methods
 	 */
-	const createFormSchemaFromPreset = (preset: PresetDetail): FormSchema => ({
+	const generateFormSchemaFromPreset = (preset: PresetDetail): FormSchema => ({
 		fields: preset?.data?.fields?.reduce((fSchema, field) => {
 			if (Array.isArray(field.validators) && field.validators?.length > 0) {
-				field.validators.forEach(validator => {
-					validator.data?.formSchema?.fields.forEach(validatorField => {
-						fSchema.push({
-							name: `${field.field.name}.${validatorField.name}`,
-							module: validatorField.fieldType?.data?.module || 'core',
-							label: validatorField.label,
-							type: validatorField.fieldType?.data?.componentName,
-							config: validatorField.config,
-							dataType: validatorField.dataType?.data?.type,
-						});
-					});
-				});
+				field.validators.forEach(validator =>
+					validator.data?.formSchema?.fields.forEach(validatorField =>
+						fSchema.push(
+							generateFRFieldFromCTField(
+								validatorField,
+								`${field.field.name}.${validatorField.name}`
+							)
+						)
+					)
+				);
 			}
 			return fSchema;
 		}, [] as FieldSchema[]),
 	});
 
-	const createFormSchemaFromfieldTypeData = (fieldTypeData: FieldTypeData): FormSchema => ({
+	const generateFormSchemaFromFieldTypeData = (fieldTypeData: FieldTypeData): FormSchema => ({
 		fields: Array.isArray(fieldTypeData?.validators)
 			? fieldTypeData.validators.map(validator => {
-					return validator.data?.formSchema?.fields?.map((validatorField: any) => ({
-						name: validatorField.name,
-						module: validatorField.fieldType?.data?.module || 'core',
-						label: validatorField.label,
-						type: validatorField.fieldType?.data?.componentName,
-						config: validatorField.config,
-						dataType: validatorField.dataType?.data?.type,
-					}));
+					return validator.data?.formSchema?.fields?.map((validatorField: Field) =>
+						generateFRFieldFromCTField(validatorField)
+					);
 			  })
 			: [],
 	});
 
-	const hasValidatorsToConfigure = (preset?: PresetDetail): boolean => {
+	const hasValidatorsToConfigure = (
+		fieldTypeData: FieldTypeData,
+		preset?: PresetDetail
+	): boolean => {
 		if (preset) {
 			const { data } = preset;
 			return !!data.fields.find(field => field?.validators?.length > 0);
@@ -107,17 +104,17 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	 * We need to set the required prop on the generalConfig when a	required validator was set by the user
 	 * The form renderer is using this prop to indicate that a field is required
 	 */
-	const createConfig = (data: FormValues, preset?: PresetDetail): Record<string, any> => {
+	const generateConfig = (data: FormValues, preset?: PresetDetail): Record<string, any> => {
 		return preset
 			? Object.keys(data).reduce(
 					(acc, fieldName) => {
 						const isRequired =
-							data[fieldName].required === 'true' ||
-							data[fieldName].required === true;
+							data[fieldName]?.required === 'true' ||
+							data[fieldName]?.required === true;
 
 						return {
 							...acc,
-							fields: acc.fields.map((field: any) => {
+							fields: acc.fields?.map((field: any) => {
 								if (field.name === fieldName && isRequired) {
 									return {
 										...field,
@@ -141,7 +138,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	const onFormSubmit = (data: FormValues): void => {
 		onSubmit({
 			validation: generateValidationChecks(data, fieldTypeData, preset),
-			config: createConfig(data, preset),
+			config: generateConfig(data, preset),
 		});
 	};
 
@@ -149,7 +146,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	 * Render
 	 */
 	const renderCCValidation = (): ReactElement => {
-		if (!formRendererConnector.api || !hasValidatorsToConfigure(preset)) {
+		if (!formRendererConnector.api || !hasValidatorsToConfigure(fieldTypeData, preset)) {
 			return <p>Er zijn geen validatie mogelijkheden</p>;
 		}
 
@@ -157,8 +154,8 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 			<formRendererConnector.api.Form
 				schema={
 					preset
-						? createFormSchemaFromPreset(preset)
-						: createFormSchemaFromfieldTypeData(fieldTypeData)
+						? generateFormSchemaFromPreset(preset)
+						: generateFormSchemaFromFieldTypeData(fieldTypeData)
 				}
 				validationSchema={DEFAULT_VALIDATION_SCHEMA}
 				initialValues={initialFormValue}

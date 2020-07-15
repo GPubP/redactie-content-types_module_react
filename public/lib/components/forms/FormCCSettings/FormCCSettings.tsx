@@ -29,7 +29,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 
 	return (
 		<Formik initialValues={initialValues} onSubmit={onFormSubmit}>
-			{({ values }) => {
+			{({ values, submitForm }) => {
 				return (
 					<>
 						<AutoSubmit />
@@ -76,9 +76,10 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 								<RadioGroup
 									id="isMultiple"
 									name="isMultiple"
-									onChange={(e: ChangeEvent<HTMLInputElement>) =>
-										setIsMultiple(e.target.value === 'true')
-									}
+									onChange={(e: ChangeEvent<HTMLInputElement>) => {
+										setIsMultiple(e.target.value === 'true');
+										submitForm();
+									}}
 									options={IS_MULTIPLE_OPTIONS}
 									value={String(isMultiple)}
 								/>
@@ -93,6 +94,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 												as={TextField}
 												type="number"
 												id="generalConfig.min"
+												min="0"
 												label="Min."
 												name="generalConfig.min"
 											/>
@@ -103,6 +105,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 												type="number"
 												id="generalConfig.max"
 												label="Max."
+												max="100"
 												name="generalConfig.max"
 											/>
 										</div>

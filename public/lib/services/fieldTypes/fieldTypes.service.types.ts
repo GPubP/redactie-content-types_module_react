@@ -1,3 +1,5 @@
+import { Field } from '../contentTypes';
+
 /**
  * =========================
  * Base types
@@ -34,7 +36,7 @@ export interface FieldTypeData {
 	defaultConfig: any;
 	fieldType?: string;
 	formSchema: {
-		fields: any[];
+		fields: Field[];
 	};
 	dataType: DataType;
 	generalConfig: {

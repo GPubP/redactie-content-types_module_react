@@ -1,5 +1,7 @@
 import { FormValues } from '@redactie/form-renderer-module';
+import { path, pathOr } from 'ramda';
 
+import { DEFAULT_VALIDATOR_ERROR_MESSAGES } from '../../contentTypes.const';
 import { Validation, ValidationCheckField } from '../../services/contentTypes';
 import { FieldTypeData } from '../../services/fieldTypes';
 import { PresetDetail } from '../../services/presets';
@@ -25,13 +27,21 @@ export const generateValidationChecks = (
 						if (validators) {
 							fields.push({
 								...check,
-								checks: Object.keys(validators).map(key => {
+								checks: Object.keys(validators).map((key: string) => {
 									const val = validators[key];
+									const validator = field.validators.find(
+										validator =>
+											!!path(['data', 'defaultValue', key], validator)
+									);
+
 									return {
 										key,
 										val: val === 'true' ? true : val === 'false' ? false : val,
-										// TODO: Replace this with the default value
-										err: 'Gelieve een geldige url in te vullen',
+										err: pathOr(
+											DEFAULT_VALIDATOR_ERROR_MESSAGES[key],
+											['data', 'defaultValue', key, 'err'],
+											validator
+										),
 									};
 								}),
 							});
@@ -48,11 +58,19 @@ export const generateValidationChecks = (
 
 	return {
 		type: fieldTypeData?.dataType?.data?.type,
-		checks: Object.keys(data).map(validatorKey => ({
-			key: validatorKey,
-			val: data[validatorKey],
-			// TODO: Replace this with the default value
-			err: 'something went wrong',
-		})),
+		checks: Object.keys(data).map(validatorKey => {
+			const validator = fieldTypeData.validators.find(
+				validator => !!validator.data.defaultValue[validatorKey]
+			);
+			return {
+				key: validatorKey,
+				val: data[validatorKey],
+				err: pathOr(
+					DEFAULT_VALIDATOR_ERROR_MESSAGES[validatorKey],
+					['data', 'defaultValue', validatorKey, 'err'],
+					validator
+				),
+			};
+		}),
 	};
 };

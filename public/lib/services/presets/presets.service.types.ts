@@ -1,3 +1,4 @@
+import { Field } from '../contentTypes';
 import { FieldType } from '../fieldTypes';
 /**
  * =========================
@@ -14,7 +15,7 @@ export interface Validator {
 		dataTypes: string[];
 		defaultValue: Record<string, any>;
 		formSchema: {
-			fields: any[];
+			fields: Field[];
 		};
 	};
 	meta: {
@@ -41,7 +42,7 @@ export interface BasePreset<T, F> {
 		fields: {
 			field: any;
 			formSchema: {
-				fields: any[];
+				fields: Field[];
 			};
 			validators: T[];
 		}[];

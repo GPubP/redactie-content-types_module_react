@@ -70,3 +70,10 @@ export const MODULE_PATHS = {
 	detailCCEditValidation: `${CC_EDIT_PATH}/validatie`,
 	detailCCEditDefaults: `${CC_EDIT_PATH}/standaard-waarde`,
 };
+
+export const DEFAULT_VALIDATOR_ERROR_MESSAGES: Record<string, string> = {
+	required: 'Dit is een verplicht veld',
+	pattern: 'De opgegeven waarden heeft niet het juiste formaat',
+	email: 'Gelieve een geldig e-mailadres in te vullen',
+	url: 'Gelieve een geldige url in te vullen',
+};
