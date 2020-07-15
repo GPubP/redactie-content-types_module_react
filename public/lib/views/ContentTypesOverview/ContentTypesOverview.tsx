@@ -12,11 +12,11 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
 import FilterForm from '../../components/FilterForm/FilterForm';
+import { FilterFormState } from '../../components/FilterForm/FilterForm.types';
 import rolesRightsConnector from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
-import { generateFilterFormState } from '../../content-types.helpers';
 import { MODULE_PATHS } from '../../contentTypes.const';
-import { ContentTypesRouteProps, FilterFormState, LoadingState } from '../../contentTypes.types';
+import { ContentTypesRouteProps, LoadingState } from '../../contentTypes.types';
 import { useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../services/contentTypes/contentTypes.service.cont';
 import { contentTypesFacade } from '../../store/contentTypes';
@@ -159,7 +159,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 			<>
 				<div className="u-margin-top">
 					<FilterForm
-						initialState={generateFilterFormState()}
+						initialState={CONTENT_INITIAL_FILTER_STATE}
 						onCancel={deleteAllFilters}
 						onSubmit={onSubmit}
 						deleteActiveFilter={deleteFilter}

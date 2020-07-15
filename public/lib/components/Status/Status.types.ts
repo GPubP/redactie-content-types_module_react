@@ -1,4 +1,4 @@
-import { StatusType } from '../../helpers/typeMap/typeMap.types';
+import { StatusType } from '../../helpers';
 
 export interface StatusProps {
 	label: string;

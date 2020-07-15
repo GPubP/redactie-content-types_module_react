@@ -2,8 +2,8 @@ import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import React, { FC } from 'react';
 
 import { FormCCSettings } from '../../components';
-import { generateCCFormState } from '../../contentTypes.helpers';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
+import { generateCCFormState } from '../../helpers';
 
 const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({ CTField, onDelete, onSubmit }) => {
 	/**

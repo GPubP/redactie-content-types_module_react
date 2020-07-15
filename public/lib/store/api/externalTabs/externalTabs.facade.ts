@@ -1,7 +1,7 @@
 import { ID } from '@datorama/akita';
 import { useEffect, useState } from 'react';
 
-import { onEmit } from '../../../helpers/onEmit/onEmit';
+import { onEmit } from '../../../helpers';
 
 import { ExternalTabModel } from './externalTabs.model';
 import { externalTabsQuery } from './externalTabs.query';

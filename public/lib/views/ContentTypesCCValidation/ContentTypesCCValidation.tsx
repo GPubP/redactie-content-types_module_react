@@ -5,9 +5,9 @@ import { AutoSubmit } from '../../components';
 import formRendererConnector from '../../connectors/formRenderer';
 import { DEFAULT_VALIDATION_SCHEMA } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
+import { generateValidationChecks } from '../../helpers';
 import {
 	ValicationCheckWithFields,
-	Validation,
 	ValidationCheck,
 	ValidationCheckField,
 } from '../../services/contentTypes';
@@ -60,55 +60,6 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	 *
 	 * Methods
 	 */
-	const createValidationChecksFromFormData = (
-		data: FormValues,
-		fieldTypeData: FieldTypeData,
-		preset?: PresetDetail
-	): Validation => {
-		if (preset) {
-			return {
-				type: 'object',
-				checks: [
-					{
-						type: 'object',
-						fields: preset?.data?.fields?.reduce((fields, field) => {
-							const validators = data[field.field?.name];
-							if (validators) {
-								fields.push({
-									type: field.field?.dataType?.data?.type,
-									name: field.field?.name,
-									checks: Object.keys(validators).map(key => {
-										const val = validators[key];
-										return {
-											key,
-											val:
-												val === 'true'
-													? true
-													: val === 'false'
-													? false
-													: val,
-											err: 'Gelieve een geldige url in te vullen',
-										};
-									}),
-								});
-							}
-							return fields;
-						}, [] as ValidationCheckField[]),
-					},
-				],
-			};
-		}
-
-		return {
-			type: fieldTypeData?.dataType?.data?.type,
-			checks: Object.keys(data).map(validatorKey => ({
-				key: validatorKey,
-				val: data[validatorKey],
-				err: 'something went wrong',
-			})),
-		};
-	};
-
 	const createFormSchemaFromPreset = (preset: PresetDetail): FormSchema => ({
 		fields: preset?.data?.fields?.reduce((fSchema, field) => {
 			if (Array.isArray(field.validators) && field.validators?.length > 0) {
@@ -152,6 +103,10 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 		return !!fieldTypeData?.validators?.length;
 	};
 
+	/**
+	 * We need to set the required prop on the generalConfig when a	required validator was set by the user
+	 * The form renderer is using this prop to indicate that a field is required
+	 */
 	const createConfig = (data: FormValues, preset?: PresetDetail): Record<string, any> => {
 		return preset
 			? Object.keys(data).reduce(
@@ -185,7 +140,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 
 	const onFormSubmit = (data: FormValues): void => {
 		onSubmit({
-			validation: createValidationChecksFromFormData(data, fieldTypeData, preset),
+			validation: generateValidationChecks(data, fieldTypeData, preset),
 			config: createConfig(data, preset),
 		});
 	};

@@ -5,8 +5,8 @@ import { Field, Formik } from 'formik';
 import React, { FC, ReactElement } from 'react';
 
 import { AutoSubmit } from '../../components';
-import { generateCCFormState } from '../../contentTypes.helpers';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
+import { generateCCFormState } from '../../helpers';
 
 const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 	CTField,

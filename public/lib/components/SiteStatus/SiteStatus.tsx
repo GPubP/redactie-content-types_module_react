@@ -2,7 +2,7 @@ import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18n
 import React, { FC } from 'react';
 
 import { useCoreTranslation } from '../../connectors/translations';
-import { StatusTypes } from '../../helpers/typeMap/typeMap.const';
+import { StatusTypes } from '../../helpers';
 import Status from '../Status/Status';
 
 import { SiteStatusProps } from './SiteStatus.types';

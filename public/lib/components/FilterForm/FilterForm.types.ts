@@ -1,4 +1,6 @@
-import { FilterFormState } from '../../contentTypes.types';
+export interface FilterFormState {
+	name: string;
+}
 
 export interface FilterFormProps {
 	initialState: FilterFormState;

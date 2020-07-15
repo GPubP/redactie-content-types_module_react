@@ -8,8 +8,8 @@ import {
 	CONTENT_TYPE_DETAIL_TAB_MAP,
 	MODULE_PATHS,
 } from '../../contentTypes.const';
-import { generateEmptyContentType } from '../../contentTypes.helpers';
 import { ContentTypesRouteProps, LoadingState, Tab } from '../../contentTypes.types';
+import { generateEmptyContentType } from '../../helpers';
 import {
 	useActiveTabs,
 	useContentType,
