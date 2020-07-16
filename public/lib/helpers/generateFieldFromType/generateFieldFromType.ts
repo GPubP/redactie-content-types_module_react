@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
 import { FieldTypeModel } from '../../store/fieldTypes';
 import { PresetDetailModel } from '../../store/presets';
@@ -8,9 +10,7 @@ export const generateFieldFromType = (
 	initialValues: Partial<ContentTypeFieldDetailModel> = {},
 	preset?: PresetDetailModel
 ): ContentTypeFieldDetailModel => ({
-	uuid: `new_${Math.random()
-		.toString(36)
-		.substr(2, 9)}`,
+	uuid: uuidv4(),
 	label: '',
 	module: fieldType.data.module || '',
 	name: '',

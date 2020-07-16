@@ -25,8 +25,6 @@ export class ContentTypesApiService {
 			dataType: field.dataType?._id || ((field.dataType as unknown) as string),
 			fieldType: field.fieldType?._id,
 			preset: field.preset?._id,
-			// don't send new uuids to the server, the server will generate one
-			uuid: field.uuid && /^new_/.test(field.uuid) ? undefined : field.uuid,
 		}));
 	}
 

@@ -56,6 +56,7 @@
 		"@types/ramda": "0.26.44",
 		"@types/react": "16.9.19",
 		"@types/react-router-dom": "5.1.3",
+		"@types/uuid": "^8.0.0",
 		"@types/webpack-env": "1.15.1",
 		"@types/yup": "^0.26.33",
 		"@typescript-eslint/eslint-plugin": "2.17.0",
@@ -101,7 +102,8 @@
 		"@mindspace-io/react": "^1.1.6",
 		"lodash.debounce": "^4.0.8",
 		"lodash.kebabcase": "4.1.1",
-		"query-string": "^6.12.0"
+		"query-string": "^6.12.0",
+		"uuid": "^8.2.0"
 	},
 	"author": "Maarten De Weerdt",
 	"license": "ISC"
