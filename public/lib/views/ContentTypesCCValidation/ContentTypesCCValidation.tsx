@@ -13,12 +13,13 @@ import {
 	ValidationCheckField,
 } from '../../services/contentTypes';
 import { FieldTypeData } from '../../services/fieldTypes';
-import { PresetDetail } from '../../services/presets';
+import { PresetDetail, Validator } from '../../services/presets';
 
 const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	CTField,
 	fieldTypeData,
 	preset,
+	location,
 	onSubmit,
 }) => {
 	/**
@@ -26,9 +27,42 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	 */
 	const initialFormValue = useMemo(() => {
 		const { validation } = CTField;
+		const useDefaults = /\/nieuw\//.test(location.pathname);
+
+		function reduceValidatorsToChecks(validators: Validator[]): ValidationCheck[] {
+			return validators.reduce((checks, validator) => {
+				if (validator.data.defaultValue) {
+					return [
+						...checks,
+						...Object.keys(validator.data.defaultValue).map(key => {
+							return {
+								key,
+								val: validator.data.defaultValue[key].val,
+								err: '',
+							};
+						}),
+					];
+				}
+				return checks;
+			}, [] as ValidationCheck[]);
+		}
 
 		function reduceFields(fields: ValidationCheckField[]): FormValues {
 			return fields.reduce((value, field) => {
+				// if field.checks is empty, get the default checks
+				if (useDefaults && field.checks?.length === 0) {
+					const pField = preset?.data.fields.find(
+						presetField => presetField.field.name === field.name
+					);
+					if (pField) {
+						const newChecks = reduceValidatorsToChecks(pField.validators);
+						// eslint-disable-next-line @typescript-eslint/no-use-before-define
+						value[field.name] = reduceChecks(newChecks);
+
+						return value;
+					}
+				}
+
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				value[field.name] = reduceChecks(field.checks);
 
@@ -46,16 +80,22 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 					};
 				}
 
-				value[check.key] = check.val;
+				// TODO: Acpaas ui component Radio Field can not handle boolean values as options
+				// Remove this functionality when the issue is fixed
+				value[check.key] =
+					check.val === true ? 'true' : check.val === false ? 'false' : check.val;
 
 				return value;
 			}, {} as FormValues);
 		}
 
 		if (validation && Array.isArray(validation.checks) && validation.checks.length > 0) {
-			return reduceChecks(validation.checks);
+			// use default values when the user creates a new content type field
+			return useDefaults && validation.checks?.length === 0 && CTField.validators?.length > 0
+				? reduceChecks(reduceValidatorsToChecks(CTField.validators))
+				: reduceChecks(validation.checks);
 		}
-	}, [CTField]);
+	}, [CTField, preset, location.pathname]);
 
 	/**
 	 *
@@ -63,7 +103,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	 */
 	const generateFormSchemaFromPreset = (preset: PresetDetail): FormSchema => ({
 		fields: preset?.data?.fields?.reduce((fSchema, field) => {
-			if (Array.isArray(field.validators) && field.validators?.length > 0) {
+			if (field.validators?.length > 0) {
 				field.validators.forEach(validator =>
 					validator.data?.formSchema?.fields.forEach(validatorField =>
 						fSchema.push(

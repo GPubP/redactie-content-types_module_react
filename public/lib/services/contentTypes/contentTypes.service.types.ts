@@ -1,5 +1,5 @@
 import { DataType, FieldType, Operator } from '../fieldTypes';
-import { Preset, PresetDetail } from '../presets';
+import { Preset, PresetDetail, Validator } from '../presets';
 
 /**
  * =========================
@@ -41,7 +41,7 @@ export interface Field<D = DataType, F = FieldType, P = Preset | PresetDetail> {
 		[key: string]: any;
 	};
 	defaultValue?: any;
-	validators: string[];
+	validators: Validator[];
 	operators: Operator[];
 	validation?: Validation;
 	generalConfig: {
