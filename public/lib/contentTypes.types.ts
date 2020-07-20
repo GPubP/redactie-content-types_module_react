@@ -10,9 +10,6 @@ export interface ContentTypesModuleProps extends RouteConfigComponentProps {
 	tenantId: string;
 }
 
-export interface FilterFormState {
-	name: string;
-}
 export interface ContentTypesRouteProps<Params = { contentTypeUuid: string }>
 	extends RouteConfigComponentProps<Params> {
 	routes: ModuleRouteConfig[];

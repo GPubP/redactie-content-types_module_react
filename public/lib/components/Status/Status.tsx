@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 
-import { typeMap } from '../../helpers/typeMap/typeMap';
-import { StatusTypes } from '../../helpers/typeMap/typeMap.const';
+import { StatusTypes, typeMap } from '../../helpers';
 
 import { StatusProps } from './Status.types';
 

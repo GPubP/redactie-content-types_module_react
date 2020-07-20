@@ -5,19 +5,21 @@ import { AutoSubmit } from '../../components';
 import formRendererConnector from '../../connectors/formRenderer';
 import { DEFAULT_VALIDATION_SCHEMA } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
+import { generateFRFieldFromCTField, generateValidationChecks } from '../../helpers';
 import {
+	Field,
 	ValicationCheckWithFields,
-	Validation,
 	ValidationCheck,
 	ValidationCheckField,
 } from '../../services/contentTypes';
 import { FieldTypeData } from '../../services/fieldTypes';
-import { PresetDetail } from '../../services/presets';
+import { PresetDetail, Validator } from '../../services/presets';
 
 const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	CTField,
 	fieldTypeData,
 	preset,
+	location,
 	onSubmit,
 }) => {
 	/**
@@ -25,9 +27,42 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	 */
 	const initialFormValue = useMemo(() => {
 		const { validation } = CTField;
+		const useDefaults = /\/nieuw\//.test(location.pathname);
+
+		function reduceValidatorsToChecks(validators: Validator[]): ValidationCheck[] {
+			return validators.reduce((checks, validator) => {
+				if (validator.data.defaultValue) {
+					return [
+						...checks,
+						...Object.keys(validator.data.defaultValue).map(key => {
+							return {
+								key,
+								val: validator.data.defaultValue[key].val,
+								err: '',
+							};
+						}),
+					];
+				}
+				return checks;
+			}, [] as ValidationCheck[]);
+		}
 
 		function reduceFields(fields: ValidationCheckField[]): FormValues {
 			return fields.reduce((value, field) => {
+				// if field.checks is empty, get the default checks
+				if (useDefaults && field.checks?.length === 0) {
+					const pField = preset?.data.fields.find(
+						presetField => presetField.field.name === field.name
+					);
+					if (pField) {
+						const newChecks = reduceValidatorsToChecks(pField.validators);
+						// eslint-disable-next-line @typescript-eslint/no-use-before-define
+						value[field.name] = reduceChecks(newChecks);
+
+						return value;
+					}
+				}
+
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				value[field.name] = reduceChecks(field.checks);
 
@@ -45,106 +80,59 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 					};
 				}
 
-				value[check.key] = check.val;
+				// TODO: Acpaas ui component Radio Field can not handle boolean values as options
+				// Remove this functionality when the issue is fixed
+				value[check.key] =
+					check.val === true ? 'true' : check.val === false ? 'false' : check.val;
 
 				return value;
 			}, {} as FormValues);
 		}
 
 		if (validation && Array.isArray(validation.checks) && validation.checks.length > 0) {
-			return reduceChecks(validation.checks);
+			// use default values when the user creates a new content type field
+			return useDefaults && validation.checks?.length === 0 && CTField.validators?.length > 0
+				? reduceChecks(reduceValidatorsToChecks(CTField.validators))
+				: reduceChecks(validation.checks);
 		}
-	}, [CTField]);
+	}, [CTField, preset, location.pathname]);
 
 	/**
 	 *
 	 * Methods
 	 */
-	const createValidationChecksFromFormData = (
-		data: FormValues,
-		fieldTypeData: FieldTypeData,
-		preset?: PresetDetail
-	): Validation => {
-		if (preset) {
-			return {
-				type: 'object',
-				checks: [
-					{
-						type: 'object',
-						fields: preset?.data?.fields?.reduce((fields, field) => {
-							const validators = data[field.field?.name];
-							if (validators) {
-								fields.push({
-									type: field.field?.dataType?.data?.type,
-									name: field.field?.name,
-									checks: Object.keys(validators).map(key => {
-										const val = validators[key];
-										return {
-											key,
-											val:
-												val === 'true'
-													? true
-													: val === 'false'
-													? false
-													: val,
-											err: 'Gelieve een geldige url in te vullen',
-										};
-									}),
-								});
-							}
-							return fields;
-						}, [] as ValidationCheckField[]),
-					},
-				],
-			};
-		}
-
-		return {
-			type: fieldTypeData?.dataType?.data?.type,
-			checks: Object.keys(data).map(validatorKey => ({
-				key: validatorKey,
-				val: data[validatorKey],
-				err: 'something went wrong',
-			})),
-		};
-	};
-
-	const createFormSchemaFromPreset = (preset: PresetDetail): FormSchema => ({
+	const generateFormSchemaFromPreset = (preset: PresetDetail): FormSchema => ({
 		fields: preset?.data?.fields?.reduce((fSchema, field) => {
-			if (Array.isArray(field.validators) && field.validators?.length > 0) {
-				field.validators.forEach(validator => {
-					validator.data?.formSchema?.fields.forEach(validatorField => {
-						fSchema.push({
-							name: `${field.field.name}.${validatorField.name}`,
-							module: validatorField.fieldType?.data?.module || 'core',
-							label: validatorField.label,
-							type: validatorField.fieldType?.data?.componentName,
-							config: validatorField.config,
-							dataType: validatorField.dataType?.data?.type,
-						});
-					});
-				});
+			if (field.validators?.length > 0) {
+				field.validators.forEach(validator =>
+					validator.data?.formSchema?.fields.forEach(validatorField =>
+						fSchema.push(
+							generateFRFieldFromCTField(
+								validatorField,
+								`${field.field.name}.${validatorField.name}`
+							)
+						)
+					)
+				);
 			}
 			return fSchema;
 		}, [] as FieldSchema[]),
 	});
 
-	const createFormSchemaFromfieldTypeData = (fieldTypeData: FieldTypeData): FormSchema => ({
+	const generateFormSchemaFromFieldTypeData = (fieldTypeData: FieldTypeData): FormSchema => ({
 		fields: Array.isArray(fieldTypeData?.validators)
 			? fieldTypeData.validators.map(validator => {
-					return validator.data?.formSchema?.fields?.map((validatorField: any) => ({
-						name: validatorField.name,
-						module: validatorField.fieldType?.data?.module || 'core',
-						label: validatorField.label,
-						type: validatorField.fieldType?.data?.componentName,
-						config: validatorField.config,
-						dataType: validatorField.dataType?.data?.type,
-					}));
+					return validator.data?.formSchema?.fields?.map((validatorField: Field) =>
+						generateFRFieldFromCTField(validatorField)
+					);
 			  })
 			: [],
 	});
 
-	const hasValidatorsToConfigure = (preset?: PresetDetail): boolean => {
+	const hasValidatorsToConfigure = (
+		fieldTypeData: FieldTypeData,
+		preset?: PresetDetail
+	): boolean => {
 		if (preset) {
 			const { data } = preset;
 			return !!data.fields.find(field => field?.validators?.length > 0);
@@ -152,17 +140,21 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 		return !!fieldTypeData?.validators?.length;
 	};
 
-	const createConfig = (data: FormValues, preset?: PresetDetail): Record<string, any> => {
+	/**
+	 * We need to set the required prop on the generalConfig when a	required validator was set by the user
+	 * The form renderer is using this prop to indicate that a field is required
+	 */
+	const generateConfig = (data: FormValues, preset?: PresetDetail): Record<string, any> => {
 		return preset
 			? Object.keys(data).reduce(
 					(acc, fieldName) => {
 						const isRequired =
-							data[fieldName].required === 'true' ||
-							data[fieldName].required === true;
+							data[fieldName]?.required === 'true' ||
+							data[fieldName]?.required === true;
 
 						return {
 							...acc,
-							fields: acc.fields.map((field: any) => {
+							fields: acc.fields?.map((field: any) => {
 								if (field.name === fieldName && isRequired) {
 									return {
 										...field,
@@ -185,8 +177,8 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 
 	const onFormSubmit = (data: FormValues): void => {
 		onSubmit({
-			validation: createValidationChecksFromFormData(data, fieldTypeData, preset),
-			config: createConfig(data, preset),
+			validation: generateValidationChecks(data, fieldTypeData, preset),
+			config: generateConfig(data, preset),
 		});
 	};
 
@@ -194,7 +186,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	 * Render
 	 */
 	const renderCCValidation = (): ReactElement => {
-		if (!formRendererConnector.api || !hasValidatorsToConfigure(preset)) {
+		if (!formRendererConnector.api || !hasValidatorsToConfigure(fieldTypeData, preset)) {
 			return <p>Er zijn geen validatie mogelijkheden</p>;
 		}
 
@@ -202,8 +194,8 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 			<formRendererConnector.api.Form
 				schema={
 					preset
-						? createFormSchemaFromPreset(preset)
-						: createFormSchemaFromfieldTypeData(fieldTypeData)
+						? generateFormSchemaFromPreset(preset)
+						: generateFormSchemaFromFieldTypeData(fieldTypeData)
 				}
 				validationSchema={DEFAULT_VALIDATION_SCHEMA}
 				initialValues={initialFormValue}

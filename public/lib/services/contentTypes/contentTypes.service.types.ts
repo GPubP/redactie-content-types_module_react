@@ -1,5 +1,5 @@
 import { DataType, FieldType, Operator } from '../fieldTypes';
-import { Preset, PresetDetail } from '../presets';
+import { Preset, PresetDetail, Validator } from '../presets';
 
 /**
  * =========================
@@ -30,14 +30,18 @@ export interface Validation {
 }
 
 export type ValidationSchema = Record<string, any>;
-export interface BaseContentTypeField {
+
+export interface Field<D = DataType, F = FieldType, P = Preset | PresetDetail> {
 	uuid?: string;
 	label: string;
 	module: string;
 	name: string;
-	config: any;
+	config: {
+		fields?: Field[];
+		[key: string]: any;
+	};
 	defaultValue?: any;
-	validators: string[];
+	validators: Validator[];
 	operators: Operator[];
 	validation?: Validation;
 	generalConfig: {
@@ -47,6 +51,9 @@ export interface BaseContentTypeField {
 		min?: number;
 		max?: number;
 	};
+	dataType: D;
+	fieldType: F;
+	preset?: P;
 }
 export interface ContentTypePaging {
 	total: number;
@@ -79,15 +86,8 @@ export interface ModuleSettings {
 	validationSchema?: ValidationSchema;
 }
 
-export interface ContentTypeFieldDetail extends BaseContentTypeField {
-	dataType: DataType;
-	fieldType: FieldType;
-	preset?: Preset | PresetDetail;
-}
-export interface ContentTypeField extends BaseContentTypeField {
-	dataType: string;
-	fieldType: string;
-}
+export type ContentTypeFieldDetail = Field;
+export type ContentTypeField = Field<string, string, string>;
 
 /**
  * =========================

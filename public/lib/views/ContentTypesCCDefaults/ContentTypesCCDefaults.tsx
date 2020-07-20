@@ -1,12 +1,13 @@
 import { Checkbox } from '@acpaas-ui/react-components';
-import { FieldDataType, FormsAPI, FormSchema } from '@redactie/form-renderer-module';
-import Core from '@redactie/redactie-core';
+import { FieldDataType, FormSchema } from '@redactie/form-renderer-module';
 import { Field, Formik } from 'formik';
 import React, { FC, ReactElement } from 'react';
 
 import { AutoSubmit } from '../../components';
-import { generateCCFormState } from '../../contentTypes.helpers';
+import formRendererConnector from '../../connectors/formRenderer';
+import { DEFAULT_VALIDATION_SCHEMA } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
+import { generateCCFormState } from '../../helpers';
 
 const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 	CTField,
@@ -16,8 +17,6 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 	/**
 	 * Methods
 	 */
-	const formsAPI = Core.modules.getModuleAPI('forms-module') as FormsAPI;
-
 	const parsedFormSchema: FormSchema = {
 		fields: CTField.fieldType._id
 			? [
@@ -35,17 +34,11 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 			: [],
 	};
 
-	const validationSchema = {
-		$schema: 'http://json-schema.org/draft-07/schema#',
-		type: 'object',
-		properties: {},
-	};
-
 	/**
 	 * Render
 	 */
 	const renderCCDefaults = (): ReactElement | null => {
-		if (!formsAPI || parsedFormSchema.fields.length === 0) {
+		if (!formRendererConnector.api || parsedFormSchema.fields.length === 0) {
 			return (
 				<p className="u-margin-bottom">
 					Er zijn geen mogelijkheden voor een standaard waarde in te vullen
@@ -56,10 +49,10 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 		const initialValues = defaultValue ? { defaultValue } : {};
 
 		return (
-			<formsAPI.Form
+			<formRendererConnector.api.Form
 				initialValues={initialValues}
 				schema={parsedFormSchema}
-				validationSchema={validationSchema}
+				validationSchema={DEFAULT_VALIDATION_SCHEMA}
 				errorMessages={{}}
 				onSubmit={onSubmit}
 			>
@@ -70,7 +63,7 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 						values={values}
 					/>
 				)}
-			</formsAPI.Form>
+			</formRendererConnector.api.Form>
 		);
 	};
 

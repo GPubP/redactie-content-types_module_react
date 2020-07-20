@@ -3,7 +3,7 @@ import { clone } from 'ramda';
 import React, { FC, useEffect } from 'react';
 
 import { ContentTypesDetailRouteProps, Tab } from '../../contentTypes.types';
-import { mapExternalTabToTab } from '../../helpers/mapExternalTabToTab/mapExternalTabToTab';
+import { mapExternalTabToTab } from '../../helpers';
 import { useExternalTabstFacade } from '../../store/api/externalTabs/externalTabs.facade';
 
 import { ContentTypeDetailMatchProps, ExternalTabValue } from './ContentTypeDetailExternal.types';
