@@ -29,6 +29,7 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
+		disableSorting: true,
 		component(value: string, rowData: ContentTypeDetailCCRow) {
 			const { path } = rowData;
 			return (
@@ -42,10 +43,12 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_TYPE),
 		value: 'fieldType',
+		disableSorting: true,
 	},
 	{
 		label: 'Meerdere',
 		value: 'multiple',
+		disableSorting: true,
 		component(value: any, rowData: ContentTypeDetailCCRow) {
 			return <StatusIcon active={rowData.multiple} />;
 		},
@@ -53,6 +56,7 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: 'Verplicht',
 		value: 'required',
+		disableSorting: true,
 		component(value: any, rowData: ContentTypeDetailCCRow) {
 			return <StatusIcon active={rowData.required} />;
 		},
@@ -60,6 +64,7 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: 'Vertaalbaar',
 		value: 'translatable',
+		disableSorting: true,
 		component(value: any, rowData: ContentTypeDetailCCRow) {
 			return <StatusIcon active={rowData.translatable} />;
 		},
@@ -67,6 +72,7 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 	{
 		label: 'Verborgen',
 		value: 'hidden',
+		disableSorting: true,
 		component(value: any, rowData: ContentTypeDetailCCRow) {
 			return <StatusIcon active={rowData.hidden} />;
 		},

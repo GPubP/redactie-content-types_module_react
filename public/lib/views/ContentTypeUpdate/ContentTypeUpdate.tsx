@@ -47,17 +47,12 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const [{ all: externalTabs, active: activeExternalTab }] = useExternalTabstFacade();
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, externalTabs, location.pathname);
 	const { tenantId } = useTenantContext();
-	const breadcrumbs = useRoutesBreadcrumbs(
-		[
-			{
-				name: 'Content types',
-				target: generatePath(MODULE_PATHS.admin),
-			},
-		],
+	const breadcrumbs = useRoutesBreadcrumbs([
 		{
-			contentTypeName: contentType?.meta.label,
-		}
-	);
+			name: 'Content types',
+			target: generatePath(MODULE_PATHS.admin),
+		},
+	]);
 	const guardsMeta = useMemo(
 		() => ({
 			tenantId,
@@ -214,7 +209,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 					to: props.href,
 					component: Link,
 				})}
-				title="Content type bewerken"
+				title={contentType?.meta.label ? `${contentType?.meta.label} bewerken` : ''}
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>

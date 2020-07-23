@@ -45,6 +45,7 @@ export interface Field<D = DataType, F = FieldType, P = Preset | PresetDetail> {
 	operators: Operator[];
 	validation?: Validation;
 	generalConfig: {
+		guideline: string;
 		multiLanguage?: boolean;
 		required?: boolean;
 		hidden?: boolean;

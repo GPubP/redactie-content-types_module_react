@@ -11,7 +11,7 @@ import AutoSubmit from '../AutoSubmit/AutoSubmit';
 import { IS_MULTIPLE_OPTIONS } from './FormCCSettings.const';
 import { FormCCSettingsProps } from './FormCCSettings.types';
 
-const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) => {
+const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, fieldTypeData, onSubmit }) => {
 	const [isMultiple, setIsMultiple] = useState(initialValues.generalConfig.max > 1);
 	const [t] = useCoreTranslation();
 
@@ -61,9 +61,9 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 							<div className="col-xs-12">
 								<Field
 									as={Textarea}
-									id="config.guideline"
+									id="generalConfig.guideline"
 									label="Richtlijn (optioneel)"
-									name="config.guideline"
+									name="generalConfig.guideline"
 								/>
 								<div className="u-text-light u-margin-top-xs">
 									Geef de redacteur een richtlijn voor het ingeven van deze
@@ -71,48 +71,50 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, onSubmit }) =>
 								</div>
 							</div>
 						</div>
-						<div className="row u-margin-top">
-							<div className="col-xs-12">
-								<RadioGroup
-									id="isMultiple"
-									name="isMultiple"
-									onChange={(e: ChangeEvent<HTMLInputElement>) => {
-										setIsMultiple(e.target.value === 'true');
-										submitForm();
-									}}
-									options={IS_MULTIPLE_OPTIONS}
-									value={String(isMultiple)}
-								/>
-								<div className="u-text-light u-margin-top-xs">
-									Bepaal hoeveel items van dit component er aangemaakt kunnen
-									worden
-								</div>
-								{isMultiple && (
-									<div className="row u-margin-top">
-										<div className="col-xs-2">
-											<Field
-												as={TextField}
-												type="number"
-												id="generalConfig.min"
-												min="0"
-												label="Min."
-												name="generalConfig.min"
-											/>
-										</div>
-										<div className="col-xs-2">
-											<Field
-												as={TextField}
-												type="number"
-												id="generalConfig.max"
-												label="Max."
-												max="100"
-												name="generalConfig.max"
-											/>
-										</div>
+						{fieldTypeData.generalConfig.isMultiple ? (
+							<div className="row u-margin-top">
+								<div className="col-xs-12">
+									<RadioGroup
+										id="isMultiple"
+										name="isMultiple"
+										onChange={(e: ChangeEvent<HTMLInputElement>) => {
+											setIsMultiple(e.target.value === 'true');
+											submitForm();
+										}}
+										options={IS_MULTIPLE_OPTIONS}
+										value={String(isMultiple)}
+									/>
+									<div className="u-text-light u-margin-top-xs">
+										Bepaal hoeveel items van dit component er aangemaakt kunnen
+										worden
 									</div>
-								)}
+									{isMultiple && (
+										<div className="row u-margin-top">
+											<div className="col-xs-2">
+												<Field
+													as={TextField}
+													type="number"
+													id="generalConfig.min"
+													min="0"
+													label="Min."
+													name="generalConfig.min"
+												/>
+											</div>
+											<div className="col-xs-2">
+												<Field
+													as={TextField}
+													type="number"
+													id="generalConfig.max"
+													label="Max."
+													max="100"
+													name="generalConfig.max"
+												/>
+											</div>
+										</div>
+									)}
+								</div>
 							</div>
-						</div>
+						) : null}
 						<div className="row u-margin-top">
 							<div className="col-xs-12">
 								<Field

@@ -25,6 +25,7 @@ export const generateFieldFromType = (
 	validation: generateValidationChecks({}, fieldType.data, preset),
 	operators: [],
 	generalConfig: {
+		guideline: '',
 		required: true,
 		hidden: false,
 		min: 0,

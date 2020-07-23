@@ -50,10 +50,8 @@ export interface CCSettingsFormState {
 	label: string;
 	name: string;
 	defaultValue: string;
-	config: {
-		guideline: string;
-	};
 	generalConfig: {
+		guideline: string;
 		required: boolean;
 		hidden: boolean;
 		min: number;

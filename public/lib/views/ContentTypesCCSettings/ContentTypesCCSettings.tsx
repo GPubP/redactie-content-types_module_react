@@ -5,14 +5,23 @@ import { FormCCSettings } from '../../components';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
 import { generateCCFormState } from '../../helpers';
 
-const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({ CTField, onDelete, onSubmit }) => {
+const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
+	CTField,
+	fieldTypeData,
+	onDelete,
+	onSubmit,
+}) => {
 	/**
 	 * Render
 	 */
 	return (
 		<>
 			<h6 className="u-margin-bottom">Instellingen</h6>
-			<FormCCSettings initialValues={generateCCFormState(CTField)} onSubmit={onSubmit} />
+			<FormCCSettings
+				initialValues={generateCCFormState(CTField)}
+				fieldTypeData={fieldTypeData}
+				onSubmit={onSubmit}
+			/>
 			{onDelete && (
 				<Card className="u-margin-top">
 					<CardBody>
