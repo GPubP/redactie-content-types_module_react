@@ -3,7 +3,7 @@ import { Table } from '@acpaas-ui/react-editorial-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
 import classNames from 'classnames/bind';
 import { useFormikContext } from 'formik';
-import { pathOr } from 'ramda';
+import { clone, equals, pathOr } from 'ramda';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -31,8 +31,8 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 	/**
 	 * HOOKS
 	 */
-	const { contentTypeUuid, contentComponentUuid } = useParams();
-	const { setFieldValue } = useFormikContext();
+	const { contentTypeUuid } = useParams();
+	const { setFieldValue, values } = useFormikContext<Record<string, Field[]>>();
 	const activeField = useActiveField();
 	const dynamicField = useDynamicField();
 	const [, fieldTypes] = useFieldTypes();
@@ -46,10 +46,14 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 	const [t] = useCoreTranslation();
 
 	useEffect(() => {
-		if (activeField && contentComponentUuid && contentComponentUuid !== dynamicField?.uuid) {
-			dynamicFieldFacade.setDynamicField(activeField);
+		if (!activeField) {
+			return;
 		}
-	}, [activeField, contentComponentUuid, dynamicField]);
+
+		if (!dynamicField || dynamicField.uuid !== activeField.uuid) {
+			dynamicFieldFacade.setDynamicField(clone(activeField));
+		}
+	}, [activeField, dynamicField]);
 
 	useEffect(() => {
 		setFieldTypeOptions(
@@ -62,6 +66,10 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 	}, [fields]);
 
 	useEffect(() => {
+		if (equals(value, values[fieldSchema.name])) {
+			return;
+		}
+
 		setFieldValue(fieldSchema.name, value);
 		setFieldValue('validation', {
 			allowedFields: (Array.isArray(value) ? value : []).map(field => ({
@@ -70,7 +78,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 				checks: field.validation?.checks,
 			})),
 		});
-	}, [value, fieldSchema.name]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [value, fieldSchema.name, setFieldValue, values]);
 
 	/**
 	 * VARIABLES
@@ -90,14 +98,20 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 		// send the fieldtype or preset with a query parameter
 		// Only presets have a fieldType prop available on the data object
 		const fieldTypeIsPreset = !!selectedFieldType?.data.fieldType;
-		const queryParams = fieldTypeIsPreset
-			? `?preset=${selectedFieldType.uuid}`
-			: `?fieldType=${selectedFieldType.uuid}`;
 
-		navigate(`${MODULE_PATHS.detailCCEditDynamicNewSettings}${queryParams}`, {
-			contentTypeUuid,
-			contentComponentUuid: activeField?.uuid,
-		});
+		navigate(
+			MODULE_PATHS.detailCCEditDynamicNewSettings,
+			{
+				contentTypeUuid,
+				contentComponentUuid: activeField?.uuid,
+			},
+			undefined,
+			new URLSearchParams(
+				fieldTypeIsPreset
+					? { preset: selectedFieldType.uuid }
+					: { fieldType: selectedFieldType.uuid }
+			)
+		);
 	};
 
 	/**

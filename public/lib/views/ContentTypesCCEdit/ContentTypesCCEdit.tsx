@@ -139,7 +139,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({
 							<NavList
 								items={CC_NAV_LIST_ITEMS.map(listItem => ({
 									...listItem,
-									meta: fieldType,
+									meta: preset || fieldType,
 									to: generatePath(listItem.to, {
 										contentTypeUuid,
 										contentComponentUuid,

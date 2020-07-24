@@ -35,9 +35,6 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		return CTField.config;
 	}, [CTField, preset]);
 
-	/**
-	 * Methods
-	 */
 	const generateFormSchemaFromPreset = (preset: PresetDetailModel): FormSchema => ({
 		fields: (preset?.data.fields || []).reduce((fSchema, presetField) => {
 			presetField.formSchema?.fields?.forEach(field =>
@@ -55,6 +52,18 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 				(field): FieldSchema => generateFRFieldFromCTField(field)
 			) || [],
 	});
+
+	const schema: FormSchema = useMemo(
+		() =>
+			preset
+				? generateFormSchemaFromPreset(preset)
+				: generateFormSchemaFromFieldTypeData(fieldTypeData),
+		[fieldTypeData, preset]
+	);
+
+	/**
+	 * Methods
+	 */
 
 	const generateFieldConfig = (
 		data: FormValues,
@@ -111,7 +120,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	const onFormSubmit = (data: FormValues): void => {
 		onSubmit({
 			config: generateFieldConfig(data, CTField, preset),
-			// validation: generateFieldValidation(data, CTField), TODO: find a way to set validatio based on configuration
+			// validation: generateFieldValidation(data, CTField), TODO: find a way to set validation based on configuration
 		});
 	};
 
@@ -126,11 +135,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		return (
 			<formRendererConnector.api.Form
 				initialValues={initialFormValue}
-				schema={
-					preset
-						? generateFormSchemaFromPreset(preset)
-						: generateFormSchemaFromFieldTypeData(fieldTypeData)
-				}
+				schema={schema}
 				validationSchema={DEFAULT_VALIDATION_SCHEMA}
 				errorMessages={{}}
 				onSubmit={onFormSubmit}

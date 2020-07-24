@@ -99,7 +99,14 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	 * Methods
 	 */
 	const navigateToOverview = (): void => {
-		navigate(MODULE_PATHS.detailCCEditConfig, { contentTypeUuid, contentComponentUuid });
+		navigate(
+			activeField?.__new ? MODULE_PATHS.detailCCNewConfig : MODULE_PATHS.detailCCEditConfig,
+			{
+				contentTypeUuid,
+				contentComponentUuid,
+				...(activeField?.__new ? { fieldType: activeField?.fieldType.uuid } : {}),
+			}
+		);
 	};
 
 	const onFieldChange = (data: ContentTypeFieldDetailModel): void => {

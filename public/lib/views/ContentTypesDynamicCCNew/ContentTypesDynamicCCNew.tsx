@@ -14,6 +14,7 @@ import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
 import { generateFieldFromType } from '../../helpers';
 import { useFieldType, useNavigate, usePreset, useQuery, useTenantContext } from '../../hooks';
+import useActiveField from '../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../hooks/useDynamicActiveField/useDynamicActiveField';
 import useDynamicField from '../../hooks/useDynamicField/useDynamicField';
 import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
@@ -39,6 +40,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	const presetUuid = query.get('preset');
 	const [fieldTypeLoadingState, fieldType] = useFieldType();
 	const [presetLoadingState, preset] = usePreset();
+	const activeField = useActiveField();
 	const dynamicField = useDynamicField();
 	const dynamicActiveField = useDynamicActiveField();
 	const { generatePath, navigate } = useNavigate();
@@ -78,12 +80,18 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			return;
 		}
 
-		const activeField = contentType.fields.find(field => field.uuid === contentComponentUuid);
-
 		if (activeField) {
 			dynamicFieldFacade.setDynamicField(activeField);
 		}
-	}, [contentComponentUuid, contentType.fields, dynamicField]);
+
+		const newActiveField = contentType.fields.find(
+			field => field.uuid === contentComponentUuid
+		);
+
+		if (newActiveField) {
+			dynamicFieldFacade.setDynamicField(newActiveField);
+		}
+	}, [activeField, contentComponentUuid, contentType.fields, dynamicField]);
 
 	/**
 	 * Get preset or fieldType based on the input of the
@@ -128,7 +136,14 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	 * Methods
 	 */
 	const navigateToOverview = (): void => {
-		navigate(MODULE_PATHS.detailCCEditConfig, { contentTypeUuid, contentComponentUuid });
+		navigate(
+			activeField?.__new ? MODULE_PATHS.detailCCNewConfig : MODULE_PATHS.detailCCEditConfig,
+			{
+				contentTypeUuid,
+				contentComponentUuid,
+				...(activeField?.__new ? { fieldType: activeField?.fieldType.uuid } : {}),
+			}
+		);
 	};
 
 	const onFieldSubmit = (): void => {

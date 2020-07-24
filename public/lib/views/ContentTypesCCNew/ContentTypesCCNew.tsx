@@ -143,6 +143,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 						<NavList
 							items={CC_NAV_LIST_ITEMS.map(listItem => ({
 								...listItem,
+								meta: preset || fieldType,
 								to: generatePath(`${listItem.to}${history.location.search}`, {
 									contentTypeUuid,
 								}),
