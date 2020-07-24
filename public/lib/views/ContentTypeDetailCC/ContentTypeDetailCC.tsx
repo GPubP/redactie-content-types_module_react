@@ -7,15 +7,19 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { Field, Formik } from 'formik';
-import { pathOr } from 'ramda';
+import { path, pathOr } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { FormCTNewCC } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
-import { ContentTypesDetailRouteProps, NewCCFormState } from '../../contentTypes.types';
-import { useNavigate } from '../../hooks';
+import {
+	ContentTypesDetailRouteProps,
+	LoadingState,
+	NewCCFormState,
+} from '../../contentTypes.types';
+import { useContentType, useNavigate } from '../../hooks';
 import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
 
 import { CONTENT_TYPE_COLUMNS, CT_CC_VALIDATION_SCHEMA } from './ContentTypeDetailCC.const';
@@ -30,18 +34,26 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 }) => {
 	const fields = useMemo(() => [...fieldTypes, ...presets], [fieldTypes, presets]);
 
-	const fieldTypeOptions = fields.map(fieldType => ({
-		key: fieldType.uuid,
-		value: fieldType.uuid,
-		label: fieldType?.data?.label,
-	}));
-
 	/**
 	 * Hooks
 	 */
 	const { contentTypeUuid } = useParams();
 	const { navigate, generatePath } = useNavigate();
 	const [t] = useCoreTranslation();
+	const [, contentTypIsUpdating] = useContentType();
+	const isLoading = useMemo(() => {
+		return contentTypIsUpdating === LoadingState.Loading;
+	}, [contentTypIsUpdating]);
+
+	/**
+	 * Variables
+	 */
+
+	const fieldTypeOptions = fields.map(fieldType => ({
+		key: fieldType.uuid,
+		value: fieldType.uuid,
+		label: fieldType?.data?.label,
+	}));
 
 	/**
 	 * Methods
@@ -84,7 +96,9 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 			}),
 			label: cc.label,
 			name: cc.name,
-			fieldType: pathOr('error', ['fieldType', 'data', 'label'])(cc),
+			fieldType:
+				(path(['preset', 'data', 'label'])(cc) as string | null) ||
+				pathOr('error', ['fieldType', 'data', 'label'])(cc),
 			multiple: Number(cc.generalConfig.max) > 1,
 			required: !!cc.generalConfig.required,
 			translatable: !!cc.generalConfig.multiLanguage,
@@ -126,6 +140,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 						<div className="u-margin">
 							<h5>Voeg een content componenten toe</h5>
 							<FormCTNewCC
+								className="u-margin-top"
 								fieldTypeOptions={fieldTypeOptions}
 								formState={{ fieldType: '', name: '' }}
 								onSubmit={onCCFormSubmit}
@@ -147,7 +162,13 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 						<Button onClick={onCancel} negative>
 							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
-						<Button className="u-margin-left-xs" onClick={onCCSave} type="success">
+						<Button
+							iconLeft={isLoading ? 'circle-o-notch fa-spin' : null}
+							disabled={isLoading}
+							className="u-margin-left-xs"
+							onClick={onCCSave}
+							type="success"
+						>
 							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
 						</Button>
 					</div>
