@@ -12,6 +12,7 @@ import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
 import { useFieldType, useNavigate, usePreset, useTenantContext } from '../../hooks';
+import { FieldType } from '../../services/fieldTypes';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
 import { fieldTypesFacade } from '../../store/fieldTypes';
 import { presetsFacade } from '../../store/presets';
@@ -43,6 +44,25 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({
 		}),
 		[tenantId]
 	);
+	const navItemMatcher = useMemo(() => {
+		return (preset?.data?.fields || []).reduce(
+			(acc, field) => {
+				acc.data.formSchema.fields = [
+					...acc.data.formSchema.fields,
+					...(field?.formSchema?.fields || []),
+				];
+				acc.data.validators = [...acc.data.validators, ...(field?.validators || [])];
+
+				return acc;
+			},
+			({
+				data: {
+					formSchema: { fields: [...(fieldType?.data?.formSchema?.fields || [])] },
+					validators: [...(fieldType?.data?.validators || [])],
+				},
+			} as unknown) as FieldType
+		);
+	}, [fieldType, preset]);
 
 	useEffect(() => {
 		if (
@@ -57,15 +77,22 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({
 	}, [fieldTypeLoading, fieldType, presetLoading]);
 
 	useEffect(() => {
-		if (contentComponentUuid && Array.isArray(contentType.fields)) {
-			const activeField = contentType.fields.find(
-				field => field.uuid === contentComponentUuid
-			);
-			if (activeField) {
-				contentTypesFacade.setActiveField(activeField);
-			}
+		if (
+			!contentComponentUuid ||
+			!Array.isArray(contentType.fields) ||
+			(activeField && activeField?.uuid === contentComponentUuid)
+		) {
+			return;
 		}
-	}, [contentComponentUuid, contentType.fields]);
+
+		const newActiveField = contentType.fields.find(
+			field => field.uuid === contentComponentUuid
+		);
+
+		if (newActiveField) {
+			contentTypesFacade.setActiveField(newActiveField);
+		}
+	}, [activeField, activeFieldFTUuid, contentComponentUuid, contentType.fields]);
 
 	useEffect(() => {
 		if (activeFieldFTUuid) {
@@ -139,7 +166,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({
 							<NavList
 								items={CC_NAV_LIST_ITEMS.map(listItem => ({
 									...listItem,
-									meta: preset || fieldType,
+									meta: navItemMatcher,
 									to: generatePath(listItem.to, {
 										contentTypeUuid,
 										contentComponentUuid,

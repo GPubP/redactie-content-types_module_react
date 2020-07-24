@@ -14,6 +14,7 @@ import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
 import { generateFieldFromType } from '../../helpers';
 import { useFieldType, useNavigate, usePreset, useQuery, useTenantContext } from '../../hooks';
+import { FieldType } from '../../services/fieldTypes';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
 import { fieldTypesFacade } from '../../store/fieldTypes';
 import { presetsFacade } from '../../store/presets';
@@ -46,6 +47,25 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 		}),
 		[tenantId]
 	);
+	const navItemMatcher = useMemo(() => {
+		return (preset?.data?.fields || []).reduce(
+			(acc, field) => {
+				acc.data.formSchema.fields = [
+					...acc.data.formSchema.fields,
+					...(field?.formSchema?.fields || []),
+				];
+				acc.data.validators = [...acc.data.validators, ...(field?.validators || [])];
+
+				return acc;
+			},
+			({
+				data: {
+					formSchema: { fields: [...(fieldType?.data?.formSchema?.fields || [])] },
+					validators: [...(fieldType?.data?.validators || [])],
+				},
+			} as unknown) as FieldType
+		);
+	}, [fieldType, preset]);
 
 	useEffect(() => {
 		presetsFacade.clearPreset();
@@ -143,7 +163,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 						<NavList
 							items={CC_NAV_LIST_ITEMS.map(listItem => ({
 								...listItem,
-								meta: preset || fieldType,
+								meta: navItemMatcher,
 								to: generatePath(`${listItem.to}${history.location.search}`, {
 									contentTypeUuid,
 								}),

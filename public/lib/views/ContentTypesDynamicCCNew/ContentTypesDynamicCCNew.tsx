@@ -6,6 +6,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import kebabCase from 'lodash.kebabcase';
+import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { DataLoader, NavList, RenderChildRoutes } from '../../components';
@@ -151,7 +152,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			return;
 		}
 
-		dynamicFieldFacade.addField(dynamicActiveField);
+		dynamicFieldFacade.addField(omit(['__new'])(dynamicActiveField));
 		navigateToOverview();
 	};
 

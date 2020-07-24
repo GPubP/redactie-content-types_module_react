@@ -51,7 +51,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 		}
 
 		if (!dynamicField || dynamicField.uuid !== activeField.uuid) {
-			dynamicFieldFacade.setDynamicField(clone(activeField));
+			dynamicFieldFacade.setDynamicField(activeField);
 		}
 	}, [activeField, dynamicField]);
 

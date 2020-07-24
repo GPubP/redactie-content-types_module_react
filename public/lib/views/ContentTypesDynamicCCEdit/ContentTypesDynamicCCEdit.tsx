@@ -5,6 +5,7 @@ import {
 	Container,
 } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
+import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { DataLoader, NavList, RenderChildRoutes } from '../../components';
@@ -14,8 +15,11 @@ import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.t
 import { useNavigate, useTenantContext } from '../../hooks';
 import useActiveField from '../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../hooks/useDynamicActiveField/useDynamicActiveField';
+import useDynamicField from '../../hooks/useDynamicField/useDynamicField';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
 import { dynamicFieldFacade } from '../../store/dynamicField/dynamicField.facade';
+import { fieldTypesFacade } from '../../store/fieldTypes';
+import { presetsFacade } from '../../store/presets';
 
 import { CC_DYNAMIC_NAV_LIST_ITEMS } from './ContentTypesDynamicCCEdit.const';
 
@@ -31,10 +35,13 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const activeField = useActiveField();
+	const dynamicField = useDynamicField();
 	const dynamicActiveField = useDynamicActiveField();
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
+	const activeFieldFTUuid = useMemo(() => activeField?.fieldType.uuid, [activeField]);
+	const activeFieldPSUuid = useMemo(() => activeField?.preset?.uuid, [activeField]);
 	const guardsMeta = useMemo(
 		() => ({
 			tenantId,
@@ -51,23 +58,34 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	}, [activeField]);
 
 	useEffect(() => {
-		if (!contentComponentUuid || !Array.isArray(contentType.fields)) {
+		if (
+			!contentComponentUuid ||
+			!Array.isArray(contentType.fields) ||
+			(activeField && activeField.uuid === contentComponentUuid)
+		) {
 			return;
 		}
 
-		const activeField = contentType.fields.find(field => field.uuid === contentComponentUuid);
+		const newActiveField = contentType.fields.find(
+			field => field.uuid === contentComponentUuid
+		);
 
-		if (activeField) {
-			contentTypesFacade.setActiveField(activeField);
+		if (newActiveField) {
+			contentTypesFacade.setActiveField(newActiveField);
 		}
-	}, [contentComponentUuid, contentType, contentType.fields]);
+	}, [activeField, contentComponentUuid, contentType, contentType.fields]);
 
 	useEffect(() => {
-		if (!dynamicContentComponentUuid || !Array.isArray(activeField?.config?.fields)) {
+		if (
+			!dynamicContentComponentUuid ||
+			!Array.isArray(dynamicField?.config?.fields) ||
+			dynamicActiveField?.uuid === dynamicContentComponentUuid ||
+			!dynamicField
+		) {
 			return;
 		}
 
-		const field = (activeField?.config?.fields || []).find(
+		const field = (dynamicField?.config?.fields || []).find(
 			f => f.uuid === dynamicContentComponentUuid
 		);
 
@@ -75,25 +93,22 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			return;
 		}
 
-		if (activeField) {
-			dynamicFieldFacade.setActiveField(field);
+		dynamicFieldFacade.setActiveField(field);
+	}, [dynamicContentComponentUuid, activeField, dynamicActiveField, dynamicField]);
+
+	useEffect(() => {
+		if (activeFieldFTUuid) {
+			fieldTypesFacade.getFieldType(activeFieldFTUuid);
+		} else {
+			fieldTypesFacade.clearFieldType();
 		}
-	}, [dynamicContentComponentUuid, activeField]);
 
-	// TODO: find out if this is still necessary in this context
-	// useEffect(() => {
-	// 	if (activeFieldFTUuid) {
-	// 		fieldTypesFacade.getFieldType(activeFieldFTUuid);
-	// 	} else {
-	// 		fieldTypesFacade.clearFieldType();
-	// 	}
-
-	// 	if (activeFieldPSUuid) {
-	// 		presetsFacade.getPreset(activeFieldPSUuid);
-	// 	} else {
-	// 		presetsFacade.clearPreset();
-	// 	}
-	// }, []);
+		if (activeFieldPSUuid) {
+			presetsFacade.getPreset(activeFieldPSUuid);
+		} else {
+			presetsFacade.clearPreset();
+		}
+	}, [activeFieldFTUuid, activeFieldPSUuid]);
 
 	/**
 	 * Methods
@@ -110,7 +125,9 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	};
 
 	const onFieldChange = (data: ContentTypeFieldDetailModel): void => {
-		dynamicFieldFacade.updateField(data);
+		dynamicFieldFacade.updateActiveField({
+			...data,
+		});
 	};
 
 	const onFieldDelete = (): void => {
@@ -127,7 +144,8 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		if (!dynamicActiveField) {
 			return;
 		}
-		dynamicFieldFacade.updateField(dynamicActiveField);
+
+		dynamicFieldFacade.updateField(omit(['__new'])(dynamicActiveField));
 		navigateToOverview();
 	};
 

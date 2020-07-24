@@ -120,7 +120,8 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	const onFormSubmit = (data: FormValues): void => {
 		onSubmit({
 			config: generateFieldConfig(data, CTField, preset),
-			// validation: generateFieldValidation(data, CTField), TODO: find a way to set validation based on configuration
+			// TODO: find a way to set validation based on configuration
+			// validation: generateFieldValidation(data, CTField),
 		});
 	};
 
