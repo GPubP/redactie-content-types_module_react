@@ -9,10 +9,8 @@ export const generateCCFormState = (
 	label: initialValues.label || '',
 	name: initialValues.name || '',
 	defaultValue: initialValues.defaultValue || '',
-	config: {
-		guideline: pathOr('', ['config', 'guideline'], initialValues),
-	},
 	generalConfig: {
+		guideline: pathOr('', ['generalConfig', 'guideline'], initialValues),
 		required: pathOr(true, ['generalConfig', 'required'], initialValues),
 		hidden: pathOr(false, ['generalConfig', 'hidden'], initialValues),
 		min: pathOr(0, ['generalConfig', 'min'], initialValues),

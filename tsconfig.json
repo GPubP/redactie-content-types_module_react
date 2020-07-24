@@ -28,6 +28,7 @@
   },
   "include": [
     "public",
-    "node_modules/@redactie/translations-module"
+    "node_modules/@redactie/translations-module",
+    "node_modules/@a-ui/core"
   ]
 }

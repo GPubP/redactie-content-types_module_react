@@ -7,6 +7,9 @@ export const generateFRFieldFromCTField = (field: Field, name?: string): FieldSc
 	module: field.fieldType?.data?.module,
 	label: field.label,
 	type: field.fieldType?.data?.componentName,
-	config: field.config,
+	config: {
+		...field.config,
+		description: field.generalConfig.guideline,
+	},
 	dataType: field.dataType?.data?.type as FieldDataType,
 });

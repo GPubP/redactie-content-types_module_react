@@ -6,7 +6,7 @@ import formRendererConnector from '../../connectors/formRenderer';
 import { DEFAULT_VALIDATION_SCHEMA } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
 import { generateFRFieldFromCTField } from '../../helpers';
-import { Field } from '../../services/contentTypes';
+import { Field, Validation } from '../../services/contentTypes';
 import { FieldTypeData } from '../../services/fieldTypes';
 import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
 import { PresetDetailModel } from '../../store/presets';
@@ -23,7 +23,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	const initialFormValue: FormValues = useMemo(() => {
 		const { config } = CTField;
 
-		if ((config.fields || []).length > 0) {
+		if (preset && (config.fields || []).length > 0) {
 			return (
 				config.fields?.reduce((initialValues: FormValues, field: Field) => {
 					initialValues[field.name] = field.config;
@@ -33,7 +33,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		}
 
 		return CTField.config;
-	}, [CTField]);
+	}, [CTField, preset]);
 
 	/**
 	 * Methods
@@ -61,23 +61,40 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		CTField: ContentTypeFieldDetailModel,
 		preset?: PresetDetailModel
 	): Record<string, any> => {
-		if (preset && (CTField.config?.fields || []).length > 0) {
-			return {
-				fields: CTField.config.fields?.map(field => {
-					const fieldConfig = data[field.name];
+		const config = data?.config && data?.validation ? data.config : data;
 
-					if (fieldConfig) {
-						return {
-							...field,
-							config: fieldConfig,
-						};
-					}
-					return field;
-				}),
-			};
+		if (!preset || (CTField.config?.fields || []).length <= 0) {
+			return config;
 		}
 
-		return data;
+		return {
+			fields: CTField.config.fields?.map(field => {
+				const fieldConfig = config[field.name];
+
+				if (fieldConfig) {
+					return {
+						...field,
+						config: fieldConfig,
+					};
+				}
+				return field;
+			}),
+		};
+	};
+
+	const generateFieldValidation = (
+		data: FormValues,
+		CTField: ContentTypeFieldDetailModel
+	): Validation => {
+		if (!data.config || !data.validation) {
+			return CTField.validation as Validation;
+		}
+
+		return {
+			...(CTField.validation || {}),
+			type: CTField.dataType.data.type,
+			checks: [...(CTField.validation as Validation)?.checks, data.validation],
+		};
 	};
 
 	const hasConfiguration = (
@@ -92,7 +109,10 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	};
 
 	const onFormSubmit = (data: FormValues): void => {
-		onSubmit({ config: generateFieldConfig(data, CTField, preset) });
+		onSubmit({
+			config: generateFieldConfig(data, CTField, preset),
+			// validation: generateFieldValidation(data, CTField), TODO: find a way to set validatio based on configuration
+		});
 	};
 
 	/**

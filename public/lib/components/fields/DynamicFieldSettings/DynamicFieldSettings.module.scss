@@ -1,0 +1,10 @@
+@import '~@a-ui/core/src/styles/quarks/_quarks.functions.scss';
+@import '~@a-ui/core/src/styles/quarks/_quarks.colors.scss';
+@import '~@a-ui/core/src/styles/quarks/_quarks.variables.scss';
+
+.m-dynamic-field {
+	&__no-content {
+		padding: $spacer;
+		border: 1px dashed #e2e2e2;
+	}
+}

@@ -11,18 +11,14 @@ import { pathOr } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { FormCTNewCC, NavList } from '../../components';
+import { FormCTNewCC } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, NewCCFormState } from '../../contentTypes.types';
 import { useNavigate } from '../../hooks';
 import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
 
-import {
-	CONTENT_TYPE_COLUMNS,
-	CT_CC_NAV_LIST_ITEMS,
-	CT_CC_VALIDATION_SCHEMA,
-} from './ContentTypeDetailCC.const';
+import { CONTENT_TYPE_COLUMNS, CT_CC_VALIDATION_SCHEMA } from './ContentTypeDetailCC.const';
 import { ContentTypeDetailCCRow } from './ContentTypeDetailCC.types';
 
 const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
@@ -120,41 +116,31 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 
 	const renderDetail = (): ReactElement => {
 		return (
-			<Card>
-				<div className="u-margin">
-					<h5>Content componenten</h5>
+			<div className="u-margin">
+				<h5>Content componenten</h5>
 
-					{renderTableForm()}
+				{renderTableForm()}
 
-					<div className="u-margin-top">
-						<Card>
-							<div className="u-margin">
-								<h5>Voeg een content componenten toe</h5>
-								<FormCTNewCC
-									fieldTypeOptions={fieldTypeOptions}
-									formState={{ fieldType: '', name: '' }}
-									onSubmit={onCCFormSubmit}
-								/>
-							</div>
-						</Card>
-					</div>
+				<div className="u-margin-top">
+					<Card>
+						<div className="u-margin">
+							<h5>Voeg een content componenten toe</h5>
+							<FormCTNewCC
+								fieldTypeOptions={fieldTypeOptions}
+								formState={{ fieldType: '', name: '' }}
+								onSubmit={onCCFormSubmit}
+							/>
+						</div>
+					</Card>
 				</div>
-			</Card>
+			</div>
 		);
 	};
 
 	return (
 		<Container>
-			<div className="row between-xs top-xs">
-				<div className="col-xs-3">
-					<NavList items={CT_CC_NAV_LIST_ITEMS} />
-					<Button className="u-margin-top" iconLeft="plus" primary>
-						Sectie toevoegen
-					</Button>
-				</div>
+			{renderDetail()}
 
-				<div className="col-xs-9">{renderDetail()}</div>
-			</div>
 			<ActionBar className="o-action-bar--fixed" isOpen>
 				<ActionBarContentSection>
 					<div className="u-wrapper row end-xs">
