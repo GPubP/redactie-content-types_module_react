@@ -1,5 +1,5 @@
 import * as H from 'history';
-import { stringify } from 'query-string';
+import { ParsedQuery, parseUrl, stringifyUrl } from 'query-string';
 import { useContext } from 'react';
 import { generatePath, useHistory } from 'react-router-dom';
 
@@ -19,13 +19,18 @@ const useNavigate = (): { generatePath: GenerateFn; navigate: NavigateFn } => {
 	const { tenantId } = useContext(TenantContext);
 	const history = useHistory();
 
-	const convertQueryToString = (query?: URLSearchParams | Query): string =>
-		query instanceof URLSearchParams
-			? `?${stringify(Object.fromEntries(query))}`
-			: `?${query ? stringify(query) : ''}`;
+	const combineUrlAndQuery = (url: string, query?: URLSearchParams | Query): string => {
+		const { query: originalQuery, url: originalUrl } = parseUrl(url);
+		const newQueryObject: ParsedQuery<string | number | boolean | undefined> = {
+			...originalQuery,
+			...(query instanceof URLSearchParams ? Object.fromEntries(query) : query),
+		};
+
+		return stringifyUrl({ url: originalUrl, query: newQueryObject as ParsedQuery<string> });
+	};
 
 	const generate = (path: string, params?: Params, query?: URLSearchParams | Query): string =>
-		generatePath(`/${tenantId}${path}${convertQueryToString(query)}`, params);
+		generatePath(combineUrlAndQuery(`/${tenantId}${path}`, query), params);
 	const navigate = (
 		path: string,
 		params?: Params,
