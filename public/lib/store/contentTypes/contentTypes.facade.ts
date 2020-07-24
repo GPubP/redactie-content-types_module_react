@@ -1,3 +1,5 @@
+import { omit } from 'ramda';
+
 import { SearchParams } from '../../services/api/api.service.types';
 import {
 	ContentTypeCreateRequest,
@@ -120,11 +122,12 @@ export class ContentTypesFacade extends BaseEntityFacade<
 
 	public addField(field: ContentTypeFieldDetailModel): void {
 		const { contentType } = this.query.getValue();
+
 		if (contentType) {
 			this.store.update({
 				contentType: {
 					...contentType,
-					fields: [...contentType.fields, field],
+					fields: [...contentType.fields, omit(['__new'])(field)],
 				},
 			});
 		}

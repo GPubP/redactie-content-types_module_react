@@ -10,6 +10,7 @@ export const generateFieldFromType = (
 	initialValues: Partial<ContentTypeFieldDetailModel> = {},
 	preset?: PresetDetailModel
 ): ContentTypeFieldDetailModel => ({
+	__new: true,
 	uuid: uuidv4(),
 	label: '',
 	module: fieldType.data.module || '',
