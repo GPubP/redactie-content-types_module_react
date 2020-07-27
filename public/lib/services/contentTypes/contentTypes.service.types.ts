@@ -55,6 +55,7 @@ export interface Field<D = DataType, F = FieldType, P = Preset | PresetDetail> {
 	dataType: D;
 	fieldType: F;
 	preset?: P;
+	__new?: boolean;
 }
 export interface ContentTypePaging {
 	total: number;

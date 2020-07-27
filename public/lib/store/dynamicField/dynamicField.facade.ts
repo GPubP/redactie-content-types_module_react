@@ -1,3 +1,5 @@
+import { omit } from 'ramda';
+
 import { ContentTypesApiService, contentTypesApiService } from '../../services/contentTypes';
 import { BaseEntityFacade } from '../shared';
 
@@ -46,7 +48,7 @@ export class DynamicFieldFacade extends BaseEntityFacade<
 				...dynamicField,
 				config: {
 					...dynamicField.config,
-					fields: [...(dynamicField.config.fields || []), field],
+					fields: [...(dynamicField.config.fields || []), omit(['__new'])(field)],
 				},
 			},
 		});

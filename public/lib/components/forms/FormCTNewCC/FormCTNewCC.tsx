@@ -65,7 +65,7 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({
 							'end-xs': !hasName,
 						})}
 					>
-						<Button onClick={submitForm} outline>
+						<Button htmlType="button" onClick={submitForm} outline>
 							{t(CORE_TRANSLATIONS.BUTTON_ADD)}
 						</Button>
 					</div>

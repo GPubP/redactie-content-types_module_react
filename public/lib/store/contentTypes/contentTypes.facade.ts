@@ -1,8 +1,11 @@
+import { omit } from 'ramda';
+
 import { SearchParams } from '../../services/api/api.service.types';
 import {
 	ContentTypeCreateRequest,
-	contentTypesApiService,
+	ContentTypeFieldDetail,
 	ContentTypesApiService,
+	contentTypesApiService,
 	ContentTypeUpdateRequest,
 } from '../../services/contentTypes';
 import { BaseEntityFacade } from '../shared';
@@ -28,6 +31,12 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	public readonly contentTypes$ = this.query.contentTypes$;
 	public readonly contentType$ = this.query.contentType$;
 	public readonly activeField$ = this.query.activeField$;
+
+	public getDynamicFieldValue(): ContentTypeFieldDetail | null {
+		const { activeField } = this.store.getValue();
+
+		return activeField || null;
+	}
 
 	public getContentTypes(payload: SearchParams): void {
 		const { isFetching } = this.query.getValue();
@@ -120,11 +129,12 @@ export class ContentTypesFacade extends BaseEntityFacade<
 
 	public addField(field: ContentTypeFieldDetailModel): void {
 		const { contentType } = this.query.getValue();
+
 		if (contentType) {
 			this.store.update({
 				contentType: {
 					...contentType,
-					fields: [...contentType.fields, field],
+					fields: [...contentType.fields, omit(['__new'])(field)],
 				},
 			});
 		}
@@ -168,33 +178,33 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	}
 
 	public updateActiveField(payload: Partial<ContentTypeFieldDetailModel>): void {
-		this.store.update(state => {
-			if (state.activeField) {
-				return {
-					...state,
-					activeField: {
-						...state.activeField,
-						...payload,
-						generalConfig: {
-							...state.activeField.generalConfig,
-							...payload.generalConfig,
-						},
-						config: {
-							...state.activeField.config,
-							...payload.config,
-						},
-						validation: {
-							...state.activeField.validation,
-							...payload.validation,
-						},
-						defaultValue: {
-							...state.activeField.defaultValue,
-							...payload.defaultValue,
-						},
-					},
-				};
-			}
-			return state;
+		const { activeField } = this.store.getValue();
+
+		if (!activeField) {
+			return;
+		}
+
+		this.store.update({
+			activeField: {
+				...activeField,
+				...payload,
+				generalConfig: {
+					...activeField.generalConfig,
+					...payload.generalConfig,
+				},
+				config: {
+					...activeField.config,
+					...payload.config,
+				},
+				validation: {
+					...activeField.validation,
+					...payload.validation,
+				},
+				defaultValue: {
+					...activeField.defaultValue,
+					...payload.defaultValue,
+				},
+			} as ContentTypeFieldDetailModel,
 		});
 	}
 

@@ -43,7 +43,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const { navigate, generatePath } = useNavigate();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 	const [presetsLoadingState, presets] = usePresets();
-	const [contentTypeLoadingState, contentType] = useContentType();
+	const [contentTypeLoadingState, , contentType] = useContentType();
 	const [{ all: externalTabs, active: activeExternalTab }] = useExternalTabstFacade();
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, externalTabs, location.pathname);
 	const { tenantId } = useTenantContext();

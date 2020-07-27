@@ -6,6 +6,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import kebabCase from 'lodash.kebabcase';
+import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { DataLoader, NavList, RenderChildRoutes } from '../../components';
@@ -14,6 +15,7 @@ import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
 import { generateFieldFromType } from '../../helpers';
 import { useFieldType, useNavigate, usePreset, useQuery, useTenantContext } from '../../hooks';
+import useActiveField from '../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../hooks/useDynamicActiveField/useDynamicActiveField';
 import useDynamicField from '../../hooks/useDynamicField/useDynamicField';
 import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
@@ -39,6 +41,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	const presetUuid = query.get('preset');
 	const [fieldTypeLoadingState, fieldType] = useFieldType();
 	const [presetLoadingState, preset] = usePreset();
+	const activeField = useActiveField();
 	const dynamicField = useDynamicField();
 	const dynamicActiveField = useDynamicActiveField();
 	const { generatePath, navigate } = useNavigate();
@@ -78,12 +81,18 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			return;
 		}
 
-		const activeField = contentType.fields.find(field => field.uuid === contentComponentUuid);
-
 		if (activeField) {
 			dynamicFieldFacade.setDynamicField(activeField);
 		}
-	}, [contentComponentUuid, contentType.fields, dynamicField]);
+
+		const newActiveField = contentType.fields.find(
+			field => field.uuid === contentComponentUuid
+		);
+
+		if (newActiveField) {
+			dynamicFieldFacade.setDynamicField(newActiveField);
+		}
+	}, [activeField, contentComponentUuid, contentType.fields, dynamicField]);
 
 	/**
 	 * Get preset or fieldType based on the input of the
@@ -128,7 +137,14 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	 * Methods
 	 */
 	const navigateToOverview = (): void => {
-		navigate(MODULE_PATHS.detailCCEditConfig, { contentTypeUuid, contentComponentUuid });
+		navigate(
+			activeField?.__new ? MODULE_PATHS.detailCCNewConfig : MODULE_PATHS.detailCCEditConfig,
+			{
+				contentTypeUuid,
+				contentComponentUuid,
+				...(activeField?.__new ? { fieldType: activeField?.fieldType.uuid } : {}),
+			}
+		);
 	};
 
 	const onFieldSubmit = (): void => {
@@ -136,7 +152,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			return;
 		}
 
-		dynamicFieldFacade.addField(dynamicActiveField);
+		dynamicFieldFacade.addField(omit(['__new'])(dynamicActiveField));
 		navigateToOverview();
 	};
 

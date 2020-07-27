@@ -7,11 +7,12 @@ import {
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 
 import { useCoreTranslation } from '../../connectors/translations';
 import { CONTENT_TYPE_DETAIL_TAB_MAP } from '../../contentTypes.const';
-import { ContentTypesDetailRouteProps } from '../../contentTypes.types';
+import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
+import { useContentType } from '../../hooks';
 import { ContentTypeDetailModel } from '../../store/contentTypes';
 
 import { CT_SETTINGS_VALIDATION_SCHEMA } from './ContentTypeDetailSettings.const';
@@ -25,6 +26,10 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	 * Hooks
 	 */
 	const [t] = useCoreTranslation();
+	const [, contentTypIsUpdating] = useContentType();
+	const isLoading = useMemo(() => {
+		return contentTypIsUpdating === LoadingState.Loading;
+	}, [contentTypIsUpdating]);
 
 	/**
 	 * Methods
@@ -92,6 +97,8 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 									{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 								</Button>
 								<Button
+									iconLeft={isLoading ? 'circle-o-notch fa-spin' : null}
+									disabled={isLoading}
 									className="u-margin-left-xs"
 									onClick={submitForm}
 									type="success"
