@@ -1,14 +1,5 @@
 import { Tab, TabTypes } from './contentTypes.types';
 
-export const BREADCRUMB_OPTIONS = {
-	excludePaths: [
-		'/',
-		'/:tenantId',
-		'/:tenantId/content-types/:contentTypeUuid/content-componenten/:contentComponentUuid',
-		'/:tenantId/content-types/:contentTypeUuid/content-componenten/:contentComponentUuid/bewerken',
-	],
-};
-
 export const DEFAULT_VALIDATION_SCHEMA = {
 	$schema: 'http://json-schema.org/draft-07/schema#',
 	type: 'object',
@@ -44,11 +35,12 @@ export const CONTENT_DETAIL_TABS: Tab[] = [
 	CONTENT_TYPE_DETAIL_TAB_MAP.sites,
 ];
 
-const CC_EDIT_PATH =
-	'/content-types/:contentTypeUuid/content-componenten/:contentComponentUuid/bewerken';
-const CC_NEW_PATH = '/content-types/:contentTypeUuid/content-componenten/nieuw';
-const CC_DYNAMIC_EDIT_PATH = `${CC_EDIT_PATH}/dynamisch/:dynamicContentComponentUuid/bewerken`;
-const CC_DYNAMIC_NEW_PATH = `${CC_EDIT_PATH}/dynamisch/nieuw`;
+const CC_BASE_PATH = '/content-types/:contentTypeUuid/content-componenten';
+const CC_EDIT_PATH = `${CC_BASE_PATH}/:contentComponentUuid/bewerken`;
+const CC_NEW_PATH = `${CC_BASE_PATH}/nieuw`;
+const CC_DYNAMIC_BASE_PATH = `${CC_EDIT_PATH}/dynamisch`;
+const CC_DYNAMIC_EDIT_PATH = `${CC_DYNAMIC_BASE_PATH}/:dynamicContentComponentUuid/bewerken`;
+const CC_DYNAMIC_NEW_PATH = `${CC_DYNAMIC_BASE_PATH}/nieuw`;
 
 export const MODULE_PATHS = {
 	dashboard: '/dashboard',
@@ -76,6 +68,7 @@ export const MODULE_PATHS = {
 	detailCCEditValidation: `${CC_EDIT_PATH}/validatie`,
 	detailCCEditDefaults: `${CC_EDIT_PATH}/standaard-waarde`,
 
+	detailCCEditDynamic: CC_DYNAMIC_BASE_PATH,
 	detailCCEditDynamicNew: CC_DYNAMIC_NEW_PATH,
 	detailCCEditDynamicNewSettings: `${CC_DYNAMIC_NEW_PATH}/instellingen`,
 	detailCCEditDynamicNewConfig: `${CC_DYNAMIC_NEW_PATH}/configuratie`,
@@ -87,6 +80,17 @@ export const MODULE_PATHS = {
 	detailCCEditDynamicEditConfig: `${CC_DYNAMIC_EDIT_PATH}/configuratie`,
 	detailCCEditDynamicEditValidation: `${CC_DYNAMIC_EDIT_PATH}/validatie`,
 	detailCCEditDynamicEditDefaults: `${CC_DYNAMIC_EDIT_PATH}/standaard-waarde`,
+};
+
+export const BREADCRUMB_OPTIONS = {
+	excludePaths: [
+		'/',
+		'/:tenantId',
+		`/:tenantId${CC_BASE_PATH}/:contentComponentUuid`,
+		`/:tenantId${CC_BASE_PATH}/:contentComponentUuid/bewerken`,
+		`/:tenantId${CC_DYNAMIC_BASE_PATH}`,
+		`/:tenantId${CC_DYNAMIC_BASE_PATH}/:dynamicContentComponentUuid([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})`,
+	],
 };
 
 export const DEFAULT_VALIDATOR_ERROR_MESSAGES: Record<string, string> = {
