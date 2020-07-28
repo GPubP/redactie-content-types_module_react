@@ -209,9 +209,10 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 							<Button
 								className="u-margin-left-xs"
 								onClick={onFieldSubmit}
-								type="success"
+								type="primary"
 							>
-								{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
+								{/* TODO: use CORE_TRANSLATIONS when available */}
+								{t('BUTTON_NEXT')}
 							</Button>
 						</div>
 					</ActionBarContentSection>
