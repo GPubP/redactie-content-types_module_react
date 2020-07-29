@@ -37,10 +37,10 @@ export const CONTENT_DETAIL_TABS: Tab[] = [
 
 const CC_BASE_PATH = '/content-types/:contentTypeUuid/content-componenten';
 const CC_EDIT_PATH = `${CC_BASE_PATH}/:contentComponentUuid/bewerken`;
-const CC_NEW_PATH = `${CC_BASE_PATH}/nieuw`;
+const CC_NEW_PATH = `${CC_BASE_PATH}/aanmaken`;
 const CC_DYNAMIC_BASE_PATH = `${CC_EDIT_PATH}/dynamisch`;
 const CC_DYNAMIC_EDIT_PATH = `${CC_DYNAMIC_BASE_PATH}/:dynamicContentComponentUuid/bewerken`;
-const CC_DYNAMIC_NEW_PATH = `${CC_DYNAMIC_BASE_PATH}/nieuw`;
+const CC_DYNAMIC_NEW_PATH = `${CC_DYNAMIC_BASE_PATH}/aanmaken`;
 
 export const MODULE_PATHS = {
 	dashboard: '/dashboard',

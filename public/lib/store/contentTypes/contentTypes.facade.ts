@@ -31,6 +31,19 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	public readonly contentTypes$ = this.query.contentTypes$;
 	public readonly contentType$ = this.query.contentType$;
 	public readonly activeField$ = this.query.activeField$;
+	public readonly pageTitle$ = this.query.pageTitle$;
+
+	public setPageTitle(pageTitle: string): void {
+		this.store.update({
+			pageTitle,
+		});
+	}
+
+	public getPageTitleValue(): string | null {
+		const { pageTitle } = this.store.getValue();
+
+		return pageTitle || null;
+	}
 
 	public getDynamicFieldValue(): ContentTypeFieldDetail | null {
 		const { activeField } = this.store.getValue();
