@@ -3,7 +3,7 @@ import { Table } from '@acpaas-ui/react-editorial-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
 import classNames from 'classnames/bind';
 import { useFormikContext } from 'formik';
-import { clone, equals, pathOr } from 'ramda';
+import { __, clone, compose, equals, pathOr, Placeholder } from 'ramda';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -127,7 +127,14 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 			}),
 			label: cc.label,
 			name: cc.name,
-			fieldType: pathOr('error', ['fieldType', 'data', 'label'])(cc),
+			fieldType: compose<Field, string, string>(
+				(pathOr<string>(
+					(__ as unknown) as string,
+					['preset', 'data', 'label'],
+					cc
+				) as unknown) as (x: string) => string,
+				pathOr<string>('error', ['fieldType', 'data', 'label'])
+			)(cc),
 			multiple: Number(cc.generalConfig.max) > 1,
 			required: !!cc.generalConfig.required,
 			translatable: !!cc.generalConfig.multiLanguage,
