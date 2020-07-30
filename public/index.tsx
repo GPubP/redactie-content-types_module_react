@@ -10,6 +10,8 @@ import rolesRightsConnector from './lib/connectors/rolesRights';
 import { MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesModuleProps } from './lib/contentTypes.types';
 import { TenantContext } from './lib/context';
+import { contentTypeTitleHelper } from './lib/helpers/contentTypeTitleHelper/contentTypeTitleHelper';
+import { TitleTypes } from './lib/helpers/contentTypeTitleHelper/contentTypeTitleHelper.types';
 import { fieldTypesFacade } from './lib/store/fieldTypes';
 import { presetsFacade } from './lib/store/presets';
 import { sitesFacade } from './lib/store/sites';
@@ -119,26 +121,32 @@ Core.routes.register({
 			},
 			component: ContentTypesUpdate,
 			redirect: MODULE_PATHS.detailSettings,
+			title: 'test',
 			routes: [
 				{
 					path: MODULE_PATHS.detailCCEditDynamicNew,
 					breadcrumb: 'Vrije paragraaf',
 					component: ContentTypesDynamicCCNew,
+					redirect: MODULE_PATHS.detailCCEditDynamicNewSettings,
 					routes: [
 						{
 							path: MODULE_PATHS.detailCCEditDynamicNewSettings,
+							title: contentTypeTitleHelper(TitleTypes.DynamicField),
 							component: ContentTypesCCSettings,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditDynamicNewConfig,
+							title: contentTypeTitleHelper(TitleTypes.DynamicField),
 							component: ContentTypesCCConfig,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditDynamicNewValidation,
+							title: contentTypeTitleHelper(TitleTypes.DynamicField),
 							component: ContentTypesCCValidation,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditDynamicNewDefaults,
+							title: contentTypeTitleHelper(TitleTypes.DynamicField),
 							component: ContentTypesCCDefaults,
 						},
 					],
@@ -151,19 +159,22 @@ Core.routes.register({
 					routes: [
 						{
 							path: MODULE_PATHS.detailCCEditDynamicEditSettings,
+							title: contentTypeTitleHelper(TitleTypes.DynamicField),
 							component: ContentTypesCCSettings,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditDynamicEditConfig,
+							title: contentTypeTitleHelper(TitleTypes.DynamicField),
 							component: ContentTypesCCConfig,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditDynamicEditValidation,
+							title: contentTypeTitleHelper(TitleTypes.DynamicField),
 							component: ContentTypesCCValidation,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditDynamicEditDefaults,
-							breadcrumb: 'Vrije paragraaf',
+							title: contentTypeTitleHelper(TitleTypes.DynamicField),
 							component: ContentTypesCCDefaults,
 						},
 					],
@@ -176,18 +187,22 @@ Core.routes.register({
 					routes: [
 						{
 							path: MODULE_PATHS.detailCCNewSettings,
+							title: contentTypeTitleHelper(TitleTypes.Field),
 							component: ContentTypesCCSettings,
 						},
 						{
 							path: MODULE_PATHS.detailCCNewConfig,
+							title: contentTypeTitleHelper(TitleTypes.Field),
 							component: ContentTypesCCConfig,
 						},
 						{
 							path: MODULE_PATHS.detailCCNewValidation,
+							title: contentTypeTitleHelper(TitleTypes.Field),
 							component: ContentTypesCCValidation,
 						},
 						{
 							path: MODULE_PATHS.detailCCNewDefaults,
+							title: contentTypeTitleHelper(TitleTypes.Field),
 							component: ContentTypesCCDefaults,
 						},
 					],
@@ -200,36 +215,44 @@ Core.routes.register({
 					routes: [
 						{
 							path: MODULE_PATHS.detailCCEditSettings,
+							title: contentTypeTitleHelper(TitleTypes.Field),
 							component: ContentTypesCCSettings,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditConfig,
+							title: contentTypeTitleHelper(TitleTypes.Field),
 							component: ContentTypesCCConfig,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditValidation,
+							title: contentTypeTitleHelper(TitleTypes.Field),
 							component: ContentTypesCCValidation,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditDefaults,
+							title: contentTypeTitleHelper(TitleTypes.Field),
 							component: ContentTypesCCDefaults,
 						},
 					],
 				},
 				{
 					path: MODULE_PATHS.detailSettings,
+					title: contentTypeTitleHelper(TitleTypes.ContentType),
 					component: ContentTypesDetailSettings,
 				},
 				{
 					path: MODULE_PATHS.detailCC,
+					title: contentTypeTitleHelper(TitleTypes.ContentType),
 					component: ContentTypesDetailCC,
 				},
 				{
 					path: MODULE_PATHS.detailSites,
+					title: contentTypeTitleHelper(TitleTypes.ContentType),
 					component: ContentTypesDetailSites,
 				},
 				{
 					path: MODULE_PATHS.detailExternal,
+					title: contentTypeTitleHelper(TitleTypes.ContentType),
 					component: ContentTypeDetailExternal,
 				},
 			],

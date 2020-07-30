@@ -12,6 +12,7 @@ import {
 import { ContentTypesRouteProps, LoadingState, Tab, TabTypes } from '../../contentTypes.types';
 import {
 	useActiveField,
+	useActiveRouteConfig,
 	useActiveTabs,
 	useContentType,
 	useFieldTypes,
@@ -20,6 +21,7 @@ import {
 	useRoutesBreadcrumbs,
 	useTenantContext,
 } from '../../hooks';
+import useDynamicActiveField from '../../hooks/useDynamicActiveField/useDynamicActiveField';
 import {
 	ContentTypeMeta,
 	ContentTypeUpdateRequest,
@@ -39,11 +41,13 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const activeField = useActiveField();
+	const dynamicActiveField = useDynamicActiveField();
+	const activeRouteConfig = useActiveRouteConfig(location, route);
 	const { contentTypeUuid } = useParams();
 	const { navigate, generatePath } = useNavigate();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 	const [presetsLoadingState, presets] = usePresets();
-	const [contentTypeLoadingState, , contentType] = useContentType();
+	const [contentTypeLoadingState, , contentType, title] = useContentType();
 	const [{ all: externalTabs, active: activeExternalTab }] = useExternalTabstFacade();
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, externalTabs, location.pathname);
 	const { tenantId } = useTenantContext();
@@ -59,6 +63,19 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		}),
 		[tenantId]
 	);
+
+	useEffect(() => {
+		if (typeof activeRouteConfig?.title !== 'function') {
+			return;
+		}
+
+		// TODO: figure out why this is needed (last set of title does not update component)
+		setTimeout(() =>
+			contentTypesFacade.setPageTitle(
+				activeRouteConfig.title(contentType, activeField, dynamicActiveField)
+			)
+		);
+	}, [activeField, activeRouteConfig, contentType, dynamicActiveField]);
 
 	useEffect(() => {
 		if (
@@ -209,7 +226,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 					to: props.href,
 					component: Link,
 				})}
-				title={contentType?.meta.label ? `${contentType?.meta.label} bewerken` : ''}
+				title={title}
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
