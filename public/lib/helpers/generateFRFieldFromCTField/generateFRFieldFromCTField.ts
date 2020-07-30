@@ -13,6 +13,7 @@ export const generateFRFieldFromCTField = (
 	config: {
 		...field.config,
 		description: field.generalConfig.guideline,
+		preset: field.preset,
 	},
 	...(field.preset && Array.isArray(field.config?.fields)
 		? { fields: field.config.fields.map(field => generateFRFieldFromCTField(field)) }

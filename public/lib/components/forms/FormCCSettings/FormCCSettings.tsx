@@ -11,8 +11,14 @@ import AutoSubmit from '../AutoSubmit/AutoSubmit';
 import { IS_MULTIPLE_OPTIONS } from './FormCCSettings.const';
 import { FormCCSettingsProps } from './FormCCSettings.types';
 
-const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, fieldTypeData, onSubmit }) => {
-	const [isMultiple, setIsMultiple] = useState(initialValues.generalConfig.max > 1);
+const FormCCSettings: FC<FormCCSettingsProps> = ({
+	initialValues,
+	inputValues,
+	fieldTypeData,
+	onSubmit,
+	isUpdate,
+}) => {
+	const [isMultiple, setIsMultiple] = useState(inputValues.generalConfig.max > 1);
 	const [t] = useCoreTranslation();
 
 	const onFormSubmit = (values: CCSettingsFormState): void => {
@@ -28,7 +34,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, fieldTypeData,
 	};
 
 	return (
-		<Formik initialValues={initialValues} onSubmit={onFormSubmit}>
+		<Formik initialValues={inputValues} onSubmit={onFormSubmit}>
 			{({ values, submitForm }) => {
 				return (
 					<>
@@ -52,7 +58,11 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({ initialValues, fieldTypeData,
 								<div className="col-xs-12 col-md-4 u-margin-top-xs u-margin-bottom">
 									<div>
 										{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
-										<b>{kebabCase(values.label)}</b>
+										<b>
+											{isUpdate
+												? initialValues?.label
+												: kebabCase(values.label)}
+										</b>
 									</div>
 								</div>
 							</div>
