@@ -22,7 +22,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	onSubmit,
 	contentType,
 }) => {
-	const isUpdate = contentType.fields.length > 0;
+	const isUpdate = !!contentType.uuid;
 	/**
 	 * Hooks
 	 */
