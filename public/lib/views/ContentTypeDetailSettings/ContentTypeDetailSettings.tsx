@@ -22,6 +22,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	onSubmit,
 	contentType,
 }) => {
+	const isUpdate = !!contentType.uuid;
 	/**
 	 * Hooks
 	 */
@@ -68,7 +69,11 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 							<div className="col-xs-12 col-md-4 u-margin-top u-margin-bottom">
 								<div>
 									{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
-									<b>{kebabCase(values.meta.label)}</b>
+									<b>
+										{isUpdate
+											? contentType.meta.safeLabel
+											: kebabCase(values.meta.label)}
+									</b>
 								</div>
 							</div>
 						</div>
