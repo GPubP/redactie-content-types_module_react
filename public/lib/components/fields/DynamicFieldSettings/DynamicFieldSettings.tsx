@@ -165,8 +165,8 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 
 	const renderForm = (): ReactElement => (
 		<div>
-			{fieldSchema.generalConfig?.guideline ? (
-				<p className="u-margin-top"> {fieldSchema.generalConfig.guideline} </p>
+			{fieldSchema.config?.description ? (
+				<p className="u-margin-top"> {fieldSchema.config.description} </p>
 			) : null}
 			<div>
 				{renderArrayElements(value)}
