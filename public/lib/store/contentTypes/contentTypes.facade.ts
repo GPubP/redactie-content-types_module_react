@@ -213,10 +213,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 					...activeField.validation,
 					...payload.validation,
 				},
-				defaultValue: {
-					...activeField.defaultValue,
-					...payload.defaultValue,
-				},
+				defaultValue: payload.defaultValue,
 			} as ContentTypeFieldDetailModel,
 		});
 	}

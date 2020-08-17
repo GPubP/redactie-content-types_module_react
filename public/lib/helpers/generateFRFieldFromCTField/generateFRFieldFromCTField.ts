@@ -1,4 +1,4 @@
-import { FieldDataType, FieldSchema } from '@redactie/form-renderer-module';
+import { FieldDataType, FieldSchema, Preset } from '@redactie/form-renderer-module';
 
 import { Field } from '../../services/contentTypes';
 
@@ -13,7 +13,7 @@ export const generateFRFieldFromCTField = (
 	config: {
 		...field.config,
 		description: field.generalConfig.guideline,
-		preset: field.preset,
+		preset: (field.preset as unknown) as Preset,
 	},
 	...(field.preset && Array.isArray(field.config?.fields)
 		? { fields: field.config.fields.map(field => generateFRFieldFromCTField(field)) }
