@@ -83,7 +83,10 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 				if (fieldConfig) {
 					return {
 						...field,
-						config: fieldConfig,
+						config: {
+							...field.config,
+							...fieldConfig,
+						},
 					};
 				}
 				return field;
