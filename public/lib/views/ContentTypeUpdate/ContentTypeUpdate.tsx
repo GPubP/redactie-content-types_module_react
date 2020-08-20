@@ -193,7 +193,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		contentTypesFacade.updateContentType(newCT);
 	};
 
-	const showTabs = !/\/(nieuw|bewerken)\//.test(location.pathname);
+	const showTabs = !/\/(aanmaken|bewerken)\//.test(location.pathname);
 
 	/**
 	 * Render
@@ -221,11 +221,16 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		<>
 			<ContextHeader
 				tabs={showTabs ? activeTabs : undefined}
-				linkProps={(props: any) => ({
-					...props,
-					to: props.href,
-					component: Link,
-				})}
+				linkProps={(props: any) => {
+					const to = generatePath(`${MODULE_PATHS.detail}/${props.href}`, {
+						contentTypeUuid,
+					});
+					return {
+						...props,
+						to,
+						component: Link,
+					};
+				}}
 				title={title}
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
