@@ -185,8 +185,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
 						<Button className="u-margin-left-xs" onClick={onCTSubmit} type="primary">
-							{/* TODO: use CORE_TRANSLATIONS when available */}
-							{t('BUTTON_NEXT')}
+							{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
 						</Button>
 					</div>
 				</ActionBarContentSection>

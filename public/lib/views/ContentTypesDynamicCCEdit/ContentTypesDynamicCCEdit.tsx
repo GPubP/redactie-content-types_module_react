@@ -211,8 +211,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 								onClick={onFieldSubmit}
 								type="primary"
 							>
-								{/* TODO: use CORE_TRANSLATIONS when available */}
-								{t('BUTTON_NEXT')}
+								{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
 							</Button>
 						</div>
 					</ActionBarContentSection>
