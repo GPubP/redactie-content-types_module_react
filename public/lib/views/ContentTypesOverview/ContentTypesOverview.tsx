@@ -173,6 +173,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					currentPage={
 						Math.ceil(meta.skip / DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit) + 1
 					}
+					responsive={false}
 					itemsPerPage={DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
