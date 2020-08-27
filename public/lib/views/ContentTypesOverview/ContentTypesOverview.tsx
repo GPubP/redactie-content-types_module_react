@@ -151,7 +151,8 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 			uuid: contentType.uuid as string,
 			label: contentType.meta.label,
 			description: contentType.meta.description,
-			status: contentType.meta.status || 'N/A',
+			fields: contentType.fields.length,
+			deleted: contentType.meta.deleted,
 			navigate: contentTypeUuid => navigate(MODULE_PATHS.detail, { contentTypeUuid }),
 		}));
 
@@ -173,6 +174,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					currentPage={
 						Math.ceil(meta.skip / DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit) + 1
 					}
+					responsive={false}
 					itemsPerPage={DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
