@@ -1,9 +1,10 @@
 import { Container } from '@acpaas-ui/react-editorial-components';
 import { clone } from 'ramda';
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 
-import { ContentTypesDetailRouteProps, Tab } from '../../contentTypes.types';
+import { ContentTypesDetailRouteProps, LoadingState, Tab } from '../../contentTypes.types';
 import { mapExternalTabToTab } from '../../helpers';
+import { useContentType } from '../../hooks';
 import { useExternalTabstFacade } from '../../store/api/externalTabs/externalTabs.facade';
 
 import { ContentTypeDetailMatchProps, ExternalTabValue } from './ContentTypeDetailExternal.types';
@@ -20,6 +21,10 @@ const ContentTypeDetailExternal: FC<ContentTypesDetailRouteProps<ContentTypeDeta
 	 * HOOKS
 	 */
 	const [{ active: activeTab }, activate] = useExternalTabstFacade();
+	const [, contentTypIsUpdating] = useContentType();
+	const isLoading = useMemo(() => {
+		return contentTypIsUpdating === LoadingState.Loading;
+	}, [contentTypIsUpdating]);
 
 	useEffect(() => {
 		activate(tab);
@@ -63,6 +68,7 @@ const ContentTypeDetailExternal: FC<ContentTypesDetailRouteProps<ContentTypeDeta
 					onCancel={() => onCancel()}
 					updateContentType={() => null}
 					value={getExternalTabValue(mapExternalTabToTab(activeTab))}
+					isLoading={isLoading}
 				></activeTab.component>
 			) : null}
 		</Container>
