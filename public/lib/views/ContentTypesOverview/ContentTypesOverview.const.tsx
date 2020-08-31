@@ -28,12 +28,10 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 			component(value: any, rowData: ContentTypesOverviewTableRow) {
 				return (
 					<>
-						<AUILink to={`${prop('uuid')(rowData)}/instellingen`} component={Link}>
-							{prop('label')(rowData)}
+						<AUILink to={`${rowData?.uuid}/instellingen`} component={Link}>
+							{value}
 						</AUILink>
-						<p className="u-text-light u-margin-top-xs">
-							{prop('description')(rowData)}
-						</p>
+						<p className="u-text-light u-margin-top-xs">{rowData?.description}</p>
 					</>
 				);
 			},
@@ -45,18 +43,17 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		},
 		{
 			label: 'Aantal content items',
-			value: 'label',
-			component(value: any, rowData: ContentTypesOverviewTableRow) {
-				return <label>{prop('fields')(rowData)}</label>;
+			value: 'fields',
+			component(value: any) {
+				return <label>{value}</label>;
 			},
 			disableSorting: true,
 		},
 		{
 			label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 			value: 'deleted',
-			component(value: string, rowData: ContentTypesOverviewTableRow) {
-				const deleted = prop('deleted')(rowData);
-				return <SiteStatus active={!deleted} />;
+			component(value: string) {
+				return <SiteStatus active={!value} />;
 			},
 			disableSorting: true,
 		},
