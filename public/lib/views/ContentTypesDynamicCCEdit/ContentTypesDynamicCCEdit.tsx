@@ -16,6 +16,8 @@ import { useNavigate, useTenantContext } from '../../hooks';
 import useActiveField from '../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../hooks/useDynamicActiveField/useDynamicActiveField';
 import useDynamicField from '../../hooks/useDynamicField/useDynamicField';
+import { useNavItemMatcher } from '../../hooks/useNavItemMatcher/useNavItemMatcher';
+import { PresetDetail } from '../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
 import { dynamicFieldFacade } from '../../store/dynamicField/dynamicField.facade';
 import { fieldTypesFacade } from '../../store/fieldTypes';
@@ -47,6 +49,10 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			tenantId,
 		}),
 		[tenantId]
+	);
+	const navItemMatcher = useNavItemMatcher(
+		dynamicActiveField?.preset as PresetDetail,
+		dynamicActiveField?.fieldType
 	);
 
 	useEffect(() => {
@@ -183,7 +189,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 							<NavList
 								items={CC_DYNAMIC_NAV_LIST_ITEMS.map(listItem => ({
 									...listItem,
-									meta: dynamicActiveField?.fieldType,
+									meta: navItemMatcher,
 									to: generatePath(listItem.to, {
 										contentTypeUuid,
 										contentComponentUuid,

@@ -6,12 +6,14 @@ export const CC_DYNAMIC_NAV_LIST_ITEMS = [
 	{
 		label: 'Configuratie',
 		to: MODULE_PATHS.detailCCEditDynamicEditConfig,
-		filter: (CtField: FieldType) => !!CtField?.data?.formSchema?.fields?.length,
+		filter: (ctField: FieldType) =>
+			(console.log(ctField) as any) || !!ctField?.data?.formSchema?.fields?.length,
 	},
 	{
 		label: 'Validatie',
 		to: MODULE_PATHS.detailCCEditDynamicEditValidation,
-		filter: (CtField: FieldType) => !!CtField?.data?.validators?.length,
+		filter: (ctField: FieldType) =>
+			(console.log(ctField) as any) || !!ctField?.data?.validators?.length,
 	},
 	{ label: 'Standaard waarde', to: MODULE_PATHS.detailCCEditDynamicEditDefaults },
 ];

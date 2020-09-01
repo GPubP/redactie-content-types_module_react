@@ -167,6 +167,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 
 	public updateField(updatedField: ContentTypeFieldDetailModel): void {
 		const { contentType } = this.query.getValue();
+
 		if (contentType) {
 			this.store.update({
 				contentType: {
@@ -200,7 +201,6 @@ export class ContentTypesFacade extends BaseEntityFacade<
 		this.store.update({
 			activeField: {
 				...activeField,
-				...payload,
 				generalConfig: {
 					...activeField.generalConfig,
 					...payload.generalConfig,

@@ -11,20 +11,21 @@ import { DataLoader, NavList, RenderChildRoutes } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
-import { useFieldType, useNavigate, usePreset, useTenantContext } from '../../hooks';
-import { FieldType } from '../../services/fieldTypes';
+import {
+	useActiveField,
+	useFieldType,
+	useNavigate,
+	usePreset,
+	useTenantContext,
+} from '../../hooks';
+import { useNavItemMatcher } from '../../hooks/useNavItemMatcher/useNavItemMatcher';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
 import { fieldTypesFacade } from '../../store/fieldTypes';
 import { presetsFacade } from '../../store/presets';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCEdit.const';
 
-const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({
-	match,
-	activeField,
-	contentType,
-	route,
-}) => {
+const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentType, route }) => {
 	const { contentTypeUuid, contentComponentUuid } = match.params;
 
 	/**
@@ -33,6 +34,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [fieldTypeLoading, fieldType] = useFieldType();
 	const [presetLoading, preset] = usePreset();
+	const activeField = useActiveField();
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
@@ -44,25 +46,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({
 		}),
 		[tenantId]
 	);
-	const navItemMatcher = useMemo(() => {
-		return (preset?.data?.fields || []).reduce(
-			(acc, field) => {
-				acc.data.formSchema.fields = [
-					...acc.data.formSchema.fields,
-					...(field?.formSchema?.fields || []),
-				];
-				acc.data.validators = [...acc.data.validators, ...(field?.validators || [])];
-
-				return acc;
-			},
-			({
-				data: {
-					formSchema: { fields: [...(fieldType?.data?.formSchema?.fields || [])] },
-					validators: [...(fieldType?.data?.validators || [])],
-				},
-			} as unknown) as FieldType
-		);
-	}, [fieldType, preset]);
+	const navItemMatcher = useNavItemMatcher(preset, fieldType);
 
 	useEffect(() => {
 		if (
@@ -133,6 +117,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({
 		}
 
 		contentTypesFacade.updateField(activeField);
+		contentTypesFacade.clearActiveField();
 		navigateToOverview();
 	};
 

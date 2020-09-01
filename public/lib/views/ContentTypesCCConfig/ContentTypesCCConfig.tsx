@@ -1,4 +1,5 @@
 import { FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-module';
+import { clone } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 
 import { AutoSubmit } from '../../components';
@@ -69,44 +70,49 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		data: FormValues,
 		CTField: ContentTypeFieldDetailModel,
 		preset?: PresetDetailModel
-	): Record<string, any> => {
-		const config = data?.config && data?.validation ? data.config : data;
+	): { config: Record<string, any>; validation: Record<string, Validation> } => {
+		return CTField.fieldType.data.formSchema.fields.reduce(
+			(acc, field) => {
+				const config = field.generalConfig.combinedOutput
+					? data[field.name]?.config
+					: data[field.name];
+				const validation = field.generalConfig.combinedOutput
+					? data[field.name]?.validation
+					: null;
 
-		if (!preset || (CTField.config?.fields || []).length <= 0) {
-			return config;
-		}
+				if (
+					field.name === 'fields' &&
+					preset &&
+					(CTField.config?.fields || []).length > 0
+				) {
+					acc.config['fields'] = CTField.config.fields?.map(field => {
+						const fieldConfig = config[field.name];
 
-		return {
-			fields: CTField.config.fields?.map(field => {
-				const fieldConfig = config[field.name];
-
-				if (fieldConfig) {
-					return {
-						...field,
-						config: {
-							...field.config,
-							...fieldConfig,
-						},
-					};
+						if (fieldConfig) {
+							return {
+								...field,
+								config: fieldConfig,
+							};
+						}
+						return field;
+					});
+				} else if (field.name === 'fields') {
+					acc.config[field.name] = config || [];
+				} else {
+					acc.config[field.name] = config;
 				}
-				return field;
-			}),
-		};
-	};
 
-	const generateFieldValidation = (
-		data: FormValues,
-		CTField: ContentTypeFieldDetailModel
-	): Validation => {
-		if (!data.config || !data.validation) {
-			return CTField.validation as Validation;
-		}
+				if (validation) {
+					acc.validation = validation;
+				}
 
-		return {
-			...(CTField.validation || {}),
-			type: CTField.dataType.data.type,
-			checks: [...(CTField.validation as Validation)?.checks, data.validation],
-		};
+				return acc;
+			},
+			{
+				config: clone(data),
+				validation: {} as Record<string, Validation>,
+			}
+		);
 	};
 
 	const hasConfiguration = (
@@ -121,10 +127,11 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	};
 
 	const onFormSubmit = (data: FormValues): void => {
+		const config = generateFieldConfig(data, CTField, preset);
+
 		onSubmit({
-			config: generateFieldConfig(data, CTField, preset),
-			// TODO: find a way to set validation based on configuration
-			// validation: generateFieldValidation(data, CTField),
+			config: config.config,
+			...(Object.values(config.validation).length ? { validation: config.validation } : {}),
 		});
 	};
 

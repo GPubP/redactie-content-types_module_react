@@ -3,7 +3,7 @@ import { Table } from '@acpaas-ui/react-editorial-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
 import classNames from 'classnames/bind';
 import { useFormikContext } from 'formik';
-import { __, clone, compose, equals, pathOr, Placeholder } from 'ramda';
+import { __, compose, equals, pathOr } from 'ramda';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -32,7 +32,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 	 * HOOKS
 	 */
 	const { contentTypeUuid } = useParams();
-	const { setFieldValue, values } = useFormikContext<Record<string, Field[]>>();
+	const { setFieldValue, values } = useFormikContext<Record<string, { config: Field[] }>>();
 	const activeField = useActiveField();
 	const dynamicField = useDynamicField();
 	const [, fieldTypes] = useFieldTypes();
@@ -66,17 +66,19 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 	}, [fields]);
 
 	useEffect(() => {
-		if (equals(value, values[fieldSchema.name])) {
+		if (equals(value, values[fieldSchema.name]?.config)) {
 			return;
 		}
 
-		setFieldValue(fieldSchema.name, value);
-		setFieldValue('validation', {
-			allowedFields: (Array.isArray(value) ? value : []).map(field => ({
-				type: field.validation?.type,
-				fieldType: field.fieldType._id,
-				checks: field.validation?.checks,
-			})),
+		setFieldValue(fieldSchema.name, {
+			config: value,
+			validation: {
+				allowedFields: (Array.isArray(value) ? value : []).map(field => ({
+					type: field.validation?.type,
+					fieldType: field.fieldType._id,
+					checks: field.validation?.checks,
+				})),
+			},
 		});
 	}, [value, fieldSchema.name, setFieldValue, values]);
 

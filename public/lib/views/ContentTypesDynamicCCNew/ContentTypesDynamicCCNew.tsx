@@ -18,6 +18,7 @@ import { useFieldType, useNavigate, usePreset, useQuery, useTenantContext } from
 import useActiveField from '../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../hooks/useDynamicActiveField/useDynamicActiveField';
 import useDynamicField from '../../hooks/useDynamicField/useDynamicField';
+import { useNavItemMatcher } from '../../hooks/useNavItemMatcher/useNavItemMatcher';
 import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
 import { dynamicFieldFacade } from '../../store/dynamicField/dynamicField.facade';
 import { fieldTypesFacade } from '../../store/fieldTypes';
@@ -53,6 +54,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		}),
 		[tenantId]
 	);
+	const navItemMatcher = useNavItemMatcher(preset, fieldType);
 
 	useEffect(() => {
 		dynamicFieldFacade.clearActiveField();
@@ -193,7 +195,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 							<NavList
 								items={CC_NAV_LIST_ITEMS.map(listItem => ({
 									...listItem,
-									meta: preset || dynamicActiveField?.fieldType,
+									meta: navItemMatcher,
 									to: generatePath(
 										listItem.to,
 										{
