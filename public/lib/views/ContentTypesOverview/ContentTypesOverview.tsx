@@ -151,7 +151,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 			uuid: contentType.uuid as string,
 			label: contentType.meta.label,
 			description: contentType.meta.description,
-			fields: contentType.fields.length,
+			fields: contentType.fields.length || 0,
 			deleted: contentType.meta.deleted || false,
 			navigate: contentTypeUuid => navigate(MODULE_PATHS.detail, { contentTypeUuid }),
 		}));
