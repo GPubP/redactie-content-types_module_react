@@ -197,7 +197,8 @@ export class ContentTypesFacade extends BaseEntityFacade<
 			return;
 		}
 
-		const payloadIsMultiple = (payload?.generalConfig?.max || 0) > 1;
+		const payloadIsMultiple =
+			(payload?.generalConfig?.max ?? (activeField?.generalConfig?.max || 0)) > 1;
 		const activeFieldIsMultiple = (activeField?.generalConfig?.max || 0) > 1;
 
 		// clear default value when switching form single to multiple or the other way around
