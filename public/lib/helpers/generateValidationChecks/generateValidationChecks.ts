@@ -60,8 +60,9 @@ export const generateValidationChecks = (
 		type: fieldTypeData?.dataType?.data?.type,
 		checks: Object.keys(data).map(validatorKey => {
 			const validator = fieldTypeData.validators.find(
-				validator => !!validator.data.defaultValue[validatorKey]
+				validator => !!path(['data', 'defaultValue', validatorKey], validator)
 			);
+
 			return {
 				key: validatorKey,
 				val: data[validatorKey],

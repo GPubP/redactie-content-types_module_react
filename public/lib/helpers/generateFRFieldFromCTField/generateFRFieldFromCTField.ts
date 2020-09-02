@@ -12,6 +12,7 @@ export const generateFRFieldFromCTField = (
 	type: field.fieldType?.data?.componentName,
 	config: {
 		...field.config,
+		...field.generalConfig,
 		description: field.generalConfig.guideline,
 		preset: (field.preset as unknown) as Preset,
 	},
