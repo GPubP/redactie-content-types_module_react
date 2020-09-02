@@ -67,17 +67,17 @@ Core.routes.register({
 	breadcrumb: null,
 	guardOptions: {
 		guards: [
-			// rolesRightsConnector.api.guards.securityRightsTenantGuard([
-			// 	rolesRightsConnector.securityRights.read,
-			// ]),
+			rolesRightsConnector.api.guards.securityRightsTenantGuard([
+				rolesRightsConnector.securityRights.read,
+			]),
 		],
 	},
 	navigation: {
 		label: 'Structuur',
 		canShown: [
-			// rolesRightsConnector.api.canShowns.securityRightsTenantCanShown([
-			// 	rolesRightsConnector.securityRights.read,
-			// ]),
+			rolesRightsConnector.api.canShowns.securityRightsTenantCanShown([
+				rolesRightsConnector.securityRights.read,
+			]),
 		],
 	},
 	redirect: MODULE_PATHS.admin,
@@ -97,9 +97,9 @@ Core.routes.register({
 			redirect: MODULE_PATHS.createSettings,
 			guardOptions: {
 				guards: [
-					// rolesRightsConnector.api.guards.securityRightsTenantGuard([
-					// 	rolesRightsConnector.securityRights.create,
-					// ]),
+					rolesRightsConnector.api.guards.securityRightsTenantGuard([
+						rolesRightsConnector.securityRights.create,
+					]),
 				],
 			},
 			routes: [
@@ -114,9 +114,9 @@ Core.routes.register({
 			breadcrumb: null,
 			guardOptions: {
 				guards: [
-					// rolesRightsConnector.api.guards.securityRightsTenantGuard([
-					// 	rolesRightsConnector.securityRights.update,
-					// ]),
+					rolesRightsConnector.api.guards.securityRightsTenantGuard([
+						rolesRightsConnector.securityRights.update,
+					]),
 				],
 			},
 			component: ContentTypesUpdate,
