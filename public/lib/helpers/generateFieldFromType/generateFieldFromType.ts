@@ -27,7 +27,7 @@ export const generateFieldFromType = (
 	operators: [],
 	generalConfig: {
 		guideline: '',
-		required: true,
+		required: false,
 		hidden: false,
 		min: 0,
 		max: 1,
