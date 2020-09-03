@@ -1,5 +1,6 @@
 import { FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-module';
-import React, { FC, ReactElement, useMemo } from 'react';
+import { clone } from 'ramda';
+import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
 
 import { AutoSubmit } from '../../components';
 import formRendererConnector from '../../connectors/formRenderer';
@@ -20,21 +21,135 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	/**
 	 * Hooks
 	 */
-	const initialFormValue: FormValues = useMemo(() => {
-		const { config } = CTField;
+	const [initialFormValuesSet, setInitialFormValuesSet] = useState<boolean>(false);
 
-		if (preset && (config.fields || []).length > 0) {
-			return (
-				config.fields?.reduce((initialValues: FormValues, field: Field) => {
-					initialValues[field.name] = field.config;
+	const onFormSubmit = useCallback(
+		(data: FormValues): void => {
+			const generateFieldConfig = (
+				data: FormValues,
+				CTField: ContentTypeFieldDetailModel,
+				preset?: PresetDetailModel
+			): Record<string, any> => {
+				const config = data?.config && data?.validation ? data.config : data;
+
+				if (!preset || (CTField.config?.fields || []).length <= 0) {
+					return config;
+				}
+
+				return {
+					fields: CTField.config.fields?.map(field => {
+						const fieldConfig = config[field.name];
+
+						if (fieldConfig) {
+							return {
+								...field,
+								config: {
+									...field.config,
+									...fieldConfig,
+								},
+							};
+						}
+						return field;
+					}),
+				};
+			};
+
+			onSubmit({
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				config: generateFieldConfig(data, CTField, preset),
+				// TODO: find a way to set validation based on configuration
+				// validation: generateFieldValidation(data, CTField),
+			});
+		},
+		[CTField, onSubmit, preset]
+	);
+
+	/**
+	 * initialFormValue
+	 *
+	 * This method creates the initialFormValues by using the CTField config object
+	 *
+	 * PRESET EXAMPLE:
+	 * CONVERTS =>
+	 * config: {
+	 * 		fields: [{
+	 * 			name: 'presetField'
+	 * 			config: {
+	 * 				someConfigField: 'value',
+	 * 				someOtherConfigField: 'value'
+	 * 			}
+	 * 		}]
+	 * }
+	 * TO =>
+	 * initialFormValue: {
+	 * 		fields: [{
+	 * 			config: {
+	 * 				someConfigField: 'value',
+	 * 				someOtherConfigField: 'value'
+	 * 			}
+	 * 		}],
+	 * 		// The presetField prop represents the form data that is used
+	 * 		presetField: {
+	 * 			someConfigField: 'value',
+	 * 			someOtherConfigField: 'value'
+	 * 		}
+	 * }
+	 */
+	const initialFormValue: FormValues = useMemo(() => {
+		// Clone the config because we can not mutate the store
+		let config = clone(CTField.config) ?? {};
+		const { formSchema } = fieldTypeData;
+
+		if (!preset) {
+			config =
+				formSchema.fields?.reduce((initialValues: FormValues, field) => {
+					// Use default value when the configuration field is not defined on the initialValues object
+					// This happens the first time the user enters this page
+					if (!initialValues[field.name]) {
+						initialValues[field.name] = field.defaultValue ?? '';
+					}
+					// return initialValues when the field already exist
 					return initialValues;
-				}, {} as FormValues) || {}
-			);
+				}, config) || {};
 		}
 
-		return CTField.config;
-	}, [CTField, preset]);
+		if (preset && (config.fields || []).length > 0) {
+			config =
+				config.fields?.reduce((initialValues: FormValues, field: Field) => {
+					initialValues[field.name] = field.config;
+					const presetField = preset.data.fields.find(f => f.field.name === field.name);
 
+					if (Array.isArray(presetField?.formSchema?.fields)) {
+						presetField?.formSchema?.fields.forEach(f => {
+							if (field.config[f.name]) {
+								initialValues[presetField.field.name][f.name] =
+									field.config[f.name];
+								return initialValues;
+							}
+							// Use default value when the field is not defined on the fields config object
+							// This happens the first time the users enters this page
+							initialValues[presetField.field.name][f.name] = f.defaultValue ?? '';
+						});
+					}
+
+					return initialValues;
+				}, config) || {};
+		}
+
+		if (!initialFormValuesSet) {
+			setInitialFormValuesSet(true);
+			// We need save the default values since the form will not trigger an onchange event
+			// when the initial values of the from are changed.
+			// If we don't do this the default values will be lost
+			onFormSubmit(config);
+		}
+
+		return config;
+	}, [CTField, fieldTypeData, initialFormValuesSet, preset, onFormSubmit]);
+
+	/**
+	 * Methods
+	 */
 	const generateFormSchemaFromPreset = (preset: PresetDetailModel): FormSchema => ({
 		fields: (preset?.data.fields || []).reduce((fSchema, presetField) => {
 			presetField.formSchema?.fields?.forEach(field =>
@@ -61,39 +176,6 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		[fieldTypeData, preset]
 	);
 
-	/**
-	 * Methods
-	 */
-
-	const generateFieldConfig = (
-		data: FormValues,
-		CTField: ContentTypeFieldDetailModel,
-		preset?: PresetDetailModel
-	): Record<string, any> => {
-		const config = data?.config && data?.validation ? data.config : data;
-
-		if (!preset || (CTField.config?.fields || []).length <= 0) {
-			return config;
-		}
-
-		return {
-			fields: CTField.config.fields?.map(field => {
-				const fieldConfig = config[field.name];
-
-				if (fieldConfig) {
-					return {
-						...field,
-						config: {
-							...field.config,
-							...fieldConfig,
-						},
-					};
-				}
-				return field;
-			}),
-		};
-	};
-
 	const generateFieldValidation = (
 		data: FormValues,
 		CTField: ContentTypeFieldDetailModel
@@ -118,14 +200,6 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 			return !!data.fields.find(field => !!field.formSchema?.fields?.length);
 		}
 		return !!fieldTypeData.formSchema?.fields?.length;
-	};
-
-	const onFormSubmit = (data: FormValues): void => {
-		onSubmit({
-			config: generateFieldConfig(data, CTField, preset),
-			// TODO: find a way to set validation based on configuration
-			// validation: generateFieldValidation(data, CTField),
-		});
 	};
 
 	/**

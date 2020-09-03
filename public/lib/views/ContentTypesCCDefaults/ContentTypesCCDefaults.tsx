@@ -1,38 +1,29 @@
 import { Checkbox } from '@acpaas-ui/react-components';
-import { FieldDataType, FormSchema } from '@redactie/form-renderer-module';
+import { FormSchema } from '@redactie/form-renderer-module';
 import { Field, Formik } from 'formik';
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useMemo } from 'react';
 
 import { AutoSubmit } from '../../components';
 import formRendererConnector from '../../connectors/formRenderer';
 import { DEFAULT_VALIDATION_SCHEMA } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
-import { generateCCFormState } from '../../helpers';
+import { generateCCFormState, parseFields } from '../../helpers';
 
-const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
-	CTField,
-	onSubmit,
-	fieldTypeData,
-}) => {
+const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, onSubmit }) => {
 	/**
-	 * Methods
+	 * Hooks
 	 */
-	const parsedFormSchema: FormSchema = {
-		fields: CTField.fieldType._id
-			? [
-					{
-						name: 'defaultValue',
-						module: fieldTypeData.module,
-						label: CTField.label,
-						type: fieldTypeData.componentName,
-						// TODO: should be fixed in form renderer
-						// Pass empty options for fields that need it
-						config: fieldTypeData.defaultConfig || { options: [] },
-						dataType: CTField.dataType.data.type as FieldDataType,
-					},
-			  ]
-			: [],
-	};
+	const parsedFormSchema: FormSchema = useMemo(
+		() => ({
+			fields: parseFields([
+				{
+					...CTField,
+					name: 'defaultValue',
+				},
+			]),
+		}),
+		[CTField]
+	);
 
 	/**
 	 * Render
@@ -50,8 +41,8 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 
 		return (
 			<formRendererConnector.api.Form
-				initialValues={initialValues}
 				schema={parsedFormSchema}
+				initialValues={initialValues}
 				validationSchema={DEFAULT_VALIDATION_SCHEMA}
 				errorMessages={{}}
 				onSubmit={onSubmit}

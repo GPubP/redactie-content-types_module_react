@@ -4,4 +4,5 @@ export interface SearchParams {
 	search?: string;
 	sort?: string;
 	direction?: number;
+	hidden?: boolean;
 }

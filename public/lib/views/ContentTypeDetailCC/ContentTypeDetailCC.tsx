@@ -32,8 +32,6 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	onCancel,
 	onSubmit,
 }) => {
-	const fields = useMemo(() => [...fieldTypes, ...presets], [fieldTypes, presets]);
-
 	/**
 	 * Hooks
 	 */
@@ -44,6 +42,24 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	const isLoading = useMemo(() => {
 		return contentTypIsUpdating === LoadingState.Loading;
 	}, [contentTypIsUpdating]);
+	const fields = useMemo(
+		() =>
+			[...fieldTypes, ...presets].sort((a, b) => {
+				const nameA = a.data?.label?.toUpperCase(); // ignore upper and lowercase
+				const nameB = b.data?.label?.toUpperCase(); // ignore upper and lowercase
+
+				if (nameA < nameB) {
+					return -1;
+				}
+
+				if (nameA > nameB) {
+					return 1;
+				}
+
+				return 0;
+			}),
+		[fieldTypes, presets]
+	);
 
 	/**
 	 * Variables
