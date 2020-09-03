@@ -14,11 +14,17 @@ import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
 import { generateFieldFromType } from '../../helpers';
-import { useFieldType, useNavigate, usePreset, useQuery, useTenantContext } from '../../hooks';
+import {
+	useFieldType,
+	useNavigate,
+	useNavItemMatcher,
+	usePreset,
+	useQuery,
+	useTenantContext,
+} from '../../hooks';
 import useActiveField from '../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../hooks/useDynamicActiveField/useDynamicActiveField';
 import useDynamicField from '../../hooks/useDynamicField/useDynamicField';
-import { useNavItemMatcher } from '../../hooks/useNavItemMatcher/useNavItemMatcher';
 import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
 import { dynamicFieldFacade } from '../../store/dynamicField/dynamicField.facade';
 import { fieldTypesFacade } from '../../store/fieldTypes';

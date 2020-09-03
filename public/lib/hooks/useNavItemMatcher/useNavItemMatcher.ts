@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { FieldType } from '../../services/fieldTypes';
 import { PresetDetail } from '../../services/presets';
 
-export const useNavItemMatcher = (
+const useNavItemMatcher = (
 	preset: PresetDetail | null | undefined,
 	fieldType: FieldType | null | undefined
 ): FieldType => {
@@ -29,3 +29,5 @@ export const useNavItemMatcher = (
 
 	return navItemMatcher;
 };
+
+export default useNavItemMatcher;

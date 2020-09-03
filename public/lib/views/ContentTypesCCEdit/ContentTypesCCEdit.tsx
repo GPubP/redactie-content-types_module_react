@@ -15,10 +15,10 @@ import {
 	useActiveField,
 	useFieldType,
 	useNavigate,
+	useNavItemMatcher,
 	usePreset,
 	useTenantContext,
 } from '../../hooks';
-import { useNavItemMatcher } from '../../hooks/useNavItemMatcher/useNavItemMatcher';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
 import { fieldTypesFacade } from '../../store/fieldTypes';
 import { presetsFacade } from '../../store/presets';
