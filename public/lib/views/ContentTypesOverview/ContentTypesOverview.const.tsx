@@ -24,7 +24,6 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 	const defaultColumns = [
 		{
 			label: t(CORE_TRANSLATIONS.TABLE_NAME),
-			value: 'label',
 			component(value: any, rowData: ContentTypesOverviewTableRow) {
 				return (
 					<>
@@ -39,28 +38,23 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		{
 			label: 'Gebruikt op',
 			value: 'sites',
-			component(value: any) {
-				return <label>{value}</label>;
-			},
 			disableSorting: true,
 		},
 		{
 			label: 'Aantal content items',
-			value: 'fields',
-			component(value: any) {
-				return value > 0 ? (
-					<label>{value}</label>
+			component(value: any, rowData: ContentTypesOverviewTableRow) {
+				return rowData.fields > 0 ? (
+					<span>{rowData.fields}</span>
 				) : (
-					<label className="u-text-light">Geen</label>
+					<span className="u-text-light">Geen</span>
 				);
 			},
 			disableSorting: true,
 		},
 		{
 			label: t(CORE_TRANSLATIONS.TABLE_STATUS),
-			value: 'deleted',
-			component(value: string) {
-				return <SiteStatus active={!JSON.parse(value)} />;
+			component(value: string, rowData: ContentTypesOverviewTableRow) {
+				return <SiteStatus active={!rowData.deleted} />;
 			},
 			disableSorting: true,
 		},
