@@ -1,4 +1,4 @@
-import { Field, ValidationCheck, Validation } from '../contentTypes';
+import { Field, Validation } from '../contentTypes';
 
 /**
  * =========================

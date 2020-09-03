@@ -1,13 +1,11 @@
 import { FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-module';
-import { equals } from 'ramda';
-import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useMemo } from 'react';
 
 import { AutoSubmit } from '../../components';
 import formRendererConnector from '../../connectors/formRenderer';
 import { DEFAULT_VALIDATION_SCHEMA } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
 import { generateFRFieldFromCTField, generateValidationChecks } from '../../helpers';
-import { usePrevious } from '../../hooks';
 import {
 	Field,
 	ValicationCheckWithFields,
