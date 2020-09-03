@@ -2,7 +2,7 @@ import { FormValues } from '@redactie/form-renderer-module';
 import { path, pathOr } from 'ramda';
 
 import { DEFAULT_VALIDATOR_ERROR_MESSAGES } from '../../contentTypes.const';
-import { Validation, ValidationCheckField } from '../../services/contentTypes';
+import { Validation, ValidationCheck, ValidationCheckField } from '../../services/contentTypes';
 import { FieldTypeData } from '../../services/fieldTypes';
 import { PresetDetail } from '../../services/presets';
 
@@ -58,20 +58,25 @@ export const generateValidationChecks = (
 
 	return {
 		type: fieldTypeData?.dataType?.data?.type,
-		checks: Object.keys(data).map(validatorKey => {
-			const validator = fieldTypeData.validators.find(
-				validator => !!path(['data', 'defaultValue', validatorKey], validator)
-			);
+		checks: [
+			...(fieldTypeData.defaultValidatorValues?.checks
+				? (fieldTypeData.defaultValidatorValues?.checks as ValidationCheck[])
+				: []),
+			...Object.keys(data).map(validatorKey => {
+				const validator = fieldTypeData.validators.find(
+					validator => !!path(['data', 'defaultValue', validatorKey], validator)
+				);
 
-			return {
-				key: validatorKey,
-				val: data[validatorKey],
-				err: pathOr(
-					DEFAULT_VALIDATOR_ERROR_MESSAGES[validatorKey],
-					['data', 'defaultValue', validatorKey, 'err'],
-					validator
-				),
-			};
-		}),
+				return {
+					key: validatorKey,
+					val: data[validatorKey],
+					err: pathOr(
+						DEFAULT_VALIDATOR_ERROR_MESSAGES[validatorKey],
+						['data', 'defaultValue', validatorKey, 'err'],
+						validator
+					),
+				};
+			}),
+		],
 	};
 };

@@ -1,4 +1,4 @@
-import { Field } from '../contentTypes';
+import { Field, ValidationCheck, Validation } from '../contentTypes';
 
 /**
  * =========================
@@ -32,7 +32,7 @@ export interface FieldTypeData {
 	name: string;
 	componentName: string;
 	validators: any[];
-	defaultValidatorValues: any[];
+	defaultValidatorValues: Validation;
 	defaultConfig: any;
 	fieldType?: string;
 	formSchema: {
