@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
 import { FieldTypeModel } from '../../store/fieldTypes';
 import { PresetDetailModel } from '../../store/presets';
+import { generateConfig } from '../generateConfig';
 import { generateValidationChecks } from '../generateValidationChecks';
 
 export const generateFieldFromType = (
@@ -15,15 +16,9 @@ export const generateFieldFromType = (
 	label: '',
 	module: fieldType.data.module || '',
 	name: '',
-	config: {
-		fields: preset
-			? preset.data?.fields.map(field => ({
-					...field.field,
-			  }))
-			: [],
-	},
+	config: generateConfig(fieldType.data, preset),
 	validators: [],
-	validation: generateValidationChecks({}, fieldType.data, preset),
+	validation: generateValidationChecks({}, fieldType.data, preset, true),
 	operators: [],
 	generalConfig: {
 		guideline: '',

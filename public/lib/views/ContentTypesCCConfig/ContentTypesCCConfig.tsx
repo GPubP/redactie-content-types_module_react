@@ -1,12 +1,12 @@
 import { FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-module';
 import { clone } from 'ramda';
-import React, { FC, ReactElement, useCallback, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useMemo } from 'react';
 
 import { AutoSubmit } from '../../components';
 import formRendererConnector from '../../connectors/formRenderer';
 import { DEFAULT_VALIDATION_SCHEMA } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
-import { generateFRFieldFromCTField } from '../../helpers';
+import { generateFRFieldFromCTField, parseFields } from '../../helpers';
 import { Field, Validation } from '../../services/contentTypes';
 import { FieldTypeData } from '../../services/fieldTypes';
 import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
@@ -21,48 +21,6 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	/**
 	 * Hooks
 	 */
-	const [initialFormValuesSet, setInitialFormValuesSet] = useState<boolean>(false);
-
-	const onFormSubmit = useCallback(
-		(data: FormValues): void => {
-			const generateFieldConfig = (
-				data: FormValues,
-				CTField: ContentTypeFieldDetailModel,
-				preset?: PresetDetailModel
-			): Record<string, any> => {
-				const config = data?.config && data?.validation ? data.config : data;
-
-				if (!preset || (CTField.config?.fields || []).length <= 0) {
-					return config;
-				}
-
-				return {
-					fields: CTField.config.fields?.map(field => {
-						const fieldConfig = config[field.name];
-
-						if (fieldConfig) {
-							return {
-								...field,
-								config: {
-									...field.config,
-									...fieldConfig,
-								},
-							};
-						}
-						return field;
-					}),
-				};
-			};
-
-			onSubmit({
-				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				config: generateFieldConfig(data, CTField, preset),
-				// TODO: find a way to set validation based on configuration
-				// validation: generateFieldValidation(data, CTField),
-			});
-		},
-		[CTField, onSubmit, preset]
-	);
 
 	/**
 	 * initialFormValue
@@ -97,55 +55,28 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	 */
 	const initialFormValue: FormValues = useMemo(() => {
 		// Clone the config because we can not mutate the store
-		let config = clone(CTField.config) ?? {};
-		const { formSchema } = fieldTypeData;
+		const config = clone(CTField.config) ?? {};
 
-		if (!preset) {
-			config =
-				formSchema.fields?.reduce((initialValues: FormValues, field) => {
-					// Use default value when the configuration field is not defined on the initialValues object
-					// This happens the first time the user enters this page
-					if (!initialValues[field.name]) {
-						initialValues[field.name] = field.defaultValue ?? '';
-					}
-					// return initialValues when the field already exist
-					return initialValues;
-				}, config) || {};
-		}
+		if (preset && Array.isArray(config.fields)) {
+			return config.fields.reduce((initialValues: FormValues, field: Field) => {
+				initialValues[field.name] = field.config;
+				const presetField = preset.data.fields.find(f => f.field.name === field.name);
 
-		if (preset && (config.fields || []).length > 0) {
-			config =
-				config.fields?.reduce((initialValues: FormValues, field: Field) => {
-					initialValues[field.name] = field.config;
-					const presetField = preset.data.fields.find(f => f.field.name === field.name);
+				if (Array.isArray(presetField?.formSchema?.fields)) {
+					presetField?.formSchema?.fields.forEach(f => {
+						if (field.config[f.name]) {
+							initialValues[presetField.field.name][f.name] = field.config[f.name];
+							return initialValues;
+						}
+					});
+				}
 
-					if (Array.isArray(presetField?.formSchema?.fields)) {
-						presetField?.formSchema?.fields.forEach(f => {
-							if (field.config[f.name]) {
-								initialValues[presetField.field.name][f.name] =
-									field.config[f.name];
-								return initialValues;
-							}
-							// Use default value when the field is not defined on the fields config object
-							// This happens the first time the users enters this page
-							initialValues[presetField.field.name][f.name] = f.defaultValue ?? '';
-						});
-					}
-
-					return initialValues;
-				}, config) || {};
-		}
-
-		if (!initialFormValuesSet) {
-			setInitialFormValuesSet(true);
-			// We need save the default values since the form will not trigger an onchange event
-			// when the initial values of the from are changed.
-			// If we don't do this the default values will be lost
-			onFormSubmit(config);
+				return initialValues;
+			}, {});
 		}
 
 		return config;
-	}, [CTField, fieldTypeData, initialFormValuesSet, preset, onFormSubmit]);
+	}, [CTField, preset]);
 
 	/**
 	 * Methods
@@ -162,10 +93,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	});
 
 	const generateFormSchemaFromFieldTypeData = (fieldTypeData: FieldTypeData): FormSchema => ({
-		fields:
-			(fieldTypeData?.formSchema.fields || []).map(
-				(field): FieldSchema => generateFRFieldFromCTField(field)
-			) || [],
+		fields: parseFields(fieldTypeData?.formSchema?.fields),
 	});
 
 	const schema: FormSchema = useMemo(
@@ -200,6 +128,44 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 			return !!data.fields.find(field => !!field.formSchema?.fields?.length);
 		}
 		return !!fieldTypeData.formSchema?.fields?.length;
+	};
+
+	const onFormSubmit = (data: FormValues): void => {
+		const generateFieldConfig = (
+			data: FormValues,
+			CTField: ContentTypeFieldDetailModel,
+			preset?: PresetDetailModel
+		): Record<string, any> => {
+			const config = data?.config && data?.validation ? data.config : data;
+
+			if (!preset || (CTField.config?.fields || []).length <= 0) {
+				return config;
+			}
+
+			return {
+				fields: CTField.config.fields?.map(field => {
+					const fieldConfig = config[field.name];
+
+					if (fieldConfig) {
+						return {
+							...field,
+							config: {
+								...field.config,
+								...fieldConfig,
+							},
+						};
+					}
+					return field;
+				}),
+			};
+		};
+
+		onSubmit({
+			// eslint-disable-next-line @typescript-eslint/no-use-before-define
+			config: generateFieldConfig(data, CTField, preset),
+			// TODO: find a way to set validation based on configuration
+			// validation: generateFieldValidation(data, CTField),
+		});
 	};
 
 	/**

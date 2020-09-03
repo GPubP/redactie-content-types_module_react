@@ -15,7 +15,7 @@ import {
 	ValidationCheckField,
 } from '../../services/contentTypes';
 import { FieldTypeData } from '../../services/fieldTypes';
-import { PresetDetail, Validator } from '../../services/presets';
+import { PresetDetail } from '../../services/presets';
 
 const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	CTField,
@@ -26,99 +26,14 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	/**
 	 * Hooks
 	 */
-	const prevValidation = usePrevious(CTField.validation);
-	const [initialFormValuesSet, setInitialFormValuesSet] = useState<boolean>(false);
-
-	const onFormSubmit = useCallback(
-		(data: FormValues): void => {
-			/**
-			 * We need to set the required prop on the generalConfig when a	required validator was set by the user
-			 * The form renderer is using this prop to indicate that a field is required
-			 */
-			const generateConfig = (
-				data: FormValues,
-				preset?: PresetDetail
-			): Record<string, any> => {
-				return preset
-					? Object.keys(data).reduce(
-							(acc, fieldName) => {
-								const isRequired =
-									data[fieldName]?.required === 'true' ||
-									data[fieldName]?.required === true;
-
-								return {
-									...acc,
-									fields: acc.fields?.map((field: any) => {
-										if (field.name === fieldName && isRequired) {
-											return {
-												...field,
-												generalConfig: {
-													...field.generalConfig,
-													required: true,
-												},
-											};
-										}
-										return field;
-									}),
-								};
-							},
-							{
-								...CTField.config,
-							}
-					  )
-					: {};
-			};
-			onSubmit({
-				validation: generateValidationChecks(data, fieldTypeData, preset),
-				config: generateConfig(data, preset),
-			});
-		},
-		[CTField.config, fieldTypeData, onSubmit, preset]
-	);
-
 	const initialFormValue: FormValues = useMemo(() => {
 		if (!CTField || !CTField.validation) {
 			return {};
 		}
-		const { validation, __new: useDefaults } = CTField;
-		const hasNoValidationChecks = validation?.checks?.length === 0;
-
-		function createChecksFromDefaultValidatorValues(
-			validators: Validator[] = []
-		): ValidationCheck[] {
-			return validators.reduce((checks, validator) => {
-				if (validator.data.defaultValue) {
-					return [
-						...checks,
-						...Object.keys(validator.data.defaultValue).map(key => {
-							return {
-								key,
-								val: validator.data.defaultValue[key].val,
-								err: '',
-							};
-						}),
-					];
-				}
-				return checks;
-			}, [] as ValidationCheck[]);
-		}
+		const { validation } = CTField;
 
 		function createInitialValuesFromFields(fields: ValidationCheckField[]): FormValues {
 			return fields.reduce((value, field) => {
-				// if field.checks is empty, get the default checks
-				if (useDefaults && field.checks?.length === 0) {
-					const pField = preset?.data.fields.find(
-						presetField => presetField.field.name === field.name
-					);
-					if (pField) {
-						const newChecks = createChecksFromDefaultValidatorValues(pField.validators);
-						// eslint-disable-next-line @typescript-eslint/no-use-before-define
-						value[field.name] = createInitialValuesFromChecks(newChecks);
-
-						return value;
-					}
-				}
-
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				value[field.name] = createInitialValuesFromChecks(field.checks);
 
@@ -147,37 +62,8 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 			}, {} as FormValues);
 		}
 
-		// return the current initial form value when nothing has changed
-		if (equals(prevValidation, validation) && initialFormValuesSet) {
-			return createInitialValuesFromChecks(validation.checks);
-		}
-
-		const result =
-			useDefaults && hasNoValidationChecks && !preset
-				? createInitialValuesFromChecks(
-						// Create checks from default validator values when the CTField is not based on a preset
-						// The default validator values are only used when we create a new content type field
-						createChecksFromDefaultValidatorValues(fieldTypeData.validators)
-				  )
-				: createInitialValuesFromChecks(validation.checks);
-
-		// We need save the default values since the form will not trigger an onchange event
-		// when the initial values of the from are changed.
-		// If we don't do this the default values will be lost
-		if (!initialFormValuesSet) {
-			setInitialFormValuesSet(true);
-			onFormSubmit(result);
-		}
-
-		return result;
-	}, [
-		CTField,
-		fieldTypeData.validators,
-		initialFormValuesSet,
-		onFormSubmit,
-		preset,
-		prevValidation,
-	]);
+		return createInitialValuesFromChecks(validation.checks);
+	}, [CTField]);
 
 	/**
 	 *
@@ -223,6 +109,47 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 			return !!data.fields.find(field => field?.validators?.length > 0);
 		}
 		return !!fieldTypeData?.validators?.length;
+	};
+
+	const onFormSubmit = (data: FormValues): void => {
+		/**
+		 * We need to set the required prop on the generalConfig when a	required validator was set by the user
+		 * The form renderer is using this prop to indicate that a field is required
+		 */
+		const generateConfig = (data: FormValues, preset?: PresetDetail): Record<string, any> => {
+			return preset
+				? Object.keys(data).reduce(
+						(acc, fieldName) => {
+							const isRequired =
+								data[fieldName]?.required === 'true' ||
+								data[fieldName]?.required === true;
+
+							return {
+								...acc,
+								fields: acc.fields?.map((field: any) => {
+									if (field.name === fieldName && isRequired) {
+										return {
+											...field,
+											generalConfig: {
+												...field.generalConfig,
+												required: true,
+											},
+										};
+									}
+									return field;
+								}),
+							};
+						},
+						{
+							...CTField.config,
+						}
+				  )
+				: {};
+		};
+		onSubmit({
+			validation: generateValidationChecks(data, fieldTypeData, preset),
+			config: generateConfig(data, preset),
+		});
 	};
 
 	/**
