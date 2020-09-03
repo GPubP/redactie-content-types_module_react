@@ -38,14 +38,21 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		},
 		{
 			label: 'Gebruikt op',
-			value: 'description',
+			value: 'sites',
+			component(value: any) {
+				return <label>{value}</label>;
+			},
 			disableSorting: true,
 		},
 		{
 			label: 'Aantal content items',
 			value: 'fields',
 			component(value: any) {
-				return <label>{value}</label>;
+				return value > 0 ? (
+					<label>{value}</label>
+				) : (
+					<label className="u-text-light">Geen</label>
+				);
 			},
 			disableSorting: true,
 		},
@@ -53,7 +60,7 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 			label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 			value: 'deleted',
 			component(value: string) {
-				return <SiteStatus active={!value} />;
+				return <SiteStatus active={!JSON.parse(value)} />;
 			},
 			disableSorting: true,
 		},
