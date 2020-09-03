@@ -13,12 +13,11 @@ import { FormCCSettingsProps } from './FormCCSettings.types';
 
 const FormCCSettings: FC<FormCCSettingsProps> = ({
 	initialValues,
-	inputValues,
 	fieldTypeData,
 	onSubmit,
 	isUpdate,
 }) => {
-	const [isMultiple, setIsMultiple] = useState(inputValues.generalConfig.max > 1);
+	const [isMultiple, setIsMultiple] = useState((initialValues?.generalConfig?.max || 0) > 1);
 	const [t] = useCoreTranslation();
 
 	const onFormSubmit = (values: CCSettingsFormState): void => {
@@ -34,7 +33,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 	};
 
 	return (
-		<Formik initialValues={inputValues} onSubmit={onFormSubmit}>
+		<Formik enableReinitialize initialValues={initialValues} onSubmit={onFormSubmit}>
 			{({ values, submitForm }) => {
 				return (
 					<>
