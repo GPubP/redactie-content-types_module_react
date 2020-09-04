@@ -24,6 +24,7 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 	const defaultColumns = [
 		{
 			label: t(CORE_TRANSLATIONS.TABLE_NAME),
+			value: 'label',
 			component(value: any, rowData: ContentTypesOverviewTableRow) {
 				return (
 					<>
