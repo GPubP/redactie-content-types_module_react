@@ -73,6 +73,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 		setFieldValue(fieldSchema.name, {
 			config: value,
 			validation: {
+				type: 'array',
 				allowedFields: (Array.isArray(value) ? value : []).map(field => ({
 					type: field.validation?.type,
 					fieldType: field.fieldType._id,

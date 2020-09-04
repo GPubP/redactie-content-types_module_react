@@ -8,6 +8,7 @@ import { ContentTypesCCRouteProps } from '../../contentTypes.types';
 import { generateFRFieldFromCTField, generateValidationChecks } from '../../helpers';
 import {
 	Field,
+	ValicationCheckWithAllowedFields,
 	ValicationCheckWithFields,
 	ValidationCheck,
 	ValidationCheckField,
@@ -70,7 +71,12 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 			}, {} as FormValues);
 		}
 
-		function reduceChecks(checks: ValidationCheck[] | ValicationCheckWithFields[]): FormValues {
+		function reduceChecks(
+			checks:
+				| ValidationCheck[]
+				| ValicationCheckWithFields[]
+				| ValicationCheckWithAllowedFields[]
+		): FormValues {
 			// NOTE!: We need to set the checks to any because typescript can not reduce over a tuple type
 			return (checks as any).reduce((value: FormValues, check: any) => {
 				if (check.fields) {

@@ -8,6 +8,7 @@ import { DEFAULT_VALIDATION_SCHEMA } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
 import { generateFRFieldFromCTField } from '../../helpers';
 import { Field, Validation } from '../../services/contentTypes';
+import { ValicationCheckWithAllowedFields } from '../../services/contentTypes/contentTypes.service.types';
 import { FieldTypeData } from '../../services/fieldTypes';
 import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
 import { PresetDetailModel } from '../../store/presets';
@@ -70,7 +71,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		data: FormValues,
 		CTField: ContentTypeFieldDetailModel,
 		preset?: PresetDetailModel
-	): { config: Record<string, any>; validation: Record<string, Validation> } => {
+	): { config: Record<string, any>; validationChecks: Validation['checks'] } => {
 		return CTField.fieldType.data.formSchema.fields.reduce(
 			(acc, field) => {
 				const config = field.generalConfig.combinedOutput
@@ -103,14 +104,24 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 				}
 
 				if (validation) {
-					acc.validation = validation;
+					const validationCheckIndex = (
+						(CTField.validation?.checks as ValicationCheckWithAllowedFields[]) || []
+					).findIndex(check => check.id === field.uuid);
+					const newCheck = { id: field.uuid, ...validation };
+
+					if (validationCheckIndex === -1) {
+						acc.validationChecks = [...(CTField.validation?.checks || []), newCheck];
+					} else {
+						acc.validationChecks = CTField.validation?.checks || [];
+						acc.validationChecks[validationCheckIndex] = newCheck;
+					}
 				}
 
 				return acc;
 			},
 			{
 				config: clone(data),
-				validation: {} as Record<string, Validation>,
+				validationChecks: [] as Validation['checks'],
 			}
 		);
 	};
@@ -131,7 +142,9 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 
 		onSubmit({
 			config: config.config,
-			...(Object.values(config.validation).length ? { validation: config.validation } : {}),
+			...(Array.isArray(config.validationChecks)
+				? { validation: { checks: config.validationChecks } }
+				: {}),
 		});
 	};
 

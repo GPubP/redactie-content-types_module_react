@@ -24,9 +24,21 @@ export interface ValidationCheckField {
 	checks: ValidationCheck[];
 }
 
+export interface ValicationCheckWithAllowedFields {
+	id?: string;
+	type: string;
+	allowedFields: ValidationCheckAllowedField[];
+}
+
+export interface ValidationCheckAllowedField {
+	type: string;
+	fieldType: string;
+	checks: ValidationCheck[];
+}
+
 export interface Validation {
 	type: string;
-	checks: ValidationCheck[] | ValicationCheckWithFields[];
+	checks: ValidationCheck[] | ValicationCheckWithFields[] | ValicationCheckWithAllowedFields[];
 }
 
 export type ValidationSchema = Record<string, any>;
