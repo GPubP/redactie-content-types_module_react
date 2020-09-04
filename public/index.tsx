@@ -4,7 +4,8 @@ import React, { FC, useEffect, useMemo } from 'react';
 
 import { registerContentTypeAPI } from './lib/api/index';
 import { RenderChildRoutes } from './lib/components';
-import DynamicFieldSettings from './lib/components/fields/DynamicFieldSettings/DynamicFieldSettings';
+import ContentTypesSelect from './lib/components/Fields/ContentTypesSelect/ContentTypesSelect';
+import DynamicFieldSettings from './lib/components/Fields/DynamicFieldSettings/DynamicFieldSettings';
 import formRendererConnector from './lib/connectors/formRenderer';
 import rolesRightsConnector from './lib/connectors/rolesRights';
 import { MODULE_PATHS } from './lib/contentTypes.const';
@@ -61,6 +62,7 @@ if (!rolesRightsConnector.api) {
 		`Content types Module can't resolve the following dependency: ${rolesRightsConnector.apiName}, please add the module to the dependency list.`
 	);
 }
+
 Core.routes.register({
 	path: MODULE_PATHS.root,
 	component: ContentTypesComponent,
@@ -266,6 +268,12 @@ formRendererConnector.api.fieldRegistry.add({
 	name: 'dynamicFieldSettings',
 	module: 'content-types',
 	component: DynamicFieldSettings,
+});
+
+formRendererConnector.api.fieldRegistry.add({
+	name: 'contentTypesSelect',
+	module: 'content-types',
+	component: ContentTypesSelect,
 });
 
 export * from './lib/api/api.types';
