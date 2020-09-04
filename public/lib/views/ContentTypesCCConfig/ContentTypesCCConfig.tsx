@@ -114,6 +114,22 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		CTField: ContentTypeFieldDetailModel,
 		preset?: PresetDetailModel
 	): { config: Record<string, any>; validationChecks: Validation['checks'] } => {
+		const newConfig = clone(data);
+
+		if (preset && (CTField.config?.fields || []).length > 0) {
+			newConfig['fields'] = CTField.config.fields?.map(field => {
+				const fieldConfig = newConfig[field.name];
+
+				if (fieldConfig) {
+					return {
+						...field,
+						config: fieldConfig,
+					};
+				}
+				return field;
+			});
+		}
+
 		return CTField.fieldType.data.formSchema.fields.reduce(
 			(acc, field) => {
 				const config = field.generalConfig.combinedOutput
@@ -123,23 +139,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 					? data[field.name]?.validation
 					: null;
 
-				if (
-					field.name === 'fields' &&
-					preset &&
-					(CTField.config?.fields || []).length > 0
-				) {
-					acc.config['fields'] = CTField.config.fields?.map(field => {
-						const fieldConfig = config[field.name];
-
-						if (fieldConfig) {
-							return {
-								...field,
-								config: fieldConfig,
-							};
-						}
-						return field;
-					});
-				} else if (field.name === 'fields') {
+				if (field.name === 'fields') {
 					acc.config[field.name] = config || [];
 				} else {
 					acc.config[field.name] = config;
@@ -162,7 +162,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 				return acc;
 			},
 			{
-				config: clone(data),
+				config: newConfig,
 				validationChecks: [] as Validation['checks'],
 			}
 		);
