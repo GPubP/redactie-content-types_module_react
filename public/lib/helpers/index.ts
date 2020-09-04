@@ -6,3 +6,5 @@ export * from './generateFieldFromType';
 export * from './generateValidationChecks';
 export * from './mapExternalTabToTab';
 export * from './generateFRFieldFromCTField';
+export * from './parseFields';
+export * from './generateConfig';

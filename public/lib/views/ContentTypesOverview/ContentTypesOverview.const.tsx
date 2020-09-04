@@ -1,7 +1,6 @@
 import { Link as AUILink, Button } from '@acpaas-ui/react-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { prop } from 'ramda';
 import React from 'react';
 import { Link } from 'react-router-dom';
 

@@ -3,7 +3,7 @@ import { Table } from '@acpaas-ui/react-editorial-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
 import classNames from 'classnames/bind';
 import { useFormikContext } from 'formik';
-import { __, clone, compose, equals, pathOr, Placeholder } from 'ramda';
+import { __, compose, equals, pathOr } from 'ramda';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 

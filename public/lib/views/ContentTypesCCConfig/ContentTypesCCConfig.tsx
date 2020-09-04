@@ -1,11 +1,12 @@
 import { FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-module';
+import { clone } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 
 import { AutoSubmit } from '../../components';
 import formRendererConnector from '../../connectors/formRenderer';
 import { DEFAULT_VALIDATION_SCHEMA } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
-import { generateFRFieldFromCTField } from '../../helpers';
+import { generateFRFieldFromCTField, parseFields } from '../../helpers';
 import { Field, Validation } from '../../services/contentTypes';
 import { FieldTypeData } from '../../services/fieldTypes';
 import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
@@ -20,21 +21,66 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	/**
 	 * Hooks
 	 */
-	const initialFormValue: FormValues = useMemo(() => {
-		const { config } = CTField;
 
-		if (preset && (config.fields || []).length > 0) {
-			return (
-				config.fields?.reduce((initialValues: FormValues, field: Field) => {
-					initialValues[field.name] = field.config;
-					return initialValues;
-				}, {} as FormValues) || {}
-			);
+	/**
+	 * initialFormValue
+	 *
+	 * This method creates the initialFormValues by using the CTField config object
+	 *
+	 * PRESET EXAMPLE:
+	 * CONVERTS =>
+	 * config: {
+	 * 		fields: [{
+	 * 			name: 'presetField'
+	 * 			config: {
+	 * 				someConfigField: 'value',
+	 * 				someOtherConfigField: 'value'
+	 * 			}
+	 * 		}]
+	 * }
+	 * TO =>
+	 * initialFormValue: {
+	 * 		fields: [{
+	 * 			config: {
+	 * 				someConfigField: 'value',
+	 * 				someOtherConfigField: 'value'
+	 * 			}
+	 * 		}],
+	 * 		// The presetField prop represents the form data that is used
+	 * 		presetField: {
+	 * 			someConfigField: 'value',
+	 * 			someOtherConfigField: 'value'
+	 * 		}
+	 * }
+	 */
+	const initialFormValue: FormValues = useMemo(() => {
+		// Clone the config because we can not mutate the store
+		const config = clone(CTField.config) ?? {};
+
+		if (preset && Array.isArray(config.fields)) {
+			return config.fields.reduce((initialValues: FormValues, field: Field) => {
+				initialValues[field.name] = field.config;
+				const presetField = preset.data.fields.find(f => f.field.name === field.name);
+
+				if (Array.isArray(presetField?.formSchema?.fields)) {
+					presetField?.formSchema?.fields.forEach(f => {
+						if (field.config[f.name]) {
+							initialValues[presetField.field.name][f.name] = field.config[f.name];
+							return initialValues;
+						}
+					});
+				}
+
+				return initialValues;
+			}, {});
 		}
 
-		return CTField.config;
+		return config;
 	}, [CTField, preset]);
 
+	/**
+	 * Methods
+	 */
 	const generateFormSchemaFromPreset = (preset: PresetDetailModel): FormSchema => ({
 		fields: (preset?.data.fields || []).reduce((fSchema, presetField) => {
 			presetField.formSchema?.fields?.forEach(field =>
@@ -47,10 +93,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	});
 
 	const generateFormSchemaFromFieldTypeData = (fieldTypeData: FieldTypeData): FormSchema => ({
-		fields:
-			(fieldTypeData?.formSchema.fields || []).map(
-				(field): FieldSchema => generateFRFieldFromCTField(field)
-			) || [],
+		fields: parseFields(fieldTypeData?.formSchema?.fields),
 	});
 
 	const schema: FormSchema = useMemo(
@@ -60,39 +103,6 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 				: generateFormSchemaFromFieldTypeData(fieldTypeData),
 		[fieldTypeData, preset]
 	);
-
-	/**
-	 * Methods
-	 */
-
-	const generateFieldConfig = (
-		data: FormValues,
-		CTField: ContentTypeFieldDetailModel,
-		preset?: PresetDetailModel
-	): Record<string, any> => {
-		const config = data?.config && data?.validation ? data.config : data;
-
-		if (!preset || (CTField.config?.fields || []).length <= 0) {
-			return config;
-		}
-
-		return {
-			fields: CTField.config.fields?.map(field => {
-				const fieldConfig = config[field.name];
-
-				if (fieldConfig) {
-					return {
-						...field,
-						config: {
-							...field.config,
-							...fieldConfig,
-						},
-					};
-				}
-				return field;
-			}),
-		};
-	};
 
 	const generateFieldValidation = (
 		data: FormValues,
@@ -121,7 +131,37 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	};
 
 	const onFormSubmit = (data: FormValues): void => {
+		const generateFieldConfig = (
+			data: FormValues,
+			CTField: ContentTypeFieldDetailModel,
+			preset?: PresetDetailModel
+		): Record<string, any> => {
+			const config = data?.config && data?.validation ? data.config : data;
+
+			if (!preset || (CTField.config?.fields || []).length <= 0) {
+				return config;
+			}
+
+			return {
+				fields: CTField.config.fields?.map(field => {
+					const fieldConfig = config[field.name];
+
+					if (fieldConfig) {
+						return {
+							...field,
+							config: {
+								...field.config,
+								...fieldConfig,
+							},
+						};
+					}
+					return field;
+				}),
+			};
+		};
+
 		onSubmit({
+			// eslint-disable-next-line @typescript-eslint/no-use-before-define
 			config: generateFieldConfig(data, CTField, preset),
 			// TODO: find a way to set validation based on configuration
 			// validation: generateFieldValidation(data, CTField),
