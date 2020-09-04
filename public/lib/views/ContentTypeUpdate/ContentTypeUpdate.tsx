@@ -203,7 +203,6 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			presets,
 			fieldTypes,
 			contentType,
-			activeField,
 			onCancel: navigateToOverview,
 			onSubmit: updateCT,
 		};

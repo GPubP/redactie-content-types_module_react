@@ -32,7 +32,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 	 * HOOKS
 	 */
 	const { contentTypeUuid } = useParams();
-	const { setFieldValue, values } = useFormikContext<Record<string, Field[]>>();
+	const { setFieldValue, values } = useFormikContext<Record<string, { config: Field[] }>>();
 	const activeField = useActiveField();
 	const dynamicField = useDynamicField();
 	const [, fieldTypes] = useFieldTypes();
@@ -66,17 +66,20 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 	}, [fields]);
 
 	useEffect(() => {
-		if (equals(value, values[fieldSchema.name])) {
+		if (equals(value, values[fieldSchema.name]?.config)) {
 			return;
 		}
 
-		setFieldValue(fieldSchema.name, value);
-		setFieldValue('validation', {
-			allowedFields: (Array.isArray(value) ? value : []).map(field => ({
-				type: field.validation?.type,
-				fieldType: field.fieldType._id,
-				checks: field.validation?.checks,
-			})),
+		setFieldValue(fieldSchema.name, {
+			config: value,
+			validation: {
+				type: 'array',
+				allowedFields: (Array.isArray(value) ? value : []).map(field => ({
+					type: field.validation?.type,
+					fieldType: field.fieldType._id,
+					checks: field.validation?.checks,
+				})),
+			},
 		});
 	}, [value, fieldSchema.name, setFieldValue, values]);
 

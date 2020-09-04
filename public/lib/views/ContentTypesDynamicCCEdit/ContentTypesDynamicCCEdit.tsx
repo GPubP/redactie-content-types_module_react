@@ -12,10 +12,11 @@ import { DataLoader, NavList, RenderChildRoutes } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
-import { useNavigate, useTenantContext } from '../../hooks';
+import { useNavigate, useNavItemMatcher, useTenantContext } from '../../hooks';
 import useActiveField from '../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../hooks/useDynamicActiveField/useDynamicActiveField';
 import useDynamicField from '../../hooks/useDynamicField/useDynamicField';
+import { PresetDetail } from '../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
 import { dynamicFieldFacade } from '../../store/dynamicField/dynamicField.facade';
 import { fieldTypesFacade } from '../../store/fieldTypes';
@@ -47,6 +48,10 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			tenantId,
 		}),
 		[tenantId]
+	);
+	const navItemMatcher = useNavItemMatcher(
+		dynamicActiveField?.preset as PresetDetail,
+		dynamicActiveField?.fieldType
 	);
 
 	useEffect(() => {
@@ -183,7 +188,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 							<NavList
 								items={CC_DYNAMIC_NAV_LIST_ITEMS.map(listItem => ({
 									...listItem,
-									meta: dynamicActiveField?.fieldType,
+									meta: navItemMatcher,
 									to: generatePath(listItem.to, {
 										contentTypeUuid,
 										contentComponentUuid,

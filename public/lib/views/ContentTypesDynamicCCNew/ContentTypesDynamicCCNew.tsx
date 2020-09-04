@@ -14,7 +14,14 @@ import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
 import { generateFieldFromType } from '../../helpers';
-import { useFieldType, useNavigate, usePreset, useQuery, useTenantContext } from '../../hooks';
+import {
+	useFieldType,
+	useNavigate,
+	useNavItemMatcher,
+	usePreset,
+	useQuery,
+	useTenantContext,
+} from '../../hooks';
 import useActiveField from '../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../hooks/useDynamicActiveField/useDynamicActiveField';
 import useDynamicField from '../../hooks/useDynamicField/useDynamicField';
@@ -53,6 +60,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		}),
 		[tenantId]
 	);
+	const navItemMatcher = useNavItemMatcher(preset, fieldType);
 
 	useEffect(() => {
 		dynamicFieldFacade.clearActiveField();
@@ -193,7 +201,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 							<NavList
 								items={CC_NAV_LIST_ITEMS.map(listItem => ({
 									...listItem,
-									meta: preset || dynamicActiveField?.fieldType,
+									meta: navItemMatcher,
 									to: generatePath(
 										listItem.to,
 										{

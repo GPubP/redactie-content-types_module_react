@@ -13,25 +13,28 @@ import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
 import { generateFieldFromType } from '../../helpers';
-import { useFieldType, useNavigate, usePreset, useQuery, useTenantContext } from '../../hooks';
-import { FieldType } from '../../services/fieldTypes';
+import {
+	useActiveField,
+	useFieldType,
+	useNavigate,
+	useNavItemMatcher,
+	usePreset,
+	useQuery,
+	useTenantContext,
+} from '../../hooks';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/contentTypes';
 import { fieldTypesFacade } from '../../store/fieldTypes';
 import { presetsFacade } from '../../store/presets';
 
 import { CC_NAV_LIST_ITEMS } from './ContentTypesCCNew.const';
 
-const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
-	match,
-	activeField,
-	route,
-	history,
-}) => {
+const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, history }) => {
 	const { contentTypeUuid } = match.params;
 	/**
 	 * Hooks
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const activeField = useActiveField();
 	const query = useQuery();
 	const fieldTypeUuid = query.get('fieldType');
 	const presetUuid = query.get('preset');
@@ -47,25 +50,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 		}),
 		[tenantId]
 	);
-	const navItemMatcher = useMemo(() => {
-		return (preset?.data?.fields || []).reduce(
-			(acc, field) => {
-				acc.data.formSchema.fields = [
-					...acc.data.formSchema.fields,
-					...(field?.formSchema?.fields || []),
-				];
-				acc.data.validators = [...acc.data.validators, ...(field?.validators || [])];
-
-				return acc;
-			},
-			({
-				data: {
-					formSchema: { fields: [...(fieldType?.data?.formSchema?.fields || [])] },
-					validators: [...(fieldType?.data?.validators || [])],
-				},
-			} as unknown) as FieldType
-		);
-	}, [fieldType, preset]);
+	const navItemMatcher = useNavItemMatcher(preset, fieldType);
 
 	useEffect(() => {
 		presetsFacade.clearPreset();
@@ -111,6 +96,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 	useEffect(() => {
 		if (fieldType) {
 			const initialValues = { label: name || '', name: kebabCase(name || '') };
+
 			contentTypesFacade.setActiveField(
 				generateFieldFromType(fieldType, initialValues, preset || undefined)
 			);
@@ -127,6 +113,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({
 	const onCTSubmit = (): void => {
 		if (activeField) {
 			contentTypesFacade.addField(activeField);
+			contentTypesFacade.clearActiveField();
 			navigateToOverview();
 		}
 	};
