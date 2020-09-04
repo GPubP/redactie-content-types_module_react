@@ -51,8 +51,6 @@ const ContentTypesSelect: React.FC<InputFieldProps> = ({
 			<CheckBoxList
 				fieldSchema={{
 					...fieldSchema,
-					name: fieldSchema.name,
-					label: fieldSchema.label,
 					config: {
 						required: fieldSchema.config?.required,
 						options: contentTypeOptions,
