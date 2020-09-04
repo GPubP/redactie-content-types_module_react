@@ -4,4 +4,5 @@ export interface SearchParams extends Record<string, string | number | undefined
 	search?: string;
 	sort?: string;
 	direction?: number;
+	hidden?: boolean;
 }

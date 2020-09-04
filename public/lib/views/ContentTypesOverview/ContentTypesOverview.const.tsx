@@ -1,8 +1,10 @@
-import { Button } from '@acpaas-ui/react-components';
+import { Link as AUILink, Button } from '@acpaas-ui/react-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
+import { SiteStatus } from '../../components';
 import rolesRightsConnector from '../../connectors/rolesRights';
 
 import { ContentTypesOverviewTableRow } from './ContentTypesOverview.types';
@@ -22,6 +24,16 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		{
 			label: t(CORE_TRANSLATIONS.TABLE_NAME),
 			value: 'label',
+			component(value: any, rowData: ContentTypesOverviewTableRow) {
+				return (
+					<>
+						<AUILink to={`${rowData?.uuid}/instellingen`} component={Link}>
+							{value}
+						</AUILink>
+						<p className="u-text-light u-margin-top-xs">{rowData?.description}</p>
+					</>
+				);
+			},
 		},
 		{
 			label: 'Gebruikt op',
@@ -29,8 +41,19 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 			disableSorting: true,
 		},
 		{
+			label: 'Aantal content items',
+			value: 'fields',
+			component(value: any) {
+				return <label>{value}</label>;
+			},
+			disableSorting: true,
+		},
+		{
 			label: t(CORE_TRANSLATIONS.TABLE_STATUS),
-			value: 'status',
+			value: 'deleted',
+			component(value: string) {
+				return <SiteStatus active={!value} />;
+			},
 			disableSorting: true,
 		},
 	];

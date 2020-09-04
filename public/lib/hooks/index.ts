@@ -14,3 +14,4 @@ export { default as usePresets } from './usePresets/usePresets';
 export { default as usePreset } from './usePreset/usePreset';
 export { default as useQuery } from './useQuery/useQuery';
 export { default as useActiveRouteConfig } from './useActiveRouteConfig/useActiveRouteConfig';
+export { default as usePrevious } from './usePrevious/usePrevious';

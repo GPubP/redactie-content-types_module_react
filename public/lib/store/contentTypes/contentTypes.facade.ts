@@ -198,6 +198,13 @@ export class ContentTypesFacade extends BaseEntityFacade<
 			return;
 		}
 
+		const payloadIsMultiple =
+			(payload?.generalConfig?.max ?? (activeField?.generalConfig?.max || 0)) > 1;
+		const activeFieldIsMultiple = (activeField?.generalConfig?.max || 0) > 1;
+
+		// clear default value when switching form single to multiple or the other way around
+		const clearDefaultValue = payloadIsMultiple !== activeFieldIsMultiple;
+
 		this.store.update({
 			activeField: {
 				...activeField,
@@ -213,7 +220,11 @@ export class ContentTypesFacade extends BaseEntityFacade<
 					...activeField.validation,
 					...payload.validation,
 				},
-				defaultValue: payload.defaultValue,
+				defaultValue: clearDefaultValue
+					? undefined
+					: payload.defaultValue !== undefined
+					? payload.defaultValue
+					: activeField.defaultValue,
 			} as ContentTypeFieldDetailModel,
 		});
 	}

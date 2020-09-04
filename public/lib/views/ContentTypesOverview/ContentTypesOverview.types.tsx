@@ -2,7 +2,8 @@ export interface ContentTypesOverviewTableRow {
 	uuid: string;
 	label: string;
 	description: string;
-	status: string;
+	fields: number;
+	deleted: boolean;
 	navigate: (contentTypeUuid: string) => void;
 }
 
