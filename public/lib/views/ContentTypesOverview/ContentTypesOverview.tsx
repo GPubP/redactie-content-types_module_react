@@ -17,9 +17,10 @@ import rolesRightsConnector from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesRouteProps, LoadingState } from '../../contentTypes.types';
-import { useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../hooks';
+import { useContentTypes, useNavigate, useRoutesBreadcrumbs, useSites } from '../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../services/contentTypes/contentTypes.service.cont';
-import { contentTypesFacade } from '../../store/contentTypes';
+import { ContentTypeModel, contentTypesFacade } from '../../store/contentTypes';
+import { SiteModel } from '../../store/sites';
 
 import {
 	CONTENT_INITIAL_FILTER_STATE,
@@ -45,6 +46,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	const { navigate } = useNavigate();
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const [loadingContentTypes, contentTypes, meta] = useContentTypes();
+	const [loadingSites, sites] = useSites();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
 	const [
@@ -56,14 +58,24 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	useEffect(() => {
 		if (
 			loadingContentTypes !== LoadingState.Loading &&
+			loadingSites !== LoadingState.Loading &&
 			mySecurityRightsLoadingState !== LoadingState.Loading &&
 			contentTypes &&
+			sites &&
 			mySecurityrights &&
 			meta
 		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [loadingContentTypes, meta, contentTypes, mySecurityrights, mySecurityRightsLoadingState]);
+	}, [
+		loadingContentTypes,
+		loadingSites,
+		meta,
+		contentTypes,
+		sites,
+		mySecurityrights,
+		mySecurityRightsLoadingState,
+	]);
 
 	useEffect(() => {
 		contentTypesFacade.getContentTypes(contentTypesSearchParams);
@@ -140,6 +152,19 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 		setActiveSorting(orderBy);
 	};
 
+	const findSitesForContentType = (contentType: ContentTypeModel): any =>
+		sites.reduce((acc: string[], site: SiteModel) => {
+			const containsCT = site.data.contentTypes.includes(contentType._id);
+
+			if (!containsCT) {
+				return acc;
+			}
+
+			acc.push(site.data.name);
+
+			return acc;
+		}, []);
+
 	/**
 	 * Render
 	 */
@@ -147,10 +172,12 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 		if (!meta) {
 			return null;
 		}
+
 		const contentTypesRows: ContentTypesOverviewTableRow[] = contentTypes.map(contentType => ({
 			uuid: contentType.uuid as string,
 			label: contentType.meta.label,
 			description: contentType.meta.description,
+			sites: findSitesForContentType(contentType),
 			fields: contentType.fields.length || 0,
 			deleted: contentType.meta.deleted || false,
 			navigate: contentTypeUuid => navigate(MODULE_PATHS.detail, { contentTypeUuid }),
