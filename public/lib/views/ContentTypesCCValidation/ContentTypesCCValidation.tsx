@@ -30,21 +30,18 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 			return {};
 		}
 		const { validation } = CTField;
-
 		function createInitialValuesFromFields(fields: ValidationCheckField[]): FormValues {
 			return fields.reduce((value, field) => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				value[field.name] = createInitialValuesFromChecks(field.checks);
-
 				return value;
 			}, {} as FormValues);
 		}
-
-		function reduceChecks(
+		function createInitialValuesFromChecks(
 			checks:
 				| ValidationCheck[]
 				| ValicationCheckWithFields[]
-				| ValicationCheckWithAllowedFields[]
+				| ValicationCheckWithAllowedFields[] = []
 		): FormValues {
 			// NOTE!: We need to set the checks to any because typescript can not reduce over a tuple type
 			return (checks as any).reduce((value: FormValues, check: any) => {
@@ -54,16 +51,13 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 						...createInitialValuesFromFields(check.fields),
 					};
 				}
-
 				// TODO: Acpaas ui component Radio Field can not handle boolean values as options
 				// Remove this functionality when the issue is fixed
 				value[check.key] =
 					check.val === true ? 'true' : check.val === false ? 'false' : check.val;
-
 				return value;
 			}, {} as FormValues);
 		}
-
 		return createInitialValuesFromChecks(validation.checks);
 	}, [CTField]);
 

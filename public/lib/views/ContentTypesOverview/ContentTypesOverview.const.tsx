@@ -37,22 +37,24 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		},
 		{
 			label: 'Gebruikt op',
-			value: 'description',
+			value: 'sites',
 			disableSorting: true,
 		},
 		{
 			label: 'Aantal content items',
-			value: 'fields',
-			component(value: any) {
-				return <label>{value}</label>;
+			component(value: any, rowData: ContentTypesOverviewTableRow) {
+				return rowData.fields > 0 ? (
+					<span>{rowData.fields}</span>
+				) : (
+					<span className="u-text-light">Geen</span>
+				);
 			},
 			disableSorting: true,
 		},
 		{
 			label: t(CORE_TRANSLATIONS.TABLE_STATUS),
-			value: 'deleted',
-			component(value: string) {
-				return <SiteStatus active={!value} />;
+			component(value: string, rowData: ContentTypesOverviewTableRow) {
+				return <SiteStatus active={!rowData.deleted} />;
 			},
 			disableSorting: true,
 		},

@@ -3,6 +3,7 @@ import { path, pathOr } from 'ramda';
 
 import { DEFAULT_VALIDATOR_ERROR_MESSAGES } from '../../contentTypes.const';
 import {
+	ValicationCheckWithAllowedFields,
 	ValicationCheckWithFields,
 	Validation,
 	ValidationCheck,
@@ -40,7 +41,7 @@ const getChecksFromDefaultValue = (validators: Validator[] = []): ValidationChec
 
 const getChecksFromDefaultValidatorValues = (
 	defaultValidatorValues: Validation
-): ValidationCheck[] | ValicationCheckWithFields[] => {
+): ValidationCheck[] | ValicationCheckWithFields[] | ValicationCheckWithAllowedFields[] => {
 	return defaultValidatorValues?.checks?.length > 0 ? defaultValidatorValues.checks : [];
 };
 
