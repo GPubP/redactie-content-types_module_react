@@ -52,7 +52,7 @@ const ContentTypesSelect: React.FC<InputFieldProps> = ({
 				fieldSchema={{
 					...fieldSchema,
 					config: {
-						required: fieldSchema.config?.required,
+						...(fieldSchema.config || {}),
 						options: contentTypeOptions,
 					},
 				}}
