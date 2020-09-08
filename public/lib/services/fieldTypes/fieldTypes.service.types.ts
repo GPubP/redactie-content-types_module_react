@@ -43,6 +43,8 @@ export interface FieldTypeData {
 		isQueryable: boolean;
 		isTranslate: boolean;
 		isMultiple: boolean;
+		defaultLabel?: string;
+		defaultGuideline?: string;
 	};
 	operators: Operator[];
 	module: string;
