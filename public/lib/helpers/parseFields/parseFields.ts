@@ -1,62 +1,90 @@
-import { FieldSchema } from '@redactie/form-renderer-module';
+import { FieldSchema, Preset } from '@redactie/form-renderer-module';
+import { omit } from 'ramda';
 
 import { ContentTypeFieldDetail } from '../../services/contentTypes';
 
 export const parseFields = (fields: ContentTypeFieldDetail[] = []): FieldSchema[] => {
-	return fields.reduce((acc, field) => {
+	const getFieldSchema = (field: ContentTypeFieldDetail): FieldSchema => {
 		const {
 			generalConfig = {
 				min: 0,
 				max: 1,
-				guideline: '',
 				hidden: false,
+				guideline: '',
 			},
 			config = {
 				fields: [],
-				guideline: null,
 			},
 			name,
-			fieldType,
+			fieldType = {
+				data: {
+					module: 'core',
+					componentName: 'text',
+					generalConfig: {
+						defaultGuideline: '',
+						defaultLabel: '',
+					},
+				},
+			},
 			dataType,
 			label,
 			preset,
-			defaultValue,
 		} = field;
 		const isMultiple = (generalConfig.max || 0) > 1;
-
-		// Don't show field when it is a hidden field
-		if (generalConfig.hidden) {
-			return acc;
-		}
-
-		const formField = {
-			name: name,
+		const isPreset = !!preset;
+		const formField: FieldSchema = {
+			name,
+			label,
 			module: fieldType?.data?.module,
-			label: !isMultiple ? label : null,
 			type: fieldType?.data?.componentName,
 			view: preset ? preset.data.name : '',
+			dataType: dataType.data.type,
+			fields: parseFields(config.fields),
 			config: {
 				...config,
 				...generalConfig,
 				description: generalConfig.guideline,
-				preset,
+				preset: (preset as unknown) as Preset,
+				fieldType,
+				dataType,
 			},
-			fields: parseFields(config.fields),
-			dataType: dataType.data.type,
-			defaultValue,
 		};
 
 		if (isMultiple) {
-			acc.push({
-				name: name,
+			/**
+			 * Use default guideline and label when rendering a field type in multiple mode
+			 */
+			if (!isPreset) {
+				formField.config = {
+					...formField.config,
+					description: fieldType.data.generalConfig.defaultGuideline,
+				};
+				// TODO: label is required in the form renderer
+				// Fix this when the label is not required anymore
+				formField.label = (fieldType.data.generalConfig.defaultLabel as unknown) as string;
+			}
+
+			/**
+			 * Remove the guideline and label from the preset when rendering a preset in multiple mode
+			 * The label and guideline will be visible on top of the repeater field
+			 */
+			if (isPreset) {
+				formField.config = omit(['description'], formField.config);
+				// TODO: label is required in the form renderer
+				// Fix this when the label is not required anymore
+				formField.label = (null as unknown) as string;
+			}
+
+			return {
+				name,
 				module: 'core',
-				label: label,
+				label,
 				type: 'repeater',
 				dataType: 'array',
 				config: {
 					...config,
 					...generalConfig,
-					description: config.guideline,
+					description: generalConfig.guideline,
 				},
 				fields: [
 					{
@@ -64,11 +92,26 @@ export const parseFields = (fields: ContentTypeFieldDetail[] = []): FieldSchema[
 						name: 'value',
 					} as FieldSchema,
 				],
-			});
+			};
+		}
+
+		return formField;
+	};
+
+	return fields.reduce((acc, field) => {
+		const {
+			generalConfig = {
+				hidden: false,
+			},
+		} = field;
+
+		// Don't show field when it is a hidden field
+		if (generalConfig.hidden) {
 			return acc;
 		}
 
-		acc.push(formField as FieldSchema);
+		acc.push(getFieldSchema(field));
+
 		return acc;
 	}, [] as FieldSchema[]);
 };
