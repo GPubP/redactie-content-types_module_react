@@ -2,6 +2,7 @@ import { Checkbox, RadioGroup, Textarea, TextField } from '@acpaas-ui/react-comp
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
+import { equals } from 'ramda';
 import React, { ChangeEvent, FC, useState } from 'react';
 
 import { useCoreTranslation } from '../../../connectors/translations';
@@ -21,11 +22,21 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 	const [t] = useCoreTranslation();
 
 	const onFormSubmit = (values: CCSettingsFormState): void => {
-		// Reset min and max to initial values if not muliple
+		const hiddenIsChanged = !equals(
+			initialValues.generalConfig.hidden,
+			values.generalConfig.hidden
+		);
 		onSubmit({
 			...values,
 			generalConfig: {
 				...values.generalConfig,
+				// Disable the content component when it is hidden
+				// The value of a hidden content component can not change when it is hidden
+				disabled:
+					hiddenIsChanged && values.generalConfig.hidden
+						? !!values.generalConfig.hidden
+						: !!initialValues.generalConfig.disabled,
+				// Reset min and max to initial values if not muliple
 				min: isMultiple ? values.generalConfig.min : 0,
 				max: isMultiple ? values.generalConfig.max : 1,
 			},
