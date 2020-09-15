@@ -165,17 +165,9 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 				}
 				validationSchema={DEFAULT_VALIDATION_SCHEMA}
 				initialValues={initialFormValue}
-				onSubmit={onFormSubmit}
 				errorMessages={{}}
-			>
-				{({ initialValues, submitForm, values }) => (
-					<AutoSubmit
-						initialValues={initialValues}
-						submitForm={submitForm}
-						values={values}
-					/>
-				)}
-			</formRendererConnector.api.Form>
+				onChange={onFormSubmit}
+			/>
 		);
 	};
 

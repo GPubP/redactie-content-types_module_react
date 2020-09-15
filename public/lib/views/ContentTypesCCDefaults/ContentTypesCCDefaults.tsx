@@ -45,16 +45,8 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, onSubmi
 				initialValues={initialValues}
 				validationSchema={DEFAULT_VALIDATION_SCHEMA}
 				errorMessages={{}}
-				onSubmit={onSubmit}
-			>
-				{({ initialValues, submitForm, values }) => (
-					<AutoSubmit
-						initialValues={initialValues}
-						submitForm={submitForm}
-						values={values}
-					/>
-				)}
-			</formRendererConnector.api.Form>
+				onChange={onSubmit}
+			/>
 		);
 	};
 
