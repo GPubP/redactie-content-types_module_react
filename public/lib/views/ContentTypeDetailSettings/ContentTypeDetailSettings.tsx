@@ -6,14 +6,16 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { useDetectValueChanges } from '@redactie/utils';
-import { Field, Formik } from 'formik';
+import { Field, Formik, FormikErrors, FormikTouched } from 'formik';
 import kebabCase from 'lodash.kebabcase';
+import { path } from 'ramda';
 import React, { FC, useMemo, useState } from 'react';
 
 import { useCoreTranslation } from '../../connectors/translations';
 import { CONTENT_TYPE_DETAIL_TAB_MAP } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
 import { useContentType } from '../../hooks';
+import { ContentTypeDetailResponse } from '../../services/contentTypes';
 import { ContentTypeDetailModel } from '../../store/contentTypes';
 
 import { CT_SETTINGS_VALIDATION_SCHEMA } from './ContentTypeDetailSettings.const';
@@ -38,6 +40,15 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	/**
 	 * Methods
 	 */
+	const getFieldState = (
+		touched: FormikTouched<ContentTypeDetailResponse>,
+		errors: FormikErrors<ContentTypeDetailResponse>,
+		pathString: string
+	): string => {
+		const pathArray = pathString.split('.');
+		return !!path(pathArray, touched) && !!path(pathArray, errors) ? 'error' : '';
+	};
+
 	const onFormSubmit = (value: ContentTypeDetailModel): void => {
 		onSubmit({ ...contentType?.meta, ...value.meta }, CONTENT_TYPE_DETAIL_TAB_MAP.settings);
 	};
@@ -52,8 +63,9 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			onSubmit={onFormSubmit}
 			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA}
 		>
-			{({ submitForm, values }) => {
+			{({ errors, submitForm, touched, values }) => {
 				setFormValue(values);
+
 				return (
 					<Container>
 						<div className="row">
@@ -65,6 +77,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 										label="Naam"
 										name="meta.label"
 										required
+										state={getFieldState(touched, errors, 'meta.label')}
 									/>
 									<div className="u-text-light u-margin-top-xs">
 										Geef het content type een korte en duidelijke naam.
@@ -92,6 +105,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 										label="Beschrijving"
 										name="meta.description"
 										required
+										state={getFieldState(touched, errors, 'meta.description')}
 									/>
 									<div className="u-text-light u-margin-top-xs">
 										Geef het content type een duidelijke beschrijving voor in

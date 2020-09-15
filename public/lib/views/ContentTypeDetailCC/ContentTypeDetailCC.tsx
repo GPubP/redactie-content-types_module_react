@@ -15,6 +15,7 @@ import { FormCTNewCC } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
 import {
+	ContentTypeDetailRouteParams,
 	ContentTypesDetailRouteProps,
 	LoadingState,
 	NewCCFormState,
@@ -35,7 +36,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	/**
 	 * Hooks
 	 */
-	const { contentTypeUuid } = useParams();
+	const { contentTypeUuid } = useParams<ContentTypeDetailRouteParams>();
 	const { navigate, generatePath } = useNavigate();
 	const [t] = useCoreTranslation();
 	const [, contentTypIsUpdating] = useContentType();
