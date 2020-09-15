@@ -14,7 +14,7 @@ import { DataLoader, RenderChildRoutes } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
-import { generateFieldFromType } from '../../helpers';
+import { filterNavList, generateFieldFromType } from '../../helpers';
 import {
 	useActiveField,
 	useFieldType,
@@ -124,6 +124,16 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, his
 		contentTypesFacade.updateActiveField(data);
 	};
 
+	const navListItems = filterNavList(
+		CC_NAV_LIST_ITEMS.map(listItem => ({
+			...listItem,
+			to: generatePath(`${listItem.to}${history.location.search}`, {
+				contentTypeUuid,
+			}),
+		})),
+		navItemMatcher
+	);
+
 	/**
 	 * Render
 	 */
@@ -149,16 +159,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, his
 			<div className="u-margin-bottom-lg">
 				<div className="row between-xs top-xs">
 					<div className="col-xs-3">
-						<NavList
-							items={CC_NAV_LIST_ITEMS.map(listItem => ({
-								...listItem,
-								meta: navItemMatcher,
-								to: generatePath(`${listItem.to}${history.location.search}`, {
-									contentTypeUuid,
-								}),
-							}))}
-							linkComponent={NavLink}
-						/>
+						<NavList items={navListItems} linkComponent={NavLink} />
 					</div>
 
 					<div className="col-xs-9">

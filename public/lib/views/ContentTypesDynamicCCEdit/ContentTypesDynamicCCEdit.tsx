@@ -14,6 +14,7 @@ import { DataLoader, RenderChildRoutes } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
+import { filterNavList } from '../../helpers';
 import { useNavigate, useNavItemMatcher, useTenantContext } from '../../hooks';
 import useActiveField from '../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../hooks/useDynamicActiveField/useDynamicActiveField';
@@ -156,6 +157,18 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		navigateToOverview();
 	};
 
+	const navListItems = filterNavList(
+		CC_DYNAMIC_NAV_LIST_ITEMS.map(listItem => ({
+			...listItem,
+			to: generatePath(listItem.to, {
+				contentTypeUuid,
+				contentComponentUuid,
+				dynamicContentComponentUuid,
+			}),
+		})),
+		navItemMatcher
+	);
+
 	/**
 	 * Render
 	 */
@@ -187,18 +200,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 				<div className="u-margin-bottom-lg">
 					<div className="row between-xs top-xs">
 						<div className="col-xs-3">
-							<NavList
-								items={CC_DYNAMIC_NAV_LIST_ITEMS.map(listItem => ({
-									...listItem,
-									meta: navItemMatcher,
-									to: generatePath(listItem.to, {
-										contentTypeUuid,
-										contentComponentUuid,
-										dynamicContentComponentUuid,
-									}),
-								}))}
-								linkComponent={NavLink}
-							/>
+							<NavList items={navListItems} linkComponent={NavLink} />
 						</div>
 
 						<div className="col-xs-9">

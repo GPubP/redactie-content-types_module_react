@@ -1,4 +1,5 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
+import { NavLinkProps } from 'react-router-dom';
 
 import { FieldType, FieldTypeData, FieldTypeMeta } from './services/fieldTypes';
 import { Preset, PresetDetail } from './services/presets';
@@ -61,6 +62,13 @@ export interface CCSettingsFormState {
 		min: number;
 		max: number;
 	};
+}
+
+export interface NavListItem extends NavLinkProps {
+	description?: string;
+	filter?: (values: any) => boolean;
+	hasError?: boolean;
+	label: string;
 }
 
 export interface Tab {
