@@ -64,6 +64,8 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA}
 		>
 			{({ errors, submitForm, touched, values }) => {
+				const labelError = getFieldState(touched, errors, 'meta.label');
+				const descriptionError = getFieldState(touched, errors, 'meta.description');
 				setFormValue(values);
 
 				return (
@@ -77,8 +79,11 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 										label="Naam"
 										name="meta.label"
 										required
-										state={getFieldState(touched, errors, 'meta.label')}
+										state={labelError}
 									/>
+									{labelError ? (
+										<p className="u-text-danger">{errors.meta?.label}</p>
+									) : null}
 									<div className="u-text-light u-margin-top-xs">
 										Geef het content type een korte en duidelijke naam.
 									</div>
@@ -105,8 +110,11 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 										label="Beschrijving"
 										name="meta.description"
 										required
-										state={getFieldState(touched, errors, 'meta.description')}
+										state={descriptionError}
 									/>
+									{descriptionError ? (
+										<p className="u-text-danger">{errors.meta?.description}</p>
+									) : null}
 									<div className="u-text-light u-margin-top-xs">
 										Geef het content type een duidelijke beschrijving voor in
 										het overzicht.
