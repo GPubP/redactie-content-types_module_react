@@ -3,11 +3,13 @@ import {
 	ActionBar,
 	ActionBarContentSection,
 	Container,
+	NavList,
 } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
-import { DataLoader, NavList, RenderChildRoutes } from '../../components';
+import { DataLoader, RenderChildRoutes } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
@@ -157,6 +159,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 										contentComponentUuid,
 									}),
 								}))}
+								linkComponent={NavLink}
 							/>
 						</div>
 
