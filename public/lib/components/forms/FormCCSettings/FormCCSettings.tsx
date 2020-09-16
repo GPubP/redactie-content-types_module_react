@@ -6,9 +6,10 @@ import React, { ChangeEvent, FC, useState } from 'react';
 
 import { useCoreTranslation } from '../../../connectors/translations';
 import { CCSettingsFormState } from '../../../contentTypes.types';
+import { getFieldState } from '../../../helpers/forms';
 import AutoSubmit from '../AutoSubmit/AutoSubmit';
 
-import { IS_MULTIPLE_OPTIONS } from './FormCCSettings.const';
+import { FORM_CC_SETTINGS_VALIDATION_SCHEMA, IS_MULTIPLE_OPTIONS } from './FormCCSettings.const';
 import { FormCCSettingsProps } from './FormCCSettings.types';
 
 const FormCCSettings: FC<FormCCSettingsProps> = ({
@@ -39,7 +40,11 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 			enableReinitialize
 			initialValues={initialValues}
 			onSubmit={onFormSubmit}
+			validationSchema={FORM_CC_SETTINGS_VALIDATION_SCHEMA}
 		>
+			{({ errors, touched, values, submitForm }) => {
+				const labelState = getFieldState(touched, errors, 'label');
+
 				return (
 					<>
 						<AutoSubmit />
@@ -52,7 +57,12 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 										label="Label"
 										name="label"
 										placeholder="Typ een label"
+										required
+										state={labelState}
 									/>
+									{labelState ? (
+										<p className="u-text-danger">{errors.label}</p>
+									) : null}
 									<div className="u-text-light u-margin-top-xs">
 										Geef deze content component een gebruiksvriendelijke naam,
 										bijvoorbeeld &apos;Titel&apos;.
@@ -120,6 +130,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 													type="number"
 													id="generalConfig.max"
 													label="Max."
+													min={values.generalConfig.min + 1}
 													max="100"
 													name="generalConfig.max"
 												/>

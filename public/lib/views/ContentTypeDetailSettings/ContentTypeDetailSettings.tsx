@@ -6,16 +6,15 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { useDetectValueChanges } from '@redactie/utils';
-import { Field, Formik, FormikErrors, FormikTouched } from 'formik';
+import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import { path } from 'ramda';
 import React, { FC, useMemo, useState } from 'react';
 
 import { useCoreTranslation } from '../../connectors/translations';
 import { CONTENT_TYPE_DETAIL_TAB_MAP } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
+import { getFieldState } from '../../helpers/forms';
 import { useContentType } from '../../hooks';
-import { ContentTypeDetailResponse } from '../../services/contentTypes';
 import { ContentTypeDetailModel } from '../../store/contentTypes';
 
 import { CT_SETTINGS_VALIDATION_SCHEMA } from './ContentTypeDetailSettings.const';
@@ -40,15 +39,6 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	/**
 	 * Methods
 	 */
-	const getFieldState = (
-		touched: FormikTouched<ContentTypeDetailResponse>,
-		errors: FormikErrors<ContentTypeDetailResponse>,
-		pathString: string
-	): string => {
-		const pathArray = pathString.split('.');
-		return !!path(pathArray, touched) && !!path(pathArray, errors) ? 'error' : '';
-	};
-
 	const onFormSubmit = (value: ContentTypeDetailModel): void => {
 		onSubmit({ ...contentType?.meta, ...value.meta }, CONTENT_TYPE_DETAIL_TAB_MAP.settings);
 	};
