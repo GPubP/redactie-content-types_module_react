@@ -1,4 +1,5 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
+import { FormikConfig, FormikValues } from 'formik';
 import { NavLinkProps } from 'react-router-dom';
 
 import { FieldType, FieldTypeData, FieldTypeMeta } from './services/fieldTypes';
@@ -44,6 +45,7 @@ export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
 	readonly preset?: PresetDetail;
 	onDelete?: () => void;
 	onSubmit: (data: any) => void;
+	formikRef: FormikRef;
 }
 
 export interface NewCCFormState {
@@ -90,3 +92,5 @@ export enum LoadingState {
 	Loaded = 'loaded',
 	Error = 'error',
 }
+
+export type FormikRef = FormikConfig<FormikValues>['innerRef'];

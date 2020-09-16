@@ -16,6 +16,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 	fieldTypeData,
 	onSubmit,
 	isUpdate,
+	formikRef,
 }) => {
 	const [isMultiple, setIsMultiple] = useState((initialValues?.generalConfig?.max || 0) > 1);
 	const [t] = useCoreTranslation();
@@ -33,8 +34,12 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 	};
 
 	return (
-		<Formik enableReinitialize initialValues={initialValues} onSubmit={onFormSubmit}>
-			{({ values, submitForm }) => {
+		<Formik
+			innerRef={formikRef}
+			enableReinitialize
+			initialValues={initialValues}
+			onSubmit={onFormSubmit}
+		>
 				return (
 					<>
 						<AutoSubmit />

@@ -6,8 +6,10 @@ import {
 	NavList,
 } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
+import { FormikProps, FormikValues, setNestedObjectValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import { equals, isEmpty } from 'ramda';
+import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
@@ -36,6 +38,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, his
 	 * Hooks
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const activeField = useActiveField();
 	const query = useQuery();
 	const fieldTypeUuid = query.get('fieldType');
@@ -46,12 +49,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, his
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
-	const guardsMeta = useMemo(
-		() => ({
-			tenantId,
-		}),
-		[tenantId]
-	);
+	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
 
 	useEffect(() => {
@@ -143,6 +141,11 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, his
 			fieldTypeData: activeField?.fieldType.data,
 			preset: preset,
 			onSubmit: onFieldTypeChange,
+			formikRef: (instance: any) => {
+				if (!equals(activeCompartmentFormikRef.current, instance)) {
+					activeCompartmentFormikRef.current = instance;
+				}
+			},
 		};
 
 		return (
