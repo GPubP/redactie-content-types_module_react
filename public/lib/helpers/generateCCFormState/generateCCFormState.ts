@@ -13,6 +13,7 @@ export const generateCCFormState = (
 		guideline: pathOr('', ['generalConfig', 'guideline'], initialValues),
 		required: pathOr(true, ['generalConfig', 'required'], initialValues),
 		hidden: pathOr(false, ['generalConfig', 'hidden'], initialValues),
+		disabled: pathOr(false, ['generalConfig', 'disabled'], initialValues),
 		min: pathOr(0, ['generalConfig', 'min'], initialValues),
 		max: pathOr(1, ['generalConfig', 'max'], initialValues),
 	},

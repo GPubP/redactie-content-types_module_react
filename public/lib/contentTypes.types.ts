@@ -54,6 +54,7 @@ export interface CCSettingsFormState {
 		guideline: string;
 		required: boolean;
 		hidden: boolean;
+		disabled: boolean;
 		min: number;
 		max: number;
 	};

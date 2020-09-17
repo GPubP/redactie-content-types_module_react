@@ -14,9 +14,7 @@ import { PresetDetail, Validator } from '../../services/presets';
 
 const createCheck = (key: string, val: unknown, validator?: Validator): ValidationCheck => ({
 	key,
-	// TODO: Acpaas ui component Radio Field can not handle boolean values as options
-	// Remove this functionality when the issue is fixed
-	val: val === 'true' ? true : val === 'false' ? false : val,
+	val,
 	err: pathOr(
 		DEFAULT_VALIDATOR_ERROR_MESSAGES[key],
 		['data', 'defaultValue', key, 'err'],
