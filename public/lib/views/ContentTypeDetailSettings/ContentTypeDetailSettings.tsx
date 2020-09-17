@@ -1,4 +1,4 @@
-import { Button, TextField } from '@acpaas-ui/react-components';
+import { Button, Textarea, TextField } from '@acpaas-ui/react-components';
 import {
 	ActionBar,
 	ActionBarContentSection,
@@ -87,7 +87,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 							<div className="col-xs-12 row middle-xs u-margin-top">
 								<div className="col-xs-12">
 									<Field
-										as={TextField}
+										as={Textarea}
 										id="meta.description"
 										label="Beschrijving"
 										name="meta.description"
