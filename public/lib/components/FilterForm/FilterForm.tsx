@@ -44,7 +44,7 @@ const FilterForm: FC<FilterFormProps> = ({
 							onFilterRemove={deleteActiveFilter}
 						>
 							<FilterBody>
-								<div className="col-xs-8">
+								<div className="col-xs-12 col-sm">
 									<Field
 										as={TextField}
 										label="Naam"
