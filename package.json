@@ -98,11 +98,11 @@
 		"webpack": "4.41.5",
 		"webpack-bundle-analyzer": "3.6.1",
 		"webpack-cli": "3.3.10",
-		"yup": "0.28.3"
+    "yup": "0.28.3",
+		"cssnano": "^4.1.10"
 	},
 	"dependencies": {
 		"@mindspace-io/react": "^1.1.6",
-		"cssnano": "^4.1.10",
 		"lodash.debounce": "^4.0.8",
 		"lodash.kebabcase": "4.1.1",
 		"query-string": "^6.13.1",
