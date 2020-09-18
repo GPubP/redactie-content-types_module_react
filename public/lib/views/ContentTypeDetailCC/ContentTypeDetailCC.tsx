@@ -32,6 +32,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	contentType,
 	onCancel,
 	onSubmit,
+	fieldsHaveChanged,
 }) => {
 	/**
 	 * Hooks
@@ -181,7 +182,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 						</Button>
 						<Button
 							iconLeft={isLoading ? 'circle-o-notch fa-spin' : null}
-							disabled={isLoading}
+							disabled={isLoading || !fieldsHaveChanged}
 							className="u-margin-left-xs"
 							onClick={onCCSave}
 							type="success"

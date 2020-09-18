@@ -10,7 +10,11 @@ export interface ContentTypesModuleProps extends RouteConfigComponentProps {
 	tenantId: string;
 }
 
-export interface ContentTypesRouteProps<Params = { contentTypeUuid: string }>
+export interface ContentTypesRouteParams {
+	contentTypeUuid: string;
+}
+
+export interface ContentTypesRouteProps<Params = ContentTypesRouteParams>
 	extends RouteConfigComponentProps<Params> {
 	routes: ModuleRouteConfig[];
 }
@@ -35,6 +39,7 @@ export interface ContentTypesDetailRouteProps<Params = ContentTypesDetailRoutePa
 		tab: Tab
 	) => void;
 	readonly activeField: ContentTypeFieldDetailModel | null;
+	readonly fieldsHaveChanged: boolean;
 }
 
 export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
