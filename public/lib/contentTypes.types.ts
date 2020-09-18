@@ -15,9 +15,13 @@ export interface ContentTypesRouteProps<Params = { contentTypeUuid: string }>
 	routes: ModuleRouteConfig[];
 }
 
-export interface ContentTypesDetailRouteProps<
-	Params = { contentTypeUuid: string; contentComponentUuid: string }
-> extends RouteConfigComponentProps<Params> {
+export interface ContentTypesDetailRouteParams {
+	contentTypeUuid: string;
+	contentComponentUuid: string;
+}
+
+export interface ContentTypesDetailRouteProps<Params = ContentTypesDetailRouteParams>
+	extends RouteConfigComponentProps<Params> {
 	readonly presets: Preset[];
 	readonly fieldTypes: FieldType[];
 	readonly contentType: ContentTypeDetailModel;
