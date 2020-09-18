@@ -171,8 +171,8 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, his
 						<Button onClick={navigateToOverview} negative>
 							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
-						<Button className="u-margin-left-xs" onClick={onCTSubmit} type="primary">
-							{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
+						<Button className="u-margin-left-xs" onClick={onCTSubmit} type="success">
+							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
 						</Button>
 					</div>
 				</ActionBarContentSection>

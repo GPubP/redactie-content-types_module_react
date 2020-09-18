@@ -176,9 +176,9 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 							<Button
 								className="u-margin-left-xs"
 								onClick={onFieldSubmit}
-								type="primary"
+								type="success"
 							>
-								{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
+								{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
 							</Button>
 						</div>
 					</ActionBarContentSection>
