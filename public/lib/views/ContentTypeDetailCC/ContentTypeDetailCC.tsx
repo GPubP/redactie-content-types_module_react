@@ -147,7 +147,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 
 	const renderDetail = (): ReactElement => {
 		return (
-			<div>
+			<div className="u-margin-bottom-lg">
 				<h5>Content componenten</h5>
 
 				{renderTableForm()}
