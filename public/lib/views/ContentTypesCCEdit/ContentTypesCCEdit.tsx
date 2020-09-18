@@ -147,7 +147,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			<>
 				<div className="u-margin-bottom-lg">
 					<div className="row between-xs top-xs">
-						<div className="col-xs-3">
+						<div className="col-xs-12 col-md-3 u-margin-bottom">
 							<NavList
 								items={CC_NAV_LIST_ITEMS.map(listItem => ({
 									...listItem,
@@ -160,7 +160,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 							/>
 						</div>
 
-						<div className="col-xs-9">
+						<div className="col-xs-12 col-md-9">
 							<Card>
 								<CardBody>{renderChildRoutes()}</CardBody>
 							</Card>
