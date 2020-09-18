@@ -60,7 +60,7 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({
 					) : null}
 
 					<div
-						className={classNames('u-flex-shrink', {
+						className={classNames('u-flex-shrink-md', {
 							'col-xs-12 col-sm-4 u-margin-top': true,
 							'end-xs': !hasName,
 						})}
