@@ -1,5 +1,5 @@
 import { FormValues } from '@redactie/form-renderer-module';
-import { pathEq, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 
 import { DEFAULT_VALIDATOR_ERROR_MESSAGES } from '../../contentTypes.const';
 import {
@@ -110,14 +110,6 @@ export const generateValidationChecks = (
 	preset?: PresetDetail,
 	create = false
 ): Validation => {
-	console.log(
-		data,
-		fieldTypeData.validators,
-		getChecksFromDefaultValue(fieldTypeData.validators),
-		getChecksFromDefaultValidatorValues(fieldTypeData.defaultValidatorValues),
-		getChecksFromData(data, fieldTypeData.validators)
-	);
-
 	return preset
 		? {
 				type: 'object',
