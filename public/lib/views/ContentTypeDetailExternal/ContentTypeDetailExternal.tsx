@@ -1,4 +1,3 @@
-import { Container } from '@acpaas-ui/react-editorial-components';
 import { clone } from 'ramda';
 import React, { FC, useEffect, useMemo } from 'react';
 
@@ -59,20 +58,16 @@ const ContentTypeDetailExternal: FC<ContentTypesDetailRouteProps<ContentTypeDeta
 	/**
 	 * RENDER
 	 */
-	return (
-		<Container>
-			{activeTab ? (
-				<activeTab.component
-					contentType={clone(contentType)}
-					onSubmit={(values: ExternalTabValue) => onExternalTabSubmit(values)}
-					onCancel={() => onCancel()}
-					updateContentType={() => null}
-					value={getExternalTabValue(mapExternalTabToTab(activeTab))}
-					isLoading={isLoading}
-				></activeTab.component>
-			) : null}
-		</Container>
-	);
+	return activeTab ? (
+		<activeTab.component
+			contentType={clone(contentType)}
+			onSubmit={(values: ExternalTabValue) => onExternalTabSubmit(values)}
+			onCancel={() => onCancel()}
+			updateContentType={() => null}
+			value={getExternalTabValue(mapExternalTabToTab(activeTab))}
+			isLoading={isLoading}
+		/>
+	) : null;
 };
 
 export default ContentTypeDetailExternal;

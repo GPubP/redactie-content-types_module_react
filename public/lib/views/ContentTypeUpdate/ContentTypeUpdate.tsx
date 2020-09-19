@@ -1,4 +1,8 @@
-import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
+import {
+	Container,
+	ContextHeader,
+	ContextHeaderTopSection,
+} from '@acpaas-ui/react-editorial-components';
 import { AlertContainer } from '@redactie/utils';
 import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
@@ -236,8 +240,12 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			<AlertContainer containerId={ALERT_CONTAINER_IDS.update} />
-			<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
+			<Container>
+				<div className="u-margin-bottom">
+					<AlertContainer containerId={ALERT_CONTAINER_IDS.update} />
+				</div>
+				<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
+			</Container>
 		</>
 	);
 };

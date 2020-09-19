@@ -1,10 +1,5 @@
 import { Button, Card } from '@acpaas-ui/react-components';
-import {
-	ActionBar,
-	ActionBarContentSection,
-	Container,
-	Table,
-} from '@acpaas-ui/react-editorial-components';
+import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { Field, Formik } from 'formik';
 import { path, pathOr } from 'ramda';
@@ -169,7 +164,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	};
 
 	return (
-		<Container>
+		<>
 			{renderDetail()}
 
 			<ActionBar className="o-action-bar--fixed" isOpen>
@@ -190,7 +185,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 					</div>
 				</ActionBarContentSection>
 			</ActionBar>
-		</Container>
+		</>
 	);
 };
 
