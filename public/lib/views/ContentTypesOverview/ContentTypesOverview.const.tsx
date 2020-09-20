@@ -5,13 +5,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { SiteStatus } from '../../components';
+import { FilterFormState } from '../../components/FilterForm/FilterForm.types';
 import rolesRightsConnector from '../../connectors/rolesRights';
 
 import { ContentTypesOverviewTableRow } from './ContentTypesOverview.types';
 
-export const CONTENT_INITIAL_FILTER_STATE = {
+export const CONTENT_INITIAL_FILTER_STATE = (): FilterFormState => ({
 	name: '',
-};
+});
 
 export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 	t: TranslateFunc,

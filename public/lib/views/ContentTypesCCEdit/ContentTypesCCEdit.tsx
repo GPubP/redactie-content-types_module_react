@@ -40,12 +40,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	const [t] = useCoreTranslation();
 	const activeFieldFTUuid = useMemo(() => activeField?.fieldType.uuid, [activeField]);
 	const activeFieldPSUuid = useMemo(() => activeField?.preset?.uuid, [activeField]);
-	const guardsMeta = useMemo(
-		() => ({
-			tenantId,
-		}),
-		[tenantId]
-	);
+	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
 
 	useEffect(() => {
