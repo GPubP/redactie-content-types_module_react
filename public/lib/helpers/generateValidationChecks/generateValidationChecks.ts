@@ -1,5 +1,5 @@
 import { FormValues } from '@redactie/form-renderer-module';
-import { path, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 
 import { DEFAULT_VALIDATOR_ERROR_MESSAGES } from '../../contentTypes.const';
 import {
@@ -47,14 +47,19 @@ const getChecksFromData = (
 	data: Record<string, any> = {},
 	validators: Validator[] = []
 ): ValidationCheck[] => {
-	return Object.keys(data).map(Key => {
-		const validator = validators.find(
-			validator => !!path(['data', 'defaultValue', Key], validator)
-		);
-		const val = data[Key];
+	return Object.keys(data).reduce((acc, key) => {
+		const validator = validators.find(validator => {
+			return !!(validator.data?.formSchema?.fields || []).find(field => field.name === key);
+		});
 
-		return createCheck(Key, val, validator);
-	});
+		if (!validator) {
+			return acc;
+		}
+
+		const val = data[key];
+
+		return acc.concat([createCheck(key, val, validator)]);
+	}, [] as ValidationCheck[]);
 };
 
 const getChecksFromPreset = (
@@ -85,7 +90,7 @@ const getChecksFromPreset = (
 				if (fieldValidationData) {
 					fields.push({
 						...check,
-						checks: getChecksFromData(fieldValidationData, field.validators),
+						checks: [...getChecksFromData(fieldValidationData, field.validators)],
 					});
 
 					return fields;

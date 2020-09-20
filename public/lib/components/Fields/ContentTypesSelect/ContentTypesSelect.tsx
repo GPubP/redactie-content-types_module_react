@@ -25,8 +25,8 @@ const ContentTypesSelect: React.FC<InputFieldProps> = ({
 		return contentTypes.map(
 			ct =>
 				({
-					value: ct.uuid,
-					key: ct.uuid,
+					value: ct._id,
+					key: ct._id,
 					label: ct.meta.label,
 				} as FieldOption)
 		);

@@ -26,7 +26,7 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({
 					<div
 						className={classNames({
 							'col-xs-12': true,
-							'col-md-6': hasName,
+							'col-md': hasName,
 							'col-sm': !hasName,
 						})}
 					>
@@ -43,7 +43,7 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({
 					</div>
 
 					{hasName ? (
-						<div className="col-xs-12 col-md-6">
+						<div className="col-xs-12 col-md">
 							<Field
 								type="text"
 								id="name"
@@ -60,8 +60,8 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({
 					) : null}
 
 					<div
-						className={classNames({
-							'col-xs-12 col-sm-4 col-md-3 u-margin-top': true,
+						className={classNames('u-flex-shrink-md', {
+							'col-xs-12 col-sm-4 u-margin-top': true,
 							'end-xs': !hasName,
 						})}
 					>

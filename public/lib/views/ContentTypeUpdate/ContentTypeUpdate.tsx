@@ -3,7 +3,7 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
-import { AlertContainer } from '@redactie/utils';
+import { AlertContainer, useDetectValueChanges } from '@redactie/utils';
 import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -15,7 +15,13 @@ import {
 	CONTENT_TYPE_DETAIL_TAB_MAP,
 	MODULE_PATHS,
 } from '../../contentTypes.const';
-import { ContentTypesRouteProps, LoadingState, Tab, TabTypes } from '../../contentTypes.types';
+import {
+	ContentTypesRouteParams,
+	ContentTypesRouteProps,
+	LoadingState,
+	Tab,
+	TabTypes,
+} from '../../contentTypes.types';
 import {
 	useActiveField,
 	useActiveRouteConfig,
@@ -49,7 +55,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const activeField = useActiveField();
 	const dynamicActiveField = useDynamicActiveField();
 	const activeRouteConfig = useActiveRouteConfig(location, route);
-	const { contentTypeUuid } = useParams();
+	const { contentTypeUuid } = useParams<ContentTypesRouteParams>();
 	const { navigate, generatePath } = useNavigate();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 	const [presetsLoadingState, presets] = usePresets();
@@ -63,11 +69,10 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			target: generatePath(MODULE_PATHS.admin),
 		},
 	]);
-	const guardsMeta = useMemo(
-		() => ({
-			tenantId,
-		}),
-		[tenantId]
+	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
+	const [fieldsHaveChanged, resetFieldsHaveChanged] = useDetectValueChanges(
+		contentTypeLoadingState === LoadingState.Loaded,
+		contentType?.fields
 	);
 
 	useEffect(() => {
@@ -197,6 +202,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		}
 
 		contentTypesFacade.updateContentType(newCT);
+		resetFieldsHaveChanged();
 	};
 
 	const showTabs = !/\/(aanmaken|bewerken)\//.test(location.pathname);
@@ -211,6 +217,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			contentType,
 			onCancel: navigateToOverview,
 			onSubmit: updateCT,
+			fieldsHaveChanged,
 		};
 
 		return (
