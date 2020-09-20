@@ -1,4 +1,4 @@
-import { Button, TextField } from '@acpaas-ui/react-components';
+import { Button, Textarea, TextField } from '@acpaas-ui/react-components';
 import {
 	ActionBar,
 	ActionBarContentSection,
@@ -91,11 +91,11 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 								</div>
 							</div>
 						</div>
-						<div className="row">
+						<div className="row u-margin-bottom-lg">
 							<div className="col-xs-12 row middle-xs u-margin-top">
 								<div className="col-xs-12">
 									<Field
-										as={TextField}
+										as={Textarea}
 										id="meta.description"
 										label="Beschrijving"
 										name="meta.description"
@@ -116,7 +116,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 							<ActionBarContentSection>
 								<div className="u-wrapper row end-xs">
 									<Button onClick={onCancel} negative>
-										{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
+										{isUpdate ? t(CORE_TRANSLATIONS['BUTTON_CANCEL']) : 'Terug'}
 									</Button>
 									<Button
 										iconLeft={isLoading ? 'circle-o-notch fa-spin' : null}

@@ -1,5 +1,5 @@
 import { FormValues } from '@redactie/form-renderer-module';
-import { path, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 
 import { DEFAULT_VALIDATOR_ERROR_MESSAGES } from '../../contentTypes.const';
 import {
@@ -14,9 +14,7 @@ import { PresetDetail, Validator } from '../../services/presets';
 
 const createCheck = (key: string, val: unknown, validator?: Validator): ValidationCheck => ({
 	key,
-	// TODO: Acpaas ui component Radio Field can not handle boolean values as options
-	// Remove this functionality when the issue is fixed
-	val: val === 'true' ? true : val === 'false' ? false : val,
+	val,
 	err: pathOr(
 		DEFAULT_VALIDATOR_ERROR_MESSAGES[key],
 		['data', 'defaultValue', key, 'err'],
@@ -49,14 +47,19 @@ const getChecksFromData = (
 	data: Record<string, any> = {},
 	validators: Validator[] = []
 ): ValidationCheck[] => {
-	return Object.keys(data).map(Key => {
-		const validator = validators.find(
-			validator => !!path(['data', 'defaultValue', Key], validator)
-		);
-		const val = data[Key];
+	return Object.keys(data).reduce((acc, key) => {
+		const validator = validators.find(validator => {
+			return !!(validator.data?.formSchema?.fields || []).find(field => field.name === key);
+		});
 
-		return createCheck(Key, val, validator);
-	});
+		if (!validator) {
+			return acc;
+		}
+
+		const val = data[key];
+
+		return acc.concat([createCheck(key, val, validator)]);
+	}, [] as ValidationCheck[]);
 };
 
 const getChecksFromPreset = (
@@ -87,7 +90,7 @@ const getChecksFromPreset = (
 				if (fieldValidationData) {
 					fields.push({
 						...check,
-						checks: getChecksFromData(fieldValidationData, field.validators),
+						checks: [...getChecksFromData(fieldValidationData, field.validators)],
 					});
 
 					return fields;

@@ -61,6 +61,7 @@ export interface Field<D = DataType, F = FieldType, P = Preset | PresetDetail> {
 		multiLanguage?: boolean;
 		required?: boolean;
 		hidden?: boolean;
+		disabled?: boolean;
 		min?: number;
 		max?: number;
 		combinedOutput?: boolean;

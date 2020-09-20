@@ -38,7 +38,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	 */
 	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
-		CONTENT_INITIAL_FILTER_STATE
+		CONTENT_INITIAL_FILTER_STATE()
 	);
 	const [contentTypesSearchParams, setContentTypesSearchParams] = useState(
 		DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
@@ -103,11 +103,11 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	};
 
 	const onSubmit = (filterFormState: FilterFormState): void => {
-		//add item to filterItems for Taglist
+		// Update filters
 		setFilterFormState(filterFormState);
 		const filterItems = createFilterItems(filterFormState);
 		setFilterItems(filterItems.filters);
-		//add value to searchParams
+		// Update searchParams
 		setContentTypesSearchParams({
 			...contentTypesSearchParams,
 			search: filterFormState.name,
@@ -116,19 +116,18 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	};
 
 	const deleteAllFilters = (): void => {
-		//set empty array as Taglist
-		const emptyFilter: [] = [];
-		setFilterItems(emptyFilter);
-		//delete search param from api call
+		// Reset filters
+		setFilterItems([]);
+		// Reset search params and filter form
 		setContentTypesSearchParams(DEFAULT_CONTENT_TYPES_SEARCH_PARAMS);
-		setFilterFormState(CONTENT_INITIAL_FILTER_STATE);
+		setFilterFormState(CONTENT_INITIAL_FILTER_STATE());
 	};
 
 	const deleteFilter = (item: any): void => {
-		//delete item from filterItems
+		// Delete item from filters
 		const setFilter = filterItems?.filter(el => el.value !== item.value);
 		setFilterItems(setFilter);
-		//set empty searchParams
+		// Update searchParams
 		setContentTypesSearchParams(DEFAULT_CONTENT_TYPES_SEARCH_PARAMS);
 		setFilterFormState({
 			...filterFormState,
@@ -187,7 +186,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 			<>
 				<div className="u-margin-top">
 					<FilterForm
-						initialState={CONTENT_INITIAL_FILTER_STATE}
+						initialState={CONTENT_INITIAL_FILTER_STATE()}
 						onCancel={deleteAllFilters}
 						onSubmit={onSubmit}
 						deleteActiveFilter={deleteFilter}
@@ -201,14 +200,13 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					currentPage={
 						Math.ceil(meta.skip / DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit) + 1
 					}
-					responsive={false}
 					itemsPerPage={DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
 					activeSorting={activeSorting}
 					totalValues={meta.total || 0}
 					loading={loadingContentTypes === LoadingState.Loading}
-				></PaginatedTable>
+				/>
 			</>
 		);
 	};

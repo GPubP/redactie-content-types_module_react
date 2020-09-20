@@ -51,13 +51,11 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 						...createInitialValuesFromFields(check.fields),
 					};
 				}
-				// TODO: Acpaas ui component Radio Field can not handle boolean values as options
-				// Remove this functionality when the issue is fixed
-				value[check.key] =
-					check.val === true ? 'true' : check.val === false ? 'false' : check.val;
+				value[check.key] = check.val;
 				return value;
 			}, {} as FormValues);
 		}
+
 		return createInitialValuesFromChecks(validation.checks);
 	}, [CTField]);
 
@@ -116,19 +114,17 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 			return preset
 				? Object.keys(data).reduce(
 						(acc, fieldName) => {
-							const isRequired =
-								data[fieldName]?.required === 'true' ||
-								data[fieldName]?.required === true;
+							const required = data[fieldName]?.required;
 
 							return {
 								...acc,
 								fields: acc.fields?.map((field: any) => {
-									if (field.name === fieldName && isRequired) {
+									if (field.name === fieldName && typeof required === 'boolean') {
 										return {
 											...field,
 											generalConfig: {
 												...field.generalConfig,
-												required: true,
+												required,
 											},
 										};
 									}
@@ -142,9 +138,24 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 				  )
 				: {};
 		};
+
+		const generateGeneralConfig = (
+			data: FormValues = {},
+			preset?: PresetDetail
+		): Record<string, any> => {
+			if (!preset && typeof data.required === 'boolean') {
+				return {
+					...CTField.generalConfig,
+					required: data.required,
+				};
+			}
+			return CTField.generalConfig;
+		};
+
 		onSubmit({
 			validation: generateValidationChecks(data, fieldTypeData, preset),
 			config: generateConfig(data, preset),
+			generalConfig: generateGeneralConfig(data, preset),
 		});
 	};
 

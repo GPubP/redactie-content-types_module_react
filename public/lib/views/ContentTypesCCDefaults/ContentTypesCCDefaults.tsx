@@ -1,15 +1,20 @@
 import { Checkbox } from '@acpaas-ui/react-components';
 import { FormSchema } from '@redactie/form-renderer-module';
-import { Field, Formik } from 'formik';
+import { Field, Formik, FormikValues } from 'formik';
 import React, { FC, ReactElement, useMemo } from 'react';
 
 import { AutoSubmit } from '../../components';
 import formRendererConnector from '../../connectors/formRenderer';
 import { DEFAULT_VALIDATION_SCHEMA } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
-import { generateCCFormState, parseFields } from '../../helpers';
+import { parseFields } from '../../helpers';
 
 const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, onSubmit }) => {
+	const initialEditableFormValues = {
+		editable: !CTField.generalConfig.disabled,
+	};
+	const editableFieldDisabled = CTField.generalConfig.hidden;
+
 	/**
 	 * Hooks
 	 */
@@ -18,12 +23,29 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, onSubmi
 			fields: parseFields([
 				{
 					...CTField,
+					generalConfig: {
+						...CTField.generalConfig,
+						hidden: false,
+						disabled: false,
+						required: false,
+					},
 					name: 'defaultValue',
 				},
 			]),
 		}),
 		[CTField]
 	);
+
+	/**
+	 * Methods
+	 */
+	const onEditableFormFormSubmit = (values: FormikValues): void => {
+		onSubmit({
+			generalConfig: {
+				disabled: !values.editable,
+			},
+		});
+	};
 
 	/**
 	 * Render
@@ -58,7 +80,7 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, onSubmi
 				component bij het aanmaken van een content item.
 			</p>
 			{renderCCDefaults()}
-			<Formik initialValues={generateCCFormState(CTField)} onSubmit={onSubmit}>
+			<Formik initialValues={initialEditableFormValues} onSubmit={onEditableFormFormSubmit}>
 				{({ values }) => {
 					return (
 						<div className="u-margin-top">
@@ -67,9 +89,10 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, onSubmi
 								<div className="col-xs-12">
 									<Field
 										as={Checkbox}
-										checked={values.generalConfig.required}
-										id="generalConfig.required"
-										name="generalConfig.required"
+										checked={values.editable}
+										id="editable"
+										disabled={editableFieldDisabled}
+										name="editable"
 										label="Aanpasbaar"
 									/>
 									<div className="u-text-light">

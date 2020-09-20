@@ -15,7 +15,7 @@ import { FormCTNewCC } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { CONTENT_TYPE_DETAIL_TAB_MAP, MODULE_PATHS } from '../../contentTypes.const';
 import {
-	ContentTypeDetailRouteParams,
+	ContentTypesDetailRouteParams,
 	ContentTypesDetailRouteProps,
 	LoadingState,
 	NewCCFormState,
@@ -32,11 +32,12 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	contentType,
 	onCancel,
 	onSubmit,
+	fieldsHaveChanged,
 }) => {
 	/**
 	 * Hooks
 	 */
-	const { contentTypeUuid } = useParams<ContentTypeDetailRouteParams>();
+	const { contentTypeUuid } = useParams<ContentTypesDetailRouteParams>();
 	const { navigate, generatePath } = useNavigate();
 	const [t] = useCoreTranslation();
 	const [, contentTypIsUpdating] = useContentType();
@@ -147,7 +148,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 
 	const renderDetail = (): ReactElement => {
 		return (
-			<div>
+			<div className="u-margin-bottom-lg">
 				<h5>Content componenten</h5>
 
 				{renderTableForm()}
@@ -181,7 +182,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 						</Button>
 						<Button
 							iconLeft={isLoading ? 'circle-o-notch fa-spin' : null}
-							disabled={isLoading}
+							disabled={isLoading || !fieldsHaveChanged}
 							className="u-margin-left-xs"
 							onClick={onCCSave}
 							type="success"

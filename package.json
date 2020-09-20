@@ -1,6 +1,6 @@
 {
 	"name": "@redactie/content-types-module",
-	"version": "0.15.2",
+	"version": "0.16.0",
 	"description": "redactie content types module",
 	"main": "dist/redactie-content-types-module.umd.js",
 	"module": "dist/redactie-content-types-module.umd.js",
@@ -98,11 +98,11 @@
 		"webpack": "4.41.5",
 		"webpack-bundle-analyzer": "3.6.1",
 		"webpack-cli": "3.3.10",
-		"yup": "0.28.3"
+		"yup": "0.28.3",
+		"cssnano": "^4.1.10"
 	},
 	"dependencies": {
 		"@mindspace-io/react": "^1.1.6",
-		"cssnano": "^4.1.10",
 		"lodash.debounce": "^4.0.8",
 		"lodash.kebabcase": "4.1.1",
 		"query-string": "^6.13.1",

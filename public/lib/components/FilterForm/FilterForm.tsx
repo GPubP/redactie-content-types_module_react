@@ -31,27 +31,30 @@ const FilterForm: FC<FilterFormProps> = ({
 				onSubmit={onSubmit}
 				validationSchema={FILTER_FORM_VALIDATION_SCHEMA}
 			>
-				{({ submitForm }) => {
+				{({ resetForm, submitForm }) => {
 					return (
 						<Filter
 							title={t(CORE_TRANSLATIONS.FILTER_TITLE)}
 							noFilterText="Geen filters beschikbaar"
 							onConfirm={submitForm}
-							onClean={onCancel}
+							onClean={() => {
+								resetForm();
+								onCancel();
+							}}
 							confirmText={t(CORE_TRANSLATIONS.FILTER_APPLY)}
 							cleanText={t(CORE_TRANSLATIONS.FILTER_CLEAR)}
 							activeFilters={activeFilters}
 							onFilterRemove={deleteActiveFilter}
 						>
 							<FilterBody>
-								<div className="col-xs-8">
+								<div className="col-xs-12 col-sm">
 									<Field
 										as={TextField}
 										label="Naam"
 										name="name"
+										iconright="search"
 										required
 										placeholder="Zoeken op naam"
-										iconright="search"
 									/>
 								</div>
 							</FilterBody>

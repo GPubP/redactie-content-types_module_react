@@ -12,17 +12,21 @@ export interface ContentTypesModuleProps extends RouteConfigComponentProps {
 	tenantId: string;
 }
 
-export interface ContentTypesRouteProps<Params = { contentTypeUuid: string }>
+export interface ContentTypesRouteParams {
+	contentTypeUuid: string;
+}
+
+export interface ContentTypesRouteProps<Params = ContentTypesRouteParams>
 	extends RouteConfigComponentProps<Params> {
 	routes: ModuleRouteConfig[];
 }
 
-export interface ContentTypeDetailRouteParams {
+export interface ContentTypesDetailRouteParams {
 	contentTypeUuid: string;
 	contentComponentUuid: string;
 }
 
-export interface ContentTypesDetailRouteProps<Params = ContentTypeDetailRouteParams>
+export interface ContentTypesDetailRouteProps<Params = ContentTypesDetailRouteParams>
 	extends RouteConfigComponentProps<Params> {
 	readonly presets: Preset[];
 	readonly fieldTypes: FieldType[];
@@ -37,6 +41,7 @@ export interface ContentTypesDetailRouteProps<Params = ContentTypeDetailRoutePar
 		tab: Tab
 	) => void;
 	readonly activeField: ContentTypeFieldDetailModel | null;
+	readonly fieldsHaveChanged: boolean;
 }
 
 export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
@@ -61,6 +66,7 @@ export interface CCSettingsFormState {
 		guideline: string;
 		required: boolean;
 		hidden: boolean;
+		disabled: boolean;
 		min: number;
 		max: number;
 	};
