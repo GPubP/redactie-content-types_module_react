@@ -1,8 +1,11 @@
+import { AlertProps, alertService } from '@redactie/utils';
 import { omit } from 'ramda';
 
+import { ALERT_CONTAINER_IDS } from '../../contentTypes.const';
 import { SearchParams } from '../../services/api/api.service.types';
 import {
 	ContentTypeCreateRequest,
+	ContentTypeDetailResponse,
 	ContentTypeFieldDetail,
 	ContentTypesApiService,
 	contentTypesApiService,
@@ -10,6 +13,7 @@ import {
 } from '../../services/contentTypes';
 import { BaseEntityFacade } from '../shared';
 
+import { getAlertMessages } from './contentTypes.messages';
 import { ContentTypeFieldDetailModel } from './contentTypes.model';
 import { ContentTypesQuery, contentTypesQuery } from './contentTypes.query';
 import { ContentTypesStore, contentTypesStore } from './contentTypes.store';
@@ -95,6 +99,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 
 	public createContentType(payload: ContentTypeCreateRequest): void {
 		this.store.setIsCreating(true);
+		const alertMessages = getAlertMessages((payload as unknown) as ContentTypeDetailResponse);
 
 		this.service
 			.createContentType(payload)
@@ -103,9 +108,13 @@ export class ContentTypesFacade extends BaseEntityFacade<
 					this.store.update({
 						contentType: response,
 					});
+					this.alertService(alertMessages.create.success, 'update', 'success');
 				}
 			})
-			.catch(error => this.store.setError(error))
+			.catch(error => {
+				this.store.setError(error);
+				this.alertService(alertMessages.create.error, 'create', 'error');
+			})
 			.finally(() => this.store.setIsCreating(false));
 	}
 
@@ -117,6 +126,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 
 	public updateContentType(payload: ContentTypeUpdateRequest): void {
 		this.store.setIsUpdating(true);
+		const alertMessages = getAlertMessages((payload as unknown) as ContentTypeDetailResponse);
 
 		this.service
 			.updateContentType(payload)
@@ -134,9 +144,13 @@ export class ContentTypesFacade extends BaseEntityFacade<
 							fields,
 						},
 					});
+					this.alertService(alertMessages.update.success, 'update', 'success');
 				}
 			})
-			.catch(error => this.store.setError(error))
+			.catch(error => {
+				this.store.setError(error);
+				this.alertService(alertMessages.update.error, 'update', 'success');
+			})
 			.finally(() => this.store.setIsUpdating(false));
 	}
 
@@ -233,6 +247,22 @@ export class ContentTypesFacade extends BaseEntityFacade<
 		this.store.update({
 			activeField: undefined,
 		});
+	}
+
+	/**
+	 * Alert service
+	 */
+
+	private alertService(
+		alertProps: AlertProps,
+		containerId: 'create' | 'update',
+		type: 'success' | 'error'
+	): void {
+		const alertType = type === 'error' ? 'danger' : type;
+		const alertOptions = { containerId: ALERT_CONTAINER_IDS[containerId] };
+
+		alertService.dismiss();
+		alertService[alertType](alertProps, alertOptions);
 	}
 }
 

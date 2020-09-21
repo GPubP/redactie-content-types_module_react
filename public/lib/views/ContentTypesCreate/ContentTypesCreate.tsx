@@ -1,9 +1,15 @@
-import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
+import {
+	Container,
+	ContextHeader,
+	ContextHeaderTopSection,
+} from '@acpaas-ui/react-editorial-components';
+import { AlertContainer } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
 import {
+	ALERT_CONTAINER_IDS,
 	CONTENT_DETAIL_TABS,
 	CONTENT_TYPE_DETAIL_TAB_MAP,
 	MODULE_PATHS,
@@ -115,9 +121,12 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			<div className="u-margin-top">
+			<Container>
+				<div className="u-margin-bottom">
+					<AlertContainer containerId={ALERT_CONTAINER_IDS.create} />
+				</div>
 				<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
-			</div>
+			</Container>
 		</>
 	);
 };

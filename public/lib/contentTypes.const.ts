@@ -99,3 +99,8 @@ export const DEFAULT_VALIDATOR_ERROR_MESSAGES: Record<string, string> = {
 	email: 'Gelieve een geldig e-mailadres in te vullen',
 	url: 'Gelieve een geldige url in te vullen',
 };
+
+export const ALERT_CONTAINER_IDS = {
+	create: 'create',
+	update: 'update',
+};
