@@ -1,9 +1,5 @@
 import { Button, Textarea, TextField } from '@acpaas-ui/react-components';
-import {
-	ActionBar,
-	ActionBarContentSection,
-	Container,
-} from '@acpaas-ui/react-editorial-components';
+import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { useDetectValueChanges } from '@redactie/utils';
 import { Field, Formik } from 'formik';
@@ -55,7 +51,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			{({ submitForm, values }) => {
 				setFormValue(values);
 				return (
-					<Container>
+					<>
 						<div className="row">
 							<div className="col-xs-12 col-md-8 row middle-xs">
 								<div className="col-xs-12 col-md-8">
@@ -120,7 +116,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 								</div>
 							</ActionBarContentSection>
 						</ActionBar>
-					</Container>
+					</>
 				);
 			}}
 		</Formik>

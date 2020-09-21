@@ -1,5 +1,5 @@
 import { Button } from '@acpaas-ui/react-components';
-import { Container, Table } from '@acpaas-ui/react-editorial-components';
+import { Table } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React, { FC, useEffect, useState } from 'react';
 
@@ -145,11 +145,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 		);
 	};
 
-	return (
-		<Container>
-			<DataLoader loadingState={initialLoading} render={SitesTable} />
-		</Container>
-	);
+	return <DataLoader loadingState={initialLoading} render={SitesTable} />;
 };
 
 export default ContentTypeSites;

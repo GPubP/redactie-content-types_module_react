@@ -1,11 +1,16 @@
-import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
-import { useDetectValueChanges } from '@redactie/utils';
+import {
+	Container,
+	ContextHeader,
+	ContextHeaderTopSection,
+} from '@acpaas-ui/react-editorial-components';
+import { AlertContainer, useDetectValueChanges } from '@redactie/utils';
 import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
 import {
+	ALERT_CONTAINER_IDS,
 	CONTENT_DETAIL_TABS,
 	CONTENT_TYPE_DETAIL_TAB_MAP,
 	MODULE_PATHS,
@@ -242,7 +247,12 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
+			<Container>
+				<div className="u-margin-bottom">
+					<AlertContainer containerId={ALERT_CONTAINER_IDS.update} />
+				</div>
+				<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
+			</Container>
 		</>
 	);
 };
