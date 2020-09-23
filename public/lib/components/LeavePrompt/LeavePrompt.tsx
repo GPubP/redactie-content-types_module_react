@@ -50,8 +50,10 @@ const LeavePrompt: FC<LeavePromptProps> = ({
 		return true;
 	};
 
-	const handleAction = (onAction: () => void): void => {
-		onAction();
+	const handleAction = (onAction?: () => void): void => {
+		if (onAction) {
+			onAction();
+		}
 		setShowModal(false);
 		setConfirmedNavigation(true);
 	};
@@ -71,21 +73,15 @@ const LeavePrompt: FC<LeavePromptProps> = ({
 		<>
 			<Prompt when={when} message={handleBlockedNavigation} />
 			<LeavePromptModal show={showModal} title={title} body={body} onClose={handleCancel}>
-				{onCancel && (
-					<Button onClick={handleCancel} outline>
-						{cancelText}
-					</Button>
-				)}
-				{onDelete && (
-					<Button onClick={() => handleAction(onDelete)} outline type="danger">
-						{deleteText}
-					</Button>
-				)}
-				{onConfirm && (
-					<Button onClick={() => handleAction(onConfirm)} type="success">
-						{confirmText}
-					</Button>
-				)}
+				<Button onClick={handleCancel} outline>
+					{cancelText}
+				</Button>
+				<Button onClick={() => handleAction(onDelete)} outline type="danger">
+					{deleteText}
+				</Button>
+				<Button onClick={() => handleAction(onConfirm)} type="success">
+					{confirmText}
+				</Button>
 			</LeavePromptModal>
 		</>
 	);

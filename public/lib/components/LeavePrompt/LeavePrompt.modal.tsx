@@ -1,12 +1,9 @@
 import { Button } from '@acpaas-ui/react-components';
-import classnames from 'classnames/bind';
+import classnames from 'classnames';
 import React, { FC } from 'react';
 import { createPortal } from 'react-dom';
 
-import styles from './LeavePrompt.module.scss';
 import { LeavePromptModalProps } from './LeavePrompt.types';
-
-const cx = classnames.bind(styles);
 
 const LeavePromptModal: FC<LeavePromptModalProps> = ({
 	body,
@@ -17,7 +14,7 @@ const LeavePromptModal: FC<LeavePromptModalProps> = ({
 	title,
 }) => {
 	return createPortal(
-		<div className={cx('m-overlay', { 'is-active': show })}>
+		<div className={classnames('m-overlay', { 'is-active': show })}>
 			<div className="m-modal m-modal--large">
 				<div className="m-modal__header u-margin-bottom-xs">
 					<h4>{title}</h4>
