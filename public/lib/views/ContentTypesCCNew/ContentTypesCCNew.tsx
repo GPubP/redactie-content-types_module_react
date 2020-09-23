@@ -16,6 +16,7 @@ import { filterCompartments, generateFieldFromType, validateCompartments } from 
 import {
 	useActiveField,
 	useCompartments,
+	useCompartmentValidation,
 	useFieldType,
 	useNavigate,
 	useNavItemMatcher,
@@ -39,10 +40,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const activeField = useActiveField();
-	const query = useQuery();
-	const fieldTypeUuid = query.get('fieldType');
-	const presetUuid = query.get('preset');
-	const name = query.get('name');
+	const { fieldTypeUuid, presetUuid, name } = useQuery();
 	const [fieldTypeLoadingState, fieldType] = useFieldType();
 	const [presetLoadingState, preset] = usePreset();
 	const { generatePath, navigate } = useNavigate();
@@ -66,6 +64,10 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		},
 	}));
 
+	/**
+	 * Trigger errors on form when switching from compartments
+	 */
+	useCompartmentValidation(activeCompartmentFormikRef, activeCompartment, hasSubmit);
 
 	/**
 	 * Set compartments

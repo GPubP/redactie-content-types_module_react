@@ -14,6 +14,7 @@ import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.t
 import { filterCompartments, validateCompartments } from '../../helpers';
 import {
 	useCompartments,
+	useCompartmentValidation,
 	useNavigate,
 	useNavItemMatcher,
 	useTenantContext,
@@ -74,6 +75,11 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			});
 		},
 	}));
+
+	/**
+	 * Trigger errors on form when switching from compartments
+	 */
+	useCompartmentValidation(activeCompartmentFormikRef, activeCompartment, hasSubmit);
 
 	/**
 	 * Set compartments

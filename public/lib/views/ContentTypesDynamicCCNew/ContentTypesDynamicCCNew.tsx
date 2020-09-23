@@ -15,6 +15,7 @@ import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.t
 import { filterCompartments, generateFieldFromType, validateCompartments } from '../../helpers';
 import {
 	useCompartments,
+	useCompartmentValidation,
 	useFieldType,
 	useNavigate,
 	useNavItemMatcher,
@@ -44,10 +45,8 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	 */
 	const [hasSubmit] = useState(false);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const query = useQuery();
-	const fieldTypeUuid = query.get('fieldType');
-	const presetUuid = query.get('preset');
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
+	const { fieldType: fieldTypeUuid, preset: presetUuid } = useQuery();
 	const [fieldTypeLoadingState, fieldType] = useFieldType();
 	const [presetLoadingState, preset] = usePreset();
 	const activeField = useActiveField();
@@ -74,6 +73,10 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		},
 	}));
 
+	/**
+	 * Trigger errors on form when switching from compartments
+	 */
+	useCompartmentValidation(activeCompartmentFormikRef, activeCompartment, hasSubmit);
 
 	/**
 	 * Set compartments

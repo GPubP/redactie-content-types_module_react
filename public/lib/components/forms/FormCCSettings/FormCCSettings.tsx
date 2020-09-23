@@ -72,7 +72,9 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 										state={labelState}
 									/>
 									{labelState ? (
-										<p className="u-text-danger">{errors.label}</p>
+										<p className="u-text-danger u-margin-top-xs">
+											{errors.label}
+										</p>
 									) : null}
 									<div className="u-text-light u-margin-top-xs">
 										Geef deze content component een gebruiksvriendelijke naam,

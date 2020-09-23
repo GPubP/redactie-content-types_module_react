@@ -15,6 +15,7 @@ import { filterCompartments, validateCompartments } from '../../helpers';
 import {
 	useActiveField,
 	useCompartments,
+	useCompartmentValidation,
 	useFieldType,
 	useNavigate,
 	useNavItemMatcher,
@@ -61,6 +62,11 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			return generatePath(c.slug || c.name, { contentTypeUuid });
 		},
 	}));
+
+	/**
+	 * Trigger errors on form when switching from compartments
+	 */
+	useCompartmentValidation(activeCompartmentFormikRef, activeCompartment, hasSubmit);
 
 	/**
 	 * Set compartments
