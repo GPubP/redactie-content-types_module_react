@@ -3,7 +3,7 @@ import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-ed
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { alertService } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
-import { isEmpty } from 'ramda';
+import { equals, isEmpty } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -34,7 +34,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	/**
 	 * Hooks
 	 */
-	const [hasSubmit] = useState(false);
+	const [hasSubmit, setHasSubmit] = useState(false);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const [fieldTypeLoading, fieldType] = useFieldType();
@@ -59,7 +59,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		hasError: hasSubmit && c.isValid === false,
 		to: () => {
 			activate(c.name);
-			return generatePath(c.slug || c.name, { contentTypeUuid });
+			return generatePath(c.slug || c.name, { contentTypeUuid, contentComponentUuid });
 		},
 	}));
 
@@ -77,7 +77,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		}
 
 		register(filterCompartments(CC_EDIT_COMPARTMENTS, navItemMatcher), { replace: true });
-	}, []); // eslint-disable-line
+	}, [fieldType]); // eslint-disable-line
 
 	useEffect(() => {
 		if (
@@ -164,6 +164,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			contentTypesFacade.clearActiveField();
 			navigateToOverview();
 		} else {
+			alertService.dismiss();
 			alertService.danger(
 				{
 					title: 'Er zijn nog fouten',
@@ -172,6 +173,8 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 				{ containerId: ALERT_CONTAINER_IDS.update }
 			);
 		}
+
+		setHasSubmit(true);
 	};
 
 	/**
@@ -184,6 +187,11 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			preset,
 			onDelete: onFieldDelete,
 			onSubmit: onFieldChange,
+			formikRef: (instance: any) => {
+				if (!equals(activeCompartmentFormikRef.current, instance)) {
+					activeCompartmentFormikRef.current = instance;
+				}
+			},
 		};
 
 		return (

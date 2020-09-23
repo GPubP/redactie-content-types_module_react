@@ -131,6 +131,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 													type="number"
 													id="generalConfig.min"
 													min="0"
+													max={values.generalConfig.max}
 													label="Min."
 													name="generalConfig.min"
 												/>

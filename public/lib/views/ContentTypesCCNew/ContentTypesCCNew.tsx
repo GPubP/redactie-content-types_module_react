@@ -36,7 +36,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	/**
 	 * Hooks
 	 */
-	const [hasSubmit] = useState(false);
+	const [hasSubmit, setHasSubmit] = useState(false);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const activeField = useActiveField();
@@ -78,7 +78,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		}
 
 		register(filterCompartments(CC_NEW_COMPARTMENTS, navItemMatcher), { replace: true });
-	}, []); // eslint-disable-line
+	}, [fieldType]); // eslint-disable-line
 
 	useEffect(() => {
 		presetsFacade.clearPreset();
@@ -139,33 +139,38 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	};
 
 	const onCTSubmit = (): void => {
-		if (activeField) {
-			const { current: formikRef } = activeCompartmentFormikRef;
-			const compartmentsAreValid = validateCompartments(compartments, activeField, validate);
-
-			// Validate current form to trigger fields error states
-			if (formikRef) {
-				formikRef.validateForm().then(errors => {
-					if (!isEmpty(errors)) {
-						formikRef.setErrors(errors);
-					}
-				});
-			}
-			// Only submit the form if all compartments are valid
-			if (compartmentsAreValid) {
-				contentTypesFacade.addField(activeField);
-				contentTypesFacade.clearActiveField();
-				navigateToOverview();
-			} else {
-				alertService.danger(
-					{
-						title: 'Er zijn nog fouten',
-						message: 'Lorem ipsum',
-					},
-					{ containerId: ALERT_CONTAINER_IDS.update }
-				);
-			}
+		if (!activeField) {
+			return;
 		}
+
+		const { current: formikRef } = activeCompartmentFormikRef;
+		const compartmentsAreValid = validateCompartments(compartments, activeField, validate);
+
+		// Validate current form to trigger fields error states
+		if (formikRef) {
+			formikRef.validateForm().then(errors => {
+				if (!isEmpty(errors)) {
+					formikRef.setErrors(errors);
+				}
+			});
+		}
+		// Only submit the form if all compartments are valid
+		if (compartmentsAreValid) {
+			contentTypesFacade.addField(activeField);
+			contentTypesFacade.clearActiveField();
+			navigateToOverview();
+		} else {
+			alertService.dismiss();
+			alertService.danger(
+				{
+					title: 'Er zijn nog fouten',
+					message: 'Lorem ipsum',
+				},
+				{ containerId: ALERT_CONTAINER_IDS.update }
+			);
+		}
+
+		setHasSubmit(true);
 	};
 
 	const onFieldTypeChange = (data: ContentTypeFieldDetailModel): void => {

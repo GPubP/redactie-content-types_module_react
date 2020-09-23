@@ -3,7 +3,7 @@ import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-ed
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { alertService } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
-import { isEmpty, omit } from 'ramda';
+import { equals, isEmpty, omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -40,7 +40,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	/**
 	 * Hooks
 	 */
-	const [hasSubmit] = useState(false);
+	const [hasSubmit, setHasSubmit] = useState(false);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const activeField = useActiveField();
@@ -92,7 +92,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		register(filterCompartments(DYNAMIC_CC_EDIT_COMPARTMENTS, navItemMatcher), {
 			replace: true,
 		});
-	}, []); // eslint-disable-line
+	}, [activeField]); // eslint-disable-line
 
 	useEffect(() => {
 		if (activeField) {
@@ -210,6 +210,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			dynamicFieldFacade.updateField(omit(['__new'])(dynamicActiveField));
 			navigateToOverview();
 		} else {
+			alertService.dismiss();
 			alertService.danger(
 				{
 					title: 'Er zijn nog fouten',
@@ -218,6 +219,8 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 				{ containerId: ALERT_CONTAINER_IDS.update }
 			);
 		}
+
+		setHasSubmit(false);
 	};
 
 	/**
@@ -234,7 +237,11 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			preset: dynamicActiveField?.preset,
 			onDelete: onFieldDelete,
 			onSubmit: onFieldChange,
-			formikRef: activeCompartmentFormikRef,
+			formikRef: (instance: any) => {
+				if (!equals(activeCompartmentFormikRef.current, instance)) {
+					activeCompartmentFormikRef.current = instance;
+				}
+			},
 		};
 
 		return (
