@@ -69,15 +69,15 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 										required
 										state={getFieldState(touched, errors, 'label')}
 									/>
+									<div className="u-text-light u-margin-top-xs">
+										Geef deze content component een gebruiksvriendelijke naam,
+										bijvoorbeeld &apos;Titel&apos;.
+									</div>
 									<ErrorMessage
 										className="u-text-danger u-margin-top-xs"
 										component="p"
 										name="label"
 									/>
-									<div className="u-text-light u-margin-top-xs">
-										Geef deze content component een gebruiksvriendelijke naam,
-										bijvoorbeeld &apos;Titel&apos;.
-									</div>
 								</div>
 
 								<div className="col-xs-12 col-md-4 u-margin-top-xs u-margin-bottom">

@@ -65,14 +65,14 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 										required
 										state={getFieldState(touched, errors, 'meta.label')}
 									/>
+									<div className="u-text-light u-margin-top-xs">
+										Geef het content type een korte en duidelijke naam.
+									</div>
 									<ErrorMessage
 										className="u-text-danger u-margin-top-xs"
 										component="p"
 										name="meta.label"
 									/>
-									<div className="u-text-light u-margin-top-xs">
-										Geef het content type een korte en duidelijke naam.
-									</div>
 								</div>
 
 								<div className="col-xs-12 col-md-4 u-margin-top u-margin-bottom">
@@ -98,15 +98,15 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 										required
 										state={getFieldState(touched, errors, 'meta.description')}
 									/>
+									<div className="u-text-light u-margin-top-xs">
+										Geef het content type een duidelijke beschrijving voor in
+										het overzicht.
+									</div>
 									<ErrorMessage
 										className="u-text-danger u-margin-top-xs"
 										component="p"
 										name="meta.description"
 									/>
-									<div className="u-text-light u-margin-top-xs">
-										Geef het content type een duidelijke beschrijving voor in
-										het overzicht.
-									</div>
 								</div>
 							</div>
 						</div>
