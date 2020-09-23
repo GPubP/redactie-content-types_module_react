@@ -9,7 +9,7 @@ import { DEFAULT_VALIDATION_SCHEMA } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
 import { parseFields } from '../../helpers';
 
-const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, onSubmit }) => {
+const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, formikRef, onSubmit }) => {
 	const initialEditableFormValues = {
 		editable: !CTField.generalConfig.disabled,
 	};
@@ -63,6 +63,7 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, onSubmi
 
 		return (
 			<formRendererConnector.api.Form
+				formikRef={formikRef}
 				schema={parsedFormSchema}
 				initialValues={initialValues}
 				validationSchema={DEFAULT_VALIDATION_SCHEMA}

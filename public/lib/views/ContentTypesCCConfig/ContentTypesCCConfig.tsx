@@ -2,7 +2,6 @@ import { FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-mod
 import { clone } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 
-import { AutoSubmit } from '../../components';
 import formRendererConnector from '../../connectors/formRenderer';
 import { DEFAULT_VALIDATION_SCHEMA } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
@@ -16,6 +15,7 @@ import { PresetDetailModel } from '../../store/presets';
 const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	CTField,
 	fieldTypeData,
+	formikRef,
 	preset,
 	onSubmit,
 }) => {
@@ -200,6 +200,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 
 		return (
 			<formRendererConnector.api.Form
+				formikRef={formikRef}
 				initialValues={initialFormValue}
 				schema={schema}
 				validationSchema={DEFAULT_VALIDATION_SCHEMA}

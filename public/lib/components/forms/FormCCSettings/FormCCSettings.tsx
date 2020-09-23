@@ -1,6 +1,6 @@
 import { Checkbox, RadioGroup, Textarea, TextField } from '@acpaas-ui/react-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { Field, Formik } from 'formik';
+import { ErrorMessage, Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { equals } from 'ramda';
 import React, { ChangeEvent, FC, useState } from 'react';
@@ -54,8 +54,6 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 			validationSchema={FORM_CC_SETTINGS_VALIDATION_SCHEMA}
 		>
 			{({ errors, touched, values, submitForm }) => {
-				const labelState = getFieldState(touched, errors, 'label');
-
 				return (
 					<>
 						<AutoSubmit />
@@ -69,13 +67,12 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 										name="label"
 										placeholder="Typ een label"
 										required
-										state={labelState}
+										state={getFieldState(touched, errors, 'label')}
 									/>
-									{labelState ? (
-										<p className="u-text-danger u-margin-top-xs">
-											{errors.label}
-										</p>
-									) : null}
+									<ErrorMessage
+										className="u-text-danger u-margin-top-xs"
+										name="label"
+									/>
 									<div className="u-text-light u-margin-top-xs">
 										Geef deze content component een gebruiksvriendelijke naam,
 										bijvoorbeeld &apos;Titel&apos;.

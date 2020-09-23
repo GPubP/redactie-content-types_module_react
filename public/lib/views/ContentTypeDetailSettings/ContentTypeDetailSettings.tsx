@@ -2,7 +2,7 @@ import { Button, Textarea, TextField } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { useDetectValueChanges } from '@redactie/utils';
-import { Field, Formik } from 'formik';
+import { ErrorMessage, Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC, useMemo, useState } from 'react';
 
@@ -50,8 +50,6 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA}
 		>
 			{({ errors, submitForm, touched, values }) => {
-				const labelError = getFieldState(touched, errors, 'meta.label');
-				const descriptionError = getFieldState(touched, errors, 'meta.description');
 				setFormValue(values);
 
 				return (
@@ -65,11 +63,12 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 										label="Naam"
 										name="meta.label"
 										required
-										state={labelError}
+										state={getFieldState(touched, errors, 'meta.label')}
 									/>
-									{labelError ? (
-										<p className="u-text-danger">{errors.meta?.label}</p>
-									) : null}
+									<ErrorMessage
+										className="u-text-danger u-margin-top-xs"
+										name="meta.label"
+									/>
 									<div className="u-text-light u-margin-top-xs">
 										Geef het content type een korte en duidelijke naam.
 									</div>
@@ -96,11 +95,12 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 										label="Beschrijving"
 										name="meta.description"
 										required
-										state={descriptionError}
+										state={getFieldState(touched, errors, 'meta.description')}
 									/>
-									{descriptionError ? (
-										<p className="u-text-danger">{errors.meta?.description}</p>
-									) : null}
+									<ErrorMessage
+										className="u-text-danger u-margin-top-xs"
+										name="meta.description"
+									/>
 									<div className="u-text-light u-margin-top-xs">
 										Geef het content type een duidelijke beschrijving voor in
 										het overzicht.

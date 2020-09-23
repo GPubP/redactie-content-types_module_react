@@ -19,6 +19,7 @@ import { PresetDetail } from '../../services/presets';
 const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	CTField,
 	fieldTypeData,
+	formikRef,
 	preset,
 	onSubmit,
 }) => {
@@ -169,6 +170,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 
 		return (
 			<formRendererConnector.api.Form
+				formikRef={formikRef}
 				schema={
 					preset
 						? generateFormSchemaFromPreset(preset)
