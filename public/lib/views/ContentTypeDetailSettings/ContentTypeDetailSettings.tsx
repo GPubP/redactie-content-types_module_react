@@ -67,6 +67,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 									/>
 									<ErrorMessage
 										className="u-text-danger u-margin-top-xs"
+										component="p"
 										name="meta.label"
 									/>
 									<div className="u-text-light u-margin-top-xs">
@@ -99,6 +100,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 									/>
 									<ErrorMessage
 										className="u-text-danger u-margin-top-xs"
+										component="p"
 										name="meta.description"
 									/>
 									<div className="u-text-light u-margin-top-xs">

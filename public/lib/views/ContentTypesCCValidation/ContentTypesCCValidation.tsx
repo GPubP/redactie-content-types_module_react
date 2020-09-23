@@ -1,7 +1,6 @@
 import { FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-module';
 import React, { FC, ReactElement, useMemo } from 'react';
 
-import { AutoSubmit } from '../../components';
 import formRendererConnector from '../../connectors/formRenderer';
 import { DEFAULT_VALIDATION_SCHEMA } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';

@@ -71,6 +71,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 									/>
 									<ErrorMessage
 										className="u-text-danger u-margin-top-xs"
+										component="p"
 										name="label"
 									/>
 									<div className="u-text-light u-margin-top-xs">
