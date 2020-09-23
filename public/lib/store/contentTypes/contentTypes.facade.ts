@@ -222,6 +222,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 		this.store.update({
 			activeField: {
 				...activeField,
+				...payload,
 				generalConfig: {
 					...activeField.generalConfig,
 					...payload.generalConfig,
