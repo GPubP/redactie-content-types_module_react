@@ -1,6 +1,6 @@
 import { ActiveState, EntityState } from '@datorama/akita';
 
-import { FieldTypeData } from '../../../services/fieldTypes';
+import { FieldType, FieldTypeData } from '../../../services/fieldTypes';
 
 export type ModuleValue = any;
 export enum CompartmentType {
@@ -16,6 +16,7 @@ export interface CompartmentModel {
 	name: string;
 	label: string;
 	getDescription?: (contentItem: FieldTypeData | undefined) => string | undefined;
+	filter?: (meta: FieldType) => boolean;
 	slug?: string;
 	type: CompartmentType;
 	isValid?: boolean;

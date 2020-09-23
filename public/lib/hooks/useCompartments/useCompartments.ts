@@ -12,7 +12,7 @@ interface CompartmentState {
 	active: CompartmentModel | undefined;
 }
 
-const useCompartmentsFacade = (): [
+const useCompartments = (): [
 	CompartmentState,
 	(compartments: CompartmentModel[], options: CompartmentRegisterOptions) => void,
 	(names: ID) => void,
@@ -32,4 +32,4 @@ const useCompartmentsFacade = (): [
 	return [{ compartments, active }, register, activate, validate];
 };
 
-export default useCompartmentsFacade;
+export default useCompartments;

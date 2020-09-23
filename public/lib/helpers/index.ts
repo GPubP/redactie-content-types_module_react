@@ -8,4 +8,4 @@ export * from './mapExternalTabToTab';
 export * from './generateFRFieldFromCTField';
 export * from './parseFields';
 export * from './generateConfig';
-export * from './filterNavList';
+export * from './compartments';

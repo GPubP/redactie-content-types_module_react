@@ -1,21 +1,20 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
-import {
-	ActionBar,
-	ActionBarContentSection,
-	Container,
-	NavList,
-} from '@acpaas-ui/react-editorial-components';
+import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import { alertService } from '@redactie/utils';
+import { FormikProps, FormikValues } from 'formik';
+import { isEmpty } from 'ramda';
+import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { DataLoader, RenderChildRoutes } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
-import { MODULE_PATHS } from '../../contentTypes.const';
+import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
-import { filterNavList } from '../../helpers';
+import { filterCompartments, validateCompartments } from '../../helpers';
 import {
 	useActiveField,
+	useCompartments,
 	useFieldType,
 	useNavigate,
 	useNavItemMatcher,
@@ -26,7 +25,7 @@ import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../store/con
 import { fieldTypesFacade } from '../../store/fieldTypes';
 import { presetsFacade } from '../../store/presets';
 
-import { CC_NAV_LIST_ITEMS } from './ContentTypesCCEdit.const';
+import { CC_EDIT_COMPARTMENTS } from './ContentTypesCCEdit.const';
 
 const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentType, route }) => {
 	const { contentTypeUuid, contentComponentUuid } = match.params;
@@ -34,7 +33,9 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	/**
 	 * Hooks
 	 */
+	const [hasSubmit] = useState(false);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const [fieldTypeLoading, fieldType] = useFieldType();
 	const [presetLoading, preset] = usePreset();
 	const activeField = useActiveField();
@@ -45,6 +46,32 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	const activeFieldPSUuid = useMemo(() => activeField?.preset?.uuid, [activeField]);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
+	const [
+		{ compartments, active: activeCompartment },
+		register,
+		activate,
+		validate,
+	] = useCompartments();
+	const navListItems = compartments.map(c => ({
+		activeClassName: 'is-active',
+		label: c.label,
+		hasError: hasSubmit && c.isValid === false,
+		to: () => {
+			activate(c.name);
+			return generatePath(c.slug || c.name, { contentTypeUuid });
+		},
+	}));
+
+	/**
+	 * Set compartments
+	 */
+	useEffect(() => {
+		if (!fieldType) {
+			return;
+		}
+
+		register(filterCompartments(CC_EDIT_COMPARTMENTS, navItemMatcher), { replace: true });
+	}, []); // eslint-disable-line
 
 	useEffect(() => {
 		if (
@@ -114,18 +141,32 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			return;
 		}
 
-		contentTypesFacade.updateField(activeField);
-		contentTypesFacade.clearActiveField();
-		navigateToOverview();
-	};
+		const { current: formikRef } = activeCompartmentFormikRef;
+		const compartmentsAreValid = validateCompartments(compartments, activeField, validate);
 
-	const navListItems = filterNavList(
-		CC_NAV_LIST_ITEMS.map(listItem => ({
-			...listItem,
-			to: generatePath(listItem.to, { contentTypeUuid, contentComponentUuid }),
-		})),
-		navItemMatcher
-	);
+		// Validate current form to trigger fields error states
+		if (formikRef) {
+			formikRef.validateForm().then(errors => {
+				if (!isEmpty(errors)) {
+					formikRef.setErrors(errors);
+				}
+			});
+		}
+		// Only submit the form if all compartments are valid
+		if (compartmentsAreValid) {
+			contentTypesFacade.updateField(activeField);
+			contentTypesFacade.clearActiveField();
+			navigateToOverview();
+		} else {
+			alertService.danger(
+				{
+					title: 'Er zijn nog fouten',
+					message: 'Lorem ipsum',
+				},
+				{ containerId: ALERT_CONTAINER_IDS.update }
+			);
+		}
+	};
 
 	/**
 	 * Render
@@ -184,11 +225,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		);
 	};
 
-	return (
-		<Container>
-			<DataLoader loadingState={initialLoading} render={renderCCEdit} />
-		</Container>
-	);
+	return <DataLoader loadingState={initialLoading} render={renderCCEdit} />;
 };
 
 export default ContentTypesCCEdit;
