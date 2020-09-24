@@ -71,11 +71,11 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 		const sitesRows: SitesRowData[] = sites.map(
 			(site: Site): SitesRowData => ({
 				uuid: site.uuid,
-				name: site.data.name,
-				description: site.data.description,
-				status: site.meta.active,
-				contentTypes: site.data.contentTypes,
-				contentItems: 0,
+				name: site.data?.name,
+				description: site.data?.description,
+				status: site.meta?.active,
+				contentTypes: site.data?.contentTypes,
+				contentItems: site.data?.contentTypes?.length ?? 0,
 			})
 		);
 
@@ -94,11 +94,14 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			{
 				label: 'Aantal content items',
 				value: 'contentItems',
+				component(value: string) {
+					return <div>{value || 0}</div>;
+				},
 			},
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 				component(value: string, rowData: SitesRowData) {
-					const isActive = !!rowData['status'];
+					const isActive = (rowData.contentTypes || []).includes(contentType._id);
 					return <SiteStatus active={isActive} />;
 				},
 			},
@@ -107,10 +110,6 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 				disableSorting: true,
 				component(value: string, rowData: SitesRowData) {
 					const isActive = (rowData.contentTypes || []).includes(contentType._id);
-
-					if (rowData.contentItems !== 0) {
-						return null;
-					}
 
 					if (isActive) {
 						return (
