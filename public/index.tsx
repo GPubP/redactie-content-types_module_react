@@ -17,7 +17,6 @@ import { fieldTypesFacade } from './lib/store/fieldTypes';
 import { presetsFacade } from './lib/store/presets';
 import { sitesFacade } from './lib/store/sites';
 import {
-	ContentTypeDetailExternal,
 	ContentTypesCCConfig,
 	ContentTypesCCDefaults,
 	ContentTypesCCEdit,
@@ -26,6 +25,7 @@ import {
 	ContentTypesCCValidation,
 	ContentTypesCreate,
 	ContentTypesDetailCC,
+	ContentTypesDetailExternal,
 	ContentTypesDetailSettings,
 	ContentTypesDetailSites,
 	ContentTypesDynamicCCEdit,
@@ -255,7 +255,7 @@ Core.routes.register({
 				{
 					path: MODULE_PATHS.detailExternal,
 					title: contentTypeTitleHelper(TitleTypes.ContentType),
-					component: ContentTypeDetailExternal,
+					component: ContentTypesDetailExternal,
 				},
 			],
 		},

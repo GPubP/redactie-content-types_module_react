@@ -3,7 +3,7 @@ import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie
 import { FieldType, FieldTypeData, FieldTypeMeta } from './services/fieldTypes';
 import { Preset, PresetDetail } from './services/presets';
 import { ContentTypeDetailModel, ContentTypeFieldDetailModel } from './store/contentTypes';
-import { ExternalTabValue } from './views/ContentTypeDetailExternal/ContentTypeDetailExternal.types';
+import { ExternalTabValue } from './views/tenant/ContentTypesDetailExternal';
 
 export interface ContentTypesModuleProps extends RouteConfigComponentProps {
 	routes: ModuleRouteConfig[];
