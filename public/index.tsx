@@ -8,6 +8,7 @@ import ContentTypesSelect from './lib/components/Fields/ContentTypesSelect/Conte
 import DynamicFieldSettings from './lib/components/Fields/DynamicFieldSettings/DynamicFieldSettings';
 import formRendererConnector from './lib/connectors/formRenderer';
 import rolesRightsConnector from './lib/connectors/rolesRights';
+import { registerRoutes } from './lib/connectors/sites';
 import { MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesModuleProps } from './lib/contentTypes.types';
 import { TenantContext } from './lib/context';
@@ -32,6 +33,7 @@ import {
 	ContentTypesDynamicCCNew,
 	ContentTypesOverview,
 	ContentTypesUpdate,
+	SiteContentTypesOverview,
 } from './lib/views';
 
 akitaDevtools();
@@ -43,12 +45,17 @@ const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, tenantId })
 		sitesFacade.getSites();
 	}, []);
 
-	const guardsMeta = useMemo(
-		() => ({
-			tenantId,
-		}),
-		[tenantId]
+	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
+
+	return (
+		<TenantContext.Provider value={{ tenantId }}>
+			<RenderChildRoutes routes={route.routes} guardsMeta={guardsMeta} />
+		</TenantContext.Provider>
 	);
+};
+
+const SiteContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, tenantId }) => {
+	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 
 	return (
 		<TenantContext.Provider value={{ tenantId }}>
@@ -258,6 +265,28 @@ Core.routes.register({
 					component: ContentTypesDetailExternal,
 				},
 			],
+		},
+	],
+});
+
+registerRoutes({
+	path: MODULE_PATHS.siteRoot,
+	component: SiteContentTypesComponent,
+	redirect: MODULE_PATHS.contentTypes.overview,
+	navigation: {
+		renderContext: 'site',
+		context: 'site',
+		label: 'Structuur',
+	},
+	routes: [
+		{
+			path: MODULE_PATHS.contentTypes.overview,
+			component: SiteContentTypesOverview,
+			navigation: {
+				context: 'site',
+				label: 'Content types',
+				parentPath: MODULE_PATHS.siteRoot,
+			},
 		},
 	],
 });
