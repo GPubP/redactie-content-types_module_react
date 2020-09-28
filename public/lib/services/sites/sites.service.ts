@@ -21,6 +21,21 @@ export class SitesApiService {
 		}
 	}
 
+	public async getSite(id: string): Promise<Site | null> {
+		try {
+			const response: Site = await apiService.get(`sites/v1/sites/${id}`).json();
+
+			if (!response) {
+				throw new Error('Failed to get sites');
+			}
+
+			return response;
+		} catch (err) {
+			console.error(err);
+			return null;
+		}
+	}
+
 	public async updateSite(id: string, body: SitesDetailRequestBody): Promise<Site | null> {
 		try {
 			const response: Site = await apiService

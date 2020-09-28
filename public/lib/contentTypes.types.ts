@@ -5,7 +5,8 @@ import { Preset, PresetDetail } from './services/presets';
 import { ContentTypeDetailModel, ContentTypeFieldDetailModel } from './store/contentTypes';
 import { ExternalTabValue } from './views/tenant/ContentTypesDetailExternal';
 
-export interface ContentTypesModuleProps extends RouteConfigComponentProps {
+export interface ContentTypesModuleProps<Params extends { [K in keyof Params]?: string } = {}>
+	extends RouteConfigComponentProps<Params> {
 	routes: ModuleRouteConfig[];
 	tenantId: string;
 }
@@ -31,11 +32,11 @@ export interface ContentTypesDetailRouteProps<Params = ContentTypesDetailRoutePa
 	readonly contentType: ContentTypeDetailModel;
 	onCancel: () => void;
 	onSubmit: (
-		data:
-			| ContentTypeDetailModel
-			| ContentTypeFieldDetailModel[]
-			| FieldTypeMeta
-			| ExternalTabValue,
+		data: 
+		| ContentTypeDetailModel
+		| ContentTypeFieldDetailModel[]
+		| FieldTypeMeta
+		| ExternalTabValue,
 		tab: Tab
 	) => void;
 	readonly activeField: ContentTypeFieldDetailModel | null;
