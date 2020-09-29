@@ -1,9 +1,9 @@
 import { Checkbox } from '@acpaas-ui/react-components';
 import { FormSchema } from '@redactie/form-renderer-module';
+import { FormikOnChangeHandler } from '@redactie/utils';
 import { Field, Formik, FormikValues } from 'formik';
 import React, { FC, ReactElement, useMemo } from 'react';
 
-import { AutoSubmit } from '../../components';
 import formRendererConnector from '../../connectors/formRenderer';
 import { DEFAULT_VALIDATION_SCHEMA } from '../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../contentTypes.types';
@@ -82,10 +82,10 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, formikR
 			</p>
 			{renderCCDefaults()}
 			<Formik initialValues={initialEditableFormValues} onSubmit={onEditableFormFormSubmit}>
-				{({ values }) => {
+				{({ submitForm, values }) => {
 					return (
 						<div className="u-margin-top">
-							<AutoSubmit />
+							<FormikOnChangeHandler onChange={submitForm} />
 							<div className="row">
 								<div className="col-xs-12">
 									<Field
