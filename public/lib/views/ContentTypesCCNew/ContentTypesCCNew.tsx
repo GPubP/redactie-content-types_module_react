@@ -5,6 +5,7 @@ import {
 	Container,
 } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
+import { LeavePrompt, useDetectValueChanges } from '@redactie/utils';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
@@ -51,6 +52,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, his
 		[tenantId]
 	);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
+	const [hasChanges] = useDetectValueChanges(!initialLoading, activeField);
 
 	useEffect(() => {
 		presetsFacade.clearPreset();
@@ -106,15 +108,18 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, his
 	/**
 	 * Methods
 	 */
-	const navigateToOverview = (): void => {
+	const navigateToDetail = (): void => {
 		navigate(MODULE_PATHS.detailCC, { contentTypeUuid });
 	};
 
-	const onCTSubmit = (): void => {
+	const onCTSubmit = (cancelNavigation = false): void => {
 		if (activeField) {
 			contentTypesFacade.addField(activeField);
 			contentTypesFacade.clearActiveField();
-			navigateToOverview();
+
+			if (!cancelNavigation) {
+				navigateToDetail();
+			}
 		}
 	};
 
@@ -168,7 +173,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, his
 			<ActionBar className="o-action-bar--fixed" isOpen>
 				<ActionBarContentSection>
 					<div className="u-wrapper row end-xs">
-						<Button onClick={navigateToOverview} negative>
+						<Button onClick={navigateToDetail} negative>
 							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
 						<Button className="u-margin-left-xs" onClick={onCTSubmit} type="primary">
@@ -177,6 +182,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, his
 					</div>
 				</ActionBarContentSection>
 			</ActionBar>
+			<LeavePrompt when={hasChanges} onConfirm={() => onCTSubmit(true)} />
 		</>
 	);
 

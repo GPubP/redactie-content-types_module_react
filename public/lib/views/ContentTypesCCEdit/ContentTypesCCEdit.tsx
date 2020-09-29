@@ -5,6 +5,7 @@ import {
 	Container,
 } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
+import { LeavePrompt, useDetectValueChanges } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { DataLoader, NavList, RenderChildRoutes } from '../../components';
@@ -42,6 +43,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	const activeFieldPSUuid = useMemo(() => activeField?.preset?.uuid, [activeField]);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
+	const [hasChanges] = useDetectValueChanges(!initialLoading, activeField);
 
 	useEffect(() => {
 		if (
@@ -90,7 +92,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	/**
 	 * Methods
 	 */
-	const navigateToOverview = (): void => {
+	const navigateToDetail = (): void => {
 		navigate(MODULE_PATHS.detailCC, { contentTypeUuid });
 	};
 
@@ -102,18 +104,21 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		if (activeField?.uuid) {
 			contentTypesFacade.deleteField(activeField.uuid);
 			contentTypesFacade.clearActiveField();
-			navigateToOverview();
+			navigateToDetail();
 		}
 	};
 
-	const onFieldSubmit = (): void => {
+	const onFieldSubmit = (cancelNavigation = false): void => {
 		if (!activeField) {
 			return;
 		}
 
 		contentTypesFacade.updateField(activeField);
 		contentTypesFacade.clearActiveField();
-		navigateToOverview();
+
+		if (!cancelNavigation) {
+			navigateToDetail();
+		}
 	};
 
 	/**
@@ -165,7 +170,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 				<ActionBar className="o-action-bar--fixed" isOpen>
 					<ActionBarContentSection>
 						<div className="u-wrapper row end-xs">
-							<Button onClick={navigateToOverview} negative>
+							<Button onClick={navigateToDetail} negative>
 								{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 							</Button>
 							<Button
@@ -178,6 +183,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 						</div>
 					</ActionBarContentSection>
 				</ActionBar>
+				<LeavePrompt when={hasChanges} onConfirm={() => onFieldSubmit(true)} />
 			</>
 		);
 	};

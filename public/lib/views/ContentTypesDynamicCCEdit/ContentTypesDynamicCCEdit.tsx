@@ -5,6 +5,7 @@ import {
 	Container,
 } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
+import { LeavePrompt, useDetectValueChanges } from '@redactie/utils';
 import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
@@ -53,6 +54,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		dynamicActiveField?.preset as PresetDetail,
 		dynamicActiveField?.fieldType
 	);
+	const [hasChanges] = useDetectValueChanges(!initialLoading, dynamicField);
 
 	useEffect(() => {
 		if (activeField) {
@@ -118,7 +120,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	/**
 	 * Methods
 	 */
-	const navigateToOverview = (): void => {
+	const navigateToDetail = (): void => {
 		navigate(
 			activeField?.__new ? MODULE_PATHS.detailCCNewConfig : MODULE_PATHS.detailCCEditConfig,
 			{
@@ -142,16 +144,19 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 
 		dynamicFieldFacade.deleteField(dynamicActiveField.uuid);
 		dynamicFieldFacade.clearActiveField();
-		navigateToOverview();
+		navigateToDetail();
 	};
 
-	const onFieldSubmit = (): void => {
+	const onFieldSubmit = (cancelNavigation = false): void => {
 		if (!dynamicActiveField) {
 			return;
 		}
 
 		dynamicFieldFacade.updateField(omit(['__new'])(dynamicActiveField));
-		navigateToOverview();
+
+		if (!cancelNavigation) {
+			navigateToDetail();
+		}
 	};
 
 	/**
@@ -208,7 +213,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 				<ActionBar className="o-action-bar--fixed" isOpen>
 					<ActionBarContentSection>
 						<div className="u-wrapper row end-xs">
-							<Button onClick={navigateToOverview} negative>
+							<Button onClick={navigateToDetail} negative>
 								{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 							</Button>
 							<Button
@@ -221,6 +226,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 						</div>
 					</ActionBarContentSection>
 				</ActionBar>
+				<LeavePrompt when={hasChanges} onConfirm={() => onFieldSubmit(true)} />
 			</>
 		);
 	};
