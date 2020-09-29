@@ -62,6 +62,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 								<div className="col-xs-12 col-md-8">
 									<Field
 										as={TextField}
+										description="Geef deze content component een gebruiksvriendelijke naam, bijvoorbeeld 'Titel'."
 										id="label"
 										label="Label"
 										name="label"
@@ -69,10 +70,6 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 										required
 										state={getFieldState(touched, errors, 'label')}
 									/>
-									<div className="u-text-light u-margin-top-xs">
-										Geef deze content component een gebruiksvriendelijke naam,
-										bijvoorbeeld &apos;Titel&apos;.
-									</div>
 									<ErrorMessage
 										className="u-text-danger u-margin-top-xs"
 										component="p"
@@ -100,16 +97,17 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 									label="Richtlijn (optioneel)"
 									name="generalConfig.guideline"
 								/>
-								<div className="u-text-light u-margin-top-xs">
+								<small className="u-text-light u-margin-top-xs">
 									Geef de redacteur een richtlijn voor het ingeven van deze
 									content component.
-								</div>
+								</small>
 							</div>
 						</div>
 						{fieldTypeData.generalConfig.isMultiple ? (
 							<div className="row u-margin-top">
 								<div className="col-xs-12">
 									<RadioGroup
+										description="Bepaal hoeveel items van dit component er aangemaakt kunnen worden"
 										id="isMultiple"
 										name="isMultiple"
 										onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -119,10 +117,6 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 										options={IS_MULTIPLE_OPTIONS}
 										value={String(isMultiple)}
 									/>
-									<div className="u-text-light u-margin-top-xs">
-										Bepaal hoeveel items van dit component er aangemaakt kunnen
-										worden
-									</div>
 									{isMultiple && (
 										<div className="row u-margin-top">
 											<div className="col-xs-2">
@@ -161,12 +155,12 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 									name="generalConfig.hidden"
 									label="Verborgen"
 								/>
-								<div className="u-text-light">
+								<small className="u-text-light">
 									Bepaal of deze content component zichtbaar mag zijn. Opgelet,
 									content componenten die een standaard waarde krijgen en als
 									&apos;niet aanpasbaar&apos; worden ingesteld worden onzichtbaar
 									voor de redacteur.
-								</div>
+								</small>
 							</div>
 						</div>
 					</>

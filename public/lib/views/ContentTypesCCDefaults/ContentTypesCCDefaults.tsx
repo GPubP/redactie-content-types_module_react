@@ -96,10 +96,10 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, formikR
 										name="editable"
 										label="Aanpasbaar"
 									/>
-									<div className="u-text-light">
+									<small className="u-text-light">
 										Bepaal of deze content component aangepast mag worden door
 										de redacteur.
-									</div>
+									</small>
 								</div>
 							</div>
 						</div>
