@@ -54,9 +54,13 @@ const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, tenantId })
 	);
 };
 
-const SiteContentTypesComponent: FC<ContentTypesModuleProps<{ siteId: string }>> = ({ match, route, tenantId }) => {
+const SiteContentTypesComponent: FC<ContentTypesModuleProps<{ siteId: string }>> = ({
+	match,
+	route,
+	tenantId,
+}) => {
 	const { siteId } = match.params;
-	const guardsMeta = useMemo(() => ({ tenantId, siteId }), [tenantId]);
+	const guardsMeta = useMemo(() => ({ tenantId, siteId }), [siteId, tenantId]);
 
 	return (
 		<TenantContext.Provider value={{ tenantId, siteId }}>

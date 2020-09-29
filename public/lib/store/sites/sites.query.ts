@@ -15,7 +15,7 @@ export class SitesQuery extends BaseEntityQuery<SitesState> {
 		filter(meta => !isNil(meta), distinctUntilChanged())
 	);
 	public sites$ = this.selectAll();
-	public site$ =  this.select(state => state.site).pipe(
+	public site$ = this.select(state => state.site).pipe(
 		filter(site => !isNil(site), distinctUntilChanged())
 	);
 }

@@ -32,11 +32,11 @@ export interface ContentTypesDetailRouteProps<Params = ContentTypesDetailRoutePa
 	readonly contentType: ContentTypeDetailModel;
 	onCancel: () => void;
 	onSubmit: (
-		data: 
-		| ContentTypeDetailModel
-		| ContentTypeFieldDetailModel[]
-		| FieldTypeMeta
-		| ExternalTabValue,
+		data:
+			| ContentTypeDetailModel
+			| ContentTypeFieldDetailModel[]
+			| FieldTypeMeta
+			| ExternalTabValue,
 		tab: Tab
 	) => void;
 	readonly activeField: ContentTypeFieldDetailModel | null;

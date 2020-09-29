@@ -5,5 +5,5 @@ export type SiteModel = Site;
 export type SitesMetaModel = SitesMeta;
 
 export interface SitesState extends BaseEntityState<SiteModel, string> {
-    site?: SiteModel
+	site?: SiteModel;
 }

@@ -7,8 +7,8 @@ import { Link } from 'react-router-dom';
 import { SiteStatus } from '../../../components';
 import { FilterFormState } from '../../../components/FilterForm/FilterForm.types';
 import rolesRightsConnector from '../../../connectors/rolesRights';
-
 import { ContentTypesOverviewTableRow } from '../../tenant';
+
 import { ContentTypesPerSiteOverviewTableRow } from './ContentTypesOverview.types';
 
 export const CONTENT_INITIAL_FILTER_STATE = (): FilterFormState => ({
