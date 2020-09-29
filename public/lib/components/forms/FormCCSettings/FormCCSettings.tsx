@@ -97,7 +97,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 									label="Richtlijn (optioneel)"
 									name="generalConfig.guideline"
 								/>
-								<small className="u-text-light u-margin-top-xs">
+								<small className="u-block u-text-light u-margin-top-xs">
 									Geef de redacteur een richtlijn voor het ingeven van deze
 									content component.
 								</small>
@@ -155,7 +155,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 									name="generalConfig.hidden"
 									label="Verborgen"
 								/>
-								<small className="u-text-light">
+								<small className="u-block u-text-light">
 									Bepaal of deze content component zichtbaar mag zijn. Opgelet,
 									content componenten die een standaard waarde krijgen en als
 									&apos;niet aanpasbaar&apos; worden ingesteld worden onzichtbaar

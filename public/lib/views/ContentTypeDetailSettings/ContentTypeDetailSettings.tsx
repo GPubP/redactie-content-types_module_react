@@ -96,7 +96,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 										required
 										state={getFieldState(touched, errors, 'meta.description')}
 									/>
-									<small className="u-text-light u-margin-top-xs">
+									<small className="u-block u-text-light u-margin-top-xs">
 										Geef het content type een duidelijke beschrijving voor in
 										het overzicht.
 									</small>

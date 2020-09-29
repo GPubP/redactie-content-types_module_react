@@ -37,7 +37,7 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({
 							options={[FIELD_TYPES_DEFAULT_OPTION, ...fieldTypeOptions]}
 							as={Select}
 						/>
-						<small className="u-text-light u-margin-top-xs">
+						<small className="u-block u-text-light u-margin-top-xs">
 							Selecteer een content component van een bepaald type.
 						</small>
 					</div>
