@@ -1,24 +1,32 @@
-import React, { ReactElement, useEffect, useState } from 'react';
 import { Button } from '@acpaas-ui/react-components';
 import {
 	Container,
 	ContextHeader,
 	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
-	PaginatedTable
+	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
+import React, { ReactElement, useEffect, useState } from 'react';
+
 import { DataLoader } from '../../../components';
-import { useContentTypes, useNavigate, useRoutesBreadcrumbs, useSite, useTenantContext } from '../../../hooks';
+import rolesRightsConnector from '../../../connectors/rolesRights';
+import { useCoreTranslation } from '../../../connectors/translations';
 import { MODULE_PATHS } from '../../../contentTypes.const';
 import { LoadingState } from '../../../contentTypes.types';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { useCoreTranslation } from '../../../connectors/translations';
+import {
+	useContentTypes,
+	useNavigate,
+	useRoutesBreadcrumbs,
+	useSite,
+	useTenantContext,
+} from '../../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes/contentTypes.service.cont';
-import { OrderBy } from '../../tenant';
-import rolesRightsConnector from '../../../connectors/rolesRights';
 import { ContentTypeModel, contentTypesFacade } from '../../../store/contentTypes';
-import { CONTENT_TYPE_OVERVIEW_COLUMNS } from './ContentTypesOverview.const';
 import { sitesFacade } from '../../../store/sites';
+import { OrderBy } from '../../tenant';
+
+import { CONTENT_TYPE_OVERVIEW_COLUMNS } from './ContentTypesOverview.const';
 import { ContentTypesPerSiteOverviewTableRow } from './ContentTypesOverview.types';
 
 const ContentTypesOverview: React.FC = () => {
@@ -39,10 +47,9 @@ const ContentTypesOverview: React.FC = () => {
 		DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
 	);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
-	const {siteId} = useTenantContext();
+	const { siteId } = useTenantContext();
 
 	useEffect(() => {
-		console.log(loadingContentTypes, loadingSite, mySecurityRightsLoadingState, contentTypes, site, mySecurityrights, meta);
 		if (
 			loadingContentTypes !== LoadingState.Loading &&
 			loadingSite !== LoadingState.Loading &&
@@ -73,7 +80,7 @@ const ContentTypesOverview: React.FC = () => {
 			return;
 		}
 		sitesFacade.getSite(siteId);
-	}, [contentTypesSearchParams]);
+	}, [siteId]);
 
 	/**
 	 * Functions
@@ -95,8 +102,7 @@ const ContentTypesOverview: React.FC = () => {
 		setActiveSorting(orderBy);
 	};
 
-	// todo: check what's inside site.data.contentTypes and adjust return value
-	const siteIncludesContentType = (contentType: ContentTypeModel): boolean => 
+	const siteIncludesContentType = (contentType: ContentTypeModel): boolean =>
 		site?.data.contentTypes.includes(contentType._id) || false;
 
 	/**
@@ -104,19 +110,21 @@ const ContentTypesOverview: React.FC = () => {
 	 */
 
 	const renderOverview = (): ReactElement | null => {
-		console.log('in renderOverview');
 		if (!meta) {
 			return null;
 		}
 
-		const contentTypesRows: ContentTypesPerSiteOverviewTableRow[] = contentTypes.map(contentType => ({
-			uuid: contentType.uuid as string,
-			label: contentType.meta.label,
-			description: contentType.meta.description,
-			amount: contentType.fields.length || 0,
-			activated: siteIncludesContentType(contentType),
-			navigate: (contentTypeUuid: any) => navigate(MODULE_PATHS.detail, { contentTypeUuid }),
-		}));
+		const contentTypesRows: ContentTypesPerSiteOverviewTableRow[] = contentTypes.map(
+			contentType => ({
+				uuid: contentType.uuid as string,
+				label: contentType.meta.label,
+				description: contentType.meta.description,
+				amount: contentType.fields.length || 0,
+				activated: siteIncludesContentType(contentType),
+				navigate: (contentTypeUuid: any) =>
+					navigate(MODULE_PATHS.detail, { contentTypeUuid }),
+			})
+		);
 
 		return (
 			<>
