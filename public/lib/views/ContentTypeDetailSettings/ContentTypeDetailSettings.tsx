@@ -6,6 +6,7 @@ import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC, useMemo, useState } from 'react';
 
+import LeavePrompt from '../../components/LeavePrompt/LeavePrompt';
 import { useCoreTranslation } from '../../connectors/translations';
 import { CONTENT_TYPE_DETAIL_TAB_MAP } from '../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
@@ -29,12 +30,15 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 		return contentTypIsUpdating === LoadingState.Loading;
 	}, [contentTypIsUpdating]);
 	const [formValue, setFormValue] = useState<ContentTypeDetailModel | null>(null);
-	const [isChanged] = useDetectValueChanges(!isLoading, formValue);
+	const [hasChanges] = useDetectValueChanges(!isLoading, formValue);
 
 	/**
 	 * Methods
 	 */
-	const onFormSubmit = (value: ContentTypeDetailModel): void => {
+	const onFormSubmit = (value: ContentTypeDetailModel | null): void => {
+		if (!value) {
+			return;
+		}
 		onSubmit({ ...contentType?.meta, ...value.meta }, CONTENT_TYPE_DETAIL_TAB_MAP.settings);
 	};
 
@@ -104,7 +108,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 									</Button>
 									<Button
 										iconLeft={isLoading ? 'circle-o-notch fa-spin' : null}
-										disabled={isLoading || !isChanged}
+										disabled={isLoading || !hasChanges}
 										className="u-margin-left-xs"
 										onClick={submitForm}
 										type="success"
@@ -116,6 +120,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 								</div>
 							</ActionBarContentSection>
 						</ActionBar>
+						<LeavePrompt when={hasChanges} onConfirm={() => onFormSubmit(formValue)} />
 					</>
 				);
 			}}
