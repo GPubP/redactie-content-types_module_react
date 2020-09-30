@@ -17,19 +17,18 @@ const ContentTypesSelect: React.FC<InputFieldProps> = ({
 	 */
 	// const [t] = useCoreTranslation();
 	const [ContentTypesLoadingState, contentTypes] = useContentTypes();
-	const contentTypeOptions: FieldOption[] = useMemo(() => {
+	const contentTypeOptions: { value: FieldOption }[] = useMemo(() => {
 		if (ContentTypesLoadingState !== LoadingState.Loaded || !contentTypes) {
 			return [];
 		}
 
-		return contentTypes.map(
-			ct =>
-				({
-					value: ct._id,
-					key: ct._id,
-					label: ct.meta.label,
-				} as FieldOption)
-		);
+		return contentTypes.map(ct => ({
+			value: {
+				value: ct._id,
+				key: ct._id,
+				label: ct.meta.label,
+			} as FieldOption,
+		}));
 	}, [ContentTypesLoadingState, contentTypes]);
 
 	useEffect(() => {
@@ -53,7 +52,7 @@ const ContentTypesSelect: React.FC<InputFieldProps> = ({
 					...fieldSchema,
 					config: {
 						...(fieldSchema.config || {}),
-						options: contentTypeOptions,
+						options: (contentTypeOptions as unknown) as FieldOption[],
 					},
 				}}
 				fieldHelperProps={fieldHelperProps}

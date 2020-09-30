@@ -79,6 +79,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 
 	public getContentType(uuid: string): void {
 		const { isFetchingOne, contentType } = this.query.getValue();
+
 		if (isFetchingOne || contentType?.uuid === uuid) {
 			return;
 		}
