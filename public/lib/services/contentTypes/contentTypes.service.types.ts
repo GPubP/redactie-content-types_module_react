@@ -65,6 +65,7 @@ export interface Field<D = DataType, F = FieldType, P = Preset | PresetDetail> {
 		min?: number;
 		max?: number;
 		combinedOutput?: boolean;
+		placeholder?: string;
 	};
 	dataType: D;
 	fieldType: F;
