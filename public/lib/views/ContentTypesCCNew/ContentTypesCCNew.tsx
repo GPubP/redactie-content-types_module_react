@@ -40,7 +40,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const activeField = useActiveField();
-	const { fieldTypeUuid, presetUuid, name } = useQuery();
+	const { fieldType: fieldTypeUuid, preset: presetUuid, name } = useQuery();
 	const [fieldTypeLoadingState, fieldType] = useFieldType();
 	const [presetLoadingState, preset] = usePreset();
 	const { generatePath, navigate } = useNavigate();

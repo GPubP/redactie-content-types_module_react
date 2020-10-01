@@ -57,10 +57,8 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		activeClassName: 'is-active',
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
-		to: () => {
-			activate(c.name);
-			return generatePath(c.slug || c.name, { contentTypeUuid, contentComponentUuid });
-		},
+		onClick: () => activate(c.name),
+		to: generatePath(c.slug || c.name, { contentTypeUuid, contentComponentUuid }),
 	}));
 
 	/**

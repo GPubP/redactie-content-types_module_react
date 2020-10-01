@@ -28,6 +28,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 			initialValues.generalConfig.hidden,
 			values.generalConfig.hidden
 		);
+
 		onSubmit({
 			...values,
 			generalConfig: {
@@ -56,7 +57,9 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 			{({ errors, touched, values, submitForm }) => {
 				return (
 					<>
-						<FormikOnChangeHandler onChange={submitForm} />
+						<FormikOnChangeHandler
+							onChange={values => onFormSubmit(values as CCSettingsFormState)}
+						/>
 						<div className="row">
 							<div className="col-xs-12 row middle-xs">
 								<div className="col-xs-12 col-md-8">
