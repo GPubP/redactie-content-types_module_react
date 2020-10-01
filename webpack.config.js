@@ -63,6 +63,7 @@ module.exports = env => {
 			yup: 'yup',
 			rxjs: 'rxjs',
 			'rxjs/operators': 'rxjs/operators',
+			'@datorama/akita': '@datorama/akita',
 			'@redactie/utils': '@redactie/utils',
 			'@redactie/redactie-core': '@redactie/redactie-core',
 			'@redactie/react-router-guards': '@redactie/react-router-guards',

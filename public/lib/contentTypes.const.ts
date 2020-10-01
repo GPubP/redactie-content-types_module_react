@@ -35,6 +35,9 @@ export const CONTENT_DETAIL_TABS: Tab[] = [
 	CONTENT_TYPE_DETAIL_TAB_MAP.sites,
 ];
 
+export const SITE_PARAM = 'siteId';
+
+const SITE_ROOT = `/:${SITE_PARAM}/content-types`;
 const CC_BASE_PATH = '/content-types/:contentTypeUuid/content-componenten';
 const CC_EDIT_PATH = `${CC_BASE_PATH}/:contentComponentUuid/bewerken`;
 const CC_NEW_PATH = `${CC_BASE_PATH}/aanmaken`;
@@ -43,6 +46,7 @@ const CC_DYNAMIC_EDIT_PATH = `${CC_DYNAMIC_BASE_PATH}/:dynamicContentComponentUu
 const CC_DYNAMIC_NEW_PATH = `${CC_DYNAMIC_BASE_PATH}/aanmaken`;
 
 export const MODULE_PATHS = {
+	// TENANT
 	dashboard: '/dashboard',
 	root: '/content-types',
 	admin: '/content-types/beheer',
@@ -80,6 +84,12 @@ export const MODULE_PATHS = {
 	detailCCEditDynamicEditConfig: `${CC_DYNAMIC_EDIT_PATH}/configuratie`,
 	detailCCEditDynamicEditValidation: `${CC_DYNAMIC_EDIT_PATH}/validatie`,
 	detailCCEditDynamicEditDefaults: `${CC_DYNAMIC_EDIT_PATH}/standaard-waarde`,
+
+	// SITE
+	siteRoot: SITE_ROOT,
+	contentTypes: {
+		overview: `${SITE_ROOT}/overzicht`,
+	},
 };
 
 export const BREADCRUMB_OPTIONS = {

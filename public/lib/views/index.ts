@@ -1,15 +1,2 @@
-export { default as ContentTypesCCConfig } from './ContentTypesCCConfig/ContentTypesCCConfig';
-export { default as ContentTypesCCDefaults } from './ContentTypesCCDefaults/ContentTypesCCDefaults';
-export { default as ContentTypesCCEdit } from './ContentTypesCCEdit/ContentTypesCCEdit';
-export { default as ContentTypesCCNew } from './ContentTypesCCNew/ContentTypesCCNew';
-export { default as ContentTypesDynamicCCEdit } from './ContentTypesDynamicCCEdit/ContentTypesDynamicCCEdit';
-export { default as ContentTypesDynamicCCNew } from './ContentTypesDynamicCCNew/ContentTypesDynamicCCNew';
-export { default as ContentTypesCCSettings } from './ContentTypesCCSettings/ContentTypesCCSettings';
-export { default as ContentTypesCCValidation } from './ContentTypesCCValidation/ContentTypesCCValidation';
-export { default as ContentTypesCreate } from './ContentTypesCreate/ContentTypesCreate';
-export { default as ContentTypesDetailCC } from './ContentTypeDetailCC/ContentTypeDetailCC';
-export { default as ContentTypesDetailSettings } from './ContentTypeDetailSettings/ContentTypeDetailSettings';
-export { default as ContentTypesDetailSites } from './ContentTypeDetailSites/ContentTypeDetailSites';
-export { default as ContentTypesOverview } from './ContentTypesOverview/ContentTypesOverview';
-export { default as ContentTypesUpdate } from './ContentTypeUpdate/ContentTypeUpdate';
-export { default as ContentTypeDetailExternal } from './ContentTypeDetailExternal/ContentTypeDetailExternal';
+export * from './site';
+export * from './tenant';

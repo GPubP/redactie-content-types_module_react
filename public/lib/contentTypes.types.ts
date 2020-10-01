@@ -5,9 +5,10 @@ import { NavLinkProps } from 'react-router-dom';
 import { FieldType, FieldTypeData, FieldTypeMeta } from './services/fieldTypes';
 import { Preset, PresetDetail } from './services/presets';
 import { ContentTypeDetailModel, ContentTypeFieldDetailModel } from './store/contentTypes';
-import { ExternalTabValue } from './views/ContentTypeDetailExternal/ContentTypeDetailExternal.types';
+import { ExternalTabValue } from './views/tenant/ContentTypesDetailExternal';
 
-export interface ContentTypesModuleProps extends RouteConfigComponentProps {
+export interface ContentTypesModuleProps<Params extends { [K in keyof Params]?: string } = {}>
+	extends RouteConfigComponentProps<Params> {
 	routes: ModuleRouteConfig[];
 	tenantId: string;
 }
