@@ -37,25 +37,22 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({
 							options={[FIELD_TYPES_DEFAULT_OPTION, ...fieldTypeOptions]}
 							as={Select}
 						/>
-						<div className="u-text-light u-margin-top-xs">
+						<small className="u-block u-text-light u-margin-top-xs">
 							Selecteer een content component van een bepaald type.
-						</div>
+						</small>
 					</div>
 
 					{hasName ? (
 						<div className="col-xs-12 col-md">
 							<Field
-								type="text"
+								as={TextField}
+								description="Kies een gebruiksvriendelijke redactie naam, bijvoorbeeld 'Titel'."
 								id="name"
 								label="Naam"
 								name="name"
 								placeholder="Typ een naam"
-								as={TextField}
+								type="text"
 							/>
-							<div className="u-text-light u-margin-top-xs">
-								Kies een gebruiksvriendelijke redactie naam, bijvoorbeeld
-								&apos;Titel&apos;.
-							</div>
 						</div>
 					) : null}
 

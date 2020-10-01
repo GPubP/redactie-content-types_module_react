@@ -1,15 +1,16 @@
 import { Checkbox, RadioGroup, Textarea, TextField } from '@acpaas-ui/react-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { Field, Formik } from 'formik';
+import { FormikOnChangeHandler } from '@redactie/utils';
+import { ErrorMessage, Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { equals } from 'ramda';
 import React, { ChangeEvent, FC, useState } from 'react';
 
 import { useCoreTranslation } from '../../../connectors/translations';
 import { CCSettingsFormState } from '../../../contentTypes.types';
-import AutoSubmit from '../AutoSubmit/AutoSubmit';
+import { getFieldState } from '../../../helpers/forms';
 
-import { IS_MULTIPLE_OPTIONS } from './FormCCSettings.const';
+import { FORM_CC_SETTINGS_VALIDATION_SCHEMA, IS_MULTIPLE_OPTIONS } from './FormCCSettings.const';
 import { FormCCSettingsProps } from './FormCCSettings.types';
 
 const FormCCSettings: FC<FormCCSettingsProps> = ({
@@ -17,6 +18,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 	fieldTypeData,
 	onSubmit,
 	isUpdate,
+	formikRef,
 }) => {
 	const [isMultiple, setIsMultiple] = useState((initialValues?.generalConfig?.max || 0) > 1);
 	const [t] = useCoreTranslation();
@@ -26,6 +28,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 			initialValues.generalConfig.hidden,
 			values.generalConfig.hidden
 		);
+
 		onSubmit({
 			...values,
 			generalConfig: {
@@ -44,25 +47,37 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 	};
 
 	return (
-		<Formik enableReinitialize initialValues={initialValues} onSubmit={onFormSubmit}>
-			{({ values, submitForm }) => {
+		<Formik
+			innerRef={formikRef}
+			enableReinitialize
+			initialValues={initialValues}
+			onSubmit={onFormSubmit}
+			validationSchema={FORM_CC_SETTINGS_VALIDATION_SCHEMA}
+		>
+			{({ errors, touched, values, submitForm }) => {
 				return (
 					<>
-						<AutoSubmit />
+						<FormikOnChangeHandler
+							onChange={values => onFormSubmit(values as CCSettingsFormState)}
+						/>
 						<div className="row">
 							<div className="col-xs-12 row middle-xs">
 								<div className="col-xs-12 col-md-8">
 									<Field
 										as={TextField}
+										description="Geef deze content component een gebruiksvriendelijke naam, bijvoorbeeld 'Titel'."
 										id="label"
 										label="Label"
 										name="label"
 										placeholder="Typ een label"
+										required
+										state={getFieldState(touched, errors, 'label')}
 									/>
-									<div className="u-text-light u-margin-top-xs">
-										Geef deze content component een gebruiksvriendelijke naam,
-										bijvoorbeeld &apos;Titel&apos;.
-									</div>
+									<ErrorMessage
+										className="u-text-danger u-margin-top-xs"
+										component="p"
+										name="label"
+									/>
 								</div>
 
 								<div className="col-xs-12 col-md-4 u-margin-top-xs u-margin-bottom">
@@ -85,16 +100,17 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 									label="Richtlijn (optioneel)"
 									name="generalConfig.guideline"
 								/>
-								<div className="u-text-light u-margin-top-xs">
+								<small className="u-block u-text-light u-margin-top-xs">
 									Geef de redacteur een richtlijn voor het ingeven van deze
 									content component.
-								</div>
+								</small>
 							</div>
 						</div>
 						{fieldTypeData.generalConfig.isMultiple ? (
 							<div className="row u-margin-top">
 								<div className="col-xs-12">
 									<RadioGroup
+										description="Bepaal hoeveel items van dit component er aangemaakt kunnen worden"
 										id="isMultiple"
 										name="isMultiple"
 										onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -104,10 +120,6 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 										options={IS_MULTIPLE_OPTIONS}
 										value={String(isMultiple)}
 									/>
-									<div className="u-text-light u-margin-top-xs">
-										Bepaal hoeveel items van dit component er aangemaakt kunnen
-										worden
-									</div>
 									{isMultiple && (
 										<div className="row u-margin-top">
 											<div className="col-xs-2">
@@ -116,6 +128,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 													type="number"
 													id="generalConfig.min"
 													min="0"
+													max={values.generalConfig.max}
 													label="Min."
 													name="generalConfig.min"
 												/>
@@ -126,6 +139,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 													type="number"
 													id="generalConfig.max"
 													label="Max."
+													min={values.generalConfig.min + 1}
 													max="100"
 													name="generalConfig.max"
 												/>
@@ -144,12 +158,12 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 									name="generalConfig.hidden"
 									label="Verborgen"
 								/>
-								<div className="u-text-light">
+								<small className="u-block u-text-light">
 									Bepaal of deze content component zichtbaar mag zijn. Opgelet,
 									content componenten die een standaard waarde krijgen en als
 									&apos;niet aanpasbaar&apos; worden ingesteld worden onzichtbaar
 									voor de redacteur.
-								</div>
+								</small>
 							</div>
 						</div>
 					</>

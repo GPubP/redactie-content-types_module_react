@@ -17,8 +17,10 @@ import useNavigate from '../../../hooks/useNavigate/useNavigate';
 import usePresets from '../../../hooks/usePresets/usePresets';
 import { Field } from '../../../services/contentTypes/contentTypes.service.types';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
-import { CONTENT_TYPE_COLUMNS } from '../../../views/ContentTypeDetailCC/ContentTypeDetailCC.const';
-import { ContentTypeDetailCCRow } from '../../../views/ContentTypeDetailCC/ContentTypeDetailCC.types';
+import {
+	CONTENT_TYPE_COLUMNS,
+	ContentTypeDetailCCRow,
+} from '../../../views/tenant/ContentTypesDetailCC';
 import DataLoader from '../../DataLoader/DataLoader';
 import { FormCTNewCC } from '../../forms';
 import { FormCTNewCCProps } from '../../forms/FormCTNewCC/FormCTNewCC.types';

@@ -1,7 +1,8 @@
+import { parse } from 'query-string';
 import { useLocation } from 'react-router-dom';
 
-const useQuery = (): URLSearchParams => {
-	return new URLSearchParams(useLocation().search);
+const useQuery = <Q extends { [key: string]: string | undefined }>(): Q => {
+	return parse(useLocation().search) as Q;
 };
 
 export default useQuery;

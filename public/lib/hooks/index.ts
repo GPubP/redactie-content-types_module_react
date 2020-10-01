@@ -1,5 +1,7 @@
 export { default as useActiveTabs } from './useActiveTabs/useActiveTabs';
 export { default as useNavigate } from './useNavigate/useNavigate';
+export { default as useCompartments } from './useCompartments/useCompartments';
+export { default as useCompartmentValidation } from './useCompartmentValidation/useCompartmentValidation';
 export { default as useNavItemMatcher } from './useNavItemMatcher/useNavItemMatcher';
 export { default as useRoutes } from './useRoutes/useRoutes';
 export { default as useRoutesBreadcrumbs } from './useRoutesBreadcrumbs/useRoutesBreadcrumbs';
@@ -9,6 +11,7 @@ export { default as useContentType } from './useContentType/useContentType';
 export { default as useActiveField } from './useActiveField/useActiveField';
 export { default as useFieldTypes } from './useFieldTypes/useFieldTypes';
 export { default as useFieldType } from './useFieldType/useFieldType';
+export { default as useSite } from './useSite/useSite';
 export { default as useSites } from './useSites/useSites';
 export { default as usePresets } from './usePresets/usePresets';
 export { default as usePreset } from './usePreset/usePreset';
