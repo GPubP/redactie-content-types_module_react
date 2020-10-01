@@ -1,12 +1,11 @@
 import { Button, Textarea, TextField } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { useDetectValueChanges } from '@redactie/utils';
+import { LeavePrompt, useDetectValueChanges } from '@redactie/utils';
 import { ErrorMessage, Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC, useMemo, useState } from 'react';
 
-import LeavePrompt from '../../../components/LeavePrompt/LeavePrompt';
 import { useCoreTranslation } from '../../../connectors/translations';
 import { CONTENT_TYPE_DETAIL_TAB_MAP } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';

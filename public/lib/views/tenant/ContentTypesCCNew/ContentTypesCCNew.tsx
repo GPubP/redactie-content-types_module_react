@@ -1,7 +1,7 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { alertService } from '@redactie/utils';
+import { alertService, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { equals, isEmpty } from 'ramda';
@@ -48,6 +48,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	const [t] = useCoreTranslation();
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
+	const [hasChanges] = useDetectValueChanges(!initialLoading, activeField);
 	const [
 		{ compartments, active: activeCompartment },
 		register,
@@ -132,11 +133,11 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	/**
 	 * Methods
 	 */
-	const navigateToOverview = (): void => {
+	const navigateToDetail = (): void => {
 		navigate(MODULE_PATHS.detailCC, { contentTypeUuid });
 	};
 
-	const onCTSubmit = (): void => {
+	const onCTSubmit = (cancelNavigation = false): void => {
 		if (!activeField) {
 			return;
 		}
@@ -156,7 +157,10 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		if (compartmentsAreValid) {
 			contentTypesFacade.addField(activeField);
 			contentTypesFacade.clearActiveField();
-			navigateToOverview();
+
+			if (!cancelNavigation) {
+				navigateToDetail();
+			}
 		} else {
 			alertService.dismiss();
 			alertService.danger(
@@ -218,7 +222,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			<ActionBar className="o-action-bar--fixed" isOpen>
 				<ActionBarContentSection>
 					<div className="u-wrapper row end-xs">
-						<Button onClick={navigateToOverview} negative>
+						<Button onClick={navigateToDetail} negative>
 							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
 						<Button className="u-margin-left-xs" onClick={onCTSubmit} type="primary">
@@ -227,6 +231,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 					</div>
 				</ActionBarContentSection>
 			</ActionBar>
+			<LeavePrompt when={hasChanges} onConfirm={() => onCTSubmit(true)} />
 		</>
 	);
 

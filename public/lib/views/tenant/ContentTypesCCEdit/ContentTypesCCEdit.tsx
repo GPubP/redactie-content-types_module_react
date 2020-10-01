@@ -1,7 +1,7 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { alertService } from '@redactie/utils';
+import { alertService, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import { equals, isEmpty } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
@@ -47,6 +47,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	const activeFieldPSUuid = useMemo(() => activeField?.preset?.uuid, [activeField]);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
+	const [hasChanges] = useDetectValueChanges(!initialLoading, activeField);
 	const [
 		{ compartments, active: activeCompartment },
 		register,
@@ -124,7 +125,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	/**
 	 * Methods
 	 */
-	const navigateToOverview = (): void => {
+	const navigateToDetail = (): void => {
 		navigate(MODULE_PATHS.detailCC, { contentTypeUuid });
 	};
 
@@ -136,11 +137,11 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		if (activeField?.uuid) {
 			contentTypesFacade.deleteField(activeField.uuid);
 			contentTypesFacade.clearActiveField();
-			navigateToOverview();
+			navigateToDetail();
 		}
 	};
 
-	const onFieldSubmit = (): void => {
+	const onFieldSubmit = (cancelNavigation = false): void => {
 		if (!activeField) {
 			return;
 		}
@@ -160,7 +161,10 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		if (compartmentsAreValid) {
 			contentTypesFacade.updateField(activeField);
 			contentTypesFacade.clearActiveField();
-			navigateToOverview();
+
+			if (!cancelNavigation) {
+				navigateToDetail();
+			}
 		} else {
 			alertService.dismiss();
 			alertService.danger(
@@ -220,7 +224,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 				<ActionBar className="o-action-bar--fixed" isOpen>
 					<ActionBarContentSection>
 						<div className="u-wrapper row end-xs">
-							<Button onClick={navigateToOverview} negative>
+							<Button onClick={navigateToDetail} negative>
 								{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 							</Button>
 							<Button
@@ -233,6 +237,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 						</div>
 					</ActionBarContentSection>
 				</ActionBar>
+				<LeavePrompt when={hasChanges} onConfirm={() => onFieldSubmit(true)} />
 			</>
 		);
 	};

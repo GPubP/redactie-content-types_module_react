@@ -1,7 +1,7 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { alertService } from '@redactie/utils';
+import { alertService, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import { equals, isEmpty, omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
@@ -56,6 +56,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		dynamicActiveField?.preset as PresetDetail,
 		dynamicActiveField?.fieldType
 	);
+	const [hasChanges] = useDetectValueChanges(!initialLoading, dynamicField);
 	const [
 		{ compartments, active: activeCompartment },
 		register,
@@ -156,7 +157,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	/**
 	 * Methods
 	 */
-	const navigateToOverview = (): void => {
+	const navigateToDetail = (): void => {
 		navigate(
 			activeField?.__new ? MODULE_PATHS.detailCCNewConfig : MODULE_PATHS.detailCCEditConfig,
 			{
@@ -180,10 +181,10 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 
 		dynamicFieldFacade.deleteField(dynamicActiveField.uuid);
 		dynamicFieldFacade.clearActiveField();
-		navigateToOverview();
+		navigateToDetail();
 	};
 
-	const onFieldSubmit = (): void => {
+	const onFieldSubmit = (cancelNavigation = false): void => {
 		if (!dynamicActiveField) {
 			return;
 		}
@@ -206,7 +207,10 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		// Only submit the form if all compartments are valid
 		if (compartmentsAreValid) {
 			dynamicFieldFacade.updateField(omit(['__new'])(dynamicActiveField));
-			navigateToOverview();
+
+			if (!cancelNavigation) {
+				navigateToDetail();
+			}
 		} else {
 			alertService.dismiss();
 			alertService.danger(
@@ -270,7 +274,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 				<ActionBar className="o-action-bar--fixed" isOpen>
 					<ActionBarContentSection>
 						<div className="u-wrapper row end-xs">
-							<Button onClick={navigateToOverview} negative>
+							<Button onClick={navigateToDetail} negative>
 								{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 							</Button>
 							<Button
@@ -283,6 +287,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 						</div>
 					</ActionBarContentSection>
 				</ActionBar>
+				<LeavePrompt when={hasChanges} onConfirm={() => onFieldSubmit(true)} />
 			</>
 		);
 	};
