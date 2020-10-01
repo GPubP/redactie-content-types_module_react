@@ -4,4 +4,6 @@ import { BaseEntityState } from '../shared';
 export type SiteModel = Site;
 export type SitesMetaModel = SitesMeta;
 
-export type SitesState = BaseEntityState<SiteModel, string>;
+export interface SitesState extends BaseEntityState<SiteModel, string> {
+	site?: SiteModel;
+}

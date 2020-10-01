@@ -11,6 +11,7 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 
 	public readonly meta$ = this.query.meta$;
 	public readonly sites$ = this.query.sites$;
+	public readonly site$ = this.query.site$;
 
 	public getSites(): void {
 		const { isFetching } = this.query.getValue();
@@ -31,6 +32,26 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 			})
 			.catch(error => this.store.setError(error))
 			.finally(() => this.store.setIsFetching(false));
+	}
+
+	public getSite(uuid: string): void {
+		const { isFetchingOne, site } = this.query.getValue();
+		if (isFetchingOne || site?.uuid === uuid) {
+			return;
+		}
+		this.store.setIsFetchingOne(true);
+
+		this.service
+			.getSite(uuid)
+			.then(response => {
+				if (response) {
+					this.store.update({
+						site: response,
+					});
+				}
+			})
+			.catch(error => this.store.setError(error))
+			.finally(() => this.store.setIsFetchingOne(false));
 	}
 
 	public updateSite(uuid: string, body: SitesDetailRequestBody): void {
