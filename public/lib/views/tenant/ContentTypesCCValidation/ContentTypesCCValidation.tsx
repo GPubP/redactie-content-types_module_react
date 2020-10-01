@@ -1,7 +1,6 @@
 import { FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-module';
 import React, { FC, ReactElement, useMemo } from 'react';
 
-import { AutoSubmit } from '../../../components';
 import formRendererConnector from '../../../connectors/formRenderer';
 import { DEFAULT_VALIDATION_SCHEMA } from '../../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../../contentTypes.types';
@@ -19,6 +18,7 @@ import { PresetDetail } from '../../../services/presets';
 const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	CTField,
 	fieldTypeData,
+	formikRef,
 	preset,
 	onSubmit,
 }) => {
@@ -169,6 +169,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 
 		return (
 			<formRendererConnector.api.Form
+				formikRef={formikRef}
 				schema={
 					preset
 						? generateFormSchemaFromPreset(preset)
@@ -176,17 +177,9 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 				}
 				validationSchema={DEFAULT_VALIDATION_SCHEMA}
 				initialValues={initialFormValue}
-				onSubmit={onFormSubmit}
 				errorMessages={{}}
-			>
-				{({ initialValues, submitForm, values }) => (
-					<AutoSubmit
-						initialValues={initialValues}
-						submitForm={submitForm}
-						values={values}
-					/>
-				)}
-			</formRendererConnector.api.Form>
+				onChange={onFormSubmit}
+			/>
 		);
 	};
 

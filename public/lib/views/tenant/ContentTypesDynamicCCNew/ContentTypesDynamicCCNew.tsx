@@ -1,20 +1,21 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
-import {
-	ActionBar,
-	ActionBarContentSection,
-	Container,
-} from '@acpaas-ui/react-editorial-components';
+import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
+import { alertService } from '@redactie/utils';
+import { FormikProps, FormikValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import { omit } from 'ramda';
-import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import { equals, isEmpty, omit } from 'ramda';
+import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
-import { DataLoader, NavList, RenderChildRoutes } from '../../../components';
+import { DataLoader, RenderChildRoutes } from '../../../components';
 import { useCoreTranslation } from '../../../connectors/translations';
-import { MODULE_PATHS } from '../../../contentTypes.const';
+import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
-import { generateFieldFromType } from '../../../helpers';
+import { filterCompartments, generateFieldFromType, validateCompartments } from '../../../helpers';
 import {
+	useCompartments,
+	useCompartmentValidation,
 	useFieldType,
 	useNavigate,
 	useNavItemMatcher,
@@ -30,11 +31,11 @@ import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.fac
 import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { presetsFacade } from '../../../store/presets';
 
-import { CC_NAV_LIST_ITEMS } from './ContentTypesDynamicCCNew.const';
+import { DYNAMIC_CC_NEW_COMPARTMENTS } from './ContentTypesDynamicCCNew.const';
 
 const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
-	match,
 	contentType,
+	match,
 	route,
 }) => {
 	const { contentTypeUuid, contentComponentUuid } = match.params;
@@ -42,10 +43,10 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	/**
 	 * Hooks
 	 */
+	const [hasSubmit, setHasSubmit] = useState(false);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const query = useQuery();
-	const fieldTypeUuid = query.get('fieldType');
-	const presetUuid = query.get('preset');
+	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
+	const { fieldType: fieldTypeUuid, preset: presetUuid } = useQuery();
 	const [fieldTypeLoadingState, fieldType] = useFieldType();
 	const [presetLoadingState, preset] = usePreset();
 	const activeField = useActiveField();
@@ -54,13 +55,39 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
-	const guardsMeta = useMemo(
-		() => ({
-			tenantId,
-		}),
-		[tenantId]
-	);
+	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
+	const [
+		{ compartments, active: activeCompartment },
+		register,
+		activate,
+		validate,
+	] = useCompartments();
+	const navListItems = compartments.map(c => ({
+		activeClassName: 'is-active',
+		label: c.label,
+		hasError: hasSubmit && c.isValid === false,
+		onClick: () => activate(c.name),
+		to: generatePath(c.slug || c.name, { contentTypeUuid, contentComponentUuid }),
+	}));
+
+	/**
+	 * Trigger errors on form when switching from compartments
+	 */
+	useCompartmentValidation(activeCompartmentFormikRef, activeCompartment, hasSubmit);
+
+	/**
+	 * Set compartments
+	 */
+	useEffect(() => {
+		if (!fieldType) {
+			return;
+		}
+
+		register(filterCompartments(DYNAMIC_CC_NEW_COMPARTMENTS, navItemMatcher), {
+			replace: true,
+		});
+	}, [fieldType]); // eslint-disable-line
 
 	useEffect(() => {
 		dynamicFieldFacade.clearActiveField();
@@ -160,8 +187,33 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			return;
 		}
 
-		dynamicFieldFacade.addField(omit(['__new'])(dynamicActiveField));
-		navigateToOverview();
+		const { current: formikRef } = activeCompartmentFormikRef;
+		const compartmentsAreValid = validateCompartments(compartments, activeField, validate);
+
+		// Validate current form to trigger fields error states
+		if (formikRef) {
+			formikRef.validateForm().then(errors => {
+				if (!isEmpty(errors)) {
+					formikRef.setErrors(errors);
+				}
+			});
+		}
+		// Only submit the form if all compartments are valid
+		if (compartmentsAreValid) {
+			dynamicFieldFacade.addField(omit(['__new'])(dynamicActiveField));
+			navigateToOverview();
+		} else {
+			alertService.dismiss();
+			alertService.danger(
+				{
+					title: 'Er zijn nog fouten',
+					message: 'Lorem ipsum',
+				},
+				{ containerId: ALERT_CONTAINER_IDS.update }
+			);
+		}
+
+		setHasSubmit(true);
 	};
 
 	const onFieldTypeChange = (data: ContentTypeFieldDetailModel): void => {
@@ -181,6 +233,11 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			fieldTypeData: dynamicActiveField?.fieldType?.data,
 			preset: preset,
 			onSubmit: onFieldTypeChange,
+			formikRef: (instance: any) => {
+				if (!equals(activeCompartmentFormikRef.current, instance)) {
+					activeCompartmentFormikRef.current = instance;
+				}
+			},
 		};
 
 		return (
@@ -198,20 +255,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 				<div className="u-margin-bottom-lg">
 					<div className="row between-xs top-xs">
 						<div className="col-xs-3">
-							<NavList
-								items={CC_NAV_LIST_ITEMS.map(listItem => ({
-									...listItem,
-									meta: navItemMatcher,
-									to: generatePath(
-										listItem.to,
-										{
-											contentTypeUuid,
-											contentComponentUuid,
-										},
-										query
-									),
-								}))}
-							/>
+							<NavList items={navListItems} linkComponent={NavLink} />
 						</div>
 
 						<div className="col-xs-9">
@@ -241,11 +285,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		);
 	};
 
-	return (
-		<Container>
-			<DataLoader loadingState={initialLoading} render={renderCCNew} />
-		</Container>
-	);
+	return <DataLoader loadingState={initialLoading} render={renderCCNew} />;
 };
 
 export default ContentTypesDynamicCCNew;

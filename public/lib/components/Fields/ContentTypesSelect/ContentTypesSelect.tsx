@@ -58,7 +58,7 @@ const ContentTypesSelect: React.FC<InputFieldProps> = ({
 				}}
 				fieldHelperProps={fieldHelperProps}
 				fieldProps={fieldProps}
-			></CheckBoxList>
+			/>
 		</>
 	);
 

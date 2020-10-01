@@ -1,20 +1,22 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
-import {
-	ActionBar,
-	ActionBarContentSection,
-	Container,
-} from '@acpaas-ui/react-editorial-components';
+import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
+import { alertService } from '@redactie/utils';
+import { FormikProps, FormikValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import { equals, isEmpty } from 'ramda';
+import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
-import { DataLoader, NavList, RenderChildRoutes } from '../../../components';
+import { DataLoader, RenderChildRoutes } from '../../../components';
 import { useCoreTranslation } from '../../../connectors/translations';
-import { MODULE_PATHS } from '../../../contentTypes.const';
+import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
-import { generateFieldFromType } from '../../../helpers';
+import { filterCompartments, generateFieldFromType, validateCompartments } from '../../../helpers';
 import {
 	useActiveField,
+	useCompartments,
+	useCompartmentValidation,
 	useFieldType,
 	useNavigate,
 	useNavItemMatcher,
@@ -26,31 +28,55 @@ import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/
 import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { presetsFacade } from '../../../store/presets';
 
-import { CC_NEW_NAV_LIST_ITEMS } from './ContentTypesCCNew.const';
+import { CC_NEW_COMPARTMENTS } from './ContentTypesCCNew.const';
 
-const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, history }) => {
+const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) => {
 	const { contentTypeUuid } = match.params;
+
 	/**
 	 * Hooks
 	 */
+	const [hasSubmit, setHasSubmit] = useState(false);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const activeField = useActiveField();
-	const query = useQuery();
-	const fieldTypeUuid = query.get('fieldType');
-	const presetUuid = query.get('preset');
-	const name = query.get('name');
+	const { fieldType: fieldTypeUuid, preset: presetUuid, name } = useQuery();
 	const [fieldTypeLoadingState, fieldType] = useFieldType();
 	const [presetLoadingState, preset] = usePreset();
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
-	const guardsMeta = useMemo(
-		() => ({
-			tenantId,
-		}),
-		[tenantId]
-	);
+	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
+	const [
+		{ compartments, active: activeCompartment },
+		register,
+		activate,
+		validate,
+	] = useCompartments();
+	const navListItems = compartments.map(c => ({
+		activeClassName: 'is-active',
+		label: c.label,
+		hasError: hasSubmit && c.isValid === false,
+		onClick: () => activate(c.name),
+		to: generatePath(c.slug || c.name, { contentTypeUuid }),
+	}));
+
+	/**
+	 * Trigger errors on form when switching from compartments
+	 */
+	useCompartmentValidation(activeCompartmentFormikRef, activeCompartment, hasSubmit);
+
+	/**
+	 * Set compartments
+	 */
+	useEffect(() => {
+		if (!fieldType) {
+			return;
+		}
+
+		register(filterCompartments(CC_NEW_COMPARTMENTS, navItemMatcher), { replace: true });
+	}, [fieldType]); // eslint-disable-line
 
 	useEffect(() => {
 		presetsFacade.clearPreset();
@@ -111,11 +137,38 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, his
 	};
 
 	const onCTSubmit = (): void => {
-		if (activeField) {
+		if (!activeField) {
+			return;
+		}
+
+		const { current: formikRef } = activeCompartmentFormikRef;
+		const compartmentsAreValid = validateCompartments(compartments, activeField, validate);
+
+		// Validate current form to trigger fields error states
+		if (formikRef) {
+			formikRef.validateForm().then(errors => {
+				if (!isEmpty(errors)) {
+					formikRef.setErrors(errors);
+				}
+			});
+		}
+		// Only submit the form if all compartments are valid
+		if (compartmentsAreValid) {
 			contentTypesFacade.addField(activeField);
 			contentTypesFacade.clearActiveField();
 			navigateToOverview();
+		} else {
+			alertService.dismiss();
+			alertService.danger(
+				{
+					title: 'Er zijn nog fouten',
+					message: 'Lorem ipsum',
+				},
+				{ containerId: ALERT_CONTAINER_IDS.update }
+			);
 		}
+
+		setHasSubmit(true);
 	};
 
 	const onFieldTypeChange = (data: ContentTypeFieldDetailModel): void => {
@@ -131,6 +184,11 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, his
 			fieldTypeData: activeField?.fieldType.data,
 			preset: preset,
 			onSubmit: onFieldTypeChange,
+			formikRef: (instance: any) => {
+				if (!equals(activeCompartmentFormikRef.current, instance)) {
+					activeCompartmentFormikRef.current = instance;
+				}
+			},
 		};
 
 		return (
@@ -147,15 +205,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, his
 			<div className="u-margin-bottom-lg">
 				<div className="row between-xs top-xs">
 					<div className="col-xs-3">
-						<NavList
-							items={CC_NEW_NAV_LIST_ITEMS.map(listItem => ({
-								...listItem,
-								meta: navItemMatcher,
-								to: generatePath(`${listItem.to}${history.location.search}`, {
-									contentTypeUuid,
-								}),
-							}))}
-						/>
+						<NavList items={navListItems} linkComponent={NavLink} />
 					</div>
 
 					<div className="col-xs-9">
@@ -180,11 +230,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, his
 		</>
 	);
 
-	return (
-		<Container>
-			<DataLoader loadingState={initialLoading} render={renderCCNew} />
-		</Container>
-	);
+	return <DataLoader loadingState={initialLoading} render={renderCCNew} />;
 };
 
 export default ContentTypesCCNew;

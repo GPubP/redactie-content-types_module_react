@@ -1,15 +1,15 @@
 import { Checkbox } from '@acpaas-ui/react-components';
 import { FormSchema } from '@redactie/form-renderer-module';
+import { FormikOnChangeHandler } from '@redactie/utils';
 import { Field, Formik, FormikValues } from 'formik';
 import React, { FC, ReactElement, useMemo } from 'react';
 
-import { AutoSubmit } from '../../../components';
 import formRendererConnector from '../../../connectors/formRenderer';
 import { DEFAULT_VALIDATION_SCHEMA } from '../../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../../contentTypes.types';
 import { parseFields } from '../../../helpers';
 
-const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, onSubmit }) => {
+const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, formikRef, onSubmit }) => {
 	const initialEditableFormValues = {
 		editable: !CTField.generalConfig.disabled,
 	};
@@ -63,20 +63,13 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, onSubmi
 
 		return (
 			<formRendererConnector.api.Form
+				formikRef={formikRef}
 				schema={parsedFormSchema}
 				initialValues={initialValues}
 				validationSchema={DEFAULT_VALIDATION_SCHEMA}
 				errorMessages={{}}
-				onSubmit={onSubmit}
-			>
-				{({ initialValues, submitForm, values }) => (
-					<AutoSubmit
-						initialValues={initialValues}
-						submitForm={submitForm}
-						values={values}
-					/>
-				)}
-			</formRendererConnector.api.Form>
+				onChange={onSubmit}
+			/>
 		);
 	};
 
@@ -89,10 +82,10 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, onSubmi
 			</p>
 			{renderCCDefaults()}
 			<Formik initialValues={initialEditableFormValues} onSubmit={onEditableFormFormSubmit}>
-				{({ values }) => {
+				{({ submitForm, values }) => {
 					return (
 						<div className="u-margin-top">
-							<AutoSubmit />
+							<FormikOnChangeHandler onChange={submitForm} />
 							<div className="row">
 								<div className="col-xs-12">
 									<Field
@@ -103,10 +96,10 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, onSubmi
 										name="editable"
 										label="Aanpasbaar"
 									/>
-									<div className="u-text-light">
+									<small className="u-block u-text-light">
 										Bepaal of deze content component aangepast mag worden door
 										de redacteur.
-									</div>
+									</small>
 								</div>
 							</div>
 						</div>

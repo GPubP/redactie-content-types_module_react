@@ -2,16 +2,17 @@ import { Button, Textarea, TextField } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { useDetectValueChanges } from '@redactie/utils';
-import { Field, Formik } from 'formik';
+import { ErrorMessage, Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC, useMemo, useState } from 'react';
 
-import LeavePrompt from '../../components/LeavePrompt/LeavePrompt';
-import { useCoreTranslation } from '../../connectors/translations';
-import { CONTENT_TYPE_DETAIL_TAB_MAP } from '../../contentTypes.const';
-import { ContentTypesDetailRouteProps, LoadingState } from '../../contentTypes.types';
-import { useContentType } from '../../hooks';
-import { ContentTypeDetailModel } from '../../store/contentTypes';
+import LeavePrompt from '../../../components/LeavePrompt/LeavePrompt';
+import { useCoreTranslation } from '../../../connectors/translations';
+import { CONTENT_TYPE_DETAIL_TAB_MAP } from '../../../contentTypes.const';
+import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
+import { getFieldState } from '../../../helpers/forms';
+import { useContentType } from '../../../hooks';
+import { ContentTypeDetailModel } from '../../../store/contentTypes';
 
 import { CT_SETTINGS_VALIDATION_SCHEMA } from './ContentTypesDetailSettings.const';
 
@@ -52,8 +53,9 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			onSubmit={onFormSubmit}
 			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA}
 		>
-			{({ submitForm, values }) => {
+			{({ errors, submitForm, touched, values }) => {
 				setFormValue(values);
+
 				return (
 					<>
 						<div className="row">
@@ -61,14 +63,18 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 								<div className="col-xs-12 col-md-8">
 									<Field
 										as={TextField}
+										description="Geef het content type een korte en duidelijke naam."
 										id="meta.label"
 										label="Naam"
 										name="meta.label"
 										required
+										state={getFieldState(touched, errors, 'meta.label')}
 									/>
-									<div className="u-text-light u-margin-top-xs">
-										Geef het content type een korte en duidelijke naam.
-									</div>
+									<ErrorMessage
+										className="u-text-danger u-margin-top-xs"
+										component="p"
+										name="meta.label"
+									/>
 								</div>
 
 								<div className="col-xs-12 col-md-4 u-margin-top u-margin-bottom">
@@ -92,11 +98,17 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 										label="Beschrijving"
 										name="meta.description"
 										required
+										state={getFieldState(touched, errors, 'meta.description')}
 									/>
-									<div className="u-text-light u-margin-top-xs">
+									<small className="u-block u-text-light u-margin-top-xs">
 										Geef het content type een duidelijke beschrijving voor in
 										het overzicht.
-									</div>
+									</small>
+									<ErrorMessage
+										className="u-text-danger u-margin-top-xs"
+										component="p"
+										name="meta.description"
+									/>
 								</div>
 							</div>
 						</div>

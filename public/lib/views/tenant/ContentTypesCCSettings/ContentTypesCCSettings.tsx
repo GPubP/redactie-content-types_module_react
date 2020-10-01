@@ -8,6 +8,7 @@ import { generateCCFormState } from '../../../helpers';
 const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
 	CTField,
 	fieldTypeData,
+	formikRef,
 	onDelete,
 	onSubmit,
 }) => {
@@ -22,6 +23,7 @@ const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
 			<FormCCSettings
 				initialValues={initialFormValues}
 				fieldTypeData={fieldTypeData}
+				formikRef={formikRef}
 				onSubmit={onSubmit}
 				isUpdate={!!onDelete}
 			/>

@@ -1,18 +1,24 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
-import {
-	ActionBar,
-	ActionBarContentSection,
-	Container,
-} from '@acpaas-ui/react-editorial-components';
+import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { omit } from 'ramda';
-import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import { alertService } from '@redactie/utils';
+import { FormikProps, FormikValues } from 'formik';
+import { equals, isEmpty, omit } from 'ramda';
+import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
-import { DataLoader, NavList, RenderChildRoutes } from '../../../components';
+import { DataLoader, RenderChildRoutes } from '../../../components';
 import { useCoreTranslation } from '../../../connectors/translations';
-import { MODULE_PATHS } from '../../../contentTypes.const';
+import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
-import { useNavigate, useNavItemMatcher, useTenantContext } from '../../../hooks';
+import { filterCompartments, validateCompartments } from '../../../helpers';
+import {
+	useCompartments,
+	useCompartmentValidation,
+	useNavigate,
+	useNavItemMatcher,
+	useTenantContext,
+} from '../../../hooks';
 import useActiveField from '../../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
 import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
@@ -22,7 +28,7 @@ import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.fac
 import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { presetsFacade } from '../../../store/presets';
 
-import { CC_DYNAMIC_NAV_LIST_ITEMS } from './ContentTypesDynamicCCEdit.const';
+import { DYNAMIC_CC_EDIT_COMPARTMENTS } from './ContentTypesDynamicCCEdit.const';
 
 const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	contentTypeUuid: string;
@@ -34,7 +40,9 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	/**
 	 * Hooks
 	 */
+	const [hasSubmit, setHasSubmit] = useState(false);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const activeField = useActiveField();
 	const dynamicField = useDynamicField();
 	const dynamicActiveField = useDynamicActiveField();
@@ -43,16 +51,46 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	const [t] = useCoreTranslation();
 	const activeFieldFTUuid = useMemo(() => activeField?.fieldType.uuid, [activeField]);
 	const activeFieldPSUuid = useMemo(() => activeField?.preset?.uuid, [activeField]);
-	const guardsMeta = useMemo(
-		() => ({
-			tenantId,
-		}),
-		[tenantId]
-	);
+	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(
 		dynamicActiveField?.preset as PresetDetail,
 		dynamicActiveField?.fieldType
 	);
+	const [
+		{ compartments, active: activeCompartment },
+		register,
+		activate,
+		validate,
+	] = useCompartments();
+	const navListItems = compartments.map(c => ({
+		activeClassName: 'is-active',
+		label: c.label,
+		hasError: hasSubmit && c.isValid === false,
+		onClick: () => activate(c.name),
+		to: generatePath(c.slug || c.name, {
+			contentTypeUuid,
+			contentComponentUuid,
+			dynamicContentComponentUuid,
+		}),
+	}));
+
+	/**
+	 * Trigger errors on form when switching from compartments
+	 */
+	useCompartmentValidation(activeCompartmentFormikRef, activeCompartment, hasSubmit);
+
+	/**
+	 * Set compartments
+	 */
+	useEffect(() => {
+		if (!activeField) {
+			return;
+		}
+
+		register(filterCompartments(DYNAMIC_CC_EDIT_COMPARTMENTS, navItemMatcher), {
+			replace: true,
+		});
+	}, [activeField]); // eslint-disable-line
 
 	useEffect(() => {
 		if (activeField) {
@@ -150,8 +188,37 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			return;
 		}
 
-		dynamicFieldFacade.updateField(omit(['__new'])(dynamicActiveField));
-		navigateToOverview();
+		const { current: formikRef } = activeCompartmentFormikRef;
+		const compartmentsAreValid = validateCompartments(
+			compartments,
+			dynamicActiveField,
+			validate
+		);
+
+		// Validate current form to trigger fields error states
+		if (formikRef) {
+			formikRef.validateForm().then(errors => {
+				if (!isEmpty(errors)) {
+					formikRef.setErrors(errors);
+				}
+			});
+		}
+		// Only submit the form if all compartments are valid
+		if (compartmentsAreValid) {
+			dynamicFieldFacade.updateField(omit(['__new'])(dynamicActiveField));
+			navigateToOverview();
+		} else {
+			alertService.dismiss();
+			alertService.danger(
+				{
+					title: 'Er zijn nog fouten',
+					message: 'Lorem ipsum',
+				},
+				{ containerId: ALERT_CONTAINER_IDS.update }
+			);
+		}
+
+		setHasSubmit(false);
 	};
 
 	/**
@@ -168,6 +235,11 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			preset: dynamicActiveField?.preset,
 			onDelete: onFieldDelete,
 			onSubmit: onFieldChange,
+			formikRef: (instance: any) => {
+				if (!equals(activeCompartmentFormikRef.current, instance)) {
+					activeCompartmentFormikRef.current = instance;
+				}
+			},
 		};
 
 		return (
@@ -185,17 +257,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 				<div className="u-margin-bottom-lg">
 					<div className="row between-xs top-xs">
 						<div className="col-xs-3">
-							<NavList
-								items={CC_DYNAMIC_NAV_LIST_ITEMS.map(listItem => ({
-									...listItem,
-									meta: navItemMatcher,
-									to: generatePath(listItem.to, {
-										contentTypeUuid,
-										contentComponentUuid,
-										dynamicContentComponentUuid,
-									}),
-								}))}
-							/>
+							<NavList items={navListItems} linkComponent={NavLink} />
 						</div>
 
 						<div className="col-xs-9">
@@ -225,11 +287,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		);
 	};
 
-	return (
-		<Container>
-			<DataLoader loadingState={initialLoading} render={renderCCEdit} />
-		</Container>
-	);
+	return <DataLoader loadingState={initialLoading} render={renderCCEdit} />;
 };
 
 export default ContentTypesDynamicCCEdit;
