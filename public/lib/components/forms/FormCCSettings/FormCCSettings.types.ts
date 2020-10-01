@@ -1,4 +1,4 @@
-import { CCSettingsFormState } from '../../../contentTypes.types';
+import { CCSettingsFormState, FormikRef } from '../../../contentTypes.types';
 import { FieldTypeData } from '../../../services/fieldTypes/fieldTypes.service.types';
 
 export interface FormCCSettingsProps {
@@ -6,4 +6,5 @@ export interface FormCCSettingsProps {
 	fieldTypeData: FieldTypeData;
 	onSubmit: (formValues: CCSettingsFormState) => void;
 	isUpdate: boolean;
+	formikRef?: FormikRef;
 }

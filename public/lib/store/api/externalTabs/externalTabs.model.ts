@@ -1,7 +1,7 @@
 import { ActiveState, EntityState } from '@datorama/akita';
 import { FC } from 'react';
 
-import { ExternalTabProps } from '../../../views/ContentTypeDetailExternal/ContentTypeDetailExternal.types';
+import { ExternalTabProps } from '../../../views/tenant/ContentTypesDetailExternal';
 
 export interface ExternalTabOptions {
 	label: string;
