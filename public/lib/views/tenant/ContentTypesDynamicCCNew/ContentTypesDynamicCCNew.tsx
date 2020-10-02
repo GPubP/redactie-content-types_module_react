@@ -35,6 +35,7 @@ import { DYNAMIC_CC_NEW_COMPARTMENTS } from './ContentTypesDynamicCCNew.const';
 
 const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	contentType,
+	location,
 	match,
 	route,
 }) => {
@@ -69,7 +70,10 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
 		onClick: () => activate(c.name),
-		to: generatePath(c.slug || c.name, { contentTypeUuid, contentComponentUuid }),
+		to: generatePath(`${c.slug || c.name}${location.search}`, {
+			contentTypeUuid,
+			contentComponentUuid,
+		}),
 	}));
 
 	/**
@@ -203,7 +207,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		if (compartmentsAreValid) {
 			dynamicFieldFacade.addField(omit(['__new'])(dynamicActiveField));
 
-			if (cancelNavigation) {
+			if (!cancelNavigation) {
 				navigateToDetail();
 			}
 		} else {
@@ -277,7 +281,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 							</Button>
 							<Button
 								className="u-margin-left-xs"
-								onClick={onFieldSubmit}
+								onClick={() => onFieldSubmit}
 								type="primary"
 							>
 								{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
@@ -285,7 +289,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 						</div>
 					</ActionBarContentSection>
 				</ActionBar>
-				<LeavePrompt when={hasChanges} onConfirm={() => onFieldSubmit()} />
+				<LeavePrompt when={hasChanges} onConfirm={() => onFieldSubmit(true)} />
 			</>
 		);
 	};
