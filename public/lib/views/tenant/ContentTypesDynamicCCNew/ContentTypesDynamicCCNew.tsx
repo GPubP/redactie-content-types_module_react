@@ -84,10 +84,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		if (!fieldType) {
 			return;
 		}
-
-		register(filterCompartments(DYNAMIC_CC_NEW_COMPARTMENTS, navItemMatcher), {
-			replace: true,
-		});
+		register(filterCompartments(DYNAMIC_CC_NEW_COMPARTMENTS, navItemMatcher), { reset: true });
 	}, [fieldType]); // eslint-disable-line
 
 	useEffect(() => {

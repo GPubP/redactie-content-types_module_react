@@ -9,7 +9,14 @@ export enum CompartmentType {
 }
 
 export interface CompartmentRegisterOptions {
+	/**
+	 * Replace existing compartments
+	 */
 	replace?: true;
+	/**
+	 * Clear all compartments before adding
+	 */
+	reset?: true;
 }
 
 export interface CompartmentModel {
