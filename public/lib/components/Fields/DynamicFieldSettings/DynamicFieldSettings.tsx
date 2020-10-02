@@ -33,7 +33,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 	/**
 	 * HOOKS
 	 */
-	const { contentTypeUuid } = useParams();
+	const { contentTypeUuid } = useParams<{ contentTypeUuid: string }>();
 	const { setFieldValue, values } = useFormikContext<Record<string, { config: Field[] }>>();
 	const activeField = useActiveField();
 	const dynamicField = useDynamicField();
