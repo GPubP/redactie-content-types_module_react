@@ -237,7 +237,11 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 						</div>
 					</ActionBarContentSection>
 				</ActionBar>
-				<LeavePrompt when={hasChanges} onConfirm={() => onFieldSubmit(true)} />
+				<LeavePrompt
+					shouldBlockNavigationOnConfirm={() => true}
+					when={hasChanges}
+					onConfirm={() => onFieldSubmit(true)}
+				/>
 			</>
 		);
 	};

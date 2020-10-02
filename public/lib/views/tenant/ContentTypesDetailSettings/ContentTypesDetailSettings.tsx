@@ -41,6 +41,8 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			return;
 		}
 
+		setBlockHasChanges(true);
+
 		onSubmit({ ...contentType?.meta, ...value.meta }, CONTENT_TYPE_DETAIL_TAB_MAP.settings);
 	};
 
@@ -124,7 +126,6 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 										disabled={isLoading || !hasChanges}
 										className="u-margin-left-xs"
 										onClick={() => {
-											setBlockHasChanges(true);
 											submitForm();
 										}}
 										type="success"
@@ -138,7 +139,8 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 						</ActionBar>
 						<LeavePrompt
 							when={!blockHasChanges && hasChanges}
-							onConfirm={() => onFormSubmit(formValue)}
+							shouldBlockNavigationOnConfirm={() => true}
+							onConfirm={() => submitForm()}
 						/>
 					</>
 				);

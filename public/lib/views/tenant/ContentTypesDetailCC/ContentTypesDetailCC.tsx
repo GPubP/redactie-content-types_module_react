@@ -178,7 +178,11 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 				</ActionBarContentSection>
 			</ActionBar>
 
-			<LeavePrompt when={fieldsHaveChanged} onConfirm={onCCSave} />
+			<LeavePrompt
+				shouldBlockNavigationOnConfirm={() => true}
+				when={fieldsHaveChanged}
+				onConfirm={onCCSave}
+			/>
 		</>
 	);
 };
