@@ -129,13 +129,13 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, loc
 	 * make it the active working field in the store
 	 */
 	useEffect(() => {
-		if (!activeField && fieldType) {
+		if (fieldType) {
 			const initialValues = { label: name || '', name: kebabCase(name || '') };
 			contentTypesFacade.setActiveField(
 				generateFieldFromType(fieldType, initialValues, preset || undefined)
 			);
 		}
-	}, [fieldType, name, preset, activeField]);
+	}, [fieldType, name, preset]);
 
 	/**
 	 * Methods
