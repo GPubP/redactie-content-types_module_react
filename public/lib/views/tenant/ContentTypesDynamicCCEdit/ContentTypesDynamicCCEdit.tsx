@@ -279,7 +279,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 							</Button>
 							<Button
 								className="u-margin-left-xs"
-								onClick={onFieldSubmit}
+								onClick={() => onFieldSubmit}
 								type="primary"
 							>
 								{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
