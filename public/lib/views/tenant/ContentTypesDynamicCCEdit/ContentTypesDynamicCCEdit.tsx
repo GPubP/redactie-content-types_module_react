@@ -27,6 +27,7 @@ import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
 import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { presetsFacade } from '../../../store/presets';
+import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import { DYNAMIC_CC_EDIT_COMPARTMENTS } from './ContentTypesDynamicCCEdit.const';
 
@@ -88,7 +89,13 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			return;
 		}
 
-		register(filterCompartments(DYNAMIC_CC_EDIT_COMPARTMENTS, navItemMatcher), { reset: true });
+		register(filterCompartments(DYNAMIC_CC_EDIT_COMPARTMENTS, navItemMatcher), {
+			replace: true,
+		});
+
+		return () => {
+			compartmentsFacade.clearCompartments();
+		};
 	}, [activeField]); // eslint-disable-line
 
 	useEffect(() => {

@@ -27,6 +27,7 @@ import {
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { presetsFacade } from '../../../store/presets';
+import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import { CC_NEW_COMPARTMENTS } from './ContentTypesCCNew.const';
 
@@ -78,7 +79,11 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, loc
 			return;
 		}
 
-		register(filterCompartments(CC_NEW_COMPARTMENTS, navItemMatcher), { reset: true });
+		register(filterCompartments(CC_NEW_COMPARTMENTS, navItemMatcher), { replace: true });
+
+		return () => {
+			compartmentsFacade.clearCompartments();
+		};
 	}, [fieldType]); // eslint-disable-line
 
 	useEffect(() => {

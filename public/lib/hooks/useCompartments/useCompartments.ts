@@ -20,11 +20,8 @@ const useCompartments = (): [
 ] => {
 	const register = (
 		compartments: CompartmentModel[] | CompartmentModel,
-		{ reset, ...options }: { replace?: true; reset?: true }
+		options: CompartmentRegisterOptions
 	): void => {
-		if (reset) {
-			compartmentsFacade.clearCompartments();
-		}
 		compartmentsFacade.register(compartments, options);
 	};
 	const activate = (name: ID): void => compartmentsFacade.setActiveByNamOrSlug(name);
