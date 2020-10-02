@@ -229,7 +229,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 							</Button>
 							<Button
 								className="u-margin-left-xs"
-								onClick={onFieldSubmit}
+								onClick={() => onFieldSubmit()}
 								type="primary"
 							>
 								{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
