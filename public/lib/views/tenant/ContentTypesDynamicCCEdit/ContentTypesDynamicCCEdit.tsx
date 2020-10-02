@@ -277,7 +277,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 							</Button>
 							<Button
 								className="u-margin-left-xs"
-								onClick={() => onFieldSubmit}
+								onClick={() => onFieldSubmit()}
 								type="primary"
 							>
 								{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
@@ -285,7 +285,11 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 						</div>
 					</ActionBarContentSection>
 				</ActionBar>
-				<LeavePrompt when={hasChanges} onConfirm={() => onFieldSubmit(true)} />
+				<LeavePrompt
+					shouldBlockNavigationOnConfirm={() => true}
+					when={hasChanges}
+					onConfirm={() => onFieldSubmit(true)}
+				/>
 			</>
 		);
 	};

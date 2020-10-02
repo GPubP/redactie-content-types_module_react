@@ -60,7 +60,9 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, loc
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
 		onClick: () => activate(c.name),
-		to: generatePath(`${c.slug || c.name}${location.search}`, { contentTypeUuid }),
+		to: generatePath(`${c.slug || c.name}${location.search}`, {
+			contentTypeUuid,
+		}),
 	}));
 
 	/**
@@ -241,7 +243,11 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, loc
 					</div>
 				</ActionBarContentSection>
 			</ActionBar>
-			<LeavePrompt when={hasChanges} onConfirm={() => onCTSubmit(true)} />
+			<LeavePrompt
+				shouldBlockNavigationOnConfirm={() => true}
+				when={hasChanges}
+				onConfirm={() => onCTSubmit(true)}
+			/>
 		</>
 	);
 
