@@ -60,6 +60,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		if (contentType?.uuid) {
 			navigate(MODULE_PATHS.detailCC, { contentTypeUuid: contentType.uuid });
 		}
+
 		if (
 			fieldTypesLoadingState !== LoadingState.Loading &&
 			contentTypeLoadingState !== LoadingState.Loading &&
