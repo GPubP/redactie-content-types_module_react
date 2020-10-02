@@ -88,9 +88,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			return;
 		}
 
-		register(filterCompartments(DYNAMIC_CC_EDIT_COMPARTMENTS, navItemMatcher), {
-			replace: true,
-		});
+		register(filterCompartments(DYNAMIC_CC_EDIT_COMPARTMENTS, navItemMatcher), { reset: true });
 	}, [activeField]); // eslint-disable-line
 
 	useEffect(() => {

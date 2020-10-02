@@ -76,7 +76,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, loc
 			return;
 		}
 
-		register(filterCompartments(CC_NEW_COMPARTMENTS, navItemMatcher), { replace: true });
+		register(filterCompartments(CC_NEW_COMPARTMENTS, navItemMatcher), { reset: true });
 	}, [fieldType]); // eslint-disable-line
 
 	useEffect(() => {

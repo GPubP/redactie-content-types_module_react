@@ -75,7 +75,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			return;
 		}
 
-		register(filterCompartments(CC_EDIT_COMPARTMENTS, navItemMatcher), { replace: true });
+		register(filterCompartments(CC_EDIT_COMPARTMENTS, navItemMatcher), { reset: true });
 	}, [fieldType]); // eslint-disable-line
 
 	useEffect(() => {
