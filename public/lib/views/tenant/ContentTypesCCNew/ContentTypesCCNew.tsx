@@ -55,12 +55,15 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		activate,
 		validate,
 	] = useCompartments();
+	const queryParams = presetUuid
+		? `?preset=${presetUuid}&name=${name}`
+		: `?fieldType=${fieldTypeUuid}&name=${name}`;
 	const navListItems = compartments.map(c => ({
 		activeClassName: 'is-active',
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
 		onClick: () => activate(c.name),
-		to: generatePath(c.slug || c.name, { contentTypeUuid }),
+		to: generatePath(`${c.slug || c.name}${queryParams}`, { contentTypeUuid }),
 	}));
 
 	/**
@@ -87,11 +90,12 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	useEffect(() => {
 		if (
 			fieldTypeLoadingState !== LoadingState.Loading &&
-			presetLoadingState !== LoadingState.Loading
+			presetLoadingState !== LoadingState.Loading &&
+			activeField
 		) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
-	}, [presetLoadingState, fieldTypeLoadingState]);
+	}, [presetLoadingState, fieldTypeLoadingState, activeField]);
 
 	/**
 	 * Get preset or fieldType based on the input of the
@@ -121,14 +125,13 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	 * make it the active working field in the store
 	 */
 	useEffect(() => {
-		if (fieldType) {
+		if (!activeField && fieldType) {
 			const initialValues = { label: name || '', name: kebabCase(name || '') };
-
 			contentTypesFacade.setActiveField(
 				generateFieldFromType(fieldType, initialValues, preset || undefined)
 			);
 		}
-	}, [fieldType, name, preset]);
+	}, [fieldType, name, preset, activeField]);
 
 	/**
 	 * Methods
@@ -182,6 +185,12 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	/**
 	 * Render
 	 */
+
+	// Can't create a new CC if the fieldTypeUuid or presetUuid and name are unknown
+	if (!(fieldTypeUuid || presetUuid) || !name) {
+		navigateToDetail();
+	}
+
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
 			CTField: activeField,
