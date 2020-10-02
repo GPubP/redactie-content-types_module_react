@@ -150,7 +150,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 			})
 			.catch(error => {
 				this.store.setError(error);
-				this.alertService(alertMessages.update.error, 'update', 'success');
+				this.alertService(alertMessages.update.error, 'update', 'error');
 			})
 			.finally(() => this.store.setIsUpdating(false));
 	}
