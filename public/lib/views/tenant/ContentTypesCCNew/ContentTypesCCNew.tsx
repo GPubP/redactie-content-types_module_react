@@ -30,7 +30,7 @@ import { presetsFacade } from '../../../store/presets';
 
 import { CC_NEW_COMPARTMENTS } from './ContentTypesCCNew.const';
 
-const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) => {
+const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, location }) => {
 	const { contentTypeUuid } = match.params;
 
 	/**
@@ -55,15 +55,12 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		activate,
 		validate,
 	] = useCompartments();
-	const queryParams = presetUuid
-		? `?preset=${presetUuid}&name=${name}`
-		: `?fieldType=${fieldTypeUuid}&name=${name}`;
 	const navListItems = compartments.map(c => ({
 		activeClassName: 'is-active',
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
 		onClick: () => activate(c.name),
-		to: generatePath(`${c.slug || c.name}${queryParams}`, { contentTypeUuid }),
+		to: generatePath(`${c.slug || c.name}${location.search}`, { contentTypeUuid }),
 	}));
 
 	/**
