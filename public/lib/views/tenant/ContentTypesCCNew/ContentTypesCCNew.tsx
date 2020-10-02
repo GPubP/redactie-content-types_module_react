@@ -30,7 +30,7 @@ import { presetsFacade } from '../../../store/presets';
 
 import { CC_NEW_COMPARTMENTS } from './ContentTypesCCNew.const';
 
-const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) => {
+const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, location }) => {
 	const { contentTypeUuid } = match.params;
 
 	/**
@@ -60,7 +60,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
 		onClick: () => activate(c.name),
-		to: generatePath(c.slug || c.name, { contentTypeUuid }),
+		to: generatePath(`${c.slug || c.name}${location.search}`, { contentTypeUuid }),
 	}));
 
 	/**
@@ -87,11 +87,12 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	useEffect(() => {
 		if (
 			fieldTypeLoadingState !== LoadingState.Loading &&
-			presetLoadingState !== LoadingState.Loading
+			presetLoadingState !== LoadingState.Loading &&
+			activeField
 		) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
-	}, [presetLoadingState, fieldTypeLoadingState]);
+	}, [presetLoadingState, fieldTypeLoadingState, activeField]);
 
 	/**
 	 * Get preset or fieldType based on the input of the
@@ -121,14 +122,13 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	 * make it the active working field in the store
 	 */
 	useEffect(() => {
-		if (fieldType) {
+		if (!activeField && fieldType) {
 			const initialValues = { label: name || '', name: kebabCase(name || '') };
-
 			contentTypesFacade.setActiveField(
 				generateFieldFromType(fieldType, initialValues, preset || undefined)
 			);
 		}
-	}, [fieldType, name, preset]);
+	}, [fieldType, name, preset, activeField]);
 
 	/**
 	 * Methods
@@ -182,6 +182,12 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	/**
 	 * Render
 	 */
+
+	// Can't create a new CC if the fieldTypeUuid or presetUuid and name are unknown
+	if (!(fieldTypeUuid || presetUuid) || !name) {
+		navigateToDetail();
+	}
+
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
 			CTField: activeField,
@@ -225,7 +231,11 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 						<Button onClick={navigateToDetail} negative>
 							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
-						<Button className="u-margin-left-xs" onClick={onCTSubmit} type="primary">
+						<Button
+							className="u-margin-left-xs"
+							onClick={() => onCTSubmit()}
+							type="primary"
+						>
 							{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
 						</Button>
 					</div>
