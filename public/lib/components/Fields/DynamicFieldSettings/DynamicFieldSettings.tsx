@@ -63,18 +63,13 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 	}, [activeField, dynamicField]);
 
 	useEffect(() => {
-		console.log(fields);
-
 		setFieldTypeOptions(
 			fields
 				// Filter out dynamic field settings
 				.filter(fieldType => {
 					const hasNestedDynamicFieldSettings = !!(
-						(fieldType as FieldTypeModel).data.formSchema &&
-						(fieldType as FieldTypeModel).data.formSchema.fields.find(
-							field => field.fieldType.data.name === DYNAMIC_FIELD_SETTINGS_NAME
-						)
-					);
+						(fieldType as FieldTypeModel).data?.formSchema?.fields || []
+					).find(field => field.fieldType.data.name === DYNAMIC_FIELD_SETTINGS_NAME);
 
 					return !hasNestedDynamicFieldSettings;
 				})
