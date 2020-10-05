@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom';
 import { useCoreTranslation } from '../../../connectors/translations';
 import { DYNAMIC_FIELD_SETTINGS_NAME, MODULE_PATHS } from '../../../contentTypes.const';
 import { LoadingState, NewCCFormState } from '../../../contentTypes.types';
+import { sortFieldTypes } from '../../../helpers';
 import useActiveField from '../../../hooks/useActiveField/useActiveField';
 import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
 import useFieldTypes from '../../../hooks/useFieldTypes/useFieldTypes';
@@ -42,7 +43,10 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 	const { navigate, generatePath } = useNavigate();
 	const [, presets] = usePresets();
 	const value: Field[] = pathOr([], ['config', 'fields'])(dynamicField);
-	const fields = useMemo(() => [...fieldTypes, ...presets], [fieldTypes, presets]);
+	const fields = useMemo(() => [...fieldTypes, ...presets].sort(sortFieldTypes), [
+		fieldTypes,
+		presets,
+	]);
 	const [fieldTypeOptions, setFieldTypeOptions] = useState<FormCTNewCCProps['fieldTypeOptions']>(
 		[]
 	);

@@ -16,6 +16,7 @@ import {
 	LoadingState,
 	NewCCFormState,
 } from '../../../contentTypes.types';
+import { sortFieldTypes } from '../../../helpers';
 import { useContentType, useNavigate } from '../../../hooks';
 import { ContentTypeFieldDetailModel } from '../../../store/contentTypes';
 
@@ -40,24 +41,10 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	const isLoading = useMemo(() => {
 		return contentTypeIsUpdating === LoadingState.Loading;
 	}, [contentTypeIsUpdating]);
-	const fields = useMemo(
-		() =>
-			[...fieldTypes, ...presets].sort((a, b) => {
-				const nameA = a.data?.label?.toUpperCase(); // ignore upper and lowercase
-				const nameB = b.data?.label?.toUpperCase(); // ignore upper and lowercase
-
-				if (nameA < nameB) {
-					return -1;
-				}
-
-				if (nameA > nameB) {
-					return 1;
-				}
-
-				return 0;
-			}),
-		[fieldTypes, presets]
-	);
+	const fields = useMemo(() => [...fieldTypes, ...presets].sort(sortFieldTypes), [
+		fieldTypes,
+		presets,
+	]);
 
 	/**
 	 * Variables
