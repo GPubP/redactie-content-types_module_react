@@ -99,12 +99,6 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	}, [fieldType]); // eslint-disable-line
 
 	useEffect(() => {
-		dynamicFieldFacade.clearActiveField();
-		presetsFacade.clearPreset();
-		fieldTypesFacade.clearFieldType();
-	}, []);
-
-	useEffect(() => {
 		if (
 			fieldTypeLoadingState !== LoadingState.Loading &&
 			presetLoadingState !== LoadingState.Loading &&
@@ -176,6 +170,18 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			);
 		}
 	}, [fieldType, preset]);
+
+	/**
+	 * Clear store on component destroy
+	 */
+	useEffect(
+		() => () => {
+			dynamicFieldFacade.clearActiveField();
+			presetsFacade.clearPreset();
+			fieldTypesFacade.clearFieldType();
+		},
+		[]
+	);
 
 	/**
 	 * Methods

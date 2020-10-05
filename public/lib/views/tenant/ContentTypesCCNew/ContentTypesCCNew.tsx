@@ -87,11 +87,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, loc
 	}, [fieldType]); // eslint-disable-line
 
 	useEffect(() => {
-		presetsFacade.clearPreset();
-		fieldTypesFacade.clearFieldType();
-	}, []);
-
-	useEffect(() => {
 		if (
 			fieldTypeLoadingState !== LoadingState.Loading &&
 			presetLoadingState !== LoadingState.Loading &&
@@ -136,6 +131,18 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, loc
 			);
 		}
 	}, [fieldType, name, preset]);
+
+	/**
+	 * Clear store on component destroy
+	 */
+	useEffect(
+		() => () => {
+			presetsFacade.clearPreset();
+			fieldTypesFacade.clearFieldType();
+			contentTypesFacade.clearActiveField();
+		},
+		[]
+	);
 
 	/**
 	 * Methods
