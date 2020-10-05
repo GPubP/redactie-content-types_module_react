@@ -139,7 +139,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, loc
 		() => () => {
 			presetsFacade.clearPreset();
 			fieldTypesFacade.clearFieldType();
-			contentTypesFacade.clearActiveField();
 		},
 		[]
 	);
