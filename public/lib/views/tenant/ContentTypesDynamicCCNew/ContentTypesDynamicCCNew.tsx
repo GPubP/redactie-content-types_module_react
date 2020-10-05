@@ -192,8 +192,16 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			{
 				contentTypeUuid,
 				contentComponentUuid,
-				...(activeField?.__new ? { fieldType: activeField?.fieldType.uuid } : {}),
-			}
+			},
+			{},
+			new URLSearchParams(
+				activeField?.__new
+					? {
+							fieldType: activeField?.fieldType.uuid,
+							name: activeField.label,
+					  }
+					: {}
+			)
 		);
 	};
 
