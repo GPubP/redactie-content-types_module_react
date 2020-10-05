@@ -9,7 +9,7 @@ import DynamicFieldSettings from './lib/components/Fields/DynamicFieldSettings/D
 import formRendererConnector from './lib/connectors/formRenderer';
 import rolesRightsConnector from './lib/connectors/rolesRights';
 import { registerRoutes } from './lib/connectors/sites';
-import { MODULE_PATHS } from './lib/contentTypes.const';
+import { DYNAMIC_FIELD_SETTINGS_NAME, MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesModuleProps } from './lib/contentTypes.types';
 import { TenantContext } from './lib/context';
 import { contentTypeTitleHelper } from './lib/helpers/contentTypeTitleHelper/contentTypeTitleHelper';
@@ -299,7 +299,7 @@ registerRoutes({
 registerContentTypeAPI();
 
 formRendererConnector.api.fieldRegistry.add({
-	name: 'dynamicFieldSettings',
+	name: DYNAMIC_FIELD_SETTINGS_NAME,
 	module: 'content-types',
 	component: DynamicFieldSettings,
 });

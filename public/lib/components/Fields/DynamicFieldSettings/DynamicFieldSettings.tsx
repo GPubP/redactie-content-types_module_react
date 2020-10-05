@@ -8,7 +8,7 @@ import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useCoreTranslation } from '../../../connectors/translations';
-import { MODULE_PATHS } from '../../../contentTypes.const';
+import { DYNAMIC_FIELD_SETTINGS_NAME, MODULE_PATHS } from '../../../contentTypes.const';
 import { LoadingState, NewCCFormState } from '../../../contentTypes.types';
 import useActiveField from '../../../hooks/useActiveField/useActiveField';
 import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
@@ -17,6 +17,7 @@ import useNavigate from '../../../hooks/useNavigate/useNavigate';
 import usePresets from '../../../hooks/usePresets/usePresets';
 import { Field } from '../../../services/contentTypes/contentTypes.service.types';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
+import { FieldTypeModel } from '../../../store/fieldTypes';
 import {
 	CONTENT_TYPE_COLUMNS,
 	ContentTypeDetailCCRow,
@@ -58,12 +59,26 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 	}, [activeField, dynamicField]);
 
 	useEffect(() => {
+		console.log(fields);
+
 		setFieldTypeOptions(
-			fields.map(fieldType => ({
-				key: fieldType.uuid,
-				value: fieldType.uuid,
-				label: fieldType?.data?.label,
-			}))
+			fields
+				// Filter out dynamic field settings
+				.filter(fieldType => {
+					const hasNestedDynamicFieldSettings = !!(
+						(fieldType as FieldTypeModel).data.formSchema &&
+						(fieldType as FieldTypeModel).data.formSchema.fields.find(
+							field => field.fieldType.data.name === DYNAMIC_FIELD_SETTINGS_NAME
+						)
+					);
+
+					return !hasNestedDynamicFieldSettings;
+				})
+				.map(fieldType => ({
+					key: fieldType.uuid,
+					value: fieldType.uuid,
+					label: fieldType?.data?.label,
+				}))
 		);
 	}, [fields]);
 
