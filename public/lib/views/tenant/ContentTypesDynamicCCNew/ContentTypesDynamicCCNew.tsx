@@ -203,7 +203,11 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		}
 
 		const { current: formikRef } = activeCompartmentFormikRef;
-		const compartmentsAreValid = validateCompartments(compartments, activeField, validate);
+		const compartmentsAreValid = validateCompartments(
+			compartments,
+			dynamicActiveField,
+			validate
+		);
 
 		// Validate current form to trigger fields error states
 		if (formikRef) {
