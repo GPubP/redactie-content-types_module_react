@@ -99,13 +99,45 @@ export class DynamicFieldFacade extends BaseEntityFacade<
 	}
 
 	public updateActiveField(payload: DynamicFieldDetailModel): void {
-		const { activeField } = this.query.getValue();
+		const { activeField } = this.store.getValue();
+
+		if (!activeField) {
+			return;
+		}
+
+		const payloadIsMultiple =
+			(payload?.generalConfig?.max ?? (activeField?.generalConfig?.max || 0)) > 1;
+		const activeFieldIsMultiple = (activeField?.generalConfig?.max || 0) > 1;
+
+		// clear default value when switching form single to multiple or the other way around
+		const clearDefaultValue = payloadIsMultiple !== activeFieldIsMultiple;
 
 		this.store.update({
 			activeField: {
-				...(activeField || {}),
+				...activeField,
 				...payload,
-			},
+				generalConfig: {
+					...activeField.generalConfig,
+					...payload.generalConfig,
+				},
+				config: {
+					...activeField.config,
+					...payload.config,
+				},
+				validation: {
+					...activeField.validation,
+					...payload.validation,
+					checks: [
+						...(activeField.validation?.checks || []),
+						...(payload.validation?.checks || []),
+					],
+				},
+				defaultValue: clearDefaultValue
+					? undefined
+					: payload.defaultValue !== undefined
+					? payload.defaultValue
+					: activeField.defaultValue,
+			} as DynamicFieldDetailModel,
 		});
 	}
 
