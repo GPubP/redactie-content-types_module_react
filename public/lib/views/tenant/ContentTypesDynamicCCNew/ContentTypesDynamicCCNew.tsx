@@ -30,6 +30,7 @@ import { ContentTypeFieldDetailModel } from '../../../store/contentTypes';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
 import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { presetsFacade } from '../../../store/presets';
+import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import { DYNAMIC_CC_NEW_COMPARTMENTS } from './ContentTypesDynamicCCNew.const';
 
@@ -88,14 +89,14 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		if (!fieldType) {
 			return;
 		}
-		register(filterCompartments(DYNAMIC_CC_NEW_COMPARTMENTS, navItemMatcher), { reset: true });
-	}, [fieldType]); // eslint-disable-line
+		register(filterCompartments(DYNAMIC_CC_NEW_COMPARTMENTS, navItemMatcher), {
+			replace: true,
+		});
 
-	useEffect(() => {
-		dynamicFieldFacade.clearActiveField();
-		presetsFacade.clearPreset();
-		fieldTypesFacade.clearFieldType();
-	}, []);
+		return () => {
+			compartmentsFacade.clearCompartments();
+		};
+	}, [fieldType]); // eslint-disable-line
 
 	useEffect(() => {
 		if (
@@ -169,6 +170,18 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			);
 		}
 	}, [fieldType, preset]);
+
+	/**
+	 * Clear store on component destroy
+	 */
+	useEffect(
+		() => () => {
+			dynamicFieldFacade.clearActiveField();
+			presetsFacade.clearPreset();
+			fieldTypesFacade.clearFieldType();
+		},
+		[]
+	);
 
 	/**
 	 * Methods

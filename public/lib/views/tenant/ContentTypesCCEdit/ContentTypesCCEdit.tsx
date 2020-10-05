@@ -25,6 +25,7 @@ import {
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { presetsFacade } from '../../../store/presets';
+import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import { CC_EDIT_COMPARTMENTS } from './ContentTypesCCEdit.const';
 
@@ -75,7 +76,11 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			return;
 		}
 
-		register(filterCompartments(CC_EDIT_COMPARTMENTS, navItemMatcher), { reset: true });
+		register(filterCompartments(CC_EDIT_COMPARTMENTS, navItemMatcher), { replace: true });
+
+		return () => {
+			compartmentsFacade.clearCompartments();
+		};
 	}, [fieldType]); // eslint-disable-line
 
 	useEffect(() => {

@@ -27,6 +27,7 @@ import {
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { presetsFacade } from '../../../store/presets';
+import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import { CC_NEW_COMPARTMENTS } from './ContentTypesCCNew.const';
 
@@ -78,13 +79,12 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, loc
 			return;
 		}
 
-		register(filterCompartments(CC_NEW_COMPARTMENTS, navItemMatcher), { reset: true });
-	}, [fieldType]); // eslint-disable-line
+		register(filterCompartments(CC_NEW_COMPARTMENTS, navItemMatcher), { replace: true });
 
-	useEffect(() => {
-		presetsFacade.clearPreset();
-		fieldTypesFacade.clearFieldType();
-	}, []);
+		return () => {
+			compartmentsFacade.clearCompartments();
+		};
+	}, [fieldType]); // eslint-disable-line
 
 	useEffect(() => {
 		if (
@@ -124,13 +124,25 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, loc
 	 * make it the active working field in the store
 	 */
 	useEffect(() => {
-		if (!activeField && fieldType) {
+		if (fieldType) {
 			const initialValues = { label: name || '', name: kebabCase(name || '') };
 			contentTypesFacade.setActiveField(
 				generateFieldFromType(fieldType, initialValues, preset || undefined)
 			);
 		}
-	}, [fieldType, name, preset, activeField]);
+	}, [fieldType, name, preset]);
+
+	/**
+	 * Clear store on component destroy
+	 */
+	useEffect(
+		() => () => {
+			presetsFacade.clearPreset();
+			fieldTypesFacade.clearFieldType();
+			contentTypesFacade.clearActiveField();
+		},
+		[]
+	);
 
 	/**
 	 * Methods
