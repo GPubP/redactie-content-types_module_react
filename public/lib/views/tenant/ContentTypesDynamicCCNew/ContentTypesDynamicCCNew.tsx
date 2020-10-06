@@ -193,7 +193,11 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 				contentTypeUuid,
 				contentComponentUuid,
 			},
-			{},
+			{
+				// This will keep the current active field (paragraaf) in state when we redirect.
+				// Changes made to the configuration of this field will not be overwritten
+				keepActiveField: true,
+			},
 			new URLSearchParams(
 				activeField?.__new
 					? {

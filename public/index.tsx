@@ -1,6 +1,8 @@
 import { akitaDevtools } from '@datorama/akita';
 import Core from '@redactie/redactie-core';
+import { omit } from 'ramda';
 import React, { FC, useEffect, useMemo } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { registerContentTypeAPI } from './lib/api/index';
 import { RenderChildRoutes } from './lib/components';
@@ -46,6 +48,25 @@ const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, tenantId })
 	}, []);
 
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
+
+	/**
+	 * Remove KeepActiveField state prop from the location object
+	 * when we render this module for the first time or when the user refreshes the page
+	 *
+	 * This is needed because once the keepActiveField prop is set the browser will keep this state
+	 * in memory even if the user refreshes the page.
+	 *
+	 * The keepActiveField state prop is used in the following views:
+	 *  - ContentTypesDynaminCCNew
+	 *  - ContentTypesCCNew
+	 */
+	const history = useHistory<{ keepActiveField?: boolean }>();
+	useEffect(() => {
+		if (history.location.state && history.location.state.keepActiveField) {
+			const state = omit(['keepActiveField'], history.location.state);
+			history.replace({ ...history.location, state });
+		}
+	}, [history]);
 
 	return (
 		<TenantContext.Provider value={{ tenantId }}>

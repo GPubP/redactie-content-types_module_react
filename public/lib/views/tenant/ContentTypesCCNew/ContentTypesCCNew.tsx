@@ -6,7 +6,7 @@ import { FormikProps, FormikValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { equals, isEmpty } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 import { DataLoader, RenderChildRoutes } from '../../../components';
 import { useCoreTranslation } from '../../../connectors/translations';
@@ -31,13 +31,14 @@ import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import { CC_NEW_COMPARTMENTS } from './ContentTypesCCNew.const';
 
-const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, location }) => {
+const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) => {
 	const { contentTypeUuid } = match.params;
 
 	/**
 	 * Hooks
 	 */
 	const [hasSubmit, setHasSubmit] = useState(false);
+	const location = useLocation<{ keepActiveField: boolean }>();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const activeField = useActiveField();
@@ -124,13 +125,18 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route, loc
 	 * make it the active working field in the store
 	 */
 	useEffect(() => {
-		if (fieldType) {
+		// Keep the current active field when keepActiveField is set to true
+		// This happens when the user navigates from the ContentTypesDynamicCCNew to the
+		// ContentTypesCCNew view
+		// We can not generate a new field because when we do, all changes on the current active
+		// field will be lost
+		if (fieldType && !location.state?.keepActiveField) {
 			const initialValues = { label: name || '', name: kebabCase(name || '') };
 			contentTypesFacade.setActiveField(
 				generateFieldFromType(fieldType, initialValues, preset || undefined)
 			);
 		}
-	}, [fieldType, name, preset]);
+	}, [fieldType, name, preset, location.state]);
 
 	/**
 	 * Clear store on component destroy
