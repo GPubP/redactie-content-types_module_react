@@ -38,7 +38,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	 * Hooks
 	 */
 	const [hasSubmit, setHasSubmit] = useState(false);
-	const location = useLocation<{ keepActiveField: string }>();
+	const location = useLocation<{ keepActiveField: boolean }>();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const activeField = useActiveField();

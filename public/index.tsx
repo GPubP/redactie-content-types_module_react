@@ -60,7 +60,7 @@ const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, tenantId })
 	 *  - ContentTypesDynaminCCNew
 	 *  - ContentTypesCCNew
 	 */
-	const history = useHistory<{ keepActiveField?: string }>();
+	const history = useHistory<{ keepActiveField?: boolean }>();
 	useEffect(() => {
 		if (history.location.state && history.location.state.keepActiveField) {
 			const state = omit(['keepActiveField'], history.location.state);
