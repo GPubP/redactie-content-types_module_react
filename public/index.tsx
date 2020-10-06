@@ -34,6 +34,7 @@ import {
 	ContentTypesOverview,
 	ContentTypesUpdate,
 	SiteContentTypesOverview,
+	SiteContentTypesUpdate,
 } from './lib/views';
 
 akitaDevtools();
@@ -275,9 +276,9 @@ Core.routes.register({
 });
 
 registerRoutes({
-	path: MODULE_PATHS.siteRoot,
+	path: MODULE_PATHS.site.root,
 	component: SiteContentTypesComponent,
-	redirect: MODULE_PATHS.contentTypes.overview,
+	redirect: MODULE_PATHS.site.overview,
 	navigation: {
 		renderContext: 'site',
 		context: 'site',
@@ -285,13 +286,25 @@ registerRoutes({
 	},
 	routes: [
 		{
-			path: MODULE_PATHS.contentTypes.overview,
+			path: MODULE_PATHS.site.overview,
 			component: SiteContentTypesOverview,
 			navigation: {
 				context: 'site',
 				label: 'Content types',
-				parentPath: MODULE_PATHS.siteRoot,
+				parentPath: MODULE_PATHS.site.root,
 			},
+		},
+		{
+			path: MODULE_PATHS.site.detail,
+			breadcrumb: null,
+			component: SiteContentTypesUpdate,
+			redirect: MODULE_PATHS.site.detailSettings,
+			routes: [
+				{
+					path: MODULE_PATHS.site.detailSettings,
+					title: contentTypeTitleHelper(TitleTypes.ContentType),
+				},
+			],
 		},
 	],
 });

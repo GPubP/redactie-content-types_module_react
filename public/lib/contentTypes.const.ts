@@ -86,9 +86,11 @@ export const MODULE_PATHS = {
 	detailCCEditDynamicEditDefaults: `${CC_DYNAMIC_EDIT_PATH}/standaard-waarde`,
 
 	// SITE
-	siteRoot: SITE_ROOT,
-	contentTypes: {
+	site: {
+		root: SITE_ROOT,
 		overview: `${SITE_ROOT}/overzicht`,
+		detail: `${SITE_ROOT}/:contentTypeUuid`,
+		detailSettings: `${SITE_ROOT}/:contentTypeUuid/instellingen`,
 	},
 };
 
