@@ -114,3 +114,5 @@ export const ALERT_CONTAINER_IDS = {
 	create: 'create',
 	update: 'update',
 };
+
+export const DYNAMIC_FIELD_SETTINGS_NAME = 'dynamicFieldSettings';

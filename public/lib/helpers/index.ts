@@ -9,3 +9,4 @@ export * from './generateFRFieldFromCTField';
 export * from './parseFields';
 export * from './generateConfig';
 export * from './compartments';
+export * from './fieldTypes';
