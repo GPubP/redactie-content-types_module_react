@@ -98,6 +98,7 @@ export const BREADCRUMB_OPTIONS = {
 	excludePaths: [
 		'/',
 		'/:tenantId',
+		'/:tenantId/sites',
 		`/:tenantId${CC_BASE_PATH}/:contentComponentUuid`,
 		`/:tenantId${CC_BASE_PATH}/:contentComponentUuid/bewerken`,
 		`/:tenantId${CC_DYNAMIC_BASE_PATH}`,
