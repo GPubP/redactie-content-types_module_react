@@ -32,7 +32,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 		return contentTypIsUpdating === LoadingState.Loading;
 	}, [contentTypIsUpdating]);
 	const [formValue, setFormValue] = useState<ContentTypeDetailModel | null>(null);
-	const [hasChanges] = useDetectValueChanges(!isLoading, formValue);
+	const [hasChanges, resetChangeDetection] = useDetectValueChanges(!isLoading, formValue);
 
 	/**
 	 * Methods
@@ -43,6 +43,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 		}
 
 		onSubmit({ ...contentType?.meta, ...value.meta }, CONTENT_TYPE_DETAIL_TAB_MAP.settings);
+		resetChangeDetection();
 	};
 
 	/**
