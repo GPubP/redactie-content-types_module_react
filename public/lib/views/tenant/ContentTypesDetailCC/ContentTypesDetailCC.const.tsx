@@ -80,4 +80,8 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 	},
 ];
 
-export const CT_DETAIL_CC_ALLOWED_PATHS = [`${TENANT_ROOT}${MODULE_PATHS.detailCCEdit}`];
+export const CT_DETAIL_CC_ALLOWED_PATHS = [
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCEdit}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCNew}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewSettings}`,
+];
