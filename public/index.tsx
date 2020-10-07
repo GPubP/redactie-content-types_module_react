@@ -33,6 +33,7 @@ import {
 	ContentTypesDynamicCCNew,
 	ContentTypesOverview,
 	ContentTypesUpdate,
+	SiteContentTypesDetailSettings,
 	SiteContentTypesOverview,
 	SiteContentTypesUpdate,
 } from './lib/views';
@@ -303,6 +304,7 @@ registerRoutes({
 				{
 					path: MODULE_PATHS.site.detailSettings,
 					title: contentTypeTitleHelper(TitleTypes.ContentType),
+					component: SiteContentTypesDetailSettings,
 				},
 			],
 		},
