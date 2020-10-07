@@ -37,9 +37,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 			}, 0),
 		[contentType._id, sites]
 	);
-	const site = useMemo(() => {
-		return (sites || []).find(s => s.uuid === siteId) || null;
-	}, [siteId, sites]);
+	const site = useMemo(() => (sites || []).find(s => s.uuid === siteId) || null, [siteId, sites]);
 	const [hasChanges, resetChangeDetection] = useDetectValueChanges(!isLoading, siteData);
 
 	/**
@@ -85,8 +83,6 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 	};
 
 	const active = siteData?.contentTypes.includes(contentType._id) || false;
-
-	console.log('is active', active);
 
 	/**
 	 * Render
