@@ -50,7 +50,7 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		{
 			label: 'Status voor site',
 			component(value: string, rowData: ContentTypesPerSiteOverviewTableRow) {
-				return <SiteStatus active={!rowData.activated} />;
+				return <SiteStatus active={rowData.activated} />;
 			},
 			disableSorting: true,
 		},

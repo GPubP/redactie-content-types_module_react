@@ -4,7 +4,7 @@ import {
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import { AlertContainer } from '@redactie/utils';
-import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import React, { FC, MouseEvent, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { DataLoader, RenderChildRoutes } from '../../../components';
@@ -79,7 +79,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	 * Methods
 	 */
 	const navigateToOverview = (): void => {
-		navigate(MODULE_PATHS.site.overview, { siteId });
+		navigate(`/sites${MODULE_PATHS.site.overview}`, { siteId });
 	};
 
 	/**
@@ -89,7 +89,6 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		const extraOptions = {
 			contentType,
 			onCancel: navigateToOverview,
-			onSubmit: () => null,
 		};
 
 		return (
@@ -107,7 +106,13 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 				tabs={activeTabs}
 				linkProps={(props: any) => ({
 					...props,
-					to: generatePath(`${MODULE_PATHS.site.detail}/${props.href}`, {
+					onClick: (e: MouseEvent) => {
+						const tab = activeTabs.find(tab => tab.target === props.href);
+						if (tab?.disabled) {
+							e.preventDefault();
+						}
+					},
+					to: generatePath(`/sites${MODULE_PATHS.site.detail}/${props.href}`, {
 						siteId,
 						contentTypeUuid,
 					}),
