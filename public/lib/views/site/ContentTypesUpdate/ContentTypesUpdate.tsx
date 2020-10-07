@@ -14,6 +14,7 @@ import {
 	ContentTypesRouteProps,
 	LoadingState,
 } from '../../../contentTypes.types';
+import { disableTabs } from '../../../helpers/tabs';
 import {
 	useActiveField,
 	useActiveRouteConfig,
@@ -24,6 +25,7 @@ import {
 	useTenantContext,
 } from '../../../hooks';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
+import { ExternalTabModel, useExternalTabsFacade } from '../../../store/api/externalTabs';
 import { contentTypesFacade } from '../../../store/contentTypes';
 
 import { SITE_CT_DETAIL_TABS } from './ContentTypesUpdate.const';
@@ -39,7 +41,12 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const { contentTypeUuid } = useParams<ContentTypesRouteParams>();
 	const { navigate, generatePath } = useNavigate();
 	const [contentTypeLoadingState, , contentType, title] = useContentType();
-	const activeTabs = useActiveTabs(SITE_CT_DETAIL_TABS, [], location.pathname);
+	const [{ all: externalTabs }] = useExternalTabsFacade();
+	const activeTabs = useActiveTabs(
+		SITE_CT_DETAIL_TABS,
+		disableTabs(externalTabs) as ExternalTabModel[],
+		location.pathname
+	);
 	const { siteId, tenantId } = useTenantContext();
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);

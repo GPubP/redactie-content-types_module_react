@@ -14,11 +14,4 @@ export const SITE_CT_DETAIL_TABS: Tab[] = [
 		active: false,
 		disabled: true,
 	},
-	{
-		name: 'Navigatie',
-		target: 'navigatie',
-		type: TabTypes.INTERNAL,
-		active: false,
-		disabled: true,
-	},
 ];

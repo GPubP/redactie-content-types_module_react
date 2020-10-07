@@ -39,7 +39,7 @@ import {
 	ContentTypeUpdateRequest,
 	ModuleSettings,
 } from '../../../services/contentTypes';
-import { useExternalTabstFacade } from '../../../store/api/externalTabs/externalTabs.facade';
+import { useExternalTabsFacade } from '../../../store/api/externalTabs/externalTabs.facade';
 import {
 	ContentTypeDetailModel,
 	ContentTypeFieldDetailModel,
@@ -60,7 +60,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 	const [presetsLoadingState, presets] = usePresets();
 	const [contentTypeLoadingState, , contentType, title] = useContentType();
-	const [{ all: externalTabs, active: activeExternalTab }] = useExternalTabstFacade();
+	const [{ all: externalTabs, active: activeExternalTab }] = useExternalTabsFacade();
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, externalTabs, location.pathname);
 	const { tenantId } = useTenantContext();
 	const breadcrumbs = useRoutesBreadcrumbs([
