@@ -38,7 +38,7 @@ import {
 	SiteContentTypesOverview,
 } from './lib/views';
 
-// Uncomment the next line if you need to activevate the redux devtools
+// Uncomment the next line if you need to activate the redux devtools
 // NOTE!: don't commit when redux devtools is active
 // akitaDevtools();
 
