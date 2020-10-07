@@ -85,7 +85,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		return () => {
 			compartmentsFacade.clearCompartments();
 		};
-	}, [fieldType]); // eslint-disable-line
+	}, [fieldType, navItemMatcher]); // eslint-disable-line
 
 	useEffect(() => {
 		if (
