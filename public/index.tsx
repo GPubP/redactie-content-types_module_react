@@ -38,7 +38,9 @@ import {
 	SiteContentTypesOverview,
 } from './lib/views';
 
-akitaDevtools();
+// Uncomment the next line if you need to activate the redux devtools
+// NOTE!: don't commit when redux devtools is active
+// akitaDevtools();
 
 const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, tenantId }) => {
 	useEffect(() => {
@@ -160,7 +162,7 @@ Core.routes.register({
 			routes: [
 				{
 					path: MODULE_PATHS.detailCCEditDynamicNew,
-					breadcrumb: 'Vrije paragraaf',
+					breadcrumb: null,
 					component: ContentTypesDynamicCCNew,
 					redirect: MODULE_PATHS.detailCCEditDynamicNewSettings,
 					routes: [
@@ -188,7 +190,7 @@ Core.routes.register({
 				},
 				{
 					path: MODULE_PATHS.detailCCEditDynamicEdit,
-					breadcrumb: 'Vrije paragraaf',
+					breadcrumb: null,
 					component: ContentTypesDynamicCCEdit,
 					redirect: MODULE_PATHS.detailCCEditDynamicEditSettings,
 					routes: [
@@ -244,7 +246,7 @@ Core.routes.register({
 				},
 				{
 					path: MODULE_PATHS.detailCCEdit,
-					breadcrumb: null,
+					breadcrumb: 'Vrije paragraaf',
 					component: ContentTypesCCEdit,
 					redirect: MODULE_PATHS.detailCCEditSettings,
 					routes: [
