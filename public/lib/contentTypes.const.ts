@@ -98,7 +98,6 @@ export const BREADCRUMB_OPTIONS = {
 		'/',
 		`${TENANT_ROOT}`,
 		`${TENANT_ROOT}${CC_BASE_PATH}/:contentComponentUuid`,
-		// `/:tenantId${CC_BASE_PATH}/:contentComponentUuid/bewerken`,
 		`${TENANT_ROOT}${CC_DYNAMIC_BASE_PATH}`,
 		`${TENANT_ROOT}${CC_DYNAMIC_BASE_PATH}/:dynamicContentComponentUuid([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})`,
 		`${TENANT_ROOT}${CC_DYNAMIC_EDIT_PATH}`,
