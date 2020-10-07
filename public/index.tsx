@@ -160,7 +160,7 @@ Core.routes.register({
 			routes: [
 				{
 					path: MODULE_PATHS.detailCCEditDynamicNew,
-					breadcrumb: 'Vrije paragraaf',
+					breadcrumb: null,
 					component: ContentTypesDynamicCCNew,
 					redirect: MODULE_PATHS.detailCCEditDynamicNewSettings,
 					routes: [
@@ -188,7 +188,7 @@ Core.routes.register({
 				},
 				{
 					path: MODULE_PATHS.detailCCEditDynamicEdit,
-					breadcrumb: 'Vrije paragraaf',
+					breadcrumb: null,
 					component: ContentTypesDynamicCCEdit,
 					redirect: MODULE_PATHS.detailCCEditDynamicEditSettings,
 					routes: [
@@ -244,7 +244,7 @@ Core.routes.register({
 				},
 				{
 					path: MODULE_PATHS.detailCCEdit,
-					breadcrumb: null,
+					breadcrumb: 'Vrije paragraaf',
 					component: ContentTypesCCEdit,
 					redirect: MODULE_PATHS.detailCCEditSettings,
 					routes: [
