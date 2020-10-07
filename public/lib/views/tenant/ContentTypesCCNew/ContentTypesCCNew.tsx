@@ -51,6 +51,9 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
 	const [hasChanges] = useDetectValueChanges(!initialLoading, activeField);
+	const locationState = location.state ?? {
+		keepActiveField: false,
+	};
 	const [
 		{ compartments, active: activeCompartment },
 		register,
@@ -62,9 +65,13 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
 		onClick: () => activate(c.name),
-		to: generatePath(`${c.slug || c.name}${location.search}`, {
-			contentTypeUuid,
-		}),
+		to: {
+			pathname: generatePath(`${c.slug || c.name}`, {
+				contentTypeUuid,
+			}),
+			search: location.search,
+			state: { keepActiveField: !!locationState?.keepActiveField },
+		},
 	}));
 
 	/**
@@ -85,7 +92,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		return () => {
 			compartmentsFacade.clearCompartments();
 		};
-	}, [fieldType]); // eslint-disable-line
+	}, [fieldType, navItemMatcher]); // eslint-disable-line
 
 	useEffect(() => {
 		if (
@@ -130,13 +137,14 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		// ContentTypesCCNew view
 		// We can not generate a new field because when we do, all changes on the current active
 		// field will be lost
-		if (fieldType && !location.state?.keepActiveField) {
+		if (fieldType && !locationState.keepActiveField) {
 			const initialValues = { label: name || '', name: kebabCase(name || '') };
 			contentTypesFacade.setActiveField(
 				generateFieldFromType(fieldType, initialValues, preset || undefined)
 			);
 		}
-	}, [fieldType, name, preset, location.state]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [fieldType, name, preset, locationState.keepActiveField]);
 
 	/**
 	 * Clear store on component destroy

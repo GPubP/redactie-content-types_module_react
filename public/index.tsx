@@ -38,7 +38,9 @@ import {
 	SiteContentTypesOverview,
 } from './lib/views';
 
-akitaDevtools();
+// Uncomment the next line if you need to activate the redux devtools
+// NOTE!: don't commit when redux devtools is active
+// akitaDevtools();
 
 const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, tenantId }) => {
 	useEffect(() => {
