@@ -29,6 +29,7 @@ export interface ContentTypesDetailRouteParams {
 
 export interface ContentTypesDetailRouteProps<Params = ContentTypesDetailRouteParams>
 	extends RouteConfigComponentProps<Params> {
+	readonly allowedPaths?: string[];
 	readonly presets: Preset[];
 	readonly fieldTypes: FieldType[];
 	readonly contentType: ContentTypeDetailModel;

@@ -16,11 +16,13 @@ import { ContentTypeDetailModel } from '../../../store/contentTypes';
 import { CT_SETTINGS_VALIDATION_SCHEMA } from './ContentTypesDetailSettings.const';
 
 const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
+	allowedPaths,
 	onCancel,
 	onSubmit,
 	contentType,
 }) => {
 	const isUpdate = !!contentType.uuid;
+
 	/**
 	 * Hooks
 	 */
@@ -30,7 +32,6 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 		return contentTypIsUpdating === LoadingState.Loading;
 	}, [contentTypIsUpdating]);
 	const [formValue, setFormValue] = useState<ContentTypeDetailModel | null>(null);
-	const [blockHasChanges, setBlockHasChanges] = useState<boolean>(false);
 	const [hasChanges] = useDetectValueChanges(!isLoading, formValue);
 
 	/**
@@ -40,8 +41,6 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 		if (!value) {
 			return;
 		}
-
-		setBlockHasChanges(true);
 
 		onSubmit({ ...contentType?.meta, ...value.meta }, CONTENT_TYPE_DETAIL_TAB_MAP.settings);
 	};
@@ -138,8 +137,9 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 							</ActionBarContentSection>
 						</ActionBar>
 						<LeavePrompt
-							when={!blockHasChanges && hasChanges}
-							shouldBlockNavigationOnConfirm={() => true}
+							allowedPaths={allowedPaths}
+							when={hasChanges}
+							shouldBlockNavigationOnConfirm
 							onConfirm={() => submitForm()}
 						/>
 					</>
