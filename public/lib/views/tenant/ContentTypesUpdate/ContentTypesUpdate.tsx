@@ -14,6 +14,7 @@ import {
 	CONTENT_DETAIL_TABS,
 	CONTENT_TYPE_DETAIL_TAB_MAP,
 	MODULE_PATHS,
+	TENANT_ROOT,
 } from '../../../contentTypes.const';
 import {
 	ContentTypesRouteParams,
@@ -63,12 +64,19 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const [{ all: externalTabs, active: activeExternalTab }] = useExternalTabsFacade();
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, externalTabs, location.pathname);
 	const { tenantId } = useTenantContext();
-	const breadcrumbs = useRoutesBreadcrumbs([
-		{
-			name: 'Content types',
-			target: generatePath(MODULE_PATHS.admin),
-		},
-	]);
+	const showParagraphBreadcrumb = /\/(dynamisch)\//.test(location.pathname);
+	const excludePaths = showParagraphBreadcrumb
+		? []
+		: [`${TENANT_ROOT}${MODULE_PATHS.detailCCEdit}`];
+	const breadcrumbs = useRoutesBreadcrumbs(
+		[
+			{
+				name: 'Content types',
+				target: generatePath(MODULE_PATHS.admin),
+			},
+		],
+		excludePaths
+	);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const [fieldsHaveChanged, resetFieldsHaveChanged] = useDetectValueChanges(
 		contentTypeLoadingState === LoadingState.Loaded,
@@ -146,6 +154,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			modulesConfig: newModulesConfig,
 		};
 	};
+
 	const getRequestBody = (
 		sectionData: ContentTypeFieldDetailModel[] | ContentTypeMeta | ExternalTabValue,
 		tab: Tab

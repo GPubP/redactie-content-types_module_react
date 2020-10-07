@@ -37,6 +37,7 @@ export const CONTENT_DETAIL_TABS: Tab[] = [
 
 export const SITE_PARAM = 'siteId';
 
+export const TENANT_ROOT = '/:tenantId';
 const SITE_ROOT = `/:${SITE_PARAM}/content-types`;
 const CC_BASE_PATH = '/content-types/:contentTypeUuid/content-componenten';
 const CC_EDIT_PATH = `${CC_BASE_PATH}/:contentComponentUuid/bewerken`;
@@ -97,12 +98,12 @@ export const MODULE_PATHS = {
 export const BREADCRUMB_OPTIONS = {
 	excludePaths: [
 		'/',
-		'/:tenantId',
-		'/:tenantId/sites',
-		`/:tenantId${CC_BASE_PATH}/:contentComponentUuid`,
-		`/:tenantId${CC_BASE_PATH}/:contentComponentUuid/bewerken`,
-		`/:tenantId${CC_DYNAMIC_BASE_PATH}`,
-		`/:tenantId${CC_DYNAMIC_BASE_PATH}/:dynamicContentComponentUuid([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})`,
+		`${TENANT_ROOT}`,
+		`${TENANT_ROOT}/sites`,
+		`${TENANT_ROOT}${CC_BASE_PATH}/:contentComponentUuid`,
+		`${TENANT_ROOT}${CC_DYNAMIC_BASE_PATH}`,
+		`${TENANT_ROOT}${CC_DYNAMIC_BASE_PATH}/:dynamicContentComponentUuid([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})`,
+		`${TENANT_ROOT}${CC_DYNAMIC_EDIT_PATH}`,
 	],
 };
 
@@ -117,3 +118,5 @@ export const ALERT_CONTAINER_IDS = {
 	create: 'create',
 	update: 'update',
 };
+
+export const DYNAMIC_FIELD_SETTINGS_NAME = 'dynamicFieldSettings';

@@ -7,13 +7,12 @@ import useRoutes from '../useRoutes/useRoutes';
 
 const useRoutesBreadcrumbs = (
 	extraBreadcrumbs: Breadcrumb[] = [],
-	extraProps?: Record<string, unknown>
+	excludePaths: string[] = []
 ): ReactNode => {
 	const { generatePath } = useNavigate();
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
-		extraProps,
 		extraBreadcrumbs: [
 			{
 				name: 'Home',
@@ -25,6 +24,7 @@ const useRoutesBreadcrumbs = (
 			},
 			...extraBreadcrumbs,
 		],
+		excludePaths: [...BREADCRUMB_OPTIONS.excludePaths, ...excludePaths],
 	});
 
 	return breadcrumbs;

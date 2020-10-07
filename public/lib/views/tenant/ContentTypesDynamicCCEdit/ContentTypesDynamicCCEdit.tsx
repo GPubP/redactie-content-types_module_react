@@ -96,7 +96,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		return () => {
 			compartmentsFacade.clearCompartments();
 		};
-	}, [activeField]); // eslint-disable-line
+	}, [activeField, navItemMatcher]); // eslint-disable-line
 
 	useEffect(() => {
 		if (activeField) {

@@ -1,4 +1,5 @@
 export * from './compartments';
+export * from './fieldTypes';
 export * from './generateCCFormState';
 export * from './generateConfig';
 export * from './generateEmptyContentType';
