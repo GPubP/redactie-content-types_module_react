@@ -1,12 +1,11 @@
 import { Button, Textarea, TextField } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { useDetectValueChanges } from '@redactie/utils';
+import { LeavePrompt, useDetectValueChanges } from '@redactie/utils';
 import { ErrorMessage, Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC, useMemo, useState } from 'react';
 
-import LeavePrompt from '../../../components/LeavePrompt/LeavePrompt';
 import { useCoreTranslation } from '../../../connectors/translations';
 import { CONTENT_TYPE_DETAIL_TAB_MAP } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
@@ -31,6 +30,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 		return contentTypIsUpdating === LoadingState.Loading;
 	}, [contentTypIsUpdating]);
 	const [formValue, setFormValue] = useState<ContentTypeDetailModel | null>(null);
+	const [blockHasChanges, setBlockHasChanges] = useState<boolean>(false);
 	const [hasChanges] = useDetectValueChanges(!isLoading, formValue);
 
 	/**
@@ -40,6 +40,9 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 		if (!value) {
 			return;
 		}
+
+		setBlockHasChanges(true);
+
 		onSubmit({ ...contentType?.meta, ...value.meta }, CONTENT_TYPE_DETAIL_TAB_MAP.settings);
 	};
 
@@ -122,7 +125,9 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 										iconLeft={isLoading ? 'circle-o-notch fa-spin' : null}
 										disabled={isLoading || !hasChanges}
 										className="u-margin-left-xs"
-										onClick={submitForm}
+										onClick={() => {
+											submitForm();
+										}}
 										type="success"
 									>
 										{isUpdate
@@ -132,7 +137,11 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 								</div>
 							</ActionBarContentSection>
 						</ActionBar>
-						<LeavePrompt when={hasChanges} onConfirm={() => onFormSubmit(formValue)} />
+						<LeavePrompt
+							when={!blockHasChanges && hasChanges}
+							shouldBlockNavigationOnConfirm={() => true}
+							onConfirm={() => submitForm()}
+						/>
 					</>
 				);
 			}}

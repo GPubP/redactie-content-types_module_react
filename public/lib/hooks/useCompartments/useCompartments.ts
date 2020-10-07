@@ -20,8 +20,10 @@ const useCompartments = (): [
 ] => {
 	const register = (
 		compartments: CompartmentModel[] | CompartmentModel,
-		options: { replace?: true }
-	): void => compartmentsFacade.register(compartments, options);
+		options: CompartmentRegisterOptions
+	): void => {
+		compartmentsFacade.register(compartments, options);
+	};
 	const activate = (name: ID): void => compartmentsFacade.setActiveByNamOrSlug(name);
 	const validate = (name: string, isValid: boolean): void =>
 		compartmentsFacade.setValid(name, isValid);

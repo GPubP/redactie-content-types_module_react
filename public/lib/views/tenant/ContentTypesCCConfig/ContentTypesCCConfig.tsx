@@ -184,7 +184,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 
 		onSubmit({
 			config: config.config,
-			...(Array.isArray(config.validationChecks)
+			...(Array.isArray(config.validationChecks) && config.validationChecks.length > 0
 				? { validation: { checks: config.validationChecks } }
 				: {}),
 		});

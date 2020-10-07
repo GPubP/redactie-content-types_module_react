@@ -1,6 +1,8 @@
 import { akitaDevtools } from '@datorama/akita';
 import Core from '@redactie/redactie-core';
+import { omit } from 'ramda';
 import React, { FC, useEffect, useMemo } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { registerContentTypeAPI } from './lib/api/index';
 import { RenderChildRoutes } from './lib/components';
@@ -9,7 +11,7 @@ import DynamicFieldSettings from './lib/components/Fields/DynamicFieldSettings/D
 import formRendererConnector from './lib/connectors/formRenderer';
 import rolesRightsConnector from './lib/connectors/rolesRights';
 import { registerRoutes } from './lib/connectors/sites';
-import { MODULE_PATHS } from './lib/contentTypes.const';
+import { DYNAMIC_FIELD_SETTINGS_NAME, MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesModuleProps } from './lib/contentTypes.types';
 import { TenantContext } from './lib/context';
 import { contentTypeTitleHelper } from './lib/helpers/contentTypeTitleHelper/contentTypeTitleHelper';
@@ -36,7 +38,9 @@ import {
 	SiteContentTypesOverview,
 } from './lib/views';
 
-akitaDevtools();
+// Uncomment the next line if you need to activate the redux devtools
+// NOTE!: don't commit when redux devtools is active
+// akitaDevtools();
 
 const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, tenantId }) => {
 	useEffect(() => {
@@ -46,6 +50,25 @@ const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, tenantId })
 	}, []);
 
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
+
+	/**
+	 * Remove KeepActiveField state prop from the location object
+	 * when we render this module for the first time or when the user refreshes the page
+	 *
+	 * This is needed because once the keepActiveField prop is set the browser will keep this state
+	 * in memory even if the user refreshes the page.
+	 *
+	 * The keepActiveField state prop is used in the following views:
+	 *  - ContentTypesDynaminCCNew
+	 *  - ContentTypesCCNew
+	 */
+	const history = useHistory<{ keepActiveField?: boolean }>();
+	useEffect(() => {
+		if (history.location.state && history.location.state.keepActiveField) {
+			const state = omit(['keepActiveField'], history.location.state);
+			history.replace({ ...history.location, state });
+		}
+	}, [history]);
 
 	return (
 		<TenantContext.Provider value={{ tenantId }}>
@@ -139,7 +162,7 @@ Core.routes.register({
 			routes: [
 				{
 					path: MODULE_PATHS.detailCCEditDynamicNew,
-					breadcrumb: 'Vrije paragraaf',
+					breadcrumb: null,
 					component: ContentTypesDynamicCCNew,
 					redirect: MODULE_PATHS.detailCCEditDynamicNewSettings,
 					routes: [
@@ -167,7 +190,7 @@ Core.routes.register({
 				},
 				{
 					path: MODULE_PATHS.detailCCEditDynamicEdit,
-					breadcrumb: 'Vrije paragraaf',
+					breadcrumb: null,
 					component: ContentTypesDynamicCCEdit,
 					redirect: MODULE_PATHS.detailCCEditDynamicEditSettings,
 					routes: [
@@ -223,7 +246,7 @@ Core.routes.register({
 				},
 				{
 					path: MODULE_PATHS.detailCCEdit,
-					breadcrumb: null,
+					breadcrumb: 'Vrije paragraaf',
 					component: ContentTypesCCEdit,
 					redirect: MODULE_PATHS.detailCCEditSettings,
 					routes: [
@@ -299,7 +322,7 @@ registerRoutes({
 registerContentTypeAPI();
 
 formRendererConnector.api.fieldRegistry.add({
-	name: 'dynamicFieldSettings',
+	name: DYNAMIC_FIELD_SETTINGS_NAME,
 	module: 'content-types',
 	component: DynamicFieldSettings,
 });

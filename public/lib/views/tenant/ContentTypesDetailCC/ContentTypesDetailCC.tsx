@@ -1,6 +1,7 @@
 import { Button, Card } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
+import { LeavePrompt } from '@redactie/utils';
 import { Field, Formik } from 'formik';
 import { path, pathOr } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
@@ -15,6 +16,7 @@ import {
 	LoadingState,
 	NewCCFormState,
 } from '../../../contentTypes.types';
+import { sortFieldTypes } from '../../../helpers';
 import { useContentType, useNavigate } from '../../../hooks';
 import { ContentTypeFieldDetailModel } from '../../../store/contentTypes';
 
@@ -35,28 +37,14 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	const { contentTypeUuid } = useParams<ContentTypesDetailRouteParams>();
 	const { navigate, generatePath } = useNavigate();
 	const [t] = useCoreTranslation();
-	const [, contentTypIsUpdating] = useContentType();
+	const [, contentTypeIsUpdating] = useContentType();
 	const isLoading = useMemo(() => {
-		return contentTypIsUpdating === LoadingState.Loading;
-	}, [contentTypIsUpdating]);
-	const fields = useMemo(
-		() =>
-			[...fieldTypes, ...presets].sort((a, b) => {
-				const nameA = a.data?.label?.toUpperCase(); // ignore upper and lowercase
-				const nameB = b.data?.label?.toUpperCase(); // ignore upper and lowercase
-
-				if (nameA < nameB) {
-					return -1;
-				}
-
-				if (nameA > nameB) {
-					return 1;
-				}
-
-				return 0;
-			}),
-		[fieldTypes, presets]
-	);
+		return contentTypeIsUpdating === LoadingState.Loading;
+	}, [contentTypeIsUpdating]);
+	const fields = useMemo(() => [...fieldTypes, ...presets].sort(sortFieldTypes), [
+		fieldTypes,
+		presets,
+	]);
 
 	/**
 	 * Variables
@@ -97,6 +85,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	/**
 	 * Render
 	 */
+
 	const renderTableField = ({
 		value: fields,
 	}: {
@@ -128,25 +117,19 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		);
 	};
 
-	const renderTableForm = (): ReactElement => {
-		return (
-			<Formik
-				enableReinitialize={true}
-				initialValues={{ fields: contentType.fields }}
-				onSubmit={onCCSave}
-				validationSchema={CT_CC_VALIDATION_SCHEMA}
-			>
-				{() => <Field name="fields" placeholder="No fields" as={renderTableField} />}
-			</Formik>
-		);
-	};
-
-	const renderDetail = (): ReactElement => {
-		return (
+	return (
+		<>
 			<div className="u-margin-bottom-lg">
 				<h5>Content componenten</h5>
 
-				{renderTableForm()}
+				<Formik
+					enableReinitialize={true}
+					initialValues={{ fields: contentType.fields }}
+					onSubmit={onCCSave}
+					validationSchema={CT_CC_VALIDATION_SCHEMA}
+				>
+					{() => <Field name="fields" placeholder="No fields" as={renderTableField} />}
+				</Formik>
 
 				<div className="u-margin-top">
 					<Card>
@@ -162,12 +145,6 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 					</Card>
 				</div>
 			</div>
-		);
-	};
-
-	return (
-		<>
-			{renderDetail()}
 
 			<ActionBar className="o-action-bar--fixed" isOpen>
 				<ActionBarContentSection>
@@ -187,6 +164,12 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 					</div>
 				</ActionBarContentSection>
 			</ActionBar>
+
+			<LeavePrompt
+				shouldBlockNavigationOnConfirm={() => true}
+				when={fieldsHaveChanged}
+				onConfirm={onCCSave}
+			/>
 		</>
 	);
 };

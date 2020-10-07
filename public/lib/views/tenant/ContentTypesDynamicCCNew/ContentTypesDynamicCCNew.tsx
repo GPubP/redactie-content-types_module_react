@@ -1,7 +1,7 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { alertService } from '@redactie/utils';
+import { alertService, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { equals, isEmpty, omit } from 'ramda';
@@ -30,11 +30,13 @@ import { ContentTypeFieldDetailModel } from '../../../store/contentTypes';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
 import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { presetsFacade } from '../../../store/presets';
+import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import { DYNAMIC_CC_NEW_COMPARTMENTS } from './ContentTypesDynamicCCNew.const';
 
 const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	contentType,
+	location,
 	match,
 	route,
 }) => {
@@ -57,6 +59,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	const [t] = useCoreTranslation();
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
+	const [hasChanges] = useDetectValueChanges(!initialLoading, dynamicActiveField);
 	const [
 		{ compartments, active: activeCompartment },
 		register,
@@ -68,7 +71,10 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
 		onClick: () => activate(c.name),
-		to: generatePath(c.slug || c.name, { contentTypeUuid, contentComponentUuid }),
+		to: generatePath(`${c.slug || c.name}${location.search}`, {
+			contentTypeUuid,
+			contentComponentUuid,
+		}),
 	}));
 
 	/**
@@ -83,17 +89,14 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		if (!fieldType) {
 			return;
 		}
-
 		register(filterCompartments(DYNAMIC_CC_NEW_COMPARTMENTS, navItemMatcher), {
 			replace: true,
 		});
-	}, [fieldType]); // eslint-disable-line
 
-	useEffect(() => {
-		dynamicFieldFacade.clearActiveField();
-		presetsFacade.clearPreset();
-		fieldTypesFacade.clearFieldType();
-	}, []);
+		return () => {
+			compartmentsFacade.clearCompartments();
+		};
+	}, [fieldType, navItemMatcher]); // eslint-disable-line
 
 	useEffect(() => {
 		if (
@@ -169,26 +172,54 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	}, [fieldType, preset]);
 
 	/**
+	 * Clear store on component destroy
+	 */
+	useEffect(
+		() => () => {
+			dynamicFieldFacade.clearActiveField();
+			presetsFacade.clearPreset();
+			fieldTypesFacade.clearFieldType();
+		},
+		[]
+	);
+
+	/**
 	 * Methods
 	 */
-	const navigateToOverview = (): void => {
+	const navigateToDetail = (): void => {
 		navigate(
 			activeField?.__new ? MODULE_PATHS.detailCCNewConfig : MODULE_PATHS.detailCCEditConfig,
 			{
 				contentTypeUuid,
 				contentComponentUuid,
-				...(activeField?.__new ? { fieldType: activeField?.fieldType.uuid } : {}),
-			}
+			},
+			{
+				// This will keep the current active field (paragraaf) in state when we redirect.
+				// Changes made to the configuration of this field will not be overwritten
+				keepActiveField: true,
+			},
+			new URLSearchParams(
+				activeField?.__new
+					? {
+							fieldType: activeField?.fieldType.uuid,
+							name: activeField.label,
+					  }
+					: {}
+			)
 		);
 	};
 
-	const onFieldSubmit = (): void => {
+	const onFieldSubmit = (cancelNavigation = false): void => {
 		if (!dynamicActiveField) {
 			return;
 		}
 
 		const { current: formikRef } = activeCompartmentFormikRef;
-		const compartmentsAreValid = validateCompartments(compartments, activeField, validate);
+		const compartmentsAreValid = validateCompartments(
+			compartments,
+			dynamicActiveField,
+			validate
+		);
 
 		// Validate current form to trigger fields error states
 		if (formikRef) {
@@ -201,7 +232,10 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		// Only submit the form if all compartments are valid
 		if (compartmentsAreValid) {
 			dynamicFieldFacade.addField(omit(['__new'])(dynamicActiveField));
-			navigateToOverview();
+
+			if (!cancelNavigation) {
+				navigateToDetail();
+			}
 		} else {
 			alertService.dismiss();
 			alertService.danger(
@@ -268,12 +302,12 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 				<ActionBar className="o-action-bar--fixed" isOpen>
 					<ActionBarContentSection>
 						<div className="u-wrapper row end-xs">
-							<Button onClick={navigateToOverview} negative>
+							<Button onClick={navigateToDetail} negative>
 								{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 							</Button>
 							<Button
 								className="u-margin-left-xs"
-								onClick={onFieldSubmit}
+								onClick={() => onFieldSubmit()}
 								type="primary"
 							>
 								{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
@@ -281,6 +315,11 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 						</div>
 					</ActionBarContentSection>
 				</ActionBar>
+				<LeavePrompt
+					shouldBlockNavigationOnConfirm={() => true}
+					when={hasChanges}
+					onConfirm={() => onFieldSubmit(true)}
+				/>
 			</>
 		);
 	};

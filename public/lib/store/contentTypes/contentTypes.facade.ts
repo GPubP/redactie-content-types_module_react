@@ -79,6 +79,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 
 	public getContentType(uuid: string): void {
 		const { isFetchingOne, contentType } = this.query.getValue();
+
 		if (isFetchingOne || contentType?.uuid === uuid) {
 			return;
 		}
@@ -149,7 +150,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 			})
 			.catch(error => {
 				this.store.setError(error);
-				this.alertService(alertMessages.update.error, 'update', 'success');
+				this.alertService(alertMessages.update.error, 'update', 'error');
 			})
 			.finally(() => this.store.setIsUpdating(false));
 	}
@@ -234,6 +235,10 @@ export class ContentTypesFacade extends BaseEntityFacade<
 				validation: {
 					...activeField.validation,
 					...payload.validation,
+					checks: [
+						...(activeField.validation?.checks || []),
+						...(payload.validation?.checks || []),
+					],
 				},
 				defaultValue: clearDefaultValue
 					? undefined

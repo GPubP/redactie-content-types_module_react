@@ -1,12 +1,12 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { alertService } from '@redactie/utils';
+import { alertService, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { equals, isEmpty } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 import { DataLoader, RenderChildRoutes } from '../../../components';
 import { useCoreTranslation } from '../../../connectors/translations';
@@ -27,6 +27,7 @@ import {
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { presetsFacade } from '../../../store/presets';
+import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import { CC_NEW_COMPARTMENTS } from './ContentTypesCCNew.const';
 
@@ -37,6 +38,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	 * Hooks
 	 */
 	const [hasSubmit, setHasSubmit] = useState(false);
+	const location = useLocation<{ keepActiveField: boolean }>();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const activeField = useActiveField();
@@ -48,6 +50,10 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	const [t] = useCoreTranslation();
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
+	const [hasChanges] = useDetectValueChanges(!initialLoading, activeField);
+	const locationState = location.state ?? {
+		keepActiveField: false,
+	};
 	const [
 		{ compartments, active: activeCompartment },
 		register,
@@ -59,7 +65,13 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
 		onClick: () => activate(c.name),
-		to: generatePath(c.slug || c.name, { contentTypeUuid }),
+		to: {
+			pathname: generatePath(`${c.slug || c.name}`, {
+				contentTypeUuid,
+			}),
+			search: location.search,
+			state: { keepActiveField: !!locationState?.keepActiveField },
+		},
 	}));
 
 	/**
@@ -76,21 +88,21 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		}
 
 		register(filterCompartments(CC_NEW_COMPARTMENTS, navItemMatcher), { replace: true });
-	}, [fieldType]); // eslint-disable-line
 
-	useEffect(() => {
-		presetsFacade.clearPreset();
-		fieldTypesFacade.clearFieldType();
-	}, []);
+		return () => {
+			compartmentsFacade.clearCompartments();
+		};
+	}, [fieldType, navItemMatcher]); // eslint-disable-line
 
 	useEffect(() => {
 		if (
 			fieldTypeLoadingState !== LoadingState.Loading &&
-			presetLoadingState !== LoadingState.Loading
+			presetLoadingState !== LoadingState.Loading &&
+			activeField
 		) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
-	}, [presetLoadingState, fieldTypeLoadingState]);
+	}, [presetLoadingState, fieldTypeLoadingState, activeField]);
 
 	/**
 	 * Get preset or fieldType based on the input of the
@@ -120,23 +132,39 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	 * make it the active working field in the store
 	 */
 	useEffect(() => {
-		if (fieldType) {
+		// Keep the current active field when keepActiveField is set to true
+		// This happens when the user navigates from the ContentTypesDynamicCCNew to the
+		// ContentTypesCCNew view
+		// We can not generate a new field because when we do, all changes on the current active
+		// field will be lost
+		if (fieldType && !locationState.keepActiveField) {
 			const initialValues = { label: name || '', name: kebabCase(name || '') };
-
 			contentTypesFacade.setActiveField(
 				generateFieldFromType(fieldType, initialValues, preset || undefined)
 			);
 		}
-	}, [fieldType, name, preset]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [fieldType, name, preset, locationState.keepActiveField]);
+
+	/**
+	 * Clear store on component destroy
+	 */
+	useEffect(
+		() => () => {
+			presetsFacade.clearPreset();
+			fieldTypesFacade.clearFieldType();
+		},
+		[]
+	);
 
 	/**
 	 * Methods
 	 */
-	const navigateToOverview = (): void => {
+	const navigateToDetail = (): void => {
 		navigate(MODULE_PATHS.detailCC, { contentTypeUuid });
 	};
 
-	const onCTSubmit = (): void => {
+	const onCTSubmit = (cancelNavigation = false): void => {
 		if (!activeField) {
 			return;
 		}
@@ -156,7 +184,10 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		if (compartmentsAreValid) {
 			contentTypesFacade.addField(activeField);
 			contentTypesFacade.clearActiveField();
-			navigateToOverview();
+
+			if (!cancelNavigation) {
+				navigateToDetail();
+			}
 		} else {
 			alertService.dismiss();
 			alertService.danger(
@@ -178,6 +209,12 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	/**
 	 * Render
 	 */
+
+	// Can't create a new CC if the fieldTypeUuid or presetUuid and name are unknown
+	if (!(fieldTypeUuid || presetUuid) || !name) {
+		navigateToDetail();
+	}
+
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
 			CTField: activeField,
@@ -218,15 +255,24 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			<ActionBar className="o-action-bar--fixed" isOpen>
 				<ActionBarContentSection>
 					<div className="u-wrapper row end-xs">
-						<Button onClick={navigateToOverview} negative>
+						<Button onClick={navigateToDetail} negative>
 							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
-						<Button className="u-margin-left-xs" onClick={onCTSubmit} type="success">
+						<Button
+							className="u-margin-left-xs"
+							onClick={() => onCTSubmit()}
+							type="success"
+						>
 							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
 						</Button>
 					</div>
 				</ActionBarContentSection>
 			</ActionBar>
+			<LeavePrompt
+				shouldBlockNavigationOnConfirm={() => true}
+				when={hasChanges}
+				onConfirm={() => onCTSubmit(true)}
+			/>
 		</>
 	);
 
