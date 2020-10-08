@@ -1,4 +1,4 @@
-import { FORM_CC_SETTINGS_VALIDATION_SCHEMA } from '../../../components/forms/FormCCSettings/FormCCSettings.const';
+import { FORM_CC_SETTINGS_VALIDATION_SCHEMA } from '../../../components';
 import { MODULE_PATHS } from '../../../contentTypes.const';
 import { FieldType } from '../../../services/fieldTypes/fieldTypes.service.types';
 import { CompartmentModel, CompartmentType } from '../../../store/ui/compartments';

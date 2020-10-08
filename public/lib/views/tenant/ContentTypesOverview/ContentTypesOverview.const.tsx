@@ -4,8 +4,7 @@ import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18n
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { SiteStatus } from '../../../components';
-import { FilterFormState } from '../../../components/FilterForm/FilterForm.types';
+import { FilterFormState, SiteStatus } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
 
 import { ContentTypesOverviewTableRow } from './ContentTypesOverview.types';

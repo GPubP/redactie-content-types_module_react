@@ -87,9 +87,11 @@ export const MODULE_PATHS = {
 	detailCCEditDynamicEditDefaults: `${CC_DYNAMIC_EDIT_PATH}/standaard-waarde`,
 
 	// SITE
-	siteRoot: SITE_ROOT,
-	contentTypes: {
+	site: {
+		root: SITE_ROOT,
 		overview: `${SITE_ROOT}/overzicht`,
+		detail: `${SITE_ROOT}/:contentTypeUuid`,
+		detailSettings: `${SITE_ROOT}/:contentTypeUuid/instellingen`,
 	},
 };
 
@@ -97,6 +99,7 @@ export const BREADCRUMB_OPTIONS = {
 	excludePaths: [
 		'/',
 		`${TENANT_ROOT}`,
+		`${TENANT_ROOT}/sites`,
 		`${TENANT_ROOT}${CC_BASE_PATH}/:contentComponentUuid`,
 		`${TENANT_ROOT}${CC_DYNAMIC_BASE_PATH}`,
 		`${TENANT_ROOT}${CC_DYNAMIC_BASE_PATH}/:dynamicContentComponentUuid([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})`,

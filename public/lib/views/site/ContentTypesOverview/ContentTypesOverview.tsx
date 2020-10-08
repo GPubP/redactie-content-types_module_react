@@ -1,12 +1,9 @@
-import { Button } from '@acpaas-ui/react-components';
 import {
 	Container,
 	ContextHeader,
-	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React, { ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../../components';
@@ -121,8 +118,8 @@ const ContentTypesOverview: React.FC = () => {
 				description: contentType.meta.description,
 				amount: contentType.fields.length || 0,
 				activated: siteIncludesContentType(contentType),
-				navigate: (contentTypeUuid: any) =>
-					navigate(MODULE_PATHS.detail, { contentTypeUuid }),
+				navigate: (contentTypeUuid: string) =>
+					navigate(`/sites${MODULE_PATHS.site.detail}`, { siteId, contentTypeUuid }),
 			})
 		);
 
@@ -150,11 +147,6 @@ const ContentTypesOverview: React.FC = () => {
 		<>
 			<ContextHeader title="Content types">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
-				<ContextHeaderActionsSection>
-					<Button iconLeft="plus" onClick={() => navigate(MODULE_PATHS.create)}>
-						{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
-					</Button>
-				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<Container>
 				<DataLoader loadingState={initialLoading} render={renderOverview} />
