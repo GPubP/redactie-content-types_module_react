@@ -1,5 +1,5 @@
 import { FORM_CC_SETTINGS_VALIDATION_SCHEMA } from '../../../components/forms/FormCCSettings/FormCCSettings.const';
-import { MODULE_PATHS } from '../../../contentTypes.const';
+import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
 import { FieldType } from '../../../services/fieldTypes';
 import { CompartmentModel, CompartmentType } from '../../../store/ui/compartments';
 
@@ -32,4 +32,16 @@ export const DYNAMIC_CC_EDIT_COMPARTMENTS: CompartmentModel[] = [
 		slug: MODULE_PATHS.detailCCEditDynamicEditDefaults,
 		type: CompartmentType.INTERNAL,
 	},
+];
+
+export const DYNAMIC_CC_EDIT_ALLOWED_PATHS = [
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCEdit}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCEditConfig}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCNew}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewConfig}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCEditDynamicEdit}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCEditDynamicEditSettings}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCEditDynamicEditConfig}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCEditDynamicEditValidation}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCEditDynamicEditDefaults}`,
 ];

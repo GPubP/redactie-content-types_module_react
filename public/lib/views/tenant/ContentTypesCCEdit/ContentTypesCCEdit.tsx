@@ -27,7 +27,7 @@ import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { presetsFacade } from '../../../store/presets';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
-import { CC_EDIT_COMPARTMENTS } from './ContentTypesCCEdit.const';
+import { CC_EDIT_ALLOWED_PATHS, CC_EDIT_COMPARTMENTS } from './ContentTypesCCEdit.const';
 
 const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentType, route }) => {
 	const { contentTypeUuid, contentComponentUuid } = match.params;
@@ -48,7 +48,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	const activeFieldPSUuid = useMemo(() => activeField?.preset?.uuid, [activeField]);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
-	const [hasChanges] = useDetectValueChanges(!initialLoading, activeField);
+	const [hasChanges] = useDetectValueChanges(initialLoading === LoadingState.Loaded, activeField);
 	const [
 		{ compartments, active: activeCompartment },
 		register,
@@ -146,7 +146,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		}
 	};
 
-	const onFieldSubmit = (cancelNavigation = false): void => {
+	const onFieldSubmit = (): void => {
 		if (!activeField) {
 			return;
 		}
@@ -166,10 +166,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		if (compartmentsAreValid) {
 			contentTypesFacade.updateField(activeField);
 			contentTypesFacade.clearActiveField();
-
-			if (!cancelNavigation) {
-				navigateToDetail();
-			}
+			navigateToDetail();
 		} else {
 			alertService.dismiss();
 			alertService.danger(
@@ -234,7 +231,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 							</Button>
 							<Button
 								className="u-margin-left-xs"
-								onClick={() => onFieldSubmit()}
+								onClick={onFieldSubmit}
 								type="primary"
 							>
 								{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
@@ -243,9 +240,10 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 					</ActionBarContentSection>
 				</ActionBar>
 				<LeavePrompt
-					shouldBlockNavigationOnConfirm={() => true}
+					allowedPaths={CC_EDIT_ALLOWED_PATHS}
+					onConfirm={onFieldSubmit}
+					shouldBlockNavigationOnConfirm
 					when={hasChanges}
-					onConfirm={() => onFieldSubmit(true)}
 				/>
 			</>
 		);
