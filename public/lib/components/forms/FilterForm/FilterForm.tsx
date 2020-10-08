@@ -4,7 +4,7 @@ import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18n
 import { Field, Formik } from 'formik';
 import React, { FC } from 'react';
 
-import { useCoreTranslation } from '../../connectors/translations';
+import { useCoreTranslation } from '../../../connectors/translations';
 
 import { FILTER_FORM_VALIDATION_SCHEMA } from './FilterForm.const';
 import { FilterFormProps } from './FilterForm.types';

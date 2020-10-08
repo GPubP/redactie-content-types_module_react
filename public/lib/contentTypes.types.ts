@@ -22,6 +22,11 @@ export interface ContentTypesRouteProps<Params = ContentTypesRouteParams>
 	routes: ModuleRouteConfig[];
 }
 
+export interface SiteContentTypesDetailRouteParams {
+	siteId: string;
+	contentTypeUuid: string;
+}
+
 export interface ContentTypesDetailRouteParams {
 	contentTypeUuid: string;
 	contentComponentUuid: string;

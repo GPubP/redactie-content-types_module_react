@@ -7,7 +7,7 @@ import { ExternalTabModel } from './externalTabs.model';
 import { externalTabsQuery } from './externalTabs.query';
 import { externalTabsService, ExternalTabsService } from './externalTabs.service';
 
-export const useExternalTabstFacade = (): [
+export const useExternalTabsFacade = (): [
 	{ all: ExternalTabModel[]; active: ExternalTabModel | null },
 	ExternalTabsService['activate']
 ] => {

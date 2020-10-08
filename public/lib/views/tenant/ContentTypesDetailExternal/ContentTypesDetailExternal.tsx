@@ -4,7 +4,7 @@ import React, { FC, useEffect, useMemo } from 'react';
 import { ContentTypesDetailRouteProps, LoadingState, Tab } from '../../../contentTypes.types';
 import { mapExternalTabToTab } from '../../../helpers';
 import { useContentType } from '../../../hooks';
-import { useExternalTabstFacade } from '../../../store/api/externalTabs/externalTabs.facade';
+import { useExternalTabsFacade } from '../../../store/api/externalTabs/externalTabs.facade';
 
 import { ContentTypeDetailMatchProps, ExternalTabValue } from './ContentTypesDetailExternal.types';
 
@@ -19,7 +19,7 @@ const ContentTypeDetailExternal: FC<ContentTypesDetailRouteProps<ContentTypeDeta
 	/**
 	 * HOOKS
 	 */
-	const [{ active: activeTab }, activate] = useExternalTabstFacade();
+	const [{ active: activeTab }, activate] = useExternalTabsFacade();
 	const [, contentTypIsUpdating] = useContentType();
 	const isLoading = useMemo(() => {
 		return contentTypIsUpdating === LoadingState.Loading;
