@@ -60,7 +60,10 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		dynamicActiveField?.preset as PresetDetail,
 		dynamicActiveField?.fieldType
 	);
-	const [hasChanges] = useDetectValueChanges(!initialLoading, dynamicField);
+	const [hasChanges] = useDetectValueChanges(
+		initialLoading === LoadingState.Loaded,
+		dynamicActiveField
+	);
 	const [
 		{ compartments, active: activeCompartment },
 		register,

@@ -48,7 +48,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	const activeFieldPSUuid = useMemo(() => activeField?.preset?.uuid, [activeField]);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
-	const [hasChanges] = useDetectValueChanges(!initialLoading, activeField);
+	const [hasChanges] = useDetectValueChanges(initialLoading === LoadingState.Loaded, activeField);
 	const [
 		{ compartments, active: activeCompartment },
 		register,

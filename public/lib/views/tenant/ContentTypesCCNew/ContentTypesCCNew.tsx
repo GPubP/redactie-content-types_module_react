@@ -50,7 +50,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	const [t] = useCoreTranslation();
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
-	const [hasChanges] = useDetectValueChanges(!initialLoading, activeField);
+	const [hasChanges] = useDetectValueChanges(initialLoading === LoadingState.Loaded, activeField);
 	const locationState = location.state ?? {
 		keepActiveField: false,
 	};

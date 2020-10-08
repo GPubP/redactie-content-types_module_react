@@ -62,7 +62,10 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	const [t] = useCoreTranslation();
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
-	const [hasChanges] = useDetectValueChanges(!initialLoading, dynamicActiveField);
+	const [hasChanges] = useDetectValueChanges(
+		initialLoading === LoadingState.Loaded,
+		dynamicActiveField
+	);
 	const [
 		{ compartments, active: activeCompartment },
 		register,
