@@ -171,11 +171,15 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	const navigateToDetail = (): void => {
 		navigate(
 			activeField?.__new ? MODULE_PATHS.detailCCNewConfig : MODULE_PATHS.detailCCEditConfig,
+			{ contentTypeUuid, contentComponentUuid },
 			{
-				contentTypeUuid,
-				contentComponentUuid,
-				...(activeField?.__new ? { fieldType: activeField?.fieldType.uuid } : {}),
-			}
+				// This will keep the current active field (paragraaf) in state when we redirect.
+				// Changes made to the configuration of this field will not be overwritten
+				keepActiveField: !!activeField?.__new,
+			},
+			new URLSearchParams(
+				activeField?.__new ? { fieldType: activeField?.fieldType.uuid } : {}
+			)
 		);
 	};
 
