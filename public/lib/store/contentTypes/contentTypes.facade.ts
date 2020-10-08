@@ -235,10 +235,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 				validation: {
 					...activeField.validation,
 					...payload.validation,
-					checks: [
-						...(activeField.validation?.checks || []),
-						...(payload.validation?.checks || []),
-					],
+					checks: payload.validation?.checks || [],
 				},
 				defaultValue: clearDefaultValue
 					? undefined
