@@ -32,7 +32,10 @@ import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { presetsFacade } from '../../../store/presets';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
-import { DYNAMIC_CC_NEW_COMPARTMENTS } from './ContentTypesDynamicCCNew.const';
+import {
+	DYNAMIC_CC_NEW_ALLOWED_PATHS,
+	DYNAMIC_CC_NEW_COMPARTMENTS,
+} from './ContentTypesDynamicCCNew.const';
 
 const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	contentType,
@@ -209,7 +212,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		);
 	};
 
-	const onFieldSubmit = (cancelNavigation = false): void => {
+	const onFieldSubmit = (): void => {
 		if (!dynamicActiveField) {
 			return;
 		}
@@ -232,10 +235,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		// Only submit the form if all compartments are valid
 		if (compartmentsAreValid) {
 			dynamicFieldFacade.addField(omit(['__new'])(dynamicActiveField));
-
-			if (!cancelNavigation) {
-				navigateToDetail();
-			}
+			navigateToDetail();
 		} else {
 			alertService.dismiss();
 			alertService.danger(
@@ -307,7 +307,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 							</Button>
 							<Button
 								className="u-margin-left-xs"
-								onClick={() => onFieldSubmit()}
+								onClick={onFieldSubmit}
 								type="primary"
 							>
 								{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
@@ -316,9 +316,10 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 					</ActionBarContentSection>
 				</ActionBar>
 				<LeavePrompt
-					shouldBlockNavigationOnConfirm={() => true}
+					allowedPaths={DYNAMIC_CC_NEW_ALLOWED_PATHS}
+					onConfirm={onFieldSubmit}
+					shouldBlockNavigationOnConfirm
 					when={hasChanges}
-					onConfirm={() => onFieldSubmit(true)}
 				/>
 			</>
 		);

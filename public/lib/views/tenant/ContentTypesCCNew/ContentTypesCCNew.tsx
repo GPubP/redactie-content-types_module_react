@@ -29,7 +29,7 @@ import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { presetsFacade } from '../../../store/presets';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
-import { CC_NEW_COMPARTMENTS } from './ContentTypesCCNew.const';
+import { CC_NEW_ALLOWED_PATHS, CC_NEW_COMPARTMENTS } from './ContentTypesCCNew.const';
 
 const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) => {
 	const { contentTypeUuid } = match.params;
@@ -164,7 +164,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		navigate(MODULE_PATHS.detailCC, { contentTypeUuid });
 	};
 
-	const onCTSubmit = (cancelNavigation = false): void => {
+	const onCTSubmit = (): void => {
 		if (!activeField) {
 			return;
 		}
@@ -184,10 +184,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		if (compartmentsAreValid) {
 			contentTypesFacade.addField(activeField);
 			contentTypesFacade.clearActiveField();
-
-			if (!cancelNavigation) {
-				navigateToDetail();
-			}
+			navigateToDetail();
 		} else {
 			alertService.dismiss();
 			alertService.danger(
@@ -258,20 +255,17 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 						<Button onClick={navigateToDetail} negative>
 							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 						</Button>
-						<Button
-							className="u-margin-left-xs"
-							onClick={() => onCTSubmit()}
-							type="primary"
-						>
+						<Button className="u-margin-left-xs" onClick={onCTSubmit} type="primary">
 							{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
 						</Button>
 					</div>
 				</ActionBarContentSection>
 			</ActionBar>
 			<LeavePrompt
-				shouldBlockNavigationOnConfirm={() => true}
+				allowedPaths={CC_NEW_ALLOWED_PATHS}
+				onConfirm={onCTSubmit}
+				shouldBlockNavigationOnConfirm
 				when={hasChanges}
-				onConfirm={() => onCTSubmit(true)}
 			/>
 		</>
 	);
