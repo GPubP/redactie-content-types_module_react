@@ -1,2 +1,4 @@
-export { default as FormCTNewCC } from './FormCTNewCC/FormCTNewCC';
-export { default as FormCCSettings } from './FormCCSettings/FormCCSettings';
+export * from './CTSettingsForm';
+export * from './FilterForm';
+export * from './FormCCSettings';
+export * from './FormCTNewCC';

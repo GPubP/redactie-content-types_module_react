@@ -29,7 +29,10 @@ import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { presetsFacade } from '../../../store/presets';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
-import { DYNAMIC_CC_EDIT_COMPARTMENTS } from './ContentTypesDynamicCCEdit.const';
+import {
+	DYNAMIC_CC_EDIT_ALLOWED_PATHS,
+	DYNAMIC_CC_EDIT_COMPARTMENTS,
+} from './ContentTypesDynamicCCEdit.const';
 
 const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	contentTypeUuid: string;
@@ -57,7 +60,10 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		dynamicActiveField?.preset as PresetDetail,
 		dynamicActiveField?.fieldType
 	);
-	const [hasChanges] = useDetectValueChanges(!initialLoading, dynamicField);
+	const [hasChanges] = useDetectValueChanges(
+		initialLoading === LoadingState.Loaded,
+		dynamicActiveField
+	);
 	const [
 		{ compartments, active: activeCompartment },
 		register,
@@ -165,11 +171,15 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	const navigateToDetail = (): void => {
 		navigate(
 			activeField?.__new ? MODULE_PATHS.detailCCNewConfig : MODULE_PATHS.detailCCEditConfig,
+			{ contentTypeUuid, contentComponentUuid },
 			{
-				contentTypeUuid,
-				contentComponentUuid,
-				...(activeField?.__new ? { fieldType: activeField?.fieldType.uuid } : {}),
-			}
+				// This will keep the current active field (paragraaf) in state when we redirect.
+				// Changes made to the configuration of this field will not be overwritten
+				keepActiveField: !!activeField?.__new,
+			},
+			new URLSearchParams(
+				activeField?.__new ? { fieldType: activeField?.fieldType.uuid } : {}
+			)
 		);
 	};
 
@@ -189,7 +199,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		navigateToDetail();
 	};
 
-	const onFieldSubmit = (cancelNavigation = false): void => {
+	const onFieldSubmit = (): void => {
 		if (!dynamicActiveField) {
 			return;
 		}
@@ -212,10 +222,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		// Only submit the form if all compartments are valid
 		if (compartmentsAreValid) {
 			dynamicFieldFacade.updateField(omit(['__new'])(dynamicActiveField));
-
-			if (!cancelNavigation) {
-				navigateToDetail();
-			}
+			navigateToDetail();
 		} else {
 			alertService.dismiss();
 			alertService.danger(
@@ -284,7 +291,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 							</Button>
 							<Button
 								className="u-margin-left-xs"
-								onClick={() => onFieldSubmit()}
+								onClick={onFieldSubmit}
 								type="primary"
 							>
 								{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
@@ -293,9 +300,10 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 					</ActionBarContentSection>
 				</ActionBar>
 				<LeavePrompt
-					shouldBlockNavigationOnConfirm={() => true}
+					allowedPaths={DYNAMIC_CC_EDIT_ALLOWED_PATHS}
+					onConfirm={onFieldSubmit}
+					shouldBlockNavigationOnConfirm
 					when={hasChanges}
-					onConfirm={() => onFieldSubmit(true)}
 				/>
 			</>
 		);

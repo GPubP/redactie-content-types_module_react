@@ -20,7 +20,11 @@ import { sortFieldTypes } from '../../../helpers';
 import { useContentType, useNavigate } from '../../../hooks';
 import { ContentTypeFieldDetailModel } from '../../../store/contentTypes';
 
-import { CONTENT_TYPE_COLUMNS, CT_CC_VALIDATION_SCHEMA } from './ContentTypesDetailCC.const';
+import {
+	CONTENT_TYPE_COLUMNS,
+	CT_CC_VALIDATION_SCHEMA,
+	CT_DETAIL_CC_ALLOWED_PATHS,
+} from './ContentTypesDetailCC.const';
 import { ContentTypeDetailCCRow } from './ContentTypesDetailCC.types';
 
 const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
@@ -166,7 +170,8 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 			</ActionBar>
 
 			<LeavePrompt
-				shouldBlockNavigationOnConfirm={() => true}
+				allowedPaths={CT_DETAIL_CC_ALLOWED_PATHS}
+				shouldBlockNavigationOnConfirm
 				when={fieldsHaveChanged}
 				onConfirm={onCCSave}
 			/>

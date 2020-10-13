@@ -38,7 +38,7 @@ export interface ValidationCheckAllowedField {
 
 export interface Validation {
 	type: string;
-	checks: ValidationCheck[] | ValicationCheckWithFields[] | ValicationCheckWithAllowedFields[];
+	checks: (ValidationCheck | ValicationCheckWithFields | ValicationCheckWithAllowedFields)[];
 }
 
 export type ValidationSchema = Record<string, any>;

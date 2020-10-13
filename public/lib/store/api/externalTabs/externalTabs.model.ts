@@ -15,6 +15,7 @@ export interface ExternalTabModel {
 	name: string;
 	component: FC<ExternalTabProps>;
 	module?: string;
+	disabled?: boolean;
 }
 
 export interface ExternalTabsState extends EntityState<ExternalTabModel, string>, ActiveState {}

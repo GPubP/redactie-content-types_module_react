@@ -154,7 +154,11 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 					if (validationCheckIndex === -1) {
 						acc.validationChecks = [...(CTField.validation?.checks || []), newCheck];
 					} else {
-						acc.validationChecks = CTField.validation?.checks || [];
+						/**
+						 * CTField.validation.checks is weirdly frozen somehow.
+						 * This should fix it until we find what freezes it.
+						 */
+						acc.validationChecks = [...(CTField.validation?.checks || [])];
 						acc.validationChecks[validationCheckIndex] = newCheck;
 					}
 				}

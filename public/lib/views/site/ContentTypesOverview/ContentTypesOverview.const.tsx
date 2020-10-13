@@ -4,8 +4,7 @@ import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18n
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { SiteStatus } from '../../../components';
-import { FilterFormState } from '../../../components/FilterForm/FilterForm.types';
+import { FilterFormState, SiteStatus } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
 import { ContentTypesOverviewTableRow } from '../../tenant';
 
@@ -51,7 +50,7 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		{
 			label: 'Status voor site',
 			component(value: string, rowData: ContentTypesPerSiteOverviewTableRow) {
-				return <SiteStatus active={!rowData.activated} />;
+				return <SiteStatus active={rowData.activated} />;
 			},
 			disableSorting: true,
 		},

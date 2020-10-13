@@ -27,6 +27,8 @@ import {
 import { ContentTypeCreateRequest, ContentTypeMeta } from '../../../services/contentTypes';
 import { contentTypesFacade } from '../../../store/contentTypes';
 
+import { CT_SETTINGS_CREATE_ALLOWED_PATHS } from './ContentTypesCreate.const';
+
 const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => {
 	/**
 	 * Hooks
@@ -94,6 +96,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	 */
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
+			allowedPaths: CT_SETTINGS_CREATE_ALLOWED_PATHS,
 			fieldTypes,
 			contentType: contentType || generateEmptyContentType(),
 			onCancel: () => navigate(MODULE_PATHS.admin),

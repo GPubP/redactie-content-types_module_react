@@ -22,6 +22,11 @@ export interface ContentTypesRouteProps<Params = ContentTypesRouteParams>
 	routes: ModuleRouteConfig[];
 }
 
+export interface SiteContentTypesDetailRouteParams {
+	siteId: string;
+	contentTypeUuid: string;
+}
+
 export interface ContentTypesDetailRouteParams {
 	contentTypeUuid: string;
 	contentComponentUuid: string;
@@ -29,6 +34,7 @@ export interface ContentTypesDetailRouteParams {
 
 export interface ContentTypesDetailRouteProps<Params = ContentTypesDetailRouteParams>
 	extends RouteConfigComponentProps<Params> {
+	readonly allowedPaths?: string[];
 	readonly presets: Preset[];
 	readonly fieldTypes: FieldType[];
 	readonly contentType: ContentTypeDetailModel;

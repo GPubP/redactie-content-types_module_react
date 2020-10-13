@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { array, object, string } from 'yup';
 
 import { StatusIcon } from '../../../components';
+import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
 
 import { ContentTypeDetailCCRow } from './ContentTypesDetailCC.types';
 
@@ -79,8 +80,8 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 	},
 ];
 
-export const CT_CC_NAV_LIST_ITEMS = [
-	{ label: 'Compartiment 1', to: { hash: 'compartiment-1' } },
-	{ label: 'Compartiment 2', to: { hash: 'compartiment-2' } },
-	{ label: 'Compartiment 3', to: { hash: 'compartiment-3' } },
+export const CT_DETAIL_CC_ALLOWED_PATHS = [
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCEdit}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCNew}`,
+	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewSettings}`,
 ];
