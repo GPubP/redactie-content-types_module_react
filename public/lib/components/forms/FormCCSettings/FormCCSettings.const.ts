@@ -7,6 +7,7 @@ export const FORM_CC_SETTINGS_VALIDATION_SCHEMA = object().shape({
 		hidden: boolean(),
 		min: number(),
 		max: number(),
+		placeholder: string(),
 	}),
 	isMultiple: boolean(),
 });

@@ -212,11 +212,11 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			<>
 				<div className="u-margin-bottom-lg">
 					<div className="row between-xs top-xs">
-						<div className="col-xs-3">
+						<div className="col-xs-12 col-md-3 u-margin-bottom">
 							<NavList items={navListItems} linkComponent={NavLink} />
 						</div>
 
-						<div className="col-xs-9">
+						<div className="col-xs-12 col-md-9">
 							<Card>
 								<CardBody>{renderChildRoutes()}</CardBody>
 							</Card>
@@ -232,9 +232,9 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 							<Button
 								className="u-margin-left-xs"
 								onClick={onFieldSubmit}
-								type="primary"
+								type="success"
 							>
-								{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
+								{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
 							</Button>
 						</div>
 					</ActionBarContentSection>
