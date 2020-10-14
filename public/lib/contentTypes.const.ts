@@ -6,6 +6,14 @@ export const DEFAULT_VALIDATION_SCHEMA = {
 	properties: {},
 };
 
+export enum ALERT_CONTAINER_IDS {
+	create = 'create', // in principe niet nodig
+	update = 'update', // in principe niet nodig
+	detailSettings = 'detail-settings',
+	detailCC = 'detail-CC',
+	detailSites = 'detail-sites',
+}
+
 export const CONTENT_TYPE_DETAIL_TAB_MAP: {
 	[key in 'settings' | 'contentComponents' | 'sites']: Tab;
 } = {
@@ -14,18 +22,21 @@ export const CONTENT_TYPE_DETAIL_TAB_MAP: {
 		target: 'instellingen',
 		type: TabTypes.INTERNAL,
 		active: true,
+		containerId: ALERT_CONTAINER_IDS.detailSettings,
 	},
 	contentComponents: {
 		name: 'Content Componenten',
 		target: 'content-componenten',
 		type: TabTypes.INTERNAL,
 		active: false,
+		containerId: ALERT_CONTAINER_IDS.detailCC,
 	},
 	sites: {
 		name: 'Sites',
 		target: 'sites',
 		type: TabTypes.INTERNAL,
 		active: false,
+		containerId: ALERT_CONTAINER_IDS.detailSites,
 	},
 };
 
@@ -112,11 +123,6 @@ export const DEFAULT_VALIDATOR_ERROR_MESSAGES: Record<string, string> = {
 	pattern: 'De opgegeven waarden heeft niet het juiste formaat',
 	email: 'Gelieve een geldig e-mailadres in te vullen',
 	url: 'Gelieve een geldige url in te vullen',
-};
-
-export const ALERT_CONTAINER_IDS = {
-	create: 'create',
-	update: 'update',
 };
 
 export const DYNAMIC_FIELD_SETTINGS_NAME = 'dynamicFieldSettings';

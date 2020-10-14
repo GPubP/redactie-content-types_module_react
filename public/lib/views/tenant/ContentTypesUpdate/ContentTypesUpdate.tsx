@@ -210,7 +210,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			return;
 		}
 
-		contentTypesFacade.updateContentType(newCT);
+		contentTypesFacade.updateContentType(newCT, tab.containerId);
 		resetFieldsHaveChanged();
 	};
 
@@ -257,9 +257,6 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>
-				<div className="u-margin-bottom">
-					<AlertContainer containerId={ALERT_CONTAINER_IDS.update} />
-				</div>
 				<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
 			</Container>
 		</>

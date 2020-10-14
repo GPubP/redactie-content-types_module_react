@@ -168,7 +168,6 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			contentTypesFacade.clearActiveField();
 			navigateToDetail();
 		} else {
-			alertService.dismiss();
 			alertService.danger(
 				{
 					title: 'Er zijn nog fouten',
