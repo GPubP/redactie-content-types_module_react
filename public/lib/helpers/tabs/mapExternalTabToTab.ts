@@ -8,4 +8,5 @@ export const mapExternalTabToTab = (externalTab: ExternalTabModel): Tab => ({
 	disabled: externalTab.disabled,
 	type: TabTypes.EXTERNAL,
 	active: true,
+	containerId: externalTab.containerId,
 });
