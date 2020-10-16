@@ -7,8 +7,8 @@ export const DEFAULT_VALIDATION_SCHEMA = {
 };
 
 export enum ALERT_CONTAINER_IDS {
-	create = 'create', // in principe niet nodig
-	update = 'update', // in principe niet nodig
+	create = 'create',
+	update = 'update',
 	detailSettings = 'detail-settings',
 	detailCC = 'detail-CC',
 	detailSites = 'detail-sites',
