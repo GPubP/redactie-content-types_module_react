@@ -14,6 +14,7 @@ export class PresetsFacade extends BaseEntityFacade<PresetsStore, PresetsApiServ
 
 	public getPresets(): void {
 		const { isFetching } = this.query.getValue();
+
 		if (isFetching) {
 			return;
 		}
