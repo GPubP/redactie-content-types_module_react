@@ -85,7 +85,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 										{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
 										<b>
 											{isUpdate
-												? initialValues?.label
+												? initialValues?.name
 												: kebabCase(values.label)}
 										</b>
 									</div>
