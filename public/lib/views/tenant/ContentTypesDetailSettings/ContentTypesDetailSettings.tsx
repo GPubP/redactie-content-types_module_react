@@ -1,7 +1,13 @@
 import { Button } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { AlertContainer, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
+import {
+	AlertContainer,
+	AlertProps,
+	alertService,
+	LeavePrompt,
+	useDetectValueChanges,
+} from '@redactie/utils';
 import React, { FC, useMemo, useState } from 'react';
 
 import { CTSettingsForm } from '../../../components';
@@ -52,7 +58,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 				<AlertContainer containerId={ALERT_CONTAINER_IDS.detailSettings} />
 			</div>
 			<CTSettingsForm contentType={contentType} isUpdate={isUpdate} onSubmit={onFormSubmit}>
-				{({ submitForm, values }) => {
+				{({ submitForm, validateForm, values }) => {
 					setFormValue(values);
 
 					return (
@@ -70,6 +76,22 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 											disabled={isLoading || !hasChanges}
 											className="u-margin-left-xs"
 											onClick={() => {
+												validateForm().then(() => {
+													const alertProps: AlertProps = {
+														title: 'Foutmelding',
+														message:
+															'Niet alle velden van het formulier zijn correct ingevuld',
+													};
+													const alertOptions = {
+														containerId:
+															ALERT_CONTAINER_IDS.detailSettings,
+													};
+													alertService['danger'](
+														alertProps,
+														alertOptions
+													);
+												});
+
 												submitForm();
 											}}
 											type="success"
