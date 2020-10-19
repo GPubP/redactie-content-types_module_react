@@ -77,18 +77,16 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 											className="u-margin-left-xs"
 											onClick={() => {
 												validateForm().then(() => {
-													const alertProps: AlertProps = {
-														title: 'Foutmelding',
-														message:
-															'Niet alle velden van het formulier zijn correct ingevuld',
-													};
-													const alertOptions = {
-														containerId:
-															ALERT_CONTAINER_IDS.detailSettings,
-													};
-													alertService['danger'](
-														alertProps,
-														alertOptions
+													alertService.danger(
+														{
+															title: 'Foutmelding',
+															message:
+																'Niet alle velden van het formulier zijn correct ingevuld',
+														},
+														{
+															containerId:
+																ALERT_CONTAINER_IDS.detailSettings,
+														}
 													);
 												});
 
