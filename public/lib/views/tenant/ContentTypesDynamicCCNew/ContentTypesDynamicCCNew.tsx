@@ -240,7 +240,6 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			dynamicFieldFacade.addField(omit(['__new'])(dynamicActiveField));
 			navigateToDetail();
 		} else {
-			alertService.dismiss();
 			alertService.danger(
 				{
 					title: 'Er zijn nog fouten',

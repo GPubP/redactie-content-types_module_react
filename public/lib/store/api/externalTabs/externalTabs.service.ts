@@ -12,6 +12,7 @@ export class ExternalTabsService {
 			label: options.label,
 			module: options.module,
 			component: options.component,
+			containerId: options.containerId,
 		};
 
 		if (options.replace) {
