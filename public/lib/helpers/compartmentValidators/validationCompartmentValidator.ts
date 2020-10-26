@@ -27,7 +27,5 @@ export const validationCompartmentValidator = (
 
 	const validated = validator.validate(values?.validation || {});
 
-	console.log(validated, values?.validation);
-
 	return typeof validated !== 'object' || !Object.keys(validated).length;
 };
