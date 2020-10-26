@@ -185,6 +185,13 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	};
 
 	const onFieldChange = (data: ContentTypeFieldDetailModel): void => {
+		validateCompartments(
+			compartments,
+			data,
+			validate,
+			dynamicActiveField?.fieldType as FieldType,
+			(dynamicActiveField?.preset as unknown) as Preset
+		);
 		dynamicFieldFacade.updateActiveField({
 			...data,
 		});
