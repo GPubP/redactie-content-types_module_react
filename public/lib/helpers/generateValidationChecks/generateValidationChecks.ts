@@ -110,19 +110,39 @@ export const generateValidationChecks = (
 	preset?: PresetDetail,
 	create = false
 ): Validation => {
-	return preset
-		? {
-				type: 'object',
-				checks: getChecksFromPreset(data, preset, create),
-		  }
-		: {
-				type: fieldTypeData?.dataType?.data?.type,
-				checks: [
-					...getChecksFromDefaultValue(fieldTypeData.validators),
-					...(getChecksFromDefaultValidatorValues(
-						fieldTypeData.defaultValidatorValues
-					) as ValidationCheck[]),
-					...getChecksFromData(data, fieldTypeData.validators),
-				],
-		  };
+	if (preset) {
+		return {
+			type: 'object',
+			checks: getChecksFromPreset(data, preset, create),
+		};
+	}
+
+	const allChecksReverseOrder: ValidationCheck[] = [
+		...getChecksFromData(data, fieldTypeData.validators),
+		...(getChecksFromDefaultValidatorValues(
+			fieldTypeData.defaultValidatorValues
+		) as ValidationCheck[]),
+		...getChecksFromDefaultValue(fieldTypeData.validators),
+	];
+	const { checks } = allChecksReverseOrder.reduce(
+		(acc, check) => {
+			if (!check.key || acc.keys.includes(check.key)) {
+				return acc;
+			}
+
+			return {
+				keys: [...acc.keys, check.key],
+				checks: [...acc.checks, check],
+			};
+		},
+		{
+			keys: [] as string[],
+			checks: [] as ValidationCheck[],
+		}
+	);
+
+	return {
+		type: fieldTypeData?.dataType?.data?.type,
+		checks,
+	};
 };

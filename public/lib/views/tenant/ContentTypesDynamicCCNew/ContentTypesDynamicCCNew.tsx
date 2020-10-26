@@ -26,6 +26,8 @@ import {
 import useActiveField from '../../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
 import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
+import { FieldType } from '../../../services/fieldTypes/fieldTypes.service.types';
+import { Preset, PresetDetail } from '../../../services/presets';
 import { ContentTypeFieldDetailModel } from '../../../store/contentTypes';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
 import { fieldTypesFacade } from '../../../store/fieldTypes';
@@ -224,7 +226,9 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		const compartmentsAreValid = validateCompartments(
 			compartments,
 			dynamicActiveField,
-			validate
+			validate,
+			fieldType as FieldType,
+			(preset as unknown) as Preset
 		);
 
 		// Validate current form to trigger fields error states
@@ -266,7 +270,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 
 		const extraOptions = {
 			CTField: dynamicActiveField,
-			fieldTypeData: dynamicActiveField?.fieldType?.data,
+			fieldType: dynamicActiveField?.fieldType,
 			preset: preset,
 			onSubmit: onFieldTypeChange,
 			formikRef: (instance: any) => {

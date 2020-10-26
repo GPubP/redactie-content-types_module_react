@@ -1,5 +1,9 @@
 import { FORM_CC_SETTINGS_VALIDATION_SCHEMA } from '../../../components';
 import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
+import {
+	configurationCompartmentValidator,
+	validationCompartmentValidator,
+} from '../../../helpers';
 import { FieldType } from '../../../services/fieldTypes/fieldTypes.service.types';
 import { CompartmentModel, CompartmentType } from '../../../store/ui/compartments';
 
@@ -18,6 +22,7 @@ export const CC_EDIT_COMPARTMENTS: CompartmentModel[] = [
 		filter: (CtField: FieldType) => !!CtField?.data?.formSchema?.fields?.length,
 		slug: MODULE_PATHS.detailCCEditConfig,
 		type: CompartmentType.INTERNAL,
+		validate: configurationCompartmentValidator,
 	},
 	{
 		label: 'Validatie',
@@ -25,6 +30,7 @@ export const CC_EDIT_COMPARTMENTS: CompartmentModel[] = [
 		filter: (CtField: FieldType) => !!CtField?.data?.validators?.length,
 		slug: MODULE_PATHS.detailCCEditValidation,
 		type: CompartmentType.INTERNAL,
+		validate: validationCompartmentValidator,
 	},
 	{
 		label: 'Standaard waarde',

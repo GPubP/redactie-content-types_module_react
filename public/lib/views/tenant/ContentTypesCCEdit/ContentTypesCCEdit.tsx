@@ -22,6 +22,8 @@ import {
 	usePreset,
 	useTenantContext,
 } from '../../../hooks';
+import { FieldType } from '../../../services/fieldTypes/fieldTypes.service.types';
+import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { presetsFacade } from '../../../store/presets';
@@ -135,6 +137,13 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	};
 
 	const onFieldChange = (data: ContentTypeFieldDetailModel): void => {
+		validateCompartments(
+			compartments,
+			data,
+			validate,
+			fieldType as FieldType,
+			(preset as unknown) as Preset
+		);
 		contentTypesFacade.updateActiveField(data);
 	};
 
@@ -152,7 +161,13 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		}
 
 		const { current: formikRef } = activeCompartmentFormikRef;
-		const compartmentsAreValid = validateCompartments(compartments, activeField, validate);
+		const compartmentsAreValid = validateCompartments(
+			compartments,
+			activeField,
+			validate,
+			fieldType as FieldType,
+			(preset as unknown) as Preset
+		);
 
 		// Validate current form to trigger fields error states
 		if (formikRef) {
@@ -186,11 +201,11 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
 			CTField: activeField,
-			fieldTypeData: fieldType?.data,
+			fieldType: fieldType,
 			preset,
 			onDelete: onFieldDelete,
 			onSubmit: onFieldChange,
-			formikRef: (instance: any) => {
+			formikRef: (instance: FormikProps<FormikValues>) => {
 				if (!equals(activeCompartmentFormikRef.current, instance)) {
 					activeCompartmentFormikRef.current = instance;
 				}

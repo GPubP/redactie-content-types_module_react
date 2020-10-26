@@ -1,9 +1,8 @@
 import { FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-module';
-import { clone } from 'ramda';
+import { clone, omit } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 
 import formRendererConnector from '../../../connectors/formRenderer';
-import { DEFAULT_VALIDATION_SCHEMA } from '../../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../../contentTypes.types';
 import { generateFRFieldFromCTField, parseFields } from '../../../helpers';
 import { Field, Validation } from '../../../services/contentTypes';
@@ -14,7 +13,7 @@ import { PresetDetailModel } from '../../../store/presets';
 
 const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	CTField,
-	fieldTypeData,
+	fieldType,
 	formikRef,
 	preset,
 	onSubmit,
@@ -101,8 +100,22 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		() =>
 			preset
 				? generateFormSchemaFromPreset(preset)
-				: generateFormSchemaFromFieldTypeData(fieldTypeData),
-		[fieldTypeData, preset]
+				: generateFormSchemaFromFieldTypeData(fieldType.data),
+		[fieldType, preset]
+	);
+	const validationSchema: Record<string, any> = useMemo(() => {
+		const schema: Record<string, any> = preset
+			? preset?.validateSchema.configuration
+			: fieldType?.validateSchema.configuration;
+
+		return {
+			...omit(['schema'])(schema),
+			$schema: schema.schema,
+		};
+	}, [fieldType, preset]);
+	const errorMessages: Record<string, string> = useMemo(
+		() => (preset ? preset.errorMessages.configuration : fieldType.errorMessages.configuration),
+		[fieldType.errorMessages.configuration, preset]
 	);
 
 	/**
@@ -187,6 +200,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		const config = generateFieldConfig(data, CTField, preset);
 
 		onSubmit({
+			...CTField,
 			config: config.config,
 			...(Array.isArray(config.validationChecks) && config.validationChecks.length > 0
 				? { validation: { checks: config.validationChecks } }
@@ -198,7 +212,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	 * Render
 	 */
 	const renderCCConfig = (): ReactElement => {
-		if (!formRendererConnector.api || !hasConfiguration(fieldTypeData, preset)) {
+		if (!formRendererConnector.api || !hasConfiguration(fieldType.data, preset)) {
 			return <p>Er zijn geen configuratie mogelijkheden</p>;
 		}
 
@@ -207,8 +221,8 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 				formikRef={formikRef}
 				initialValues={initialFormValue}
 				schema={schema}
-				validationSchema={DEFAULT_VALIDATION_SCHEMA}
-				errorMessages={{}}
+				validationSchema={validationSchema}
+				errorMessages={errorMessages}
 				onChange={onFormSubmit}
 			/>
 		);

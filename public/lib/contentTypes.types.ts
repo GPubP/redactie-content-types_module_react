@@ -54,7 +54,7 @@ export interface ContentTypesDetailRouteProps<Params = ContentTypesDetailRoutePa
 
 export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
 	readonly CTField: ContentTypeFieldDetailModel;
-	readonly fieldTypeData: FieldTypeData;
+	readonly fieldType: FieldType;
 	readonly preset?: PresetDetail;
 	onDelete?: () => void;
 	onSubmit: (data: any) => void;

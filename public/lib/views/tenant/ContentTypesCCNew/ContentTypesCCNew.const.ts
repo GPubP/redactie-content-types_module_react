@@ -1,5 +1,9 @@
 import { FORM_CC_SETTINGS_VALIDATION_SCHEMA } from '../../../components/forms/FormCCSettings/FormCCSettings.const';
 import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
+import {
+	configurationCompartmentValidator,
+	validationCompartmentValidator,
+} from '../../../helpers';
 import { CompartmentModel, CompartmentType } from '../../../store/ui/compartments';
 
 export const CC_NEW_COMPARTMENTS: CompartmentModel[] = [
@@ -17,6 +21,7 @@ export const CC_NEW_COMPARTMENTS: CompartmentModel[] = [
 		slug: MODULE_PATHS.detailCCNewConfig,
 		type: CompartmentType.INTERNAL,
 		filter: ctField => !!ctField?.data?.formSchema?.fields?.length,
+		validate: configurationCompartmentValidator,
 	},
 	{
 		name: 'validation',
@@ -24,6 +29,7 @@ export const CC_NEW_COMPARTMENTS: CompartmentModel[] = [
 		slug: MODULE_PATHS.detailCCNewValidation,
 		type: CompartmentType.INTERNAL,
 		filter: ctField => !!ctField?.data?.validators?.length,
+		validate: validationCompartmentValidator,
 	},
 	{
 		name: 'default',
