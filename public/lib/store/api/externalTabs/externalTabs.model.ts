@@ -1,6 +1,7 @@
 import { ActiveState, EntityState } from '@datorama/akita';
 import { FC } from 'react';
 
+import { ALERT_CONTAINER_IDS } from '../../../contentTypes.const';
 import { ExternalTabProps } from '../../../views/tenant/ContentTypesDetailExternal';
 
 export interface ExternalTabOptions {
@@ -8,6 +9,7 @@ export interface ExternalTabOptions {
 	module: string;
 	component: FC<ExternalTabProps>;
 	replace?: boolean; // only replace existing if this is true (safety)
+	containerId: ALERT_CONTAINER_IDS;
 }
 
 export interface ExternalTabModel {
@@ -16,6 +18,7 @@ export interface ExternalTabModel {
 	component: FC<ExternalTabProps>;
 	module?: string;
 	disabled?: boolean;
+	containerId: ALERT_CONTAINER_IDS;
 }
 
 export interface ExternalTabsState extends EntityState<ExternalTabModel, string>, ActiveState {}

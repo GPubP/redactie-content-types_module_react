@@ -2,6 +2,7 @@ import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie
 import { FormikConfig, FormikValues } from 'formik';
 import { NavLinkProps } from 'react-router-dom';
 
+import { ALERT_CONTAINER_IDS } from './contentTypes.const';
 import { FieldType, FieldTypeData, FieldTypeMeta } from './services/fieldTypes';
 import { Preset, PresetDetail } from './services/presets';
 import { ContentTypeDetailModel, ContentTypeFieldDetailModel } from './store/contentTypes';
@@ -93,6 +94,7 @@ export interface Tab {
 	active: boolean;
 	type: TabTypes;
 	disabled?: boolean;
+	containerId: ALERT_CONTAINER_IDS;
 }
 
 export enum TabTypes {

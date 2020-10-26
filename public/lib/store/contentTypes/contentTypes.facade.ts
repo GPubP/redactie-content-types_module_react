@@ -109,12 +109,16 @@ export class ContentTypesFacade extends BaseEntityFacade<
 					this.store.update({
 						contentType: response,
 					});
-					this.alertService(alertMessages.create.success, 'update', 'success');
+					this.alertService(
+						alertMessages.create.success,
+						ALERT_CONTAINER_IDS.create,
+						'success'
+					);
 				}
 			})
 			.catch(error => {
 				this.store.setError(error);
-				this.alertService(alertMessages.create.error, 'create', 'error');
+				this.alertService(alertMessages.create.error, ALERT_CONTAINER_IDS.create, 'error');
 			})
 			.finally(() => this.store.setIsCreating(false));
 	}
@@ -125,7 +129,10 @@ export class ContentTypesFacade extends BaseEntityFacade<
 		});
 	}
 
-	public updateContentType(payload: ContentTypeUpdateRequest): void {
+	public updateContentType(
+		payload: ContentTypeUpdateRequest,
+		containerId: ALERT_CONTAINER_IDS
+	): void {
 		this.store.setIsUpdating(true);
 		const alertMessages = getAlertMessages((payload as unknown) as ContentTypeDetailResponse);
 
@@ -145,12 +152,12 @@ export class ContentTypesFacade extends BaseEntityFacade<
 							fields,
 						},
 					});
-					this.alertService(alertMessages.update.success, 'update', 'success');
+					this.alertService(alertMessages.update.success, containerId, 'success');
 				}
 			})
 			.catch(error => {
 				this.store.setError(error);
-				this.alertService(alertMessages.update.error, 'update', 'error');
+				this.alertService(alertMessages.update.error, containerId, 'error');
 			})
 			.finally(() => this.store.setIsUpdating(false));
 	}
@@ -258,13 +265,12 @@ export class ContentTypesFacade extends BaseEntityFacade<
 
 	private alertService(
 		alertProps: AlertProps,
-		containerId: 'create' | 'update',
+		containerId: ALERT_CONTAINER_IDS,
 		type: 'success' | 'error'
 	): void {
 		const alertType = type === 'error' ? 'danger' : type;
-		const alertOptions = { containerId: ALERT_CONTAINER_IDS[containerId] };
+		const alertOptions = { containerId: containerId };
 
-		alertService.dismiss();
 		alertService[alertType](alertProps, alertOptions);
 	}
 }

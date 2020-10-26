@@ -85,7 +85,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 										{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
 										<b>
 											{isUpdate
-												? initialValues?.label
+												? initialValues?.name
 												: kebabCase(values.label)}
 										</b>
 									</div>
@@ -106,6 +106,20 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 								</small>
 							</div>
 						</div>
+						{fieldTypeData.generalConfig.hasPlaceholder ? (
+							<div className="row u-margin-top">
+								<div className="col-xs-12">
+									<Field
+										as={TextField}
+										description="Placeholder in het veld."
+										id="generalConfig.placeholder"
+										label="Placeholder"
+										name="generalConfig.placeholder"
+										placeholder="Typ een placeholder"
+									/>
+								</div>
+							</div>
+						) : null}
 						{fieldTypeData.generalConfig.isMultiple ? (
 							<div className="row u-margin-top">
 								<div className="col-xs-12">

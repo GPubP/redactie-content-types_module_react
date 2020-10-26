@@ -38,7 +38,7 @@ export interface ValidationCheckAllowedField {
 
 export interface Validation {
 	type: string;
-	checks: ValidationCheck[] | ValicationCheckWithFields[] | ValicationCheckWithAllowedFields[];
+	checks: (ValidationCheck | ValicationCheckWithFields | ValicationCheckWithAllowedFields)[];
 }
 
 export type ValidationSchema = Record<string, any>;
@@ -65,6 +65,7 @@ export interface Field<D = DataType, F = FieldType, P = Preset | PresetDetail> {
 		min?: number;
 		max?: number;
 		combinedOutput?: boolean;
+		placeholder?: string;
 	};
 	dataType: D;
 	fieldType: F;

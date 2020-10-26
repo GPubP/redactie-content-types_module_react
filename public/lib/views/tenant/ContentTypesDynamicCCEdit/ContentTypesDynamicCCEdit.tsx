@@ -224,7 +224,6 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			dynamicFieldFacade.updateField(omit(['__new'])(dynamicActiveField));
 			navigateToDetail();
 		} else {
-			alertService.dismiss();
 			alertService.danger(
 				{
 					title: 'Er zijn nog fouten',

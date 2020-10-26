@@ -39,7 +39,7 @@ const getChecksFromDefaultValue = (validators: Validator[] = []): ValidationChec
 
 const getChecksFromDefaultValidatorValues = (
 	defaultValidatorValues: Validation
-): ValidationCheck[] | ValicationCheckWithFields[] | ValicationCheckWithAllowedFields[] => {
+): (ValidationCheck | ValicationCheckWithFields | ValicationCheckWithAllowedFields)[] => {
 	return defaultValidatorValues?.checks?.length > 0 ? defaultValidatorValues.checks : [];
 };
 

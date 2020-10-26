@@ -19,7 +19,6 @@ import { generateEmptyContentType } from '../../../helpers';
 import {
 	useActiveTabs,
 	useContentType,
-	useFieldTypes,
 	useNavigate,
 	useRoutesBreadcrumbs,
 	useTenantContext,
@@ -42,7 +41,6 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		},
 	]);
 	const [contentTypeLoadingState, , contentType] = useContentType();
-	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, [], location.pathname);
 	const { tenantId } = useTenantContext();
 	const guardsMeta = useMemo(
@@ -63,16 +61,12 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			navigate(MODULE_PATHS.detailCC, { contentTypeUuid: contentType.uuid });
 		}
 
-		if (
-			fieldTypesLoadingState !== LoadingState.Loading &&
-			contentTypeLoadingState !== LoadingState.Loading &&
-			fieldTypes
-		) {
+		if (contentTypeLoadingState !== LoadingState.Loading) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [contentType, fieldTypes, contentTypeLoadingState, fieldTypesLoadingState, navigate]);
+	}, [contentType, contentTypeLoadingState, navigate]);
 
 	/**
 	 * Methods
@@ -97,7 +91,6 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
 			allowedPaths: CT_SETTINGS_CREATE_ALLOWED_PATHS,
-			fieldTypes,
 			contentType: contentType || generateEmptyContentType(),
 			onCancel: () => navigate(MODULE_PATHS.admin),
 			onSubmit: (sectionData: any, tab: Tab) => upsertCT(sectionData, tab),

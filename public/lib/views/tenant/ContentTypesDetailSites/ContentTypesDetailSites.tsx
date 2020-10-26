@@ -1,11 +1,13 @@
 import { Button } from '@acpaas-ui/react-components';
 import { Table } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
+import { AlertContainer } from '@redactie/utils';
 import React, { FC, useEffect, useState } from 'react';
 
 import DataLoader from '../../../components/DataLoader/DataLoader';
 import SiteStatus from '../../../components/SiteStatus/SiteStatus';
 import { useCoreTranslation } from '../../../connectors/translations';
+import { ALERT_CONTAINER_IDS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
 import { useSites } from '../../../hooks';
 import { Site, SitesDetailRequestBody } from '../../../services/sites';
@@ -134,6 +136,9 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 
 		return (
 			<>
+				<div className="u-margin-bottom">
+					<AlertContainer containerId={ALERT_CONTAINER_IDS.detailSites} />
+				</div>
 				<p className="u-margin-bottom">
 					Bepaal op welke sites dit content type geactiveerd mag worden. Opgelet, u kan
 					het content type enkel deactiveren wanneer er géén content items van dit type
