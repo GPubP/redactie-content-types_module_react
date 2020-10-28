@@ -22,7 +22,7 @@ import {
 	usePreset,
 	useTenantContext,
 } from '../../../hooks';
-import { FieldType } from '../../../services/fieldTypes/fieldTypes.service.types';
+import { FieldType } from '../../../services/fieldTypes';
 import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 import { fieldTypesFacade } from '../../../store/fieldTypes';
