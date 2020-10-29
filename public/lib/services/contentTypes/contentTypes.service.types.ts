@@ -1,3 +1,5 @@
+import { FieldSchema } from '@redactie/form-renderer-module';
+
 import { DataType, FieldType, Operator } from '../fieldTypes';
 import { Preset, PresetDetail, Validator } from '../presets';
 
@@ -149,4 +151,8 @@ export interface ContentTypeCreateRequest {
 		// TODO: fix in backend that this isn't needed
 		deleted: boolean;
 	};
+}
+
+export interface ContentTypeFieldSchema extends FieldSchema {
+	uuid?: string;
 }
