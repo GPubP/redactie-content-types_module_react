@@ -1,7 +1,7 @@
 import { FieldSchema, Preset } from '@redactie/form-renderer-module';
 import { omit } from 'ramda';
 
-import { ContentTypeFieldDetail, ContentTypeFieldSchema } from '../../services/contentTypes';
+import { ContentTypeFieldDetail } from '../../services/contentTypes';
 
 export const parseFields = (fields: ContentTypeFieldDetail[] = []): FieldSchema[] => {
 	const getFieldSchema = (field: ContentTypeFieldDetail): FieldSchema => {
@@ -32,7 +32,7 @@ export const parseFields = (fields: ContentTypeFieldDetail[] = []): FieldSchema[
 		} = field;
 		const isMultiple = (generalConfig.max || 0) > 1;
 		const isPreset = !!preset;
-		const formField: ContentTypeFieldSchema = {
+		const formField: FieldSchema = {
 			name,
 			label,
 			module: fieldType?.data?.module,

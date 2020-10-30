@@ -152,7 +152,3 @@ export interface ContentTypeCreateRequest {
 		deleted: boolean;
 	};
 }
-
-export interface ContentTypeFieldSchema extends FieldSchema {
-	uuid?: string;
-}
