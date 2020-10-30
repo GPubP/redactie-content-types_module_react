@@ -100,6 +100,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 
 	public createContentType(payload: ContentTypeCreateRequest): void {
 		this.store.setIsCreating(true);
+
 		const alertMessages = getAlertMessages((payload as unknown) as ContentTypeDetailResponse);
 
 		this.service
@@ -109,6 +110,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 					this.store.update({
 						contentType: response,
 					});
+
 					this.alertService(
 						alertMessages.create.success,
 						ALERT_CONTAINER_IDS.create,

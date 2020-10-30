@@ -40,7 +40,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const activeRouteConfig = useActiveRouteConfig(location, route);
 	const { contentTypeUuid } = useParams<ContentTypesRouteParams>();
 	const { navigate, generatePath } = useNavigate();
-	const [contentTypeLoadingState, , contentType, title] = useContentType();
+	const [contentTypeLoadingState, , , contentType, title] = useContentType();
 	const [{ all: externalTabs }] = useExternalTabsFacade();
 	const activeTabs = useActiveTabs(
 		SITE_CT_DETAIL_TABS,

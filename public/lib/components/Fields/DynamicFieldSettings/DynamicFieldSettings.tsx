@@ -7,6 +7,7 @@ import { __, compose, equals, pathOr } from 'ramda';
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+import formRendererConnector from '../../../connectors/formRenderer';
 import { useCoreTranslation } from '../../../connectors/translations';
 import { DYNAMIC_FIELD_SETTINGS_NAME, MODULE_PATHS } from '../../../contentTypes.const';
 import { LoadingState, NewCCFormState } from '../../../contentTypes.types';
@@ -31,7 +32,10 @@ import styles from './DynamicFieldSettings.module.scss';
 
 const cx = classNames.bind(styles);
 
-const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputFieldProps) => {
+const DynamicFieldSettings: React.FC<InputFieldProps> = ({
+	fieldSchema,
+	fieldProps,
+}: InputFieldProps) => {
 	/**
 	 * HOOKS
 	 */
@@ -51,6 +55,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 		[]
 	);
 	const [t] = useCoreTranslation();
+	const { field } = fieldProps;
 
 	useEffect(() => {
 		if (!activeField) {
@@ -199,6 +204,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({ fieldSchema }: InputF
 						onSubmit={item => addItem(item)}
 					/>
 				</Card>
+				<formRendererConnector.api.ErrorMessage name={field.name} />
 			</div>
 		</div>
 	);

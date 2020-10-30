@@ -24,7 +24,6 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 	/**
 	 * Hooks
 	 */
-
 	const [siteData, setSiteData] = useState<SiteModel['data']>();
 	const [t] = useCoreTranslation();
 	const [loadingSites, sites] = useSites();

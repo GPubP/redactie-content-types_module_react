@@ -1,5 +1,5 @@
-import { FormikProps } from 'formik';
-import { ReactNode } from 'react';
+import { FormikProps, FormikValues } from 'formik';
+import { ReactNode, Ref } from 'react';
 
 import { ContentTypeDetailModel } from '../../../store/contentTypes';
 
@@ -12,5 +12,6 @@ export interface CTSettingsFormProps {
 	contentType: ContentTypeDetailModel;
 	disabled?: boolean;
 	isUpdate?: boolean;
+	formikRef?: Ref<FormikProps<FormikValues>>;
 	onSubmit: (values: ContentTypeDetailModel | null) => void;
 }
