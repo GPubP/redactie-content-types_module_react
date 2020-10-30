@@ -22,7 +22,6 @@ import {
 import useActiveField from '../../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
 import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
-import { FieldType } from '../../../services/fieldTypes/fieldTypes.service.types';
 import { Preset, PresetDetail } from '../../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
