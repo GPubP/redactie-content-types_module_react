@@ -26,7 +26,6 @@ import {
 import useActiveField from '../../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
 import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
-import { FieldType } from '../../../services/fieldTypes';
 import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel } from '../../../store/contentTypes';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
@@ -227,7 +226,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			compartments,
 			dynamicActiveField,
 			validate,
-			fieldType as FieldType,
+			dynamicActiveField?.fieldType,
 			(preset as unknown) as Preset
 		);
 
@@ -257,6 +256,13 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	};
 
 	const onFieldTypeChange = (data: ContentTypeFieldDetailModel): void => {
+		validateCompartments(
+			compartments,
+			dynamicActiveField,
+			validate,
+			dynamicActiveField?.fieldType,
+			(preset as unknown) as Preset
+		);
 		dynamicFieldFacade.updateActiveField(data);
 	};
 
