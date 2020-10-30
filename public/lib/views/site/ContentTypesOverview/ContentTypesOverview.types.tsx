@@ -11,7 +11,7 @@ export interface ContentTypesPerSiteOverviewTableRow {
 	uuid: string;
 	label: string;
 	description: string;
-	amount: number;
+	contentItemCount: number;
 	activated: boolean;
 	navigate: (contentTypeUuid: string) => void;
 }
