@@ -1,5 +1,3 @@
-import { FieldSchema } from '@redactie/form-renderer-module';
-
 import { DataType, FieldType, Operator } from '../fieldTypes';
 import { Preset, PresetDetail, Validator } from '../presets';
 
