@@ -53,6 +53,20 @@ export interface BasePreset<T, F> {
 			deleted: boolean;
 		};
 	};
+	validateSchema: {
+		configuration: object;
+		validation: {
+			formSchema: object;
+			dataSchema: object;
+		};
+	};
+	errorMessages: {
+		configuration: Record<string, string>;
+		validation: {
+			formSchema: Record<string, string>;
+			dataSchema: Record<string, string>;
+		};
+	};
 }
 
 export type Preset = BasePreset<string, string>;

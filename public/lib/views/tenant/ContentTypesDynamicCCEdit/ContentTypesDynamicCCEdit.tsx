@@ -22,7 +22,7 @@ import {
 import useActiveField from '../../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
 import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
-import { PresetDetail } from '../../../services/presets';
+import { Preset, PresetDetail } from '../../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
 import { fieldTypesFacade } from '../../../store/fieldTypes';
@@ -184,6 +184,13 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	};
 
 	const onFieldChange = (data: ContentTypeFieldDetailModel): void => {
+		validateCompartments(
+			compartments,
+			data,
+			validate,
+			dynamicActiveField?.fieldType as FieldType,
+			(dynamicActiveField?.preset as unknown) as Preset
+		);
 		dynamicFieldFacade.updateActiveField({
 			...data,
 		});
@@ -208,7 +215,9 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		const compartmentsAreValid = validateCompartments(
 			compartments,
 			dynamicActiveField,
-			validate
+			validate,
+			dynamicActiveField?.fieldType,
+			(dynamicActiveField?.preset as unknown) as Preset
 		);
 
 		// Validate current form to trigger fields error states
@@ -246,7 +255,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 
 		const extraOptions = {
 			CTField: dynamicActiveField,
-			fieldTypeData: dynamicActiveField?.fieldType?.data,
+			fieldType: dynamicActiveField?.fieldType,
 			preset: dynamicActiveField?.preset,
 			onDelete: onFieldDelete,
 			onSubmit: onFieldChange,
