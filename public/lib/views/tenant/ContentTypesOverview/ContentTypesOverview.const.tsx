@@ -43,8 +43,8 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		{
 			label: 'Aantal content items',
 			component(value: any, rowData: ContentTypesOverviewTableRow) {
-				return rowData.fields > 0 ? (
-					<span>{rowData.fields}</span>
+				return rowData.contentItemCount > 0 ? (
+					<span>{rowData.contentItemCount}</span>
 				) : (
 					<span className="u-text-light">Geen</span>
 				);
