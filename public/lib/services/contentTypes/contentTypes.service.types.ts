@@ -89,6 +89,7 @@ export interface ContentTypeMeta {
 		fieldType: string;
 		tags: string[];
 	};
+	contentItemCount: number | undefined;
 	deleted: false;
 	status?: string;
 	lastEditor: string;

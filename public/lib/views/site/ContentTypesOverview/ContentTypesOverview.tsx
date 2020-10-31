@@ -116,7 +116,7 @@ const ContentTypesOverview: React.FC = () => {
 				uuid: contentType.uuid as string,
 				label: contentType.meta.label,
 				description: contentType.meta.description,
-				amount: contentType.fields.length || 0,
+				contentItemCount: contentType.meta.contentItemCount || 0,
 				activated: siteIncludesContentType(contentType),
 				navigate: (contentTypeUuid: string) =>
 					navigate(`/sites${MODULE_PATHS.site.detail}`, { siteId, contentTypeUuid }),

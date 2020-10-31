@@ -175,7 +175,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 			label: contentType.meta.label,
 			description: contentType.meta.description,
 			sites: findSitesForContentType(contentType),
-			fields: contentType.fields.length || 0,
+			contentItemCount: contentType.meta.contentItemCount || 0,
 			deleted: contentType.meta.deleted || false,
 			navigate: contentTypeUuid => navigate(MODULE_PATHS.detail, { contentTypeUuid }),
 		}));
