@@ -1,3 +1,5 @@
+import { FieldType } from '../../services/fieldTypes/fieldTypes.service.types';
+import { Preset } from '../../services/presets';
 import { CompartmentModel } from '../../store/ui/compartments';
 
 export function filterCompartments(
@@ -16,12 +18,14 @@ export function filterCompartments(
 export function validateCompartments(
 	compartments: CompartmentModel[],
 	values: any,
-	setValidity: (compartmentId: string, isValid: boolean) => void
+	setValidity: (compartmentId: string, isValid: boolean) => void,
+	fieldType?: FieldType,
+	preset?: Preset
 ): boolean {
 	// Create array of booleans from compartment validation
 	const validatedCompartments: boolean[] = compartments.map(compartment => {
 		if (compartment.validate) {
-			const isValid = compartment.validate(values);
+			const isValid = compartment.validate(values, fieldType, preset);
 			setValidity(compartment.name, isValid);
 
 			return isValid;

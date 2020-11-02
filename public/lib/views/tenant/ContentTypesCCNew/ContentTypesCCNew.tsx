@@ -24,6 +24,8 @@ import {
 	useQuery,
 	useTenantContext,
 } from '../../../hooks';
+import { FieldType } from '../../../services/fieldTypes';
+import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { presetsFacade } from '../../../store/presets';
@@ -170,7 +172,13 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		}
 
 		const { current: formikRef } = activeCompartmentFormikRef;
-		const compartmentsAreValid = validateCompartments(compartments, activeField, validate);
+		const compartmentsAreValid = validateCompartments(
+			compartments,
+			activeField,
+			validate,
+			fieldType as FieldType,
+			(preset as unknown) as Preset
+		);
 
 		// Validate current form to trigger fields error states
 		if (formikRef) {
@@ -199,6 +207,13 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	};
 
 	const onFieldTypeChange = (data: ContentTypeFieldDetailModel): void => {
+		validateCompartments(
+			compartments,
+			data,
+			validate,
+			fieldType as FieldType,
+			(preset as unknown) as Preset
+		);
 		contentTypesFacade.updateActiveField(data);
 	};
 
@@ -214,10 +229,10 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
 			CTField: activeField,
-			fieldTypeData: activeField?.fieldType.data,
+			fieldType: activeField?.fieldType,
 			preset: preset,
 			onSubmit: onFieldTypeChange,
-			formikRef: (instance: any) => {
+			formikRef: (instance: FormikProps<FormikValues>) => {
 				if (!equals(activeCompartmentFormikRef.current, instance)) {
 					activeCompartmentFormikRef.current = instance;
 				}

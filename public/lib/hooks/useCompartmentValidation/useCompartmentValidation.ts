@@ -24,7 +24,7 @@ const useCompartmentValidation = (
 				}
 			});
 		}
-	}, [activeCompartmentFormikRef, activeCompartment, hasSubmit]);
+	}, [activeCompartment, hasSubmit, activeCompartmentFormikRef, activeCompartmentFormikRef.current]); // eslint-disable-line
 };
 
 export default useCompartmentValidation;

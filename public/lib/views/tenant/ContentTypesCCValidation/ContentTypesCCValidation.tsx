@@ -1,8 +1,8 @@
 import { FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-module';
+import { omit } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 
 import formRendererConnector from '../../../connectors/formRenderer';
-import { DEFAULT_VALIDATION_SCHEMA } from '../../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../../contentTypes.types';
 import { generateFRFieldFromCTField, generateValidationChecks } from '../../../helpers';
 import {
@@ -17,7 +17,7 @@ import { PresetDetail } from '../../../services/presets';
 
 const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	CTField,
-	fieldTypeData,
+	fieldType,
 	formikRef,
 	preset,
 	onSubmit,
@@ -59,6 +59,23 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 
 		return createInitialValuesFromChecks(validation.checks);
 	}, [CTField]);
+	const validationSchema: Record<string, any> = useMemo(() => {
+		const schema: Record<string, any> = preset
+			? preset?.validateSchema.validation.formSchema
+			: fieldType?.validateSchema.validation.formSchema;
+
+		return {
+			...omit(['schema'])(schema),
+			$schema: schema.schema,
+		};
+	}, [fieldType, preset]);
+	const errorMessages: Record<string, string> = useMemo(
+		() =>
+			preset
+				? preset.errorMessages.validation.formSchema || {}
+				: fieldType.errorMessages.validation.formSchema || {},
+		[fieldType.errorMessages.validation, preset]
+	);
 
 	/**
 	 *
@@ -154,7 +171,8 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 		};
 
 		onSubmit({
-			validation: generateValidationChecks(data, fieldTypeData, preset),
+			...CTField,
+			validation: generateValidationChecks(data, fieldType.data, preset),
 			config: generateConfig(data, preset),
 			generalConfig: generateGeneralConfig(data, preset),
 		});
@@ -164,7 +182,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	 * Render
 	 */
 	const renderCCValidation = (): ReactElement => {
-		if (!formRendererConnector.api || !hasValidatorsToConfigure(fieldTypeData, preset)) {
+		if (!formRendererConnector.api || !hasValidatorsToConfigure(fieldType.data, preset)) {
 			return <p>Er zijn geen validatie mogelijkheden</p>;
 		}
 
@@ -174,11 +192,11 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 				schema={
 					preset
 						? generateFormSchemaFromPreset(preset)
-						: generateFormSchemaFromFieldTypeData(fieldTypeData)
+						: generateFormSchemaFromFieldTypeData(fieldType.data)
 				}
-				validationSchema={DEFAULT_VALIDATION_SCHEMA}
+				validationSchema={validationSchema}
 				initialValues={initialFormValue}
-				errorMessages={{}}
+				errorMessages={errorMessages}
 				onChange={onFormSubmit}
 			/>
 		);

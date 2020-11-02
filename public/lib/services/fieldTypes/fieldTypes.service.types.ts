@@ -63,6 +63,20 @@ export interface FieldType {
 	uuid: string;
 	data: FieldTypeData;
 	meta: FieldTypeMeta;
+	validateSchema: {
+		configuration: object;
+		validation: {
+			formSchema: object;
+			dataSchema: object;
+		};
+	};
+	errorMessages: {
+		configuration: Record<string, string>;
+		validation: {
+			formSchema: Record<string, string>;
+			dataSchema: Record<string, string>;
+		};
+	};
 }
 
 /**
