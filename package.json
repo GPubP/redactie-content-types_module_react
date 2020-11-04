@@ -1,6 +1,6 @@
 {
 	"name": "@redactie/content-types-module",
-	"version": "0.19.2-0",
+	"version": "0.19.2",
 	"description": "redactie content types module",
 	"main": "dist/redactie-content-types-module.umd.js",
 	"module": "dist/redactie-content-types-module.umd.js",
@@ -41,7 +41,7 @@
 		"@commitlint/cli": "8.3.5",
 		"@commitlint/config-conventional": "8.3.4",
 		"@datorama/akita": "^4.22.1",
-		"@redactie/form-renderer-module": "^0.11.0",
+		"@redactie/form-renderer-module": "^0.12.0",
 		"@redactie/module-webpack-plugin": "2.0.0",
 		"@redactie/react-router-guards": "^1.0.2",
 		"@redactie/redactie-core": "^1.10.5",

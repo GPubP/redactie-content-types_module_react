@@ -40,6 +40,7 @@ export const parseFields = (fields: ContentTypeFieldDetail[] = []): FieldSchema[
 			view: preset ? preset.data.name : '',
 			dataType: dataType.data.type,
 			fields: parseFields(config.fields),
+			uuid: field.uuid,
 			config: {
 				...config,
 				...generalConfig,
