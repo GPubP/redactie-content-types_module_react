@@ -1,7 +1,7 @@
 import { Textarea, TextField } from '@acpaas-ui/react-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { ErrorMessage } from '@redactie/utils';
-import { Field, Formik } from 'formik';
+import { Field, Formik, isFunction } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC } from 'react';
 
@@ -16,6 +16,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 	contentType,
 	disabled = false,
 	isUpdate = false,
+	formikRef,
 	onSubmit,
 }) => {
 	/**
@@ -30,6 +31,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 
 	return (
 		<Formik
+			innerRef={instance => isFunction(formikRef) && formikRef(instance)}
 			initialValues={contentType}
 			onSubmit={onSubmit}
 			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA}

@@ -1,14 +1,9 @@
 import { Button } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import {
-	AlertContainer,
-	AlertProps,
-	alertService,
-	LeavePrompt,
-	useDetectValueChanges,
-} from '@redactie/utils';
-import React, { FC, useMemo, useState } from 'react';
+import { AlertContainer, alertService, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
+import { FormikProps, FormikValues } from 'formik';
+import React, { FC, useMemo, useRef, useState } from 'react';
 
 import { CTSettingsForm } from '../../../components';
 import { useCoreTranslation } from '../../../connectors/translations';
@@ -29,23 +24,53 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	 * Hooks
 	 */
 	const [t] = useCoreTranslation();
-	const [, contentTypIsUpdating] = useContentType();
+	const [, contentTypeIsUpdating, contentTypeIsCreating] = useContentType();
+	const formikRef = useRef<FormikProps<FormikValues>>();
 	const isLoading = useMemo(() => {
-		return contentTypIsUpdating === LoadingState.Loading;
-	}, [contentTypIsUpdating]);
+		return isUpdate
+			? contentTypeIsUpdating === LoadingState.Loading
+			: contentTypeIsCreating === LoadingState.Loading;
+	}, [contentTypeIsCreating, contentTypeIsUpdating, isUpdate]);
 	const [formValue, setFormValue] = useState<ContentTypeDetailModel | null>(null);
 	const [hasChanges, resetChangeDetection] = useDetectValueChanges(!isLoading, formValue);
 
 	/**
 	 * Methods
 	 */
-	const onFormSubmit = (value: ContentTypeDetailModel | null): void => {
+	const renderDangerAlert = ({
+		title = 'Foutmelding',
+		message = 'Niet alle velden van het formulier zijn correct ingevuld',
+	} = {}): void => {
+		alertService.danger(
+			{
+				title,
+				message,
+			},
+			{
+				containerId: ALERT_CONTAINER_IDS.detailSettings,
+			}
+		);
+	};
+	const onFormSubmit = async (value: ContentTypeDetailModel | null): Promise<void> => {
 		if (!value) {
+			return renderDangerAlert();
+		}
+
+		if (!formikRef || !formikRef.current) {
+			return renderDangerAlert({
+				message: 'Er is iets fout gelopen. Probeer later opnieuw.',
+			});
+		}
+
+		const errors = await formikRef.current.validateForm();
+
+		if (typeof errors !== 'object' || !Object.keys(errors).length) {
+			onSubmit({ ...contentType?.meta, ...value.meta }, CONTENT_TYPE_DETAIL_TAB_MAP.settings);
+			resetChangeDetection();
 			return;
 		}
 
-		onSubmit({ ...contentType?.meta, ...value.meta }, CONTENT_TYPE_DETAIL_TAB_MAP.settings);
-		resetChangeDetection();
+		renderDangerAlert();
 	};
 
 	/**
@@ -57,8 +82,13 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			<div className="u-margin-bottom">
 				<AlertContainer containerId={ALERT_CONTAINER_IDS.detailSettings} />
 			</div>
-			<CTSettingsForm contentType={contentType} isUpdate={isUpdate} onSubmit={onFormSubmit}>
-				{({ submitForm, validateForm, values }) => {
+			<CTSettingsForm
+				formikRef={instance => (formikRef.current = instance || undefined)}
+				contentType={contentType}
+				isUpdate={isUpdate}
+				onSubmit={onFormSubmit}
+			>
+				{({ submitForm, values }) => {
 					setFormValue(values);
 
 					return (
@@ -75,23 +105,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 											iconLeft={isLoading ? 'circle-o-notch fa-spin' : null}
 											disabled={isLoading || !hasChanges}
 											className="u-margin-left-xs"
-											onClick={() => {
-												validateForm().then(() => {
-													alertService.danger(
-														{
-															title: 'Foutmelding',
-															message:
-																'Niet alle velden van het formulier zijn correct ingevuld',
-														},
-														{
-															containerId:
-																ALERT_CONTAINER_IDS.detailSettings,
-														}
-													);
-												});
-
-												submitForm();
-											}}
+											onClick={submitForm}
 											type="success"
 										>
 											{isUpdate
