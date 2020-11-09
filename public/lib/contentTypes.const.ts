@@ -111,6 +111,8 @@ export const BREADCRUMB_OPTIONS = {
 		'/',
 		`${TENANT_ROOT}`,
 		`${TENANT_ROOT}/sites`,
+		`${TENANT_ROOT}/sites${SITE_ROOT}`,
+		`${TENANT_ROOT}/sites${SITE_ROOT}/overzicht`,
 		`${TENANT_ROOT}${CC_BASE_PATH}/:contentComponentUuid`,
 		`${TENANT_ROOT}${CC_DYNAMIC_BASE_PATH}`,
 		`${TENANT_ROOT}${CC_DYNAMIC_BASE_PATH}/:dynamicContentComponentUuid([0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12})`,
