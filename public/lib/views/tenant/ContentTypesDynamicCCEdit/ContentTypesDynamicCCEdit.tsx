@@ -178,7 +178,12 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 				keepActiveField: !!activeField?.__new,
 			},
 			new URLSearchParams(
-				activeField?.__new ? { fieldType: activeField?.fieldType.uuid } : {}
+				activeField?.__new
+					? {
+							fieldType: activeField.fieldType.uuid,
+							name: activeField.label,
+					  }
+					: {}
 			)
 		);
 	};
