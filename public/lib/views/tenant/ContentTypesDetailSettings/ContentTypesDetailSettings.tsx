@@ -3,6 +3,7 @@ import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-c
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { AlertContainer, alertService, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
+import { isEmpty } from 'ramda';
 import React, { FC, useMemo, useRef, useState } from 'react';
 
 import { CTSettingsForm } from '../../../components';
@@ -51,6 +52,27 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			}
 		);
 	};
+
+	const isFormValid = async (): Promise<boolean> => {
+		if (!formikRef || !formikRef.current) {
+			return false;
+		}
+
+		const errors = await formikRef.current.validateForm();
+
+		return isEmpty(errors);
+	};
+
+	const beforeSubmit = async (): Promise<boolean> => {
+		const isValid = await isFormValid();
+
+		if (!isValid) {
+			renderDangerAlert();
+		}
+
+		return isValid;
+	};
+
 	const onFormSubmit = async (value: ContentTypeDetailModel | null): Promise<void> => {
 		if (!value) {
 			return renderDangerAlert();
@@ -62,21 +84,17 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			});
 		}
 
-		const errors = await formikRef.current.validateForm();
-
-		if (typeof errors !== 'object' || !Object.keys(errors).length) {
-			onSubmit({ ...contentType?.meta, ...value.meta }, CONTENT_TYPE_DETAIL_TAB_MAP.settings);
-			resetChangeDetection();
+		if (!(await beforeSubmit())) {
 			return;
 		}
 
-		renderDangerAlert();
+		onSubmit({ ...contentType?.meta, ...value.meta }, CONTENT_TYPE_DETAIL_TAB_MAP.settings);
+		resetChangeDetection();
 	};
 
 	/**
 	 * Render
 	 */
-
 	return (
 		<>
 			<div className="u-margin-bottom">
@@ -90,6 +108,10 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			>
 				{({ submitForm, values }) => {
 					setFormValue(values);
+					const submit = (): void => {
+						beforeSubmit();
+						submitForm();
+					};
 
 					return (
 						<>
@@ -105,7 +127,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 											iconLeft={isLoading ? 'circle-o-notch fa-spin' : null}
 											disabled={isLoading || !hasChanges}
 											className="u-margin-left-xs"
-											onClick={submitForm}
+											onClick={submit}
 											type="success"
 										>
 											{isUpdate
@@ -119,7 +141,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 								allowedPaths={allowedPaths}
 								when={hasChanges}
 								shouldBlockNavigationOnConfirm
-								onConfirm={() => submitForm()}
+								onConfirm={submit}
 							/>
 						</>
 					);
