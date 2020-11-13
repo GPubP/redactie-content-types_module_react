@@ -69,6 +69,7 @@ export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
 export interface NewCCFormState {
 	fieldType: string;
 	name: string;
+	compartment?: string;
 }
 
 export interface CCSettingsFormState {

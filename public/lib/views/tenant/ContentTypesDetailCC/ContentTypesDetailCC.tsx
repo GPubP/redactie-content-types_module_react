@@ -63,10 +63,16 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		label: fieldType?.data?.label,
 	}));
 
+	const compartmentOptions = contentType.compartments.map(c => ({
+		key: c.uuid,
+		value: c.uuid,
+		label: c.label,
+	}));
+
 	/**
 	 * Methods
 	 */
-	const onCCFormSubmit = ({ name, fieldType }: NewCCFormState): void => {
+	const onCCFormSubmit = ({ name, fieldType, compartment }: NewCCFormState): void => {
 		const selectedFieldType = fields.find(ft => ft.uuid === fieldType);
 		if (!selectedFieldType) {
 			return;
@@ -77,8 +83,8 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		// Only presets have a fieldType prop available on the data object
 		const fieldTypeIsPreset = !!selectedFieldType?.data.fieldType;
 		const queryParams = fieldTypeIsPreset
-			? `?preset=${selectedFieldType.uuid}&name=${name}&compartment=${CONTENT_COMPARTMENT_UUID}`
-			: `?fieldType=${selectedFieldType.uuid}&name=${name}&compartment=${CONTENT_COMPARTMENT_UUID}`;
+			? `?preset=${selectedFieldType.uuid}&name=${name}&compartment=${compartment}`
+			: `?fieldType=${selectedFieldType.uuid}&name=${name}&compartment=${compartment}`;
 
 		navigate(`${MODULE_PATHS.detailCCNewSettings}${queryParams}`, {
 			contentTypeUuid,
@@ -183,7 +189,12 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 							<FormCTNewCC
 								className="u-margin-top"
 								fieldTypeOptions={fieldTypeOptions}
-								formState={{ fieldType: '', name: '' }}
+								compartmentOptions={compartmentOptions}
+								formState={{
+									fieldType: '',
+									name: '',
+									compartment: CONTENT_COMPARTMENT_UUID,
+								}}
 								onSubmit={onCCFormSubmit}
 							/>
 						</div>

@@ -6,6 +6,11 @@ export interface FormCTNewCCProps {
 		label: string;
 		value: string;
 	}[];
+	compartmentOptions?: {
+		key: string;
+		label: string;
+		value: string;
+	}[];
 	formState: NewCCFormState;
 	onSubmit: (formValues: NewCCFormState) => void;
 	hasName?: boolean;
