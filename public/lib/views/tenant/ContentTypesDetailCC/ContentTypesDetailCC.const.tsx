@@ -1,30 +1,13 @@
 import { TranslateFunc } from '@redactie/translations-module';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
+import { isNil } from 'ramda';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { array, object, string } from 'yup';
 
 import { StatusIcon } from '../../../components';
 import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
 
 import { ContentTypeDetailCCRow } from './ContentTypesDetailCC.types';
-
-export const CT_CC_VALIDATION_SCHEMA = object().shape({
-	fields: array(
-		object().shape({
-			uuid: string(),
-			label: string().required(),
-			name: string().required(),
-			module: string()
-				.required()
-				.default('default'),
-			dataType: string().required(),
-			fieldType: string().required(),
-			config: object().default({}),
-			validators: array(string()),
-		})
-	),
-});
 
 export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 	{
@@ -35,8 +18,8 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 			const { path } = rowData;
 			return (
 				<>
-					<Link to={path}>{value}</Link>
-					<p className="u-text-light">systeemnaam: [{rowData.name}]</p>
+					{path ? <Link to={path}>{value}</Link> : <p>{value}</p>}
+					{rowData.name && <p className="u-text-light">systeemnaam: [{rowData.name}]</p>}
 				</>
 			);
 		},
@@ -51,7 +34,9 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 		value: 'multiple',
 		disableSorting: true,
 		component(value: any, rowData: ContentTypeDetailCCRow) {
-			return <StatusIcon active={rowData.multiple} />;
+			return !isNil(rowData.multiple) ? (
+				<StatusIcon active={rowData.multiple ?? false} />
+			) : null;
 		},
 	},
 	{
@@ -59,7 +44,9 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 		value: 'required',
 		disableSorting: true,
 		component(value: any, rowData: ContentTypeDetailCCRow) {
-			return <StatusIcon active={rowData.required} />;
+			return !isNil(rowData.required) ? (
+				<StatusIcon active={rowData.required ?? false} />
+			) : null;
 		},
 	},
 	{
@@ -67,7 +54,9 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 		value: 'translatable',
 		disableSorting: true,
 		component(value: any, rowData: ContentTypeDetailCCRow) {
-			return <StatusIcon active={rowData.translatable} />;
+			return !isNil(rowData.translatable) ? (
+				<StatusIcon active={rowData.translatable ?? false} />
+			) : null;
 		},
 	},
 	{
@@ -75,7 +64,7 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 		value: 'hidden',
 		disableSorting: true,
 		component(value: any, rowData: ContentTypeDetailCCRow) {
-			return <StatusIcon active={rowData.hidden} />;
+			return !isNil(rowData.hidden) ? <StatusIcon active={rowData.hidden ?? false} /> : null;
 		},
 	},
 ];

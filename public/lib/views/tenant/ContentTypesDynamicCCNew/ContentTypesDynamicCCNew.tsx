@@ -173,7 +173,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 				name: kebabCase(fieldType.data.name || ''),
 			};
 			dynamicFieldFacade.setActiveField(
-				generateFieldFromType(fieldType, initialValues, preset || undefined)
+				generateFieldFromType(fieldType, initialValues, undefined, preset || undefined)
 			);
 		}
 	}, [fieldType, preset]);

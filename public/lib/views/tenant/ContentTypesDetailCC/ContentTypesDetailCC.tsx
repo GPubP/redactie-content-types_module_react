@@ -3,14 +3,16 @@ import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-edit
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { AlertContainer, LeavePrompt } from '@redactie/utils';
 import { Field, Formik } from 'formik';
-import { path, pathOr } from 'ramda';
+import { move, path, pathOr } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
-import { FormCTNewCC } from '../../../components';
+import { FormCTNewCC, FormCTNewCompartment, FormCTNewCompartmentState } from '../../../components';
 import { useCoreTranslation } from '../../../connectors/translations';
 import {
 	ALERT_CONTAINER_IDS,
+	CONTENT_COMPARTMENT_UUID,
 	CONTENT_TYPE_DETAIL_TAB_MAP,
 	MODULE_PATHS,
 } from '../../../contentTypes.const';
@@ -22,19 +24,16 @@ import {
 } from '../../../contentTypes.types';
 import { sortFieldTypes } from '../../../helpers';
 import { useContentType, useNavigate } from '../../../hooks';
-import { ContentTypeFieldDetailModel } from '../../../store/contentTypes';
+import { contentTypesFacade } from '../../../store/contentTypes';
 
-import {
-	CONTENT_TYPE_COLUMNS,
-	CT_CC_VALIDATION_SCHEMA,
-	CT_DETAIL_CC_ALLOWED_PATHS,
-} from './ContentTypesDetailCC.const';
+import { CONTENT_TYPE_COLUMNS, CT_DETAIL_CC_ALLOWED_PATHS } from './ContentTypesDetailCC.const';
 import { ContentTypeDetailCCRow } from './ContentTypesDetailCC.types';
 
 const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	presets,
 	fieldTypes,
 	contentType,
+	fieldsByCompartments = [],
 	onCancel,
 	onSubmit,
 	fieldsHaveChanged,
@@ -78,46 +77,88 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		// Only presets have a fieldType prop available on the data object
 		const fieldTypeIsPreset = !!selectedFieldType?.data.fieldType;
 		const queryParams = fieldTypeIsPreset
-			? `?preset=${selectedFieldType.uuid}&name=${name}`
-			: `?fieldType=${selectedFieldType.uuid}&name=${name}`;
+			? `?preset=${selectedFieldType.uuid}&name=${name}&compartment=${CONTENT_COMPARTMENT_UUID}`
+			: `?fieldType=${selectedFieldType.uuid}&name=${name}&compartment=${CONTENT_COMPARTMENT_UUID}`;
 
 		navigate(`${MODULE_PATHS.detailCCNewSettings}${queryParams}`, {
 			contentTypeUuid,
 		});
 	};
 
+	const onCompartmentFormSubmit = ({ name }: FormCTNewCompartmentState): void => {
+		const compartment = {
+			uuid: uuidv4(),
+			label: name,
+			removable: true,
+		};
+
+		// save compartment on content type
+		contentTypesFacade.addCompartment(compartment);
+	};
+
 	const onCCSave = (): void => {
 		onSubmit(contentType.fields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
+	};
+
+	const moveRow = (source: any, target: any): void => {
+		const targetCompartmentUuid =
+			contentType.fields.find(f => f.uuid === target.id)?.compartment.uuid || target.id;
+		const moveFieldToCompartment = source.type === 'row-2' && target.type === 'row-1';
+		const moveFieldToField = source.type === 'row-2' && target.type === 'row-2';
+		const moveCompartment = source.type === 'row-1' && target.type === 'row-1';
+		if (moveCompartment) {
+			contentTypesFacade.updateCompartments(
+				move(source.index, target.index, contentType.compartments)
+			);
+			return;
+		}
+
+		if (targetCompartmentUuid && (moveFieldToField || moveFieldToCompartment)) {
+			contentTypesFacade.updateFieldCompartment(
+				source.id,
+				targetCompartmentUuid,
+				source.index,
+				target.index,
+				moveFieldToCompartment
+			);
+		}
 	};
 
 	/**
 	 * Render
 	 */
 
-	const renderTableField = ({
-		value: fields,
-	}: {
-		value: ContentTypeFieldDetailModel[];
-	}): ReactElement => {
-		const contentTypeRows: ContentTypeDetailCCRow[] = (fields || []).map(cc => ({
-			path: generatePath(MODULE_PATHS.detailCCEdit, {
-				contentTypeUuid,
-				contentComponentUuid: cc.uuid,
-			}),
-			label: cc.label,
-			name: cc.name,
-			fieldType:
-				(path(['preset', 'data', 'label'])(cc) as string | null) ||
-				pathOr('error', ['fieldType', 'data', 'label'])(cc),
-			multiple: Number(cc.generalConfig.max) > 1,
-			required: !!cc.generalConfig.required,
-			translatable: !!cc.generalConfig.multiLanguage,
-			hidden: !!cc.generalConfig.hidden,
-		}));
-
+	const renderTableField = (): ReactElement => {
+		const contentTypeRows: ContentTypeDetailCCRow[] = (fieldsByCompartments || []).map(
+			compartment => {
+				return {
+					id: compartment.uuid,
+					label: compartment.label,
+					rows: (compartment?.fields || []).map(cc => ({
+						id: cc.uuid,
+						path: generatePath(MODULE_PATHS.detailCCEdit, {
+							contentTypeUuid,
+							contentComponentUuid: cc.uuid,
+						}),
+						label: cc.label,
+						name: cc.name,
+						fieldType:
+							(path(['preset', 'data', 'label'])(cc) as string | null) ||
+							pathOr('error', ['fieldType', 'data', 'label'])(cc),
+						multiple: Number(cc.generalConfig.max) > 1,
+						required: !!cc.generalConfig.required,
+						translatable: !!cc.generalConfig.multiLanguage,
+						hidden: !!cc.generalConfig.hidden,
+					})),
+				};
+			}
+		);
 		return (
 			<Table
+				dataKey="id"
 				className="u-margin-top"
+				draggable
+				moveRow={moveRow}
 				columns={CONTENT_TYPE_COLUMNS(t)}
 				rows={contentTypeRows}
 				totalValues={contentType.fields.length}
@@ -133,14 +174,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 			<div className="u-margin-bottom-lg">
 				<h5>Content componenten</h5>
 
-				<Formik
-					enableReinitialize={true}
-					initialValues={{ fields: contentType.fields }}
-					onSubmit={onCCSave}
-					validationSchema={CT_CC_VALIDATION_SCHEMA}
-				>
-					{() => <Field name="fields" placeholder="No fields" as={renderTableField} />}
-				</Formik>
+				{renderTableField()}
 
 				<div className="u-margin-top">
 					<Card>
@@ -151,6 +185,18 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 								fieldTypeOptions={fieldTypeOptions}
 								formState={{ fieldType: '', name: '' }}
 								onSubmit={onCCFormSubmit}
+							/>
+						</div>
+					</Card>
+				</div>
+				<div className="u-margin-top">
+					<Card>
+						<div className="u-margin">
+							<h5>Voeg een compartiment toe</h5>
+							<FormCTNewCompartment
+								className="u-margin-top"
+								formState={{ name: '' }}
+								onSubmit={onCompartmentFormSubmit}
 							/>
 						</div>
 					</Card>

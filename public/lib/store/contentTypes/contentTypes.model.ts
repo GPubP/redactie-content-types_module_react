@@ -16,3 +16,9 @@ export interface ContentTypesState extends BaseEntityState<ContentTypeModel, str
 	activeField?: ContentTypeFieldDetailModel;
 	pageTitle?: string | null;
 }
+
+export interface FieldsByCompartment {
+	uuid: string;
+	label: string;
+	fields?: ContentTypeFieldDetail[];
+}

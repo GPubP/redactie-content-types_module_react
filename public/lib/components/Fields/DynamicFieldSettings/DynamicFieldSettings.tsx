@@ -144,6 +144,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 
 	const renderTableField = (values: Field[]): ReactElement => {
 		const contentTypeRows: ContentTypeDetailCCRow[] = values.map(cc => ({
+			id: cc.uuid,
 			path: generatePath(MODULE_PATHS.detailCCEditDynamicEditSettings, {
 				contentTypeUuid,
 				contentComponentUuid: activeField?.uuid,

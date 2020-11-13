@@ -44,7 +44,7 @@ export interface Validation {
 export type ValidationSchema = Record<string, any>;
 
 export interface Field<D = DataType, F = FieldType, P = Preset | PresetDetail> {
-	uuid?: string;
+	uuid: string;
 	label: string;
 	module: string;
 	name: string;
@@ -70,6 +70,7 @@ export interface Field<D = DataType, F = FieldType, P = Preset | PresetDetail> {
 	dataType: D;
 	fieldType: F;
 	preset?: P;
+	compartment: FieldCompartment;
 	__new?: boolean;
 }
 export interface ContentTypePaging {
@@ -104,6 +105,17 @@ export interface ModuleSettings {
 	validationSchema?: ValidationSchema;
 }
 
+export interface Compartment {
+	uuid: string;
+	label: string;
+	removable: boolean;
+}
+
+export interface FieldCompartment {
+	uuid: string;
+	position: number;
+}
+
 export type ContentTypeFieldDetail = Field;
 export type ContentTypeField = Field<string, string, string>;
 
@@ -120,6 +132,7 @@ export interface ContentTypeBase<T> {
 	fields: T[];
 	modulesConfig: ModuleSettings[];
 	meta: ContentTypeMeta;
+	compartments: Compartment[];
 }
 
 export type ContentTypeResponse = ContentTypeBase<ContentTypeField>;
@@ -141,6 +154,7 @@ export interface ContentTypesResponse {
 export type ContentTypeUpdateRequest = ContentTypeBase<ContentTypeFieldDetail>;
 
 export interface ContentTypeCreateRequest {
+	compartments: Compartment[];
 	fields: ContentTypeField[];
 	modulesConfig: ModuleSettings[];
 	meta: {

@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
+import { CONTENT_COMPARTMENT_UUID } from '../../contentTypes.const';
 import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
 import { FieldTypeModel } from '../../store/fieldTypes';
 import { PresetDetailModel } from '../../store/presets';
@@ -9,6 +10,7 @@ import { generateValidationChecks } from '../generateValidationChecks';
 export const generateFieldFromType = (
 	fieldType: FieldTypeModel,
 	initialValues: Partial<ContentTypeFieldDetailModel> = {},
+	fieldCompartmentUUID = CONTENT_COMPARTMENT_UUID,
 	preset?: PresetDetailModel
 ): ContentTypeFieldDetailModel => ({
 	__new: true,
@@ -31,4 +33,8 @@ export const generateFieldFromType = (
 	dataType: fieldType.data.dataType,
 	fieldType,
 	preset,
+	compartment: {
+		uuid: fieldCompartmentUUID,
+		position: 0,
+	},
 });
