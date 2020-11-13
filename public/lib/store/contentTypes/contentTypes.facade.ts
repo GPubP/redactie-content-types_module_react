@@ -1,8 +1,8 @@
-import { arrayAdd, arrayUpdate } from '@datorama/akita';
+import { arrayAdd, arrayRemove, arrayUpdate, ItemPredicate } from '@datorama/akita';
 import { AlertProps, alertService } from '@redactie/utils';
 import { insert, move, omit } from 'ramda';
 
-import { ALERT_CONTAINER_IDS } from '../../contentTypes.const';
+import { ALERT_CONTAINER_IDS, CONTENT_COMPARTMENT_UUID } from '../../contentTypes.const';
 import { SearchParams } from '../../services/api/api.service.types';
 import {
 	Compartment,
@@ -217,6 +217,62 @@ export class ContentTypesFacade extends BaseEntityFacade<
 				},
 			});
 		}
+	}
+
+	public removeCompartment(uuid: string): void {
+		this.store.update(state => {
+			if (!state.contentType) {
+				return state;
+			}
+			const fields = state.contentType?.fields || [];
+			const otherFields = fields.filter(
+				f =>
+					f.compartment?.uuid !== uuid && f.compartment?.uuid !== CONTENT_COMPARTMENT_UUID
+			);
+			const fieldsToMove = fields
+				.filter(f => f.compartment?.uuid === uuid)
+				.sort((a, b) => a.compartment?.position - b.compartment?.position);
+			const contentCompartmentFields = fields
+				.filter(f => f.compartment?.uuid === CONTENT_COMPARTMENT_UUID)
+				.sort((a, b) => a.compartment?.position - b.compartment?.position);
+			const newContentCompartmentFields = [...contentCompartmentFields, ...fieldsToMove].map(
+				(f, index) => ({
+					...f,
+					compartment: {
+						compartment: CONTENT_COMPARTMENT_UUID,
+						position: index,
+					},
+				})
+			);
+			const newFields = [...newContentCompartmentFields, ...otherFields];
+
+			return {
+				contentType: {
+					...state.contentType,
+					compartments: arrayRemove(state.contentType.compartments, uuid, 'uuid'),
+					fields: newFields,
+				},
+			};
+		});
+	}
+
+	public updateCompartment(uuid: string, compartment: Compartment): void {
+		this.store.update(state => {
+			if (!state.contentType) {
+				return state;
+			}
+			return {
+				contentType: {
+					...state.contentType,
+					compartments: arrayUpdate(
+						state.contentType.compartments,
+						uuid,
+						compartment,
+						'uuid'
+					),
+				},
+			};
+		});
 	}
 
 	public updateCompartments(compartments: Compartment[]): void {

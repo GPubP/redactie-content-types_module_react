@@ -35,6 +35,6 @@ export const generateFieldFromType = (
 	preset,
 	compartment: {
 		uuid: fieldCompartmentUUID,
-		position: 0,
+		position: 0, // dynamic set position
 	},
 });

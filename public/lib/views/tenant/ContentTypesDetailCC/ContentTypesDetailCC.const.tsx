@@ -1,3 +1,4 @@
+import { Button } from '@acpaas-ui/react-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { isNil } from 'ramda';
@@ -9,7 +10,44 @@ import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
 
 import { ContentTypeDetailCCRow } from './ContentTypesDetailCC.types';
 
-export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
+export const CONTENT_TYPE_COLUMNS = (
+	t: TranslateFunc,
+	onExpand: (id: string) => void = () => null,
+	moveRowUp: (uuid: string) => void = () => null,
+	moveRowDown: (uuid: string) => void = () => null
+): any[] => [
+	{
+		label: '  ',
+		disableSorting: true,
+		component(value: any, rowData: ContentTypeDetailCCRow) {
+			return (
+				<div className="m-button-group m-button-group--vertical">
+					<Button
+						onClick={() => moveRowUp(rowData.id)}
+						icon="chevron-up"
+						ariaLabel="Move item up"
+						type="primary"
+						htmlType="button"
+						size="tiny"
+						transparent
+						disabled={false}
+						negative
+					/>
+					<Button
+						onClick={() => moveRowDown(rowData.id)}
+						icon="chevron-down"
+						ariaLabel="Move item down"
+						type="primary"
+						htmlType="button"
+						size="tiny"
+						disabled={false}
+						transparent
+						negative
+					/>
+				</div>
+			);
+		},
+	},
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
@@ -65,6 +103,21 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 		disableSorting: true,
 		component(value: any, rowData: ContentTypeDetailCCRow) {
 			return !isNil(rowData.hidden) ? <StatusIcon active={rowData.hidden ?? false} /> : null;
+		},
+	},
+	{
+		label: '',
+		disableSorting: true,
+		component(value: any, rowData: ContentTypeDetailCCRow) {
+			return isNil(rowData.name) ? (
+				<Button
+					ariaLabel="Edit"
+					icon="edit"
+					onClick={() => onExpand(rowData.id)}
+					type="primary"
+					transparent
+				></Button>
+			) : null;
 		},
 	},
 ];
