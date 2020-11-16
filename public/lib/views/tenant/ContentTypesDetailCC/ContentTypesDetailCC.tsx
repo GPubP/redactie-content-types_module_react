@@ -2,7 +2,7 @@ import { Button, Card } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { AlertContainer, LeavePrompt } from '@redactie/utils';
-import { FormikHelpers, FormikProps } from 'formik';
+import { FormikHelpers } from 'formik';
 import { move, path, pathOr } from 'ramda';
 import React, { FC, ReactElement, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -30,7 +30,7 @@ import {
 } from '../../../contentTypes.types';
 import { sortFieldTypes } from '../../../helpers';
 import { useContentType, useNavigate } from '../../../hooks';
-import { Compartment } from '../../../services/contentTypes';
+import { Compartment, ContentTypeFieldDetail } from '../../../services/contentTypes';
 import { contentTypesFacade } from '../../../store/contentTypes';
 
 import { CONTENT_TYPE_COLUMNS, CT_DETAIL_CC_ALLOWED_PATHS } from './ContentTypesDetailCC.const';
@@ -49,7 +49,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	 * Hooks
 	 */
 	const { contentTypeUuid } = useParams<ContentTypesDetailRouteParams>();
-	const [expandedRows, setExpandedRows] = useState({});
+	const [expandedRows, setExpandedRows] = useState<Record<string, any>>({});
 	const { navigate, generatePath } = useNavigate();
 	const [t] = useCoreTranslation();
 	const [, contentTypeIsUpdating] = useContentType();
@@ -118,7 +118,123 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		onSubmit(contentType.fields, CONTENT_TYPE_DETAIL_TAB_MAP.contentComponents);
 	};
 
-	const moveRow = (source: any, target: any): void => {
+	const onRowExpand = (rowId: string): void => {
+		setExpandedRows({
+			[rowId]: true,
+		});
+	};
+
+	const onCompartmentUpdateFormSubmit = (
+		uuid: string,
+		compartment: Partial<Compartment>
+	): void => {
+		contentTypesFacade.updateCompartment(uuid, compartment);
+		setExpandedRows({});
+	};
+
+	const updateCompartmentTemplate = (row: ContentTypeDetailCCRow): ReactElement | null => {
+		const compartment = contentType.compartments.find(c => c.uuid === row.id);
+		if (!compartment) {
+			return null;
+		}
+		const isRemovable = compartment?.removable;
+		return (
+			<div className="u-margin-xs">
+				<FormCTEditCompartment
+					formState={{ name: row.label }}
+					isRemovable={isRemovable}
+					onSubmit={value =>
+						onCompartmentUpdateFormSubmit(row.id, {
+							uuid: row.id,
+							label: value.name,
+						})
+					}
+					onDelete={() => contentTypesFacade.removeCompartment(row.id)}
+					onCancel={() => setExpandedRows({})}
+				/>
+			</div>
+		);
+	};
+
+	const moveCompartment = (uuid: string, action: 'up' | 'down'): void => {
+		const { compartments } = contentType;
+		const movedUp = action === 'up';
+		const compartmentIndex = compartments.findIndex(c => c.uuid === uuid);
+		const last = compartments.length - 1 === compartmentIndex;
+		const first = compartmentIndex === 0;
+
+		if ((movedUp && first) || (!movedUp && last)) {
+			return;
+		}
+
+		const nextIndex = movedUp ? compartmentIndex - 1 : compartmentIndex + 1;
+		contentTypesFacade.updateCompartments(move(compartmentIndex, nextIndex, compartments));
+	};
+
+	const moveField = (uuid: string, action: 'up' | 'down'): void => {
+		const { compartments, fields } = contentType;
+		const movedField = fields.find(f => f.uuid === uuid);
+
+		if (!movedField) {
+			return;
+		}
+
+		const { uuid: compartmentUuid, position } = movedField.compartment;
+		const AllFieldsInCompartment = fields.filter(f => f.compartment.uuid === compartmentUuid);
+		const compartmentIndex = compartments.findIndex(c => c.uuid === compartmentUuid);
+		const movedUp = action === 'up';
+		const movedDown = action === 'down';
+		const first = position === 0;
+		const last = AllFieldsInCompartment.length - 1 === position;
+		const movedUpAndFirst = movedUp && first;
+		const movedDownAndLast = movedDown && last;
+
+		const nextCompartment = movedUp
+			? compartments[compartmentIndex - 1]
+			: compartments[compartmentIndex + 1];
+
+		if ((movedUpAndFirst || movedDownAndLast) && !nextCompartment) {
+			return;
+		}
+		const nextCompartmentFieldLength =
+			fields.filter(f => f.compartment.uuid === nextCompartment?.uuid)?.length || 0;
+
+		const nextPosition = movedUp
+			? first
+				? nextCompartmentFieldLength
+				: position - 1
+			: last
+			? 0
+			: position + 1;
+
+		const targetCompartmentUuid =
+			movedUpAndFirst || movedDownAndLast ? nextCompartment.uuid : compartmentUuid;
+
+		contentTypesFacade.updateFieldCompartment(
+			uuid,
+			targetCompartmentUuid,
+			position,
+			nextPosition,
+			false
+		);
+	};
+
+	const onMoveRow = (uuid: string, action: 'up' | 'down'): void => {
+		const { compartments, fields } = contentType;
+		const movedField = fields.find(f => f.uuid === uuid);
+		const movedCompartment = compartments.find(c => c.uuid === uuid);
+
+		if (!movedField) {
+			if (movedCompartment) {
+				moveCompartment(uuid, action);
+			}
+			return;
+		}
+
+		moveField(uuid, action);
+	};
+
+	const onMoveRowDnD = (source: any, target: any): void => {
 		const targetCompartmentUuid =
 			contentType.fields.find(f => f.uuid === target.id)?.compartment.uuid || target.id;
 		const moveFieldToCompartment = source.type === 'row-2' && target.type === 'row-1';
@@ -142,110 +258,31 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		}
 	};
 
-	const onRowExpand = (rowId: string): void => {
-		setExpandedRows({
-			[rowId]: true,
-		});
-	};
-
-	const onCompartmentUpdateFormSubmit = (uuid: string, compartment: Compartment): void => {
-		contentTypesFacade.updateCompartment(uuid, compartment);
-		setExpandedRows({});
-	};
-
-	const updateCompartmentTemplate = (row: ContentTypeDetailCCRow): ReactElement | null => {
-		const compartment = contentType.compartments.find(c => c.uuid === row.id);
-		if (!compartment) {
-			return null;
+	const canMoveUp = (fieldToMove: ContentTypeFieldDetail): boolean => {
+		if (!fieldToMove) {
+			return false;
 		}
-		const isRemovable = compartment?.removable;
-		return (
-			<div className="u-margin-xs">
-				<FormCTEditCompartment
-					formState={{ name: row.label }}
-					isRemovable={isRemovable}
-					onSubmit={value =>
-						onCompartmentUpdateFormSubmit(row.id, {
-							uuid: row.id,
-							label: value.name,
-							removable: true,
-						})
-					}
-					onDelete={() => contentTypesFacade.removeCompartment(row.id)}
-					onCancel={() => setExpandedRows({})}
-				/>
-			</div>
-		);
+
+		const { compartments } = contentType;
+		const { compartment } = fieldToMove;
+
+		const compartmentIndex = compartments.findIndex(c => c.uuid === compartment.uuid);
+		const nextCompartment = compartments[compartmentIndex - 1];
+		return !(compartment.position === 0 && !nextCompartment);
 	};
 
-	const onMoveRowUp = (uuid: string): void => {
-		const movedField = contentType.fields.find(f => f.uuid === uuid);
-
-		if (movedField) {
-			const { uuid: compartmentUuid, position } = movedField.compartment;
-			if (position === 0) {
-				const nextCompartmentIndex =
-					contentType.compartments.findIndex(c => c.uuid === compartmentUuid) - 1;
-				const nextCompartment = contentType.compartments[nextCompartmentIndex];
-
-				if (nextCompartment) {
-					const AllFieldsInCompartment = contentType.fields.filter(
-						f => f.compartment.uuid === nextCompartment.uuid
-					);
-					contentTypesFacade.updateFieldCompartment(
-						uuid,
-						nextCompartment.uuid,
-						position,
-						AllFieldsInCompartment.length,
-						false
-					);
-					return;
-				}
-				return;
-			}
-			contentTypesFacade.updateFieldCompartment(
-				uuid,
-				compartmentUuid,
-				position,
-				position - 1,
-				false
-			);
+	const canMoveDown = (fieldToMove: ContentTypeFieldDetail): boolean => {
+		if (!fieldToMove) {
+			return false;
 		}
-	};
 
-	const onMoveRowDown = (uuid: string): void => {
-		const movedField = contentType.fields.find(f => f.uuid === uuid);
+		const { compartments, fields } = contentType;
+		const { compartment } = fieldToMove;
 
-		if (movedField) {
-			const { uuid: compartmentUuid, position } = movedField.compartment;
-			const AllFieldsInCompartment = contentType.fields.filter(
-				f => f.compartment.uuid === compartmentUuid
-			);
-			if (AllFieldsInCompartment.length - 1 === position) {
-				const nextCompartmentIndex =
-					contentType.compartments.findIndex(c => c.uuid === compartmentUuid) + 1;
-				const nextCompartment = contentType.compartments[nextCompartmentIndex];
-
-				if (nextCompartment) {
-					contentTypesFacade.updateFieldCompartment(
-						uuid,
-						nextCompartment.uuid,
-						position,
-						0,
-						false
-					);
-					return;
-				}
-				return;
-			}
-			contentTypesFacade.updateFieldCompartment(
-				uuid,
-				compartmentUuid,
-				position,
-				position + 1,
-				false
-			);
-		}
+		const compartmentIndex = compartments.findIndex(c => c.uuid === compartment.uuid);
+		const nextCompartment = compartments[compartmentIndex + 1];
+		const AllFieldsInCompartment = fields.filter(f => f.compartment.uuid === compartment.uuid);
+		return !(AllFieldsInCompartment.length - 1 === compartment.position && !nextCompartment);
 	};
 	/**
 	 * Render
@@ -253,10 +290,12 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 
 	const renderTableField = (): ReactElement => {
 		const contentTypeRows: ContentTypeDetailCCRow[] = (fieldsByCompartments || []).map(
-			compartment => {
+			(compartment, index) => {
 				return {
 					id: compartment.uuid,
 					label: compartment.label,
+					canMoveUp: index > 0,
+					canMoveDown: fieldsByCompartments.length - 1 !== index,
 					rows: (compartment?.fields || []).map(cc => ({
 						id: cc.uuid,
 						path: generatePath(MODULE_PATHS.detailCCEdit, {
@@ -272,6 +311,8 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 						required: !!cc.generalConfig.required,
 						translatable: !!cc.generalConfig.multiLanguage,
 						hidden: !!cc.generalConfig.hidden,
+						canMoveUp: canMoveUp(cc),
+						canMoveDown: canMoveDown(cc),
 					})),
 				};
 			}
@@ -281,8 +322,8 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 				dataKey="id"
 				className="u-margin-top"
 				draggable
-				moveRow={moveRow}
-				columns={CONTENT_TYPE_COLUMNS(t, onRowExpand, onMoveRowUp, onMoveRowDown)}
+				moveRow={onMoveRowDnD}
+				columns={CONTENT_TYPE_COLUMNS(t, onRowExpand, onMoveRow)}
 				expandedRows={expandedRows}
 				rows={contentTypeRows}
 				rowExpansionTemplate={updateCompartmentTemplate}
@@ -294,7 +335,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	return (
 		<>
 			<div className="u-margin-bottom">
-				<AlertContainer containerId={ALERT_CONTAINER_IDS.detailSites} />
+				<AlertContainer containerId={ALERT_CONTAINER_IDS.detailCC} />
 			</div>
 			<div className="u-margin-bottom-lg">
 				<h5>Content componenten</h5>

@@ -1,4 +1,4 @@
-import { arrayAdd, arrayRemove, arrayUpdate, ItemPredicate } from '@datorama/akita';
+import { arrayAdd, arrayRemove, arrayUpdate } from '@datorama/akita';
 import { AlertProps, alertService } from '@redactie/utils';
 import { insert, move, omit } from 'ramda';
 
@@ -239,7 +239,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 				(f, index) => ({
 					...f,
 					compartment: {
-						compartment: CONTENT_COMPARTMENT_UUID,
+						uuid: CONTENT_COMPARTMENT_UUID,
 						position: index,
 					},
 				})
@@ -256,7 +256,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 		});
 	}
 
-	public updateCompartment(uuid: string, compartment: Compartment): void {
+	public updateCompartment(uuid: string, compartment: Partial<Compartment>): void {
 		this.store.update(state => {
 			if (!state.contentType) {
 				return state;

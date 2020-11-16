@@ -13,34 +13,34 @@ import { ContentTypeDetailCCRow } from './ContentTypesDetailCC.types';
 export const CONTENT_TYPE_COLUMNS = (
 	t: TranslateFunc,
 	onExpand: (id: string) => void = () => null,
-	moveRowUp: (uuid: string) => void = () => null,
-	moveRowDown: (uuid: string) => void = () => null
+	moveRow: (uuid: string, action: 'up' | 'down') => void = () => null
 ): any[] => [
 	{
 		label: '  ',
 		disableSorting: true,
+		classList: ['is-condensed'],
 		component(value: any, rowData: ContentTypeDetailCCRow) {
 			return (
 				<div className="m-button-group m-button-group--vertical">
 					<Button
-						onClick={() => moveRowUp(rowData.id)}
+						onClick={() => moveRow(rowData.id, 'up')}
 						icon="chevron-up"
 						ariaLabel="Move item up"
 						type="primary"
 						htmlType="button"
 						size="tiny"
 						transparent
-						disabled={false}
+						disabled={!rowData.canMoveUp}
 						negative
 					/>
 					<Button
-						onClick={() => moveRowDown(rowData.id)}
+						onClick={() => moveRow(rowData.id, 'down')}
 						icon="chevron-down"
 						ariaLabel="Move item down"
 						type="primary"
 						htmlType="button"
 						size="tiny"
-						disabled={false}
+						disabled={!rowData.canMoveDown}
 						transparent
 						negative
 					/>
@@ -108,6 +108,7 @@ export const CONTENT_TYPE_COLUMNS = (
 	{
 		label: '',
 		disableSorting: true,
+		classList: ['is-condensed'],
 		component(value: any, rowData: ContentTypeDetailCCRow) {
 			return isNil(rowData.name) ? (
 				<Button

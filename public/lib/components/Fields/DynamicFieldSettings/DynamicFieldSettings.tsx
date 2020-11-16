@@ -20,15 +20,13 @@ import usePresets from '../../../hooks/usePresets/usePresets';
 import { Field } from '../../../services/contentTypes/contentTypes.service.types';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
 import { FieldTypeModel } from '../../../store/fieldTypes';
-import {
-	CONTENT_TYPE_COLUMNS,
-	ContentTypeDetailCCRow,
-} from '../../../views/tenant/ContentTypesDetailCC';
 import DataLoader from '../../DataLoader/DataLoader';
 import { FormCTNewCC } from '../../forms';
 import { FormCTNewCCProps } from '../../forms/FormCTNewCC/FormCTNewCC.types';
 
+import { DYNAMIC_CC_COLUMNS } from './DynamicFieldSettings.const';
 import styles from './DynamicFieldSettings.module.scss';
+import { DynamicFieldCCRow } from './DynamicFieldSettings.types';
 
 const cx = classNames.bind(styles);
 
@@ -143,7 +141,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 	 */
 
 	const renderTableField = (values: Field[]): ReactElement => {
-		const contentTypeRows: ContentTypeDetailCCRow[] = values.map(cc => ({
+		const contentTypeRows: DynamicFieldCCRow[] = values.map(cc => ({
 			id: cc.uuid,
 			path: generatePath(MODULE_PATHS.detailCCEditDynamicEditSettings, {
 				contentTypeUuid,
@@ -169,7 +167,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 		return (
 			<Table
 				className="u-margin-top"
-				columns={CONTENT_TYPE_COLUMNS(t)}
+				columns={DYNAMIC_CC_COLUMNS(t)}
 				rows={contentTypeRows}
 				totalValues={fields.length}
 			/>

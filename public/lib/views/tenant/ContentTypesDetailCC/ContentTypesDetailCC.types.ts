@@ -9,4 +9,6 @@ export interface ContentTypeDetailCCRow {
 	hidden?: boolean;
 	translatable?: boolean;
 	rows?: ContentTypeDetailCCRow[];
+	canMoveUp: boolean;
+	canMoveDown: boolean;
 }
