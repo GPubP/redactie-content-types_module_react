@@ -34,7 +34,7 @@ import { Compartment, ContentTypeFieldDetail } from '../../../services/contentTy
 import { contentTypesFacade } from '../../../store/contentTypes';
 
 import { CONTENT_TYPE_COLUMNS, CT_DETAIL_CC_ALLOWED_PATHS } from './ContentTypesDetailCC.const';
-import { ContentTypeDetailCCRow } from './ContentTypesDetailCC.types';
+import { ContentTypeDetailCCRow, MoveAction } from './ContentTypesDetailCC.types';
 
 const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	presets,
@@ -156,9 +156,9 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		);
 	};
 
-	const moveCompartment = (uuid: string, action: 'up' | 'down'): void => {
+	const moveCompartment = (uuid: string, action: MoveAction): void => {
 		const { compartments } = contentType;
-		const movedUp = action === 'up';
+		const movedUp = action === MoveAction.UP;
 		const compartmentIndex = compartments.findIndex(c => c.uuid === uuid);
 		const last = compartments.length - 1 === compartmentIndex;
 		const first = compartmentIndex === 0;
@@ -171,7 +171,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		contentTypesFacade.updateCompartments(move(compartmentIndex, nextIndex, compartments));
 	};
 
-	const moveField = (uuid: string, action: 'up' | 'down'): void => {
+	const moveField = (uuid: string, action: MoveAction): void => {
 		const { compartments, fields } = contentType;
 		const movedField = fields.find(f => f.uuid === uuid);
 
@@ -182,8 +182,8 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		const { uuid: compartmentUuid, position } = movedField.compartment;
 		const AllFieldsInCompartment = fields.filter(f => f.compartment.uuid === compartmentUuid);
 		const compartmentIndex = compartments.findIndex(c => c.uuid === compartmentUuid);
-		const movedUp = action === 'up';
-		const movedDown = action === 'down';
+		const movedUp = action === MoveAction.UP;
+		const movedDown = action === MoveAction.DOWN;
 		const first = position === 0;
 		const last = AllFieldsInCompartment.length - 1 === position;
 		const movedUpAndFirst = movedUp && first;
@@ -219,7 +219,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		);
 	};
 
-	const onMoveRow = (uuid: string, action: 'up' | 'down'): void => {
+	const onMoveRow = (uuid: string, action: MoveAction): void => {
 		const { compartments, fields } = contentType;
 		const movedField = fields.find(f => f.uuid === uuid);
 		const movedCompartment = compartments.find(c => c.uuid === uuid);
@@ -296,6 +296,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 					label: compartment.label,
 					canMoveUp: index > 0,
 					canMoveDown: fieldsByCompartments.length - 1 !== index,
+					isCompartment: true,
 					rows: (compartment?.fields || []).map(cc => ({
 						id: cc.uuid,
 						path: generatePath(MODULE_PATHS.detailCCEdit, {
@@ -313,6 +314,12 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 						hidden: !!cc.generalConfig.hidden,
 						canMoveUp: canMoveUp(cc),
 						canMoveDown: canMoveDown(cc),
+						isCompartment: false,
+						navigate: () =>
+							navigate(MODULE_PATHS.detailCCEdit, {
+								contentTypeUuid,
+								contentComponentUuid: cc.uuid,
+							}),
 					})),
 				};
 			}

@@ -1,4 +1,4 @@
-import { Button } from '@acpaas-ui/react-components';
+import { Button, Icon } from '@acpaas-ui/react-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { isNil } from 'ramda';
@@ -8,46 +8,13 @@ import { Link } from 'react-router-dom';
 import { StatusIcon } from '../../../components';
 import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
 
-import { ContentTypeDetailCCRow } from './ContentTypesDetailCC.types';
+import { ContentTypeDetailCCRow, MoveAction } from './ContentTypesDetailCC.types';
 
 export const CONTENT_TYPE_COLUMNS = (
 	t: TranslateFunc,
 	onExpand: (id: string) => void = () => null,
-	moveRow: (uuid: string, action: 'up' | 'down') => void = () => null
+	moveRow: (uuid: string, action: MoveAction) => void = () => null
 ): any[] => [
-	{
-		label: '  ',
-		disableSorting: true,
-		classList: ['is-condensed'],
-		component(value: any, rowData: ContentTypeDetailCCRow) {
-			return (
-				<div className="m-button-group m-button-group--vertical">
-					<Button
-						onClick={() => moveRow(rowData.id, 'up')}
-						icon="chevron-up"
-						ariaLabel="Move item up"
-						type="primary"
-						htmlType="button"
-						size="tiny"
-						transparent
-						disabled={!rowData.canMoveUp}
-						negative
-					/>
-					<Button
-						onClick={() => moveRow(rowData.id, 'down')}
-						icon="chevron-down"
-						ariaLabel="Move item down"
-						type="primary"
-						htmlType="button"
-						size="tiny"
-						disabled={!rowData.canMoveDown}
-						transparent
-						negative
-					/>
-				</div>
-			);
-		},
-	},
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
@@ -56,8 +23,45 @@ export const CONTENT_TYPE_COLUMNS = (
 			const { path } = rowData;
 			return (
 				<>
-					{path ? <Link to={path}>{value}</Link> : <p>{value}</p>}
-					{rowData.name && <p className="u-text-light">systeemnaam: [{rowData.name}]</p>}
+					<div className="row middle-xs">
+						<div className="u-margin-left-xs u-margin-right-xs">
+							<Icon name="arrows-alt" className="u-text-primary" />
+						</div>
+						<div className="m-button-group m-button-group--vertical u-margin-left-xs u-margin-right-xs">
+							<Button
+								onClick={() => moveRow(rowData.id, MoveAction.UP)}
+								icon="chevron-up"
+								ariaLabel="Move item up"
+								type="primary"
+								htmlType="button"
+								size="tiny"
+								transparent
+								disabled={!rowData.canMoveUp}
+								negative
+							/>
+							<Button
+								onClick={() => moveRow(rowData.id, MoveAction.DOWN)}
+								icon="chevron-down"
+								ariaLabel="Move item down"
+								type="primary"
+								htmlType="button"
+								size="tiny"
+								disabled={!rowData.canMoveDown}
+								transparent
+								negative
+							/>
+						</div>
+						<div>
+							{path ? (
+								<Link to={path}>{value}</Link>
+							) : (
+								<p className="u-text-bold">{value}</p>
+							)}
+							{rowData.name && (
+								<p className="u-text-light">systeemnaam: [{rowData.name}]</p>
+							)}
+						</div>
+					</div>
 				</>
 			);
 		},
@@ -110,15 +114,19 @@ export const CONTENT_TYPE_COLUMNS = (
 		disableSorting: true,
 		classList: ['is-condensed'],
 		component(value: any, rowData: ContentTypeDetailCCRow) {
-			return isNil(rowData.name) ? (
+			return (
 				<Button
 					ariaLabel="Edit"
 					icon="edit"
-					onClick={() => onExpand(rowData.id)}
+					onClick={() =>
+						rowData.navigate && typeof rowData.navigate === 'function'
+							? rowData.navigate()
+							: onExpand(rowData.id)
+					}
 					type="primary"
 					transparent
 				></Button>
-			) : null;
+			);
 		},
 	},
 ];

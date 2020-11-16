@@ -1,3 +1,5 @@
+import { NavigateFn } from '@redactie/utils';
+
 export interface ContentTypeDetailCCRow {
 	id: string;
 	label: string;
@@ -11,4 +13,11 @@ export interface ContentTypeDetailCCRow {
 	rows?: ContentTypeDetailCCRow[];
 	canMoveUp: boolean;
 	canMoveDown: boolean;
+	isCompartment: boolean;
+	navigate?: () => void;
+}
+
+export enum MoveAction {
+	UP = 'up',
+	DOWN = 'down',
 }
