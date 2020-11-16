@@ -18,11 +18,7 @@ const FormCTNewCompartment: FC<FormCTNewCompartmentProps> = ({
 	return (
 		<Formik initialValues={formState} onSubmit={onSubmit}>
 			{({ submitForm }) => (
-				<div
-					className={classNames('row', {
-						[`${className}`]: !!className,
-					})}
-				>
+				<div className={classNames(className, 'row')}>
 					<div className="col-xs-12 col-md">
 						<Field
 							as={TextField}
