@@ -1,6 +1,5 @@
 import { Button, Modal, TextField } from '@acpaas-ui/react-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import classNames from 'classnames';
 import { Field, Formik } from 'formik';
 import React, { FC } from 'react';
 
@@ -21,11 +20,7 @@ const FormCTEditCompartment: FC<FormCTEditCompartmentProps> = ({
 	return (
 		<Formik initialValues={formState} onSubmit={onSubmit}>
 			{({ submitForm }) => (
-				<div
-					className={classNames({
-						[`${className}`]: !!className,
-					})}
-				>
+				<div className={className}>
 					<div className="row">
 						<div className="col-xs-12 col-md-6">
 							<Field
