@@ -1,10 +1,10 @@
 import formRendererConnector from '../../connectors/formRenderer';
-import { ContentTypeField } from '../../services/contentTypes';
+import { ContentTypeFieldDetail } from '../../services/contentTypes';
 import { FieldType } from '../../services/fieldTypes/fieldTypes.service.types';
 import { Preset } from '../../services/presets';
 
 export const validationCompartmentValidator = (
-	values: ContentTypeField,
+	values: ContentTypeFieldDetail,
 	fieldType?: FieldType,
 	preset?: Preset
 ): boolean => {

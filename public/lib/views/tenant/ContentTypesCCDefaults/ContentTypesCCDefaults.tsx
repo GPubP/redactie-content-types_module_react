@@ -5,11 +5,15 @@ import { Field, Formik, FormikValues } from 'formik';
 import React, { FC, ReactElement, useMemo } from 'react';
 
 import formRendererConnector from '../../../connectors/formRenderer';
-import { DEFAULT_VALIDATION_SCHEMA } from '../../../contentTypes.const';
 import { ContentTypesCCRouteProps } from '../../../contentTypes.types';
-import { parseFields } from '../../../helpers';
+import { getDefaultValueSchemas, parseFields } from '../../../helpers';
 
-const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, formikRef, onSubmit }) => {
+const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
+	CTField,
+	formikRef,
+	onSubmit,
+	fieldType,
+}) => {
 	const initialEditableFormValues = {
 		editable: !CTField.generalConfig.disabled,
 	};
@@ -35,6 +39,10 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, formikR
 		}),
 		[CTField]
 	);
+	const { validationSchema, errorMessages } = useMemo(
+		() => getDefaultValueSchemas(CTField, fieldType),
+		[CTField, fieldType]
+	);
 
 	/**
 	 * Methods
@@ -58,16 +66,14 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({ CTField, formikR
 				</p>
 			);
 		}
-		const { defaultValue } = CTField;
-		const initialValues = defaultValue ? { defaultValue } : {};
 
 		return (
 			<formRendererConnector.api.Form
 				formikRef={formikRef}
 				schema={parsedFormSchema}
-				initialValues={initialValues}
-				validationSchema={DEFAULT_VALIDATION_SCHEMA}
-				errorMessages={{}}
+				initialValues={CTField}
+				validationSchema={validationSchema}
+				errorMessages={errorMessages}
 				onChange={onSubmit}
 			/>
 		);
