@@ -1,11 +1,11 @@
 import { Link as AUILink, Button } from '@acpaas-ui/react-components';
 import { TranslateFunc } from '@redactie/translations-module';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { FilterFormState, SiteStatus } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
+import { CORE_TRANSLATIONS } from '../../../connectors/translations';
 
 import { ContentTypesOverviewTableRow } from './ContentTypesOverview.types';
 

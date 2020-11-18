@@ -1,11 +1,10 @@
 import { Button, Card, CardBody, CardDescription, CardTitle } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { LeavePrompt, useDetectValueChanges } from '@redactie/utils';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import { CTSettingsForm, SiteStatus } from '../../../components';
-import { useCoreTranslation } from '../../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import {
 	ContentTypesDetailRouteProps,
 	LoadingState,

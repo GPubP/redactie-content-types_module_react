@@ -1,12 +1,11 @@
 import { Button } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { AlertContainer, alertService, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import React, { FC, useMemo, useRef, useState } from 'react';
 
 import { CTSettingsForm } from '../../../components';
-import { useCoreTranslation } from '../../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, CONTENT_TYPE_DETAIL_TAB_MAP } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
 import { useContentType } from '../../../hooks';

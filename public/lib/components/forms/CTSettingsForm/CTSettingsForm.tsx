@@ -1,11 +1,10 @@
 import { Textarea, TextField } from '@acpaas-ui/react-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { ErrorMessage } from '@redactie/utils';
 import { Field, Formik, isFunction } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC } from 'react';
 
-import { useCoreTranslation } from '../../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { getFieldState } from '../../../helpers/forms';
 
 import { CT_SETTINGS_VALIDATION_SCHEMA } from './CTSettingsForm.const';

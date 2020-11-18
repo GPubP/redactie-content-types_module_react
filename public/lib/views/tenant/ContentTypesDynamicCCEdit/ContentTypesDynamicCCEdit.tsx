@@ -1,6 +1,5 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { alertService, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import { equals, isEmpty, omit } from 'ramda';
@@ -8,7 +7,7 @@ import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'r
 import { NavLink } from 'react-router-dom';
 
 import { DataLoader, RenderChildRoutes } from '../../../components';
-import { useCoreTranslation } from '../../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
 import { filterCompartments, validateCompartments } from '../../../helpers';
