@@ -11,7 +11,7 @@ export interface ExternalTabValue {
 }
 
 export interface ExternalTabProps {
-	contentType: ContentTypeDetailModel; // = deep clone
+	contentType: ContentTypeDetailModel;
 	value: ExternalTabValue;
 	isLoading: boolean;
 	onSubmit: (value: ExternalTabValue) => void;
