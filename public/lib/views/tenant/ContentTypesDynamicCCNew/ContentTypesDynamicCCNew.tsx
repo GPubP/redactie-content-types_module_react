@@ -1,6 +1,11 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
-import { alertService, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
+import {
+	alertService,
+	LeavePrompt,
+	useDetectValueChangesWorker,
+	useTenantContext,
+} from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { equals, isEmpty, omit } from 'ramda';
@@ -20,7 +25,6 @@ import {
 	useNavItemMatcher,
 	usePreset,
 	useQuery,
-	useTenantContext,
 } from '../../../hooks';
 import useActiveField from '../../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
@@ -62,9 +66,10 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	const [t] = useCoreTranslation();
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
-	const [hasChanges] = useDetectValueChanges(
+	const [hasChanges] = useDetectValueChangesWorker(
 		initialLoading === LoadingState.Loaded,
-		dynamicActiveField
+		dynamicActiveField,
+		BFF_MODULE_PUBLIC_PATH
 	);
 	const [
 		{ compartments, active: activeCompartment },

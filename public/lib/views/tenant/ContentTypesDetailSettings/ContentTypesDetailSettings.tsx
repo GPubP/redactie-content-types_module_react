@@ -1,6 +1,11 @@
 import { Button } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
-import { AlertContainer, alertService, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
+import {
+	AlertContainer,
+	alertService,
+	LeavePrompt,
+	useDetectValueChangesWorker,
+} from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import React, { FC, useMemo, useRef, useState } from 'react';
 
@@ -31,7 +36,11 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			: contentTypeIsCreating === LoadingState.Loading;
 	}, [contentTypeIsCreating, contentTypeIsUpdating, isUpdate]);
 	const [formValue, setFormValue] = useState<ContentTypeDetailModel | null>(null);
-	const [hasChanges, resetChangeDetection] = useDetectValueChanges(!isLoading, formValue);
+	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
+		!isLoading,
+		formValue,
+		BFF_MODULE_PUBLIC_PATH
+	);
 
 	/**
 	 * Methods
