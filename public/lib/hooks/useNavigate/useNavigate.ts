@@ -1,9 +1,8 @@
+import { TenantContext } from '@redactie/utils';
 import * as H from 'history';
 import { ParsedQuery, parseUrl, stringifyUrl } from 'query-string';
 import { useContext } from 'react';
 import { generatePath, useHistory } from 'react-router-dom';
-
-import { TenantContext } from '../../context';
 
 type Params = { [paramName: string]: string | number | boolean | undefined };
 type Query = { [paramName: string]: string | number | boolean | undefined };

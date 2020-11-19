@@ -1,5 +1,6 @@
-import { akitaDevtools } from '@datorama/akita';
+// import { akitaDevtools } from '@datorama/akita';
 import Core from '@redactie/redactie-core';
+import { SiteContext, TenantContext } from '@redactie/utils';
 import { omit } from 'ramda';
 import React, { FC, useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -13,7 +14,6 @@ import rolesRightsConnector from './lib/connectors/rolesRights';
 import { registerRoutes } from './lib/connectors/sites';
 import { DYNAMIC_FIELD_SETTINGS_NAME, MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesModuleProps } from './lib/contentTypes.types';
-import { TenantContext } from './lib/context';
 import { contentTypeTitleHelper } from './lib/helpers/contentTypeTitleHelper/contentTypeTitleHelper';
 import { TitleTypes } from './lib/helpers/contentTypeTitleHelper/contentTypeTitleHelper.types';
 import { fieldTypesFacade } from './lib/store/fieldTypes';
@@ -88,8 +88,10 @@ const SiteContentTypesComponent: FC<ContentTypesModuleProps<{ siteId: string }>>
 	const guardsMeta = useMemo(() => ({ tenantId, siteId }), [siteId, tenantId]);
 
 	return (
-		<TenantContext.Provider value={{ tenantId, siteId }}>
-			<RenderChildRoutes routes={route.routes} guardsMeta={guardsMeta} />
+		<TenantContext.Provider value={{ tenantId }}>
+			<SiteContext.Provider value={{ siteId }}>
+				<RenderChildRoutes routes={route.routes} guardsMeta={guardsMeta} />
+			</SiteContext.Provider>
 		</TenantContext.Provider>
 	);
 };

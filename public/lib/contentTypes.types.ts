@@ -3,7 +3,7 @@ import { FormikConfig, FormikValues } from 'formik';
 import { NavLinkProps } from 'react-router-dom';
 
 import { ALERT_CONTAINER_IDS } from './contentTypes.const';
-import { FieldType, FieldTypeData, FieldTypeMeta } from './services/fieldTypes';
+import { FieldType, FieldTypeMeta } from './services/fieldTypes';
 import { Preset, PresetDetail } from './services/presets';
 import {
 	ContentTypeDetailModel,

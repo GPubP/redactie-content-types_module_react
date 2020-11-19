@@ -1,11 +1,11 @@
 import { Button, Icon } from '@acpaas-ui/react-components';
 import { TranslateFunc } from '@redactie/translations-module';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { isNil } from 'ramda';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { StatusIcon } from '../../../components';
+import { CORE_TRANSLATIONS } from '../../../connectors/translations';
 import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
 
 import { ContentTypeDetailCCRow, MoveAction } from './ContentTypesDetailCC.types';

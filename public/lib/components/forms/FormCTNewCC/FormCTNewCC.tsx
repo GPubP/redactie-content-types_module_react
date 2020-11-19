@@ -1,10 +1,9 @@
 import { Button, Select, TextField } from '@acpaas-ui/react-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import classNames from 'classnames';
 import { Field, Formik } from 'formik';
 import React, { FC } from 'react';
 
-import { useCoreTranslation } from '../../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 
 import { COMPARTMENT_DEFAULT_OPTION, FIELD_TYPES_DEFAULT_OPTION } from './FormCTNewCC.const';
 import { FormCTNewCCProps } from './FormCTNewCC.types';

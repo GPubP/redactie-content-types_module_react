@@ -3,7 +3,7 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
-import { useDetectValueChanges } from '@redactie/utils';
+import { useDetectValueChangesWorker, useTenantContext } from '@redactie/utils';
 import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -31,7 +31,6 @@ import {
 	useNavigate,
 	usePresets,
 	useRoutesBreadcrumbs,
-	useTenantContext,
 } from '../../../hooks';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
 import {
@@ -84,9 +83,10 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		excludePaths
 	);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
-	const [fieldsHaveChanged, resetFieldsHaveChanged] = useDetectValueChanges(
+	const [fieldsHaveChanged, resetFieldsHaveChanged] = useDetectValueChangesWorker(
 		contentTypeLoadingState === LoadingState.Loaded,
-		contentType?.fields
+		contentType?.fields,
+		BFF_MODULE_PUBLIC_PATH
 	);
 
 	useEffect(() => {

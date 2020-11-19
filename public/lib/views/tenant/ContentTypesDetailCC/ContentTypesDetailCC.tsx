@@ -1,6 +1,5 @@
 import { Button, Card } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { AlertContainer, LeavePrompt } from '@redactie/utils';
 import { FormikHelpers } from 'formik';
 import { move, path, pathOr } from 'ramda';
@@ -15,7 +14,7 @@ import {
 	FormCTNewCompartment,
 	FormCTNewCompartmentState,
 } from '../../../components';
-import { useCoreTranslation } from '../../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import {
 	ALERT_CONTAINER_IDS,
 	CONTENT_COMPARTMENT_UUID,

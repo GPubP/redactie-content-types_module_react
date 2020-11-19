@@ -1,4 +1,3 @@
-import { clone } from 'ramda';
 import React, { FC, useEffect, useMemo } from 'react';
 
 import { ContentTypesDetailRouteProps, LoadingState, Tab } from '../../../contentTypes.types';
@@ -60,7 +59,7 @@ const ContentTypeDetailExternal: FC<ContentTypesDetailRouteProps<ContentTypeDeta
 	 */
 	return activeTab ? (
 		<activeTab.component
-			contentType={clone(contentType)}
+			contentType={contentType}
 			onSubmit={(values: ExternalTabValue) => onExternalTabSubmit(values)}
 			onCancel={() => onCancel()}
 			updateContentType={() => null}
