@@ -1,10 +1,10 @@
 import { TranslateFunc } from '@redactie/translations-module';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { array, object, string } from 'yup';
 
 import { StatusIcon } from '../../../components';
+import { CORE_TRANSLATIONS } from '../../../connectors/translations';
 import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
 
 import { ContentTypeDetailCCRow } from './ContentTypesDetailCC.types';

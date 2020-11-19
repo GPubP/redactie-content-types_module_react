@@ -1,11 +1,10 @@
 import { Button, Card, CardBody, CardDescription, CardTitle } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { LeavePrompt, useDetectValueChanges } from '@redactie/utils';
+import { LeavePrompt, useDetectValueChangesWorker } from '@redactie/utils';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import { CTSettingsForm, SiteStatus } from '../../../components';
-import { useCoreTranslation } from '../../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import {
 	ContentTypesDetailRouteProps,
 	LoadingState,
@@ -37,7 +36,11 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 		[contentType._id, sites]
 	);
 	const site = useMemo(() => (sites || []).find(s => s.uuid === siteId) || null, [siteId, sites]);
-	const [hasChanges, resetChangeDetection] = useDetectValueChanges(!isLoading, siteData);
+	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
+		!isLoading,
+		siteData,
+		BFF_MODULE_PUBLIC_PATH
+	);
 
 	/**
 	 * Fetch sites

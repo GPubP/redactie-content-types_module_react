@@ -4,6 +4,7 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
+import { useSiteContext } from '@redactie/utils';
 import React, { ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../../components';
@@ -11,13 +12,7 @@ import rolesRightsConnector from '../../../connectors/rolesRights';
 import { useCoreTranslation } from '../../../connectors/translations';
 import { MODULE_PATHS } from '../../../contentTypes.const';
 import { LoadingState } from '../../../contentTypes.types';
-import {
-	useContentTypes,
-	useNavigate,
-	useRoutesBreadcrumbs,
-	useSite,
-	useTenantContext,
-} from '../../../hooks';
+import { useContentTypes, useNavigate, useRoutesBreadcrumbs, useSite } from '../../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes/contentTypes.service.cont';
 import { ContentTypeModel, contentTypesFacade } from '../../../store/contentTypes';
 import { sitesFacade } from '../../../store/sites';
@@ -49,7 +44,7 @@ const ContentTypesOverview: React.FC = () => {
 		DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
 	);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
-	const { siteId } = useTenantContext();
+	const { siteId } = useSiteContext();
 
 	useEffect(() => {
 		if (

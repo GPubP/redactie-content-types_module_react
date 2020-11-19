@@ -7,12 +7,11 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader, FilterForm, FilterFormState } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
-import { useCoreTranslation } from '../../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesRouteProps, LoadingState } from '../../../contentTypes.types';
 import { useContentTypes, useNavigate, useRoutesBreadcrumbs, useSites } from '../../../hooks';
