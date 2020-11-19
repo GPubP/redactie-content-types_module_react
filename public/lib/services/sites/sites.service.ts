@@ -1,11 +1,13 @@
-import apiService from '../api/api.service';
+import apiService, { parseSearchParams } from '../api/api.service';
 
-import { Site, SitesData, SitesDetailRequestBody, SitesResponse } from './sites.service.types';
+import { GetSitesPayload, Site, SitesData, SitesDetailRequestBody, SitesResponse } from './sites.service.types';
 
 export class SitesApiService {
-	public async getSites(): Promise<SitesData | null> {
+	public async getSites(searchParams?: GetSitesPayload): Promise<SitesData | null> {
 		try {
-			const response: SitesResponse = await apiService.get('sites/v1/sites').json();
+			const response: SitesResponse = await apiService.get('sites/v1/sites', {
+				...searchParams && { searchParams: parseSearchParams(searchParams)},
+			}).json();
 
 			if (!response._embedded) {
 				throw new Error('Failed to get sites');

@@ -18,3 +18,5 @@ export { default as usePreset } from './usePreset/usePreset';
 export { default as useQuery } from './useQuery/useQuery';
 export { default as useActiveRouteConfig } from './useActiveRouteConfig/useActiveRouteConfig';
 export { default as usePrevious } from './usePrevious/usePrevious';
+export { default as useSitesLoadingStates } from './useSitesLoadingStates/useSitesLoadingStates';
+export { default as useSitesPagination } from './useSitesPagination/useSitesPagination';
