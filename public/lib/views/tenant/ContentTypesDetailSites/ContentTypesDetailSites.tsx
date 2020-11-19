@@ -1,12 +1,11 @@
 import { Button } from '@acpaas-ui/react-components';
 import { PaginatedTable } from '@acpaas-ui/react-editorial-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { AlertContainer, useAPIQueryParams } from '@redactie/utils';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import DataLoader from '../../../components/DataLoader/DataLoader';
 import SiteStatus from '../../../components/SiteStatus/SiteStatus';
-import { useCoreTranslation } from '../../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
 import { useSitesLoadingStates, useSitesPagination } from '../../../hooks';

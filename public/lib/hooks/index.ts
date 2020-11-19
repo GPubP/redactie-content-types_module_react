@@ -5,7 +5,6 @@ export { default as useCompartmentValidation } from './useCompartmentValidation/
 export { default as useNavItemMatcher } from './useNavItemMatcher/useNavItemMatcher';
 export { default as useRoutes } from './useRoutes/useRoutes';
 export { default as useRoutesBreadcrumbs } from './useRoutesBreadcrumbs/useRoutesBreadcrumbs';
-export { default as useTenantContext } from './useTenantContext/useTenantContext';
 export { default as useContentTypes } from './useContentTypes/useContentTypes';
 export { default as useContentType } from './useContentType/useContentType';
 export { default as useActiveField } from './useActiveField/useActiveField';

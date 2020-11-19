@@ -3,7 +3,7 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
-import { AlertContainer } from '@redactie/utils';
+import { AlertContainer, useSiteContext, useTenantContext } from '@redactie/utils';
 import React, { FC, MouseEvent, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
@@ -22,7 +22,6 @@ import {
 	useContentType,
 	useNavigate,
 	useRoutesBreadcrumbs,
-	useTenantContext,
 } from '../../../hooks';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
 import { ExternalTabModel, useExternalTabsFacade } from '../../../store/api/externalTabs';
@@ -47,7 +46,8 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		disableTabs(externalTabs) as ExternalTabModel[],
 		location.pathname
 	);
-	const { siteId, tenantId } = useTenantContext();
+	const { tenantId } = useTenantContext();
+	const { siteId } = useSiteContext();
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 

@@ -1,12 +1,11 @@
 import { Checkbox, RadioGroup, Textarea, TextField } from '@acpaas-ui/react-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { FormikOnChangeHandler } from '@redactie/utils';
 import { ErrorMessage, Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { equals } from 'ramda';
 import React, { ChangeEvent, FC, useState } from 'react';
 
-import { useCoreTranslation } from '../../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { CCSettingsFormState } from '../../../contentTypes.types';
 import { getFieldState } from '../../../helpers/forms';
 
