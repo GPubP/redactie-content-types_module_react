@@ -2,6 +2,7 @@ import { FORM_CC_SETTINGS_VALIDATION_SCHEMA } from '../../../components';
 import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
 import {
 	configurationCompartmentValidator,
+	defaultValueCompartmentValidator,
 	validationCompartmentValidator,
 } from '../../../helpers';
 import { FieldType } from '../../../services/fieldTypes/fieldTypes.service.types';
@@ -37,6 +38,7 @@ export const CC_EDIT_COMPARTMENTS: CompartmentModel[] = [
 		name: 'default',
 		slug: MODULE_PATHS.detailCCEditDefaults,
 		type: CompartmentType.INTERNAL,
+		validate: defaultValueCompartmentValidator,
 	},
 ];
 
