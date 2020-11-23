@@ -14,6 +14,8 @@ export enum ALERT_CONTAINER_IDS {
 	detailSites = 'detail-sites',
 }
 
+export const CONTENT_COMPARTMENT_UUID = 'ce569384-6497-4e1b-84c6-52fa43592c69';
+
 export const CONTENT_TYPE_DETAIL_TAB_MAP: {
 	[key in 'settings' | 'contentComponents' | 'sites']: Tab;
 } = {

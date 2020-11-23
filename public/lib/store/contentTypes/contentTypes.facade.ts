@@ -1,9 +1,11 @@
+import { arrayAdd, arrayRemove, arrayUpdate } from '@datorama/akita';
 import { AlertProps, alertService } from '@redactie/utils';
-import { omit } from 'ramda';
+import { insert, move, omit } from 'ramda';
 
-import { ALERT_CONTAINER_IDS } from '../../contentTypes.const';
+import { ALERT_CONTAINER_IDS, CONTENT_COMPARTMENT_UUID } from '../../contentTypes.const';
 import { SearchParams } from '../../services/api/api.service.types';
 import {
+	Compartment,
 	ContentTypeCreateRequest,
 	ContentTypeDetailResponse,
 	ContentTypeFieldDetail,
@@ -36,6 +38,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	public readonly contentType$ = this.query.contentType$;
 	public readonly activeField$ = this.query.activeField$;
 	public readonly pageTitle$ = this.query.pageTitle$;
+	public readonly fieldsByCompartments$ = this.query.fieldsByCompartments$;
 
 	public setPageTitle(pageTitle: string): void {
 		this.store.update({
@@ -168,10 +171,22 @@ export class ContentTypesFacade extends BaseEntityFacade<
 		const { contentType } = this.query.getValue();
 
 		if (contentType) {
+			const fieldsLength = (contentType.fields || []).filter(
+				f => f.compartment.uuid === field.compartment.uuid
+			).length;
 			this.store.update({
 				contentType: {
 					...contentType,
-					fields: [...contentType.fields, omit(['__new'])(field)],
+					fields: [
+						...contentType.fields,
+						omit(['__new'])({
+							...field,
+							compartment: {
+								...field.compartment,
+								position: fieldsLength,
+							},
+						}),
+					],
 				},
 			});
 		}
@@ -202,6 +217,142 @@ export class ContentTypesFacade extends BaseEntityFacade<
 				},
 			});
 		}
+	}
+
+	public removeCompartment(uuid: string): void {
+		this.store.update(state => {
+			if (!state.contentType) {
+				return state;
+			}
+			const fields = state.contentType?.fields || [];
+			const otherFields = fields.filter(
+				f =>
+					f.compartment?.uuid !== uuid && f.compartment?.uuid !== CONTENT_COMPARTMENT_UUID
+			);
+			const fieldsToMove = fields
+				.filter(f => f.compartment?.uuid === uuid)
+				.sort((a, b) => a.compartment?.position - b.compartment?.position);
+			const contentCompartmentFields = fields
+				.filter(f => f.compartment?.uuid === CONTENT_COMPARTMENT_UUID)
+				.sort((a, b) => a.compartment?.position - b.compartment?.position);
+			const newContentCompartmentFields = [...contentCompartmentFields, ...fieldsToMove].map(
+				(f, index) => ({
+					...f,
+					compartment: {
+						uuid: CONTENT_COMPARTMENT_UUID,
+						position: index,
+					},
+				})
+			);
+			const newFields = [...newContentCompartmentFields, ...otherFields];
+
+			return {
+				contentType: {
+					...state.contentType,
+					compartments: arrayRemove(state.contentType.compartments, uuid, 'uuid'),
+					fields: newFields,
+				},
+			};
+		});
+	}
+
+	public updateCompartment(uuid: string, compartment: Partial<Compartment>): void {
+		this.store.update(state => {
+			if (!state.contentType) {
+				return state;
+			}
+			return {
+				contentType: {
+					...state.contentType,
+					compartments: arrayUpdate(
+						state.contentType.compartments,
+						uuid,
+						compartment,
+						'uuid'
+					),
+				},
+			};
+		});
+	}
+
+	public updateCompartments(compartments: Compartment[]): void {
+		this.store.update(state => {
+			if (!state.contentType) {
+				return state;
+			}
+			return {
+				contentType: {
+					...state.contentType,
+					compartments,
+				},
+			};
+		});
+	}
+
+	public updateFieldCompartment(
+		fieldUuid: string,
+		targetCompartmentUuid: string,
+		sourcePosition: number,
+		targetPosition: number,
+		moveFieldToCompartment: boolean
+	): void {
+		this.store.update(state => {
+			if (!state.contentType) {
+				return state;
+			}
+			const fields = state.contentType?.fields || [];
+
+			// Get all fields that exist on the target compartment
+			const targetCompartmentFields = fields
+				.filter(f => f.compartment?.uuid === targetCompartmentUuid)
+				.sort((a, b) => a.compartment?.position - b.compartment?.position);
+			// Check if the field is moved inside the target compartment
+			const fieldMovedInTargetList = targetCompartmentFields.find(f => f.uuid === fieldUuid);
+
+			// Don't update the state when the field was dropped on the root item (compartment - level one) inside his own
+			// compartment. This because the field is already visible inside the compartment
+			if (fieldMovedInTargetList && moveFieldToCompartment) {
+				return;
+			}
+
+			// Get the moved field
+			const movedField = fields.find(f => f.uuid === fieldUuid);
+			// Get all fields that are not visible inside the target compartment
+			const otherFields = fields.filter(
+				f => f.compartment?.uuid !== targetCompartmentUuid && f.uuid !== fieldUuid
+			);
+
+			// Calculate the new target compartment fields
+			const newTargetCompartmentFields = (fieldMovedInTargetList
+				? move(sourcePosition, targetPosition, targetCompartmentFields)
+				: insert(targetPosition, movedField, targetCompartmentFields)
+			).map((f, index) => ({
+				...f,
+				compartment: {
+					uuid: targetCompartmentUuid,
+					position: index,
+				},
+			}));
+			// concat all fields
+			const newFields = [...newTargetCompartmentFields, ...otherFields];
+
+			return {
+				contentType: {
+					...state.contentType,
+					fields: newFields,
+				},
+			};
+		});
+	}
+
+	public addCompartment(compartment: Compartment): void {
+		this.store.update(state => ({
+			...state,
+			contentType: {
+				...state.contentType,
+				compartments: arrayAdd(state.contentType?.compartments || [], compartment),
+			},
+		}));
 	}
 
 	/**

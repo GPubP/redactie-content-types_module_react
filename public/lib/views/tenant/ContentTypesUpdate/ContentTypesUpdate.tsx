@@ -58,7 +58,14 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const { navigate, generatePath } = useNavigate();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
 	const [presetsLoadingState, presets] = usePresets();
-	const [contentTypeLoadingState, , , contentType, title] = useContentType();
+	const [
+		contentTypeLoadingState,
+		,
+		,
+		contentType,
+		title,
+		fieldsByCompartments,
+	] = useContentType();
 	const [{ all: externalTabs, active: activeExternalTab }] = useExternalTabsFacade();
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, externalTabs, location.pathname);
 	const { tenantId } = useTenantContext();
@@ -223,6 +230,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			presets,
 			fieldTypes,
 			contentType,
+			fieldsByCompartments,
 			onCancel: navigateToOverview,
 			onSubmit: updateCT,
 			fieldsHaveChanged,

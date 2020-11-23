@@ -5,7 +5,11 @@ import { NavLinkProps } from 'react-router-dom';
 import { ALERT_CONTAINER_IDS } from './contentTypes.const';
 import { FieldType, FieldTypeMeta } from './services/fieldTypes';
 import { Preset, PresetDetail } from './services/presets';
-import { ContentTypeDetailModel, ContentTypeFieldDetailModel } from './store/contentTypes';
+import {
+	ContentTypeDetailModel,
+	ContentTypeFieldDetailModel,
+	FieldsByCompartment,
+} from './store/contentTypes';
 import { ExternalTabValue } from './views/tenant/ContentTypesDetailExternal';
 
 export interface ContentTypesModuleProps<Params extends { [K in keyof Params]?: string } = {}>
@@ -39,6 +43,7 @@ export interface ContentTypesDetailRouteProps<Params = ContentTypesDetailRoutePa
 	readonly presets: Preset[];
 	readonly fieldTypes: FieldType[];
 	readonly contentType: ContentTypeDetailModel;
+	readonly fieldsByCompartments: FieldsByCompartment[];
 	onCancel: () => void;
 	onSubmit: (
 		data:
@@ -64,6 +69,7 @@ export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
 export interface NewCCFormState {
 	fieldType: string;
 	name: string;
+	compartment?: string;
 }
 
 export interface CCSettingsFormState {

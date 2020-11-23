@@ -5,11 +5,12 @@ import React, { FC } from 'react';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 
-import { FIELD_TYPES_DEFAULT_OPTION } from './FormCTNewCC.const';
+import { COMPARTMENT_DEFAULT_OPTION, FIELD_TYPES_DEFAULT_OPTION } from './FormCTNewCC.const';
 import { FormCTNewCCProps } from './FormCTNewCC.types';
 
 const FormGeneralCC: FC<FormCTNewCCProps> = ({
 	fieldTypeOptions,
+	compartmentOptions,
 	formState,
 	onSubmit,
 	hasName = true,
@@ -23,8 +24,7 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({
 			{({ submitForm }) => (
 				<div className={`row ${className || ''}`} {...props}>
 					<div
-						className={classNames({
-							'col-xs-12': true,
+						className={classNames('col-xs-12 u-margin-bottom-xs', {
 							'col-md': hasName,
 							'col-sm': !hasName,
 						})}
@@ -42,7 +42,7 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({
 					</div>
 
 					{hasName ? (
-						<div className="col-xs-12 col-md">
+						<div className="col-xs-12 col-md u-margin-bottom-xs">
 							<Field
 								as={TextField}
 								description="Kies een gebruiksvriendelijke redactie naam, bijvoorbeeld 'Titel'."
@@ -52,6 +52,21 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({
 								placeholder="Typ een naam"
 								type="text"
 							/>
+						</div>
+					) : null}
+
+					{compartmentOptions && compartmentOptions.length > 1 ? (
+						<div className="col-xs-12 col-md u-margin-bottom-xs">
+							<Field
+								id="compartment"
+								label="Compartiment"
+								name="compartment"
+								options={[COMPARTMENT_DEFAULT_OPTION, ...compartmentOptions]}
+								as={Select}
+							/>
+							<small className="u-block u-text-light u-margin-top-xs">
+								Selecteer waar deze content component moet komen.
+							</small>
 						</div>
 					) : null}
 

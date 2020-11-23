@@ -47,7 +47,12 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const activeField = useActiveField();
-	const { fieldType: fieldTypeUuid, preset: presetUuid, name } = useQuery();
+	const {
+		fieldType: fieldTypeUuid,
+		preset: presetUuid,
+		name,
+		compartment: fieldCompartment,
+	} = useQuery();
 	const [fieldTypeLoadingState, fieldType] = useFieldType();
 	const [presetLoadingState, preset] = usePreset();
 	const { generatePath, navigate } = useNavigate();
@@ -149,11 +154,16 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		if (fieldType && !locationState.keepActiveField) {
 			const initialValues = { label: name || '', name: kebabCase(name || '') };
 			contentTypesFacade.setActiveField(
-				generateFieldFromType(fieldType, initialValues, preset || undefined)
+				generateFieldFromType(
+					fieldType,
+					initialValues,
+					fieldCompartment,
+					preset || undefined
+				)
 			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [fieldType, name, preset, locationState.keepActiveField]);
+	}, [fieldType, name, preset, fieldCompartment, locationState.keepActiveField]);
 
 	/**
 	 * Clear store on component destroy

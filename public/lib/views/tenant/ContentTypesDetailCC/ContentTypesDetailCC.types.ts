@@ -1,10 +1,23 @@
+import { NavigateFn } from '@redactie/utils';
+
 export interface ContentTypeDetailCCRow {
-	path: string;
+	id: string;
 	label: string;
-	name: string;
-	fieldType: string;
-	multiple: boolean;
-	required: boolean;
-	translatable: boolean;
-	hidden: boolean;
+	path?: string;
+	name?: string;
+	multiple?: boolean;
+	fieldType?: string;
+	required?: boolean;
+	hidden?: boolean;
+	translatable?: boolean;
+	rows?: ContentTypeDetailCCRow[];
+	canMoveUp: boolean;
+	canMoveDown: boolean;
+	isCompartment: boolean;
+	navigate?: () => void;
+}
+
+export enum MoveAction {
+	UP = 'up',
+	DOWN = 'down',
 }

@@ -1,32 +1,20 @@
+import { Button, Icon } from '@acpaas-ui/react-components';
 import { TranslateFunc } from '@redactie/translations-module';
+import { isNil } from 'ramda';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { array, object, string } from 'yup';
 
 import { StatusIcon } from '../../../components';
 import { CORE_TRANSLATIONS } from '../../../connectors/translations';
 import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
 
-import { ContentTypeDetailCCRow } from './ContentTypesDetailCC.types';
+import { ContentTypeDetailCCRow, MoveAction } from './ContentTypesDetailCC.types';
 
-export const CT_CC_VALIDATION_SCHEMA = object().shape({
-	fields: array(
-		object().shape({
-			uuid: string(),
-			label: string().required(),
-			name: string().required(),
-			module: string()
-				.required()
-				.default('default'),
-			dataType: string().required(),
-			fieldType: string().required(),
-			config: object().default({}),
-			validators: array(string()),
-		})
-	),
-});
-
-export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
+export const CONTENT_TYPE_COLUMNS = (
+	t: TranslateFunc,
+	onExpand: (id: string) => void = () => null,
+	moveRow: (uuid: string, action: MoveAction) => void = () => null
+): any[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
@@ -35,8 +23,45 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 			const { path } = rowData;
 			return (
 				<>
-					<Link to={path}>{value}</Link>
-					<p className="u-text-light">systeemnaam: [{rowData.name}]</p>
+					<div className="row middle-xs">
+						<div className="u-margin-left-xs u-margin-right-xs">
+							<Icon name="arrows-alt" className="u-text-primary" />
+						</div>
+						<div className="m-button-group m-button-group--vertical u-margin-left-xs u-margin-right-xs">
+							<Button
+								onClick={() => moveRow(rowData.id, MoveAction.UP)}
+								icon="chevron-up"
+								ariaLabel="Move item up"
+								type="primary"
+								htmlType="button"
+								size="tiny"
+								transparent
+								disabled={!rowData.canMoveUp}
+								negative
+							/>
+							<Button
+								onClick={() => moveRow(rowData.id, MoveAction.DOWN)}
+								icon="chevron-down"
+								ariaLabel="Move item down"
+								type="primary"
+								htmlType="button"
+								size="tiny"
+								disabled={!rowData.canMoveDown}
+								transparent
+								negative
+							/>
+						</div>
+						<div>
+							{path ? (
+								<Link to={path}>{value}</Link>
+							) : (
+								<p className="u-text-bold">{value}</p>
+							)}
+							{rowData.name && (
+								<p className="u-text-light">systeemnaam: [{rowData.name}]</p>
+							)}
+						</div>
+					</div>
 				</>
 			);
 		},
@@ -51,7 +76,9 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 		value: 'multiple',
 		disableSorting: true,
 		component(value: any, rowData: ContentTypeDetailCCRow) {
-			return <StatusIcon active={rowData.multiple} />;
+			return !isNil(rowData.multiple) ? (
+				<StatusIcon active={rowData.multiple ?? false} />
+			) : null;
 		},
 	},
 	{
@@ -59,7 +86,9 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 		value: 'required',
 		disableSorting: true,
 		component(value: any, rowData: ContentTypeDetailCCRow) {
-			return <StatusIcon active={rowData.required} />;
+			return !isNil(rowData.required) ? (
+				<StatusIcon active={rowData.required ?? false} />
+			) : null;
 		},
 	},
 	{
@@ -67,7 +96,9 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 		value: 'translatable',
 		disableSorting: true,
 		component(value: any, rowData: ContentTypeDetailCCRow) {
-			return <StatusIcon active={rowData.translatable} />;
+			return !isNil(rowData.translatable) ? (
+				<StatusIcon active={rowData.translatable ?? false} />
+			) : null;
 		},
 	},
 	{
@@ -75,7 +106,27 @@ export const CONTENT_TYPE_COLUMNS = (t: TranslateFunc): any[] => [
 		value: 'hidden',
 		disableSorting: true,
 		component(value: any, rowData: ContentTypeDetailCCRow) {
-			return <StatusIcon active={rowData.hidden} />;
+			return !isNil(rowData.hidden) ? <StatusIcon active={rowData.hidden ?? false} /> : null;
+		},
+	},
+	{
+		label: '',
+		disableSorting: true,
+		classList: ['is-condensed'],
+		component(value: any, rowData: ContentTypeDetailCCRow) {
+			return (
+				<Button
+					ariaLabel="Edit"
+					icon="edit"
+					onClick={() =>
+						rowData.navigate && typeof rowData.navigate === 'function'
+							? rowData.navigate()
+							: onExpand(rowData.id)
+					}
+					type="primary"
+					transparent
+				></Button>
+			);
 		},
 	},
 ];
