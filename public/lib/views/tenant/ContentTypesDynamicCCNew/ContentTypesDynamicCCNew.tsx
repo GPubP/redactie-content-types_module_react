@@ -172,9 +172,17 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	 */
 	useEffect(() => {
 		if (fieldType) {
+			const label =
+				preset?.data.label ||
+				fieldType.data.label ||
+				fieldType.data.generalConfig.defaultLabel ||
+				'';
 			const initialValues = {
-				label: fieldType.data.label,
-				name: kebabCase(fieldType.data.name || ''),
+				label,
+				name: kebabCase(label),
+				generalConfig: {
+					guideline: fieldType.data.generalConfig.defaultGuideline || '',
+				},
 			};
 			dynamicFieldFacade.setActiveField(
 				generateFieldFromType(fieldType, initialValues, undefined, preset || undefined)
