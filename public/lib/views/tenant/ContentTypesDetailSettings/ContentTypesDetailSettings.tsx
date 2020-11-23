@@ -105,9 +105,10 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	 */
 	return (
 		<>
-			<div className="u-margin-bottom">
-				<AlertContainer containerId={ALERT_CONTAINER_IDS.detailSettings} />
-			</div>
+			<AlertContainer
+				toastClassName="u-margin-bottom"
+				containerId={ALERT_CONTAINER_IDS.detailSettings}
+			/>
 			<CTSettingsForm
 				formikRef={instance => (formikRef.current = instance || undefined)}
 				contentType={contentType}

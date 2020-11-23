@@ -135,9 +135,10 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 
 		return (
 			<>
-				<div className="u-margin-bottom">
-					<AlertContainer containerId={ALERT_CONTAINER_IDS.detailSites} />
-				</div>
+				<AlertContainer
+					toastClassName="u-margin-bottom"
+					containerId={ALERT_CONTAINER_IDS.detailSites}
+				/>
 				<p className="u-margin-bottom">
 					Bepaal op welke sites dit content type geactiveerd mag worden. Opgelet, u kan
 					het content type enkel deactiveren wanneer er géén content items van dit type
