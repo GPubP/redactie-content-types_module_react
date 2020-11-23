@@ -151,8 +151,12 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		// ContentTypesCCNew view
 		// We can not generate a new field because when we do, all changes on the current active
 		// field will be lost
-		if (fieldType && !locationState.keepActiveField) {
-			const initialValues = { label: name || '', name: kebabCase(name || '') };
+		if (fieldType?.data?.generalConfig && !locationState.keepActiveField) {
+			const initialValues = {
+				label: name || fieldType.data.generalConfig.defaultLabel || '',
+				name: kebabCase(name || ''),
+				generalConfig: { guideline: fieldType.data.generalConfig.defaultGuideline || '' },
+			};
 			contentTypesFacade.setActiveField(
 				generateFieldFromType(
 					fieldType,
