@@ -126,7 +126,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 						<>
 							<ActionBar className="o-action-bar--fixed" isOpen>
 								<ActionBarContentSection>
-									<div className="u-wrapper row end-xs">
+									<div className="u-wrapper u-text-right">
 										<Button onClick={onCancel} negative>
 											{isUpdate
 												? t(CORE_TRANSLATIONS['BUTTON_CANCEL'])

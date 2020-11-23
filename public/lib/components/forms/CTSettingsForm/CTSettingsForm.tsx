@@ -73,27 +73,25 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 							</div>
 						</div>
 						<div className="row u-margin-bottom-lg">
-							<div className="col-xs-12 row middle-xs u-margin-top">
-								<div className="col-xs-12">
-									<Field
-										as={Textarea}
-										disabled={disabled}
-										id="meta.description"
-										label="Beschrijving"
-										name="meta.description"
-										required
-										state={getFieldState(touched, errors, 'meta.description')}
-									/>
-									<small className="u-block u-text-light u-margin-top-xs">
-										Geef het content type een duidelijke beschrijving voor in
-										het overzicht.
-									</small>
-									<ErrorMessage
-										className="u-text-danger u-margin-top-xs"
-										component="p"
-										name="meta.description"
-									/>
-								</div>
+							<div className="col-xs-12 u-margin-top">
+								<Field
+									as={Textarea}
+									disabled={disabled}
+									id="meta.description"
+									label="Beschrijving"
+									name="meta.description"
+									required
+									state={getFieldState(touched, errors, 'meta.description')}
+								/>
+								<small className="u-block u-text-light u-margin-top-xs">
+									Geef het content type een duidelijke beschrijving voor in het
+									overzicht.
+								</small>
+								<ErrorMessage
+									className="u-text-danger u-margin-top-xs"
+									component="p"
+									name="meta.description"
+								/>
 							</div>
 						</div>
 						{typeof children === 'function'
