@@ -184,9 +184,9 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			new URLSearchParams(
 				activeField?.__new
 					? {
-							fieldType: activeField.fieldType.uuid,
-							name: activeField.label,
-					  }
+						fieldType: activeField.fieldType.uuid,
+						name: activeField.label,
+					}
 					: {}
 			)
 		);
@@ -289,11 +289,11 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			<>
 				<div className="u-margin-bottom-lg">
 					<div className="row between-xs top-xs">
-						<div className="col-xs-3">
+						<div className="col-xs-12 col-md-3 u-margin-bottom">
 							<NavList items={navListItems} linkComponent={NavLink} />
 						</div>
 
-						<div className="col-xs-9">
+						<div className="col-xs-12 col-md-9">
 							<Card>
 								<CardBody>{renderChildRoutes()}</CardBody>
 							</Card>
