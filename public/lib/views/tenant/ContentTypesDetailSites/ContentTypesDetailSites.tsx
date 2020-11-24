@@ -1,34 +1,68 @@
 import { Button } from '@acpaas-ui/react-components';
-import { Table } from '@acpaas-ui/react-editorial-components';
-import { AlertContainer } from '@redactie/utils';
-import React, { FC, useEffect, useState } from 'react';
+import { PaginatedTable } from '@acpaas-ui/react-editorial-components';
+import { AlertContainer, useAPIQueryParams } from '@redactie/utils';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import DataLoader from '../../../components/DataLoader/DataLoader';
 import SiteStatus from '../../../components/SiteStatus/SiteStatus';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
-import { useSites } from '../../../hooks';
+import { useSitesLoadingStates, useSitesPagination } from '../../../hooks';
+import { SearchParams } from '../../../services/api';
+import { parseOrderBy, parseOrderByString } from '../../../services/helpers/helpers.service';
 import { Site, SitesDetailRequestBody } from '../../../services/sites';
 import { sitesFacade } from '../../../store/sites';
+import { OrderBy } from '../ContentTypesOverview';
 
-import { SitesRowData } from './ContentTypesSites.types';
+import { SitesOverviewRowData } from './ContentTypesSites.types';
 
 const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => {
-	const [sitesLoading, sites] = useSites();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [t] = useCoreTranslation();
+	const [query, setQuery] = useAPIQueryParams({
+		sort: {
+			defaultValue: 'data.name',
+			type: 'string',
+		}
+	});
+	const sitesActiveSorting = useMemo(() => parseOrderByString(query.sort), [query.sort]);
+	const sitesPagination = useSitesPagination(query as SearchParams);
+	const sitesLoadingStates = useSitesLoadingStates();
 
 	useEffect(() => {
-		if (sitesLoading !== LoadingState.Loading && sites) {
+		if ((sitesLoadingStates.isFetching === LoadingState.Loaded ||
+			sitesLoadingStates.isFetching === LoadingState.Error)) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [sites, sitesLoading]);
+	}, [sitesLoadingStates.isFetching]);
 
-	const getOgSite = (siteUuid: string): Site | undefined =>
-		sites?.find((s: Site) => s.uuid === siteUuid);
+	const handlePageChange = (pageNumber: number): void => {
+		setQuery({
+			...query,
+			page: pageNumber,
+		});
+	};
+
+	const handleOrderBy = (orderBy: OrderBy): void => {
+		setQuery({
+			...query,
+			sort: parseOrderBy({
+				...orderBy,
+				key: `${orderBy.key === 'active' ? 'meta' : 'data'}.${orderBy.key}`,
+			}),
+		});
+	};
+
+	const getOgSite = (siteUuid: string): Site | undefined => {
+		if (!sitesPagination) {
+			return;
+		}
+
+		return sitesPagination.data?.find((s: Site) => s.uuid === siteUuid);
+	};
 
 	const setCTsOnSites = (siteUuid: string): void => {
 		const ogSite = getOgSite(siteUuid);
@@ -65,25 +99,24 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 	};
 
 	const SitesTable = (): React.ReactElement | null => {
-		if (!sites) {
+		if (!sitesPagination) {
 			return null;
 		}
 
-		const sitesRows: SitesRowData[] = sites.map(
-			(site: Site): SitesRowData => ({
-				uuid: site.uuid,
-				name: site.data?.name,
-				description: site.data?.description,
-				status: site.meta?.active,
-				contentTypes: site.data?.contentTypes,
-				contentItems: site.data?.contentTypes?.length ?? 0,
-			})
-		);
+		const sitesRows: SitesOverviewRowData[] = sitesPagination.data.map(site => ({
+			id: site.uuid,
+			name: site.data.name,
+			description: site.data.description,
+			active: site.meta.active,
+			contentTypes: site.data?.contentTypes,
+			contentItems: site.data?.contentTypes?.length ?? 0,
+		}));
 
 		const sitesColumns = [
 			{
 				label: 'Site',
-				component(value: any, rowData: SitesRowData) {
+				value: 'name',
+				component(value: any, rowData: SitesOverviewRowData) {
 					return (
 						<div>
 							<p>{rowData.name}</p>
@@ -95,27 +128,29 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			{
 				label: 'Aantal content items',
 				value: 'contentItems',
+				disableSorting: true,
 				component(value: string) {
 					return <div>{value || 0}</div>;
 				},
 			},
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_STATUS),
-				component(value: string, rowData: SitesRowData) {
-					const isActive = (rowData.contentTypes || []).includes(contentType._id);
+				value: 'active',
+				component(value: string) {
+					const isActive = !!value;
 					return <SiteStatus active={isActive} />;
 				},
 			},
 			{
 				label: '',
 				disableSorting: true,
-				component(value: string, rowData: SitesRowData) {
+				component(value: string, rowData: SitesOverviewRowData) {
 					const isActive = (rowData.contentTypes || []).includes(contentType._id);
 
 					if (isActive) {
 						return (
 							<Button
-								onClick={() => removeCTsFromSites(rowData.uuid)}
+								onClick={() => removeCTsFromSites(rowData.id)}
 								type="danger"
 								outline
 							>
@@ -125,7 +160,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 					}
 
 					return (
-						<Button onClick={() => setCTsOnSites(rowData.uuid)} type="success" outline>
+						<Button onClick={() => setCTsOnSites(rowData.id)} type="success" outline>
 							{t(CORE_TRANSLATIONS.BUTTON_ACTIVATE)}
 						</Button>
 					);
@@ -135,15 +170,29 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 
 		return (
 			<>
-				<div className="u-margin-bottom">
-					<AlertContainer containerId={ALERT_CONTAINER_IDS.detailSites} />
-				</div>
+				<AlertContainer
+					toastClassName="u-margin-bottom"
+					containerId={ALERT_CONTAINER_IDS.detailSites}
+				/>
 				<p className="u-margin-bottom">
 					Bepaal op welke sites dit content type geactiveerd mag worden. Opgelet, u kan
 					het content type enkel deactiveren wanneer er géén content items van dit type
 					meer bestaan binnen de desbetreffende site.
 				</p>
-				<Table columns={sitesColumns} rows={sitesRows}></Table>
+				<PaginatedTable
+					className="u-margin-top"
+					columns={sitesColumns}
+					rows={sitesRows}
+					currentPage={sitesPagination.currentPage}
+					itemsPerPage={query.pagesize}
+					onPageChange={handlePageChange}
+					orderBy={handleOrderBy}
+					noDataMessage="Er zijn geen resultaten voor de ingestelde filters"
+					loadDataMessage="Sites ophalen"
+					activeSorting={sitesActiveSorting}
+					totalValues={sitesPagination.total}
+					loading={sitesLoadingStates.isFetching === LoadingState.Loading}
+				></PaginatedTable>
 			</>
 		);
 	};

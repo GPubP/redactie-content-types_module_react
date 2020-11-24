@@ -105,9 +105,10 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	 */
 	return (
 		<>
-			<div className="u-margin-bottom">
-				<AlertContainer containerId={ALERT_CONTAINER_IDS.detailSettings} />
-			</div>
+			<AlertContainer
+				toastClassName="u-margin-bottom"
+				containerId={ALERT_CONTAINER_IDS.detailSettings}
+			/>
 			<CTSettingsForm
 				formikRef={instance => (formikRef.current = instance || undefined)}
 				contentType={contentType}
@@ -125,7 +126,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 						<>
 							<ActionBar className="o-action-bar--fixed" isOpen>
 								<ActionBarContentSection>
-									<div className="u-wrapper row end-xs">
+									<div className="u-wrapper u-text-right">
 										<Button onClick={onCancel} negative>
 											{isUpdate
 												? t(CORE_TRANSLATIONS['BUTTON_CANCEL'])

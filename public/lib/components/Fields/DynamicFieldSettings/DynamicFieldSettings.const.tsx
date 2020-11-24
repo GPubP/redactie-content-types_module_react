@@ -1,17 +1,15 @@
-import { TranslateFunc, TranslationsAPI } from '@redactie/translations-module';
+import { TranslateFunc } from '@redactie/translations-module';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { CORE_TRANSLATIONS } from '../../../connectors/translations';
 import StatusIcon from '../../StatusIcon/StatusIcon';
 
 import { DynamicFieldCCRow } from './DynamicFieldSettings.types';
 
-export const DYNAMIC_CC_COLUMNS = (
-	t: TranslateFunc,
-	TRANSLATIONS: TranslationsAPI['core']['CORE_TRANSLATIONS']
-): any[] => [
+export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): any[] => [
 	{
-		label: t(TRANSLATIONS.TABLE_NAME),
+		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
 		disableSorting: true,
 		component(value: string, rowData: DynamicFieldCCRow) {
@@ -25,7 +23,7 @@ export const DYNAMIC_CC_COLUMNS = (
 		},
 	},
 	{
-		label: t(TRANSLATIONS.TABLE_TYPE),
+		label: t(CORE_TRANSLATIONS.TABLE_TYPE),
 		value: 'fieldType',
 		disableSorting: true,
 	},

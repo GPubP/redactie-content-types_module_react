@@ -167,7 +167,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 		return (
 			<Table
 				className="u-margin-top"
-				columns={DYNAMIC_CC_COLUMNS(t, CORE_TRANSLATIONS)}
+				columns={DYNAMIC_CC_COLUMNS(t)}
 				rows={contentTypeRows}
 				totalValues={fields.length}
 			/>
