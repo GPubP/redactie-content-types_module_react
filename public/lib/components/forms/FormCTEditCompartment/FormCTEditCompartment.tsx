@@ -1,9 +1,8 @@
 import { Button, Modal, TextField } from '@acpaas-ui/react-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { Field, Formik } from 'formik';
 import React, { FC } from 'react';
 
-import { useCoreTranslation } from '../../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 
 import { FormCTEditCompartmentProps } from './FormCTEditCompartment.types';
 

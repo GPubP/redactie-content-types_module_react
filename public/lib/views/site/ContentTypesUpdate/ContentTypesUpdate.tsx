@@ -123,9 +123,10 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>
-				<div className="u-margin-bottom">
-					<AlertContainer containerId={ALERT_CONTAINER_IDS.update} />
-				</div>
+				<AlertContainer
+					toastClassName="u-margin-bottom"
+					containerId={ALERT_CONTAINER_IDS.update}
+				/>
 				<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
 			</Container>
 		</>

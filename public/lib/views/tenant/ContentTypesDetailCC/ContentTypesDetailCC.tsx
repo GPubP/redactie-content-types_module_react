@@ -340,9 +340,10 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 
 	return (
 		<>
-			<div className="u-margin-bottom">
-				<AlertContainer containerId={ALERT_CONTAINER_IDS.detailCC} />
-			</div>
+			<AlertContainer
+				toastClassName="u-margin-bottom"
+				containerId={ALERT_CONTAINER_IDS.detailCC}
+			/>
 			<div className="u-margin-bottom-lg">
 				<h5>Content componenten</h5>
 

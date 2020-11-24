@@ -1,8 +1,8 @@
 import { TranslateFunc } from '@redactie/translations-module';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { CORE_TRANSLATIONS } from '../../../connectors/translations';
 import StatusIcon from '../../StatusIcon/StatusIcon';
 
 import { DynamicFieldCCRow } from './DynamicFieldSettings.types';
