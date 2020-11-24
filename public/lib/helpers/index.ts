@@ -8,6 +8,5 @@ export * from './generateFieldFromType';
 export * from './generateFRFieldFromCTField';
 export * from './generateValidationChecks';
 export * from './onEmit';
-export * from './parseFields';
 export * from './tabs';
 export * from './typeMap';
