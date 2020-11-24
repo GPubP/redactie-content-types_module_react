@@ -1,8 +1,8 @@
-export interface SitesRowData {
-	uuid: string;
+export interface SitesOverviewRowData {
+	id: string;
 	name: string;
+	active: boolean;
 	description: string;
-	status: boolean;
 	contentTypes: string[];
 	contentItems: number;
 }

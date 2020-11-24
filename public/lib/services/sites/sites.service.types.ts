@@ -1,3 +1,5 @@
+import { SearchParams } from '../api';
+
 /**
  * =========================
  * Base types
@@ -55,3 +57,5 @@ export interface SitesDetailRequestBody {
 	description: string;
 	contentTypes: string[];
 }
+
+export type GetSitesPayload = SearchParams
