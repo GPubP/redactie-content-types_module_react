@@ -8,7 +8,7 @@ import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import formRendererConnector from '../../../connectors/formRenderer';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
+import { useCoreTranslation } from '../../../connectors/translations';
 import { DYNAMIC_FIELD_SETTINGS_NAME, MODULE_PATHS } from '../../../contentTypes.const';
 import { LoadingState, NewCCFormState } from '../../../contentTypes.types';
 import { sortFieldTypes } from '../../../helpers';
