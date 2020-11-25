@@ -73,6 +73,7 @@ export interface NewCCFormState {
 }
 
 export interface CCSettingsFormState {
+	uuid: string;
 	label: string;
 	name: string;
 	defaultValue: string;

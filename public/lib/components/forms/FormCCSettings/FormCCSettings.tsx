@@ -1,9 +1,9 @@
-import { Checkbox, RadioGroup, Textarea, TextField } from '@acpaas-ui/react-components';
+import { Button, Checkbox, RadioGroup, Textarea, TextField } from '@acpaas-ui/react-components';
 import { FormikOnChangeHandler } from '@redactie/utils';
 import { ErrorMessage, Field, Formik } from 'formik';
-import kebabCase from 'lodash.kebabcase';
 import { equals } from 'ramda';
 import React, { ChangeEvent, FC, useState } from 'react';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { CCSettingsFormState } from '../../../contentTypes.types';
@@ -77,17 +77,6 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 										component="p"
 										name="label"
 									/>
-								</div>
-
-								<div className="col-xs-12 col-md-4 u-margin-top-xs u-margin-bottom">
-									<div>
-										{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
-										<b>
-											{isUpdate
-												? initialValues?.name
-												: kebabCase(values.label)}
-										</b>
-									</div>
 								</div>
 							</div>
 						</div>
@@ -179,6 +168,27 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 								</small>
 							</div>
 						</div>
+						{values.uuid && (
+							<div className="row u-margin-top">
+								<div className="col-xs-12 ">
+									<label>UUID</label>
+									<p className="u-margin-top-xs">
+										<span className="u-text-light u-margin-right-xs">
+											{values.uuid}
+										</span>
+										<CopyToClipboard text={values.uuid}>
+											<Button
+												className="u-button-as-link"
+												htmlType="button"
+												type="transparent"
+											>
+												{t(CORE_TRANSLATIONS.GENERAL_COPY)}
+											</Button>
+										</CopyToClipboard>
+									</p>
+								</div>
+							</div>
+						)}
 					</>
 				);
 			}}

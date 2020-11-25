@@ -1,8 +1,8 @@
-import { Textarea, TextField } from '@acpaas-ui/react-components';
+import { Button, Textarea, TextField } from '@acpaas-ui/react-components';
 import { ErrorMessage } from '@redactie/utils';
 import { Field, Formik, isFunction } from 'formik';
-import kebabCase from 'lodash.kebabcase';
 import React, { FC } from 'react';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { getFieldState } from '../../../helpers/forms';
@@ -59,17 +59,6 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 										name="meta.label"
 									/>
 								</div>
-
-								<div className="col-xs-12 col-md-4 u-margin-top u-margin-bottom">
-									<div>
-										{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
-										<b>
-											{isUpdate
-												? contentType.meta.safeLabel
-												: kebabCase(values.meta.label)}
-										</b>
-									</div>
-								</div>
 							</div>
 						</div>
 						<div className="row u-margin-bottom-lg">
@@ -94,6 +83,27 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 								/>
 							</div>
 						</div>
+						{values.uuid && (
+							<div className="row u-margin-top">
+								<div className="col-xs-12 ">
+									<label>UUID</label>
+									<p className="u-margin-top-xs">
+										<span className="u-text-light u-margin-right-xs">
+											{values.uuid}
+										</span>
+										<CopyToClipboard text={values.uuid}>
+											<Button
+												className="u-button-as-link"
+												htmlType="button"
+												type="transparent"
+											>
+												{t(CORE_TRANSLATIONS.GENERAL_COPY)}
+											</Button>
+										</CopyToClipboard>
+									</p>
+								</div>
+							</div>
+						)}
 						{typeof children === 'function'
 							? (children as CTSettingsFormChildrenFn)(formikProps)
 							: children}
