@@ -24,15 +24,17 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 		sort: {
 			defaultValue: 'data.name',
 			type: 'string',
-		}
+		},
 	});
 	const sitesActiveSorting = useMemo(() => parseOrderByString(query.sort), [query.sort]);
 	const sitesPagination = useSitesPagination(query as SearchParams);
 	const sitesLoadingStates = useSitesLoadingStates();
 
 	useEffect(() => {
-		if ((sitesLoadingStates.isFetching === LoadingState.Loaded ||
-			sitesLoadingStates.isFetching === LoadingState.Error)) {
+		if (
+			sitesLoadingStates.isFetching === LoadingState.Loaded ||
+			sitesLoadingStates.isFetching === LoadingState.Error
+		) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 
