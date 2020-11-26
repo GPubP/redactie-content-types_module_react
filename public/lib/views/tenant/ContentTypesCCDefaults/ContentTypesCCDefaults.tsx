@@ -6,7 +6,7 @@ import React, { FC, ReactElement, useMemo } from 'react';
 
 import formRendererConnector from '../../../connectors/formRenderer';
 import { ContentTypesCCRouteProps } from '../../../contentTypes.types';
-import { getDefaultValueSchemas, parseFields } from '../../../helpers';
+import { getDefaultValueSchemas } from '../../../helpers';
 
 const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 	CTField,
@@ -24,7 +24,7 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 	 */
 	const parsedFormSchema: FormSchema = useMemo(
 		() => ({
-			fields: parseFields([
+			fields: formRendererConnector.api.parseFields([
 				{
 					...CTField,
 					generalConfig: {
