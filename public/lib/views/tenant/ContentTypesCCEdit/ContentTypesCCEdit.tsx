@@ -42,6 +42,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	 */
 	const [hasSubmit, setHasSubmit] = useState(false);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [invalidCCUuid, setInvalidCCUuid] = useState(false);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const [fieldTypeLoading, fieldType] = useFieldType();
 	const [presetLoading, preset] = usePreset();
@@ -119,6 +120,8 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 
 		if (newActiveField) {
 			contentTypesFacade.setActiveField(newActiveField);
+		} else {
+			setInvalidCCUuid(true);
 		}
 	}, [activeField, activeFieldFTUuid, contentComponentUuid, contentType.fields]);
 
@@ -270,7 +273,24 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		);
 	};
 
-	return <DataLoader loadingState={initialLoading} render={renderCCEdit} />;
+	return (
+		<>
+			{!invalidCCUuid && (
+				<DataLoader loadingState={initialLoading} render={renderCCEdit} />
+			)}
+
+			{invalidCCUuid && (
+				<div>
+					<p className="u-margin-top-xs u-margin-bottom">
+						De content component kan niet worden geladen. Probeer later opnieuw.
+					</p>
+					<Button onClick={navigateToDetail} outline>
+						{t(CORE_TRANSLATIONS['BUTTON_BACK-TO-OVERVIEW'])}
+					</Button>
+				</div>
+			)}
+		</>
+	)
 };
 
 export default ContentTypesCCEdit;
