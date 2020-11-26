@@ -1,10 +1,16 @@
 import { PaginationResponse, PaginatorPlugin } from '@datorama/akita';
 import { from, Observable } from 'rxjs';
-import { GetSitesPayload, sitesApiService, SitesApiService, SitesDetailRequestBody } from '../../services/sites';
+
+import {
+	GetSitesPayload,
+	sitesApiService,
+	SitesApiService,
+	SitesDetailRequestBody,
+} from '../../services/sites';
 import { BaseEntityFacade } from '../shared';
+
 import { SiteModel, SitesState } from './sites.model';
 import { sitesPaginator } from './sites.paginator';
-
 import { SitesQuery, sitesQuery } from './sites.query';
 import { SitesStore, sitesStore } from './sites.store';
 

@@ -58,4 +58,4 @@ export interface SitesDetailRequestBody {
 	contentTypes: string[];
 }
 
-export type GetSitesPayload = SearchParams
+export type GetSitesPayload = SearchParams;

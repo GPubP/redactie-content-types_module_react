@@ -4,7 +4,7 @@ import React, { FC, ReactElement, useMemo } from 'react';
 
 import formRendererConnector from '../../../connectors/formRenderer';
 import { ContentTypesCCRouteProps } from '../../../contentTypes.types';
-import { generateFRFieldFromCTField, parseFields } from '../../../helpers';
+import { generateFRFieldFromCTField } from '../../../helpers';
 import { Field, Validation } from '../../../services/contentTypes';
 import { ValicationCheckWithAllowedFields } from '../../../services/contentTypes/contentTypes.service.types';
 import { FieldTypeData } from '../../../services/fieldTypes';
@@ -93,7 +93,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	});
 
 	const generateFormSchemaFromFieldTypeData = (fieldTypeData: FieldTypeData): FormSchema => ({
-		fields: parseFields(fieldTypeData?.formSchema?.fields),
+		fields: formRendererConnector.api.parseFields(fieldTypeData?.formSchema?.fields),
 	});
 
 	const schema: FormSchema = useMemo(

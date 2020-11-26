@@ -70,7 +70,7 @@ const FormCTEditCompartment: FC<FormCTEditCompartmentProps> = ({
 												transparent
 											/>
 										}
-									></Modal>
+									/>
 								</div>
 							)}
 						</div>
