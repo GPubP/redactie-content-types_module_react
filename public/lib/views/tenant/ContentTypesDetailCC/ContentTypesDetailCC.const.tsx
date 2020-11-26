@@ -125,7 +125,7 @@ export const CONTENT_TYPE_COLUMNS = (
 					}
 					type="primary"
 					transparent
-				></Button>
+				/>
 			);
 		},
 	},

@@ -1,4 +1,4 @@
-import { OrderBy } from "../../views";
+import { OrderBy } from '../../views';
 
 export const parseOrderBy = (orderBy: OrderBy): string => {
 	return orderBy.order === 'asc' ? orderBy.key : `-${orderBy.key}`;
