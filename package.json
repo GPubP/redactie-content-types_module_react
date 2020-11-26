@@ -41,7 +41,7 @@
 		"@commitlint/cli": "8.3.5",
 		"@commitlint/config-conventional": "8.3.4",
 		"@datorama/akita": "^4.22.1",
-		"@redactie/form-renderer-module": "^0.12.5",
+		"@redactie/form-renderer-module": "^0.13.0",
 		"@redactie/module-webpack-plugin": "2.0.0",
 		"@redactie/react-router-guards": "^1.0.2",
 		"@redactie/redactie-core": "^1.10.5",
@@ -105,7 +105,7 @@
 	},
 	"dependencies": {
 		"@mindspace-io/react": "^1.1.6",
-		"@wcm/jsonschema-generator": "1.0.0",
+		"@wcm/jsonschema-generator": "1.0.1",
 		"lodash.debounce": "^4.0.8",
 		"lodash.kebabcase": "4.1.1",
 		"query-string": "^6.13.1",
