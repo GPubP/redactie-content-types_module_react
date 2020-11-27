@@ -11,14 +11,13 @@ import ContentTypesSelect from './lib/components/Fields/ContentTypesSelect/Conte
 import DynamicFieldSettings from './lib/components/Fields/DynamicFieldSettings/DynamicFieldSettings';
 import formRendererConnector from './lib/connectors/formRenderer';
 import rolesRightsConnector from './lib/connectors/rolesRights';
-import { registerRoutes } from './lib/connectors/sites';
+import sitesConnector from './lib/connectors/sites';
 import { DYNAMIC_FIELD_SETTINGS_NAME, MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesModuleProps } from './lib/contentTypes.types';
 import { contentTypeTitleHelper } from './lib/helpers/contentTypeTitleHelper/contentTypeTitleHelper';
 import { TitleTypes } from './lib/helpers/contentTypeTitleHelper/contentTypeTitleHelper.types';
 import { fieldTypesFacade } from './lib/store/fieldTypes';
 import { presetsFacade } from './lib/store/presets';
-import { sitesFacade } from './lib/store/sites';
 import {
 	ContentTypesCCConfig,
 	ContentTypesCCDefaults,
@@ -48,7 +47,7 @@ const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, tenantId })
 	useEffect(() => {
 		fieldTypesFacade.getFieldTypes();
 		presetsFacade.getPresets();
-		sitesFacade.getSites();
+		sitesConnector.sitesFacade.getSites();
 	}, []);
 
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
@@ -303,7 +302,7 @@ Core.routes.register({
 	],
 });
 
-registerRoutes({
+sitesConnector.registerRoutes({
 	path: MODULE_PATHS.site.root,
 	component: SiteContentTypesComponent,
 	redirect: MODULE_PATHS.site.overview,

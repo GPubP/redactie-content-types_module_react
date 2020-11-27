@@ -7,17 +7,18 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
+import { SiteModel } from '@redactie/sites-module';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader, FilterForm, FilterFormState } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
+import sitesConnector from '../../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesRouteProps, LoadingState } from '../../../contentTypes.types';
-import { useContentTypes, useNavigate, useRoutesBreadcrumbs, useSites } from '../../../hooks';
+import { useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes/contentTypes.service.cont';
 import { ContentTypeModel, contentTypesFacade } from '../../../store/contentTypes';
-import { SiteModel } from '../../../store/sites';
 
 import {
 	CONTENT_INITIAL_FILTER_STATE,
@@ -43,7 +44,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	const { navigate } = useNavigate();
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const [loadingContentTypes, contentTypes, meta] = useContentTypes();
-	const [loadingSites, sites] = useSites();
+	const [loadingSites, sites] = sitesConnector.hooks.useSites();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
 	const [

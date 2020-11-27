@@ -1,5 +1,6 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 import { FormikConfig, FormikValues } from 'formik';
+import { ReactNode } from 'react';
 import { NavLinkProps } from 'react-router-dom';
 
 import { ALERT_CONTAINER_IDS } from './contentTypes.const';
@@ -116,3 +117,16 @@ export enum LoadingState {
 }
 
 export type FormikRef = FormikConfig<FormikValues>['innerRef'];
+
+export interface TableColumn<RowData = unknown> {
+	label: string;
+	value?: string;
+	component?: (value: any, rowData: RowData, rowIndex: number) => ReactNode;
+	headerComponent?: (value: any) => ReactNode;
+	format?: (value: any, col: TableColumn<RowData>, rowData: RowData, rowIndex: number) => string;
+	hidden?: boolean;
+	disabled?: boolean;
+	disableSorting?: boolean;
+	classList?: string[];
+	fallback?: string;
+}
