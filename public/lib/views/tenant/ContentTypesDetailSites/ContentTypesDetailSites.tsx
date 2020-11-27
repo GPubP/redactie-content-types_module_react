@@ -1,43 +1,31 @@
 import { Button } from '@acpaas-ui/react-components';
 import { PaginatedTable } from '@acpaas-ui/react-editorial-components';
+import { SiteModel, UpdateSitePayload } from '@redactie/sites-module';
 import { AlertContainer, useAPIQueryParams } from '@redactie/utils';
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 
-import DataLoader from '../../../components/DataLoader/DataLoader';
 import SiteStatus from '../../../components/SiteStatus/SiteStatus';
+import sitesConnector from '../../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
-import { useSitesLoadingStates, useSitesPagination } from '../../../hooks';
-import { SearchParams } from '../../../services/api';
 import { parseOrderBy, parseOrderByString } from '../../../services/helpers/helpers.service';
-import { Site, SitesDetailRequestBody } from '../../../services/sites';
-import { sitesFacade } from '../../../store/sites';
 import { OrderBy } from '../ContentTypesOverview';
 
 import { SitesOverviewRowData } from './ContentTypesSites.types';
 
 const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => {
-	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [t] = useCoreTranslation();
 	const [query, setQuery] = useAPIQueryParams({
 		sort: {
 			defaultValue: 'data.name',
 			type: 'string',
-		}
+		},
 	});
+	const [updateSiteId, setUpdateSiteId] = useState<string | null>(null);
 	const sitesActiveSorting = useMemo(() => parseOrderByString(query.sort), [query.sort]);
-	const sitesPagination = useSitesPagination(query as SearchParams);
-	const sitesLoadingStates = useSitesLoadingStates();
-
-	useEffect(() => {
-		if ((sitesLoadingStates.isFetching === LoadingState.Loaded ||
-			sitesLoadingStates.isFetching === LoadingState.Error)) {
-			return setInitialLoading(LoadingState.Loaded);
-		}
-
-		setInitialLoading(LoadingState.Loading);
-	}, [sitesLoadingStates.isFetching]);
+	const [sitesPagination, refreshPage] = sitesConnector.hooks.useSitesPagination(query as any);
+	const sitesLoadingStates = sitesConnector.hooks.useSitesLoadingStates();
 
 	const handlePageChange = (pageNumber: number): void => {
 		setQuery({
@@ -56,12 +44,12 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 		});
 	};
 
-	const getOgSite = (siteUuid: string): Site | undefined => {
+	const getOgSite = (siteUuid: string): SiteModel | undefined => {
 		if (!sitesPagination) {
 			return;
 		}
 
-		return sitesPagination.data?.find((s: Site) => s.uuid === siteUuid);
+		return sitesPagination.data?.find((s: SiteModel) => s.uuid === siteUuid);
 	};
 
 	const setCTsOnSites = (siteUuid: string): void => {
@@ -71,13 +59,15 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			return;
 		}
 
-		const updateBody: SitesDetailRequestBody = {
-			...(ogSite as Site).data,
-			contentTypes: ogSite.data.contentTypes.concat(contentType._id),
+		const payload: UpdateSitePayload = {
+			id: ogSite.uuid,
+			body: {
+				...ogSite.data,
+				contentTypes: ogSite.data.contentTypes.concat(contentType._id),
+			},
 		};
 
-		// TODO: quick user sites module and stores
-		sitesFacade.updateSite(ogSite.uuid, updateBody);
+		sitesConnector.sitesFacade.updateSite(payload).finally(() => refreshPage());
 	};
 
 	const removeCTsFromSites = (siteUuid: string): void => {
@@ -87,23 +77,21 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			return;
 		}
 
-		const updateBody: SitesDetailRequestBody = {
-			...(ogSite as Site).data,
-			contentTypes: ogSite.data.contentTypes.filter(
-				(ctId: string) => ctId !== contentType._id
-			),
+		const payload: UpdateSitePayload = {
+			id: ogSite.uuid,
+			body: {
+				...ogSite.data,
+				contentTypes: ogSite.data.contentTypes.filter(
+					(ctId: string) => ctId !== contentType._id
+				),
+			},
 		};
 
-		// TODO: use sites module and stores
-		sitesFacade.updateSite(ogSite.uuid, updateBody);
+		sitesConnector.sitesFacade.updateSite(payload).finally(() => refreshPage());
 	};
 
-	const SitesTable = (): React.ReactElement | null => {
-		if (!sitesPagination) {
-			return null;
-		}
-
-		const sitesRows: SitesOverviewRowData[] = sitesPagination.data.map(site => ({
+	const RenderSitesTable = (): React.ReactElement | null => {
+		const sitesRows: SitesOverviewRowData[] = (sitesPagination?.data || []).map(site => ({
 			id: site.uuid,
 			name: site.data.name,
 			description: site.data.description,
@@ -146,11 +134,19 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 				disableSorting: true,
 				component(value: string, rowData: SitesOverviewRowData) {
 					const isActive = (rowData.contentTypes || []).includes(contentType._id);
+					const loading =
+						sitesLoadingStates.isUpdating === LoadingState.Loading &&
+						updateSiteId === rowData.id;
 
 					if (isActive) {
 						return (
 							<Button
-								onClick={() => removeCTsFromSites(rowData.id)}
+								iconLeft={loading ? 'circle-o-notch fa-spin' : null}
+								disabled={loading}
+								onClick={() => {
+									setUpdateSiteId(rowData.id);
+									removeCTsFromSites(rowData.id);
+								}}
 								type="danger"
 								outline
 							>
@@ -160,7 +156,16 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 					}
 
 					return (
-						<Button onClick={() => setCTsOnSites(rowData.id)} type="success" outline>
+						<Button
+							iconLeft={loading ? 'circle-o-notch fa-spin' : null}
+							disabled={loading}
+							onClick={() => {
+								setUpdateSiteId(rowData.id);
+								setCTsOnSites(rowData.id);
+							}}
+							type="success"
+							outline
+						>
 							{t(CORE_TRANSLATIONS.BUTTON_ACTIVATE)}
 						</Button>
 					);
@@ -170,6 +175,10 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 
 		return (
 			<>
+				<AlertContainer
+					toastClassName="u-margin-bottom"
+					containerId={sitesConnector.config.ALERT_CONTAINER_IDS.fetch}
+				/>
 				<AlertContainer
 					toastClassName="u-margin-bottom"
 					containerId={ALERT_CONTAINER_IDS.detailSites}
@@ -183,21 +192,21 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 					className="u-margin-top"
 					columns={sitesColumns}
 					rows={sitesRows}
-					currentPage={sitesPagination.currentPage}
+					currentPage={sitesPagination?.currentPage}
 					itemsPerPage={query.pagesize}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
 					noDataMessage="Er zijn geen resultaten voor de ingestelde filters"
 					loadDataMessage="Sites ophalen"
 					activeSorting={sitesActiveSorting}
-					totalValues={sitesPagination.total}
+					totalValues={sitesPagination?.total ?? 0}
 					loading={sitesLoadingStates.isFetching === LoadingState.Loading}
-				></PaginatedTable>
+				/>
 			</>
 		);
 	};
 
-	return <DataLoader loadingState={initialLoading} render={SitesTable} />;
+	return RenderSitesTable();
 };
 
 export default ContentTypeSites;
