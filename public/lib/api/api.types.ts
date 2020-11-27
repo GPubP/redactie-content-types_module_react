@@ -1,4 +1,5 @@
-import { parseFields } from '../helpers/parseFields/parseFields';
+import { FormsAPI } from '@redactie/form-renderer-module';
+
 import { ExternalTabOptions } from '../store/api/externalTabs';
 
 import { registerCTDetailTab } from './registerCTDetailTab';
@@ -9,6 +10,6 @@ export { ExternalTabProps } from '../views/tenant/ContentTypesDetailExternal';
 
 export interface ContentTypeAPI {
 	registerCTDetailTab: typeof registerCTDetailTab;
-	parseFields: typeof parseFields;
+	parseFields: FormsAPI['parseFields'];
 }
 export { ExternalTabOptions };

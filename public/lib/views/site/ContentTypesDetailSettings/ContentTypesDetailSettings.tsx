@@ -1,16 +1,15 @@
 import { Button, Card, CardBody, CardDescription, CardTitle } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
-import { LeavePrompt, useDetectValueChangesWorker } from '@redactie/utils';
+import { LeavePrompt, LoadingState, useDetectValueChangesWorker } from '@redactie/utils';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import { CTSettingsForm, SiteStatus } from '../../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import {
 	ContentTypesDetailRouteProps,
-	LoadingState,
 	SiteContentTypesDetailRouteParams,
 } from '../../../contentTypes.types';
-import { useSites } from '../../../hooks';
+import { useSites, useSitesLoadingStates } from '../../../hooks';
 import { SiteModel, sitesFacade } from '../../../store/sites';
 
 const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetailRouteParams>> = ({
@@ -26,6 +25,8 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 	const [siteData, setSiteData] = useState<SiteModel['data']>();
 	const [t] = useCoreTranslation();
 	const [loadingSites, sites] = useSites();
+	const { isUpdating } = useSitesLoadingStates();
+	const isUpdatingSite = useMemo(() => isUpdating === LoadingState.Loading, [isUpdating]);
 	const isLoading = useMemo(() => loadingSites === LoadingState.Loading, [loadingSites]);
 	// Calculate on how many sites the content type is used
 	const amountUsedOnSites = useMemo(
@@ -122,8 +123,8 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 							{t(CORE_TRANSLATIONS['BUTTON_CANCEL'])}
 						</Button>
 						<Button
-							iconLeft={isLoading ? 'circle-o-notch fa-spin' : null}
-							disabled={isLoading || !hasChanges}
+							iconLeft={isUpdatingSite ? 'circle-o-notch fa-spin' : null}
+							disabled={isLoading || isUpdatingSite || !hasChanges}
 							className="u-margin-left-xs"
 							onClick={onSave}
 							type="success"

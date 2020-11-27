@@ -1,5 +1,3 @@
-import { NavigateFn } from '@redactie/utils';
-
 export interface ContentTypeDetailCCRow {
 	id: string;
 	label: string;

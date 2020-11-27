@@ -115,6 +115,7 @@ Core.routes.register({
 	},
 	navigation: {
 		label: 'Structuur',
+		order: 1,
 		canShown: [
 			rolesRightsConnector.api.canShowns.securityRightsTenantCanShown([
 				rolesRightsConnector.securityRights.read,
@@ -128,6 +129,7 @@ Core.routes.register({
 			component: ContentTypesOverview,
 			navigation: {
 				label: 'Content types',
+				order: 0,
 				parentPath: MODULE_PATHS.root,
 			},
 		},
@@ -309,6 +311,7 @@ registerRoutes({
 		renderContext: 'site',
 		context: 'site',
 		label: 'Structuur',
+		order: 1,
 	},
 	routes: [
 		{
@@ -317,6 +320,7 @@ registerRoutes({
 			navigation: {
 				context: 'site',
 				label: 'Content types',
+				order: 0,
 				parentPath: MODULE_PATHS.site.root,
 			},
 		},
