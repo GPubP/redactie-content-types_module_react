@@ -275,7 +275,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 
 	return (
 		<>
-			{!invalidCCUuid ?  (
+			{!invalidCCUuid ? (
 				<DataLoader loadingState={initialLoading} render={renderCCEdit} />
 			) : (
 				<div>
@@ -288,7 +288,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 				</div>
 			)}
 		</>
-	)
+	);
 };
 
 export default ContentTypesCCEdit;
