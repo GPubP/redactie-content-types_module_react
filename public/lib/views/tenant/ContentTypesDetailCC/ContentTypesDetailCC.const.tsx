@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { StatusIcon } from '../../../components';
 import { CORE_TRANSLATIONS } from '../../../connectors/translations';
 import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
+import { TableColumn } from '../../../contentTypes.types';
 
 import { ContentTypeDetailCCRow, MoveAction } from './ContentTypesDetailCC.types';
 
@@ -14,7 +15,7 @@ export const CONTENT_TYPE_COLUMNS = (
 	t: TranslateFunc,
 	onExpand: (id: string) => void = () => null,
 	moveRow: (uuid: string, action: MoveAction) => void = () => null
-): any[] => [
+): TableColumn<ContentTypeDetailCCRow>[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
@@ -75,6 +76,7 @@ export const CONTENT_TYPE_COLUMNS = (
 		label: 'Meerdere',
 		value: 'multiple',
 		disableSorting: true,
+		classList: ['u-text-center'],
 		component(value: any, rowData: ContentTypeDetailCCRow) {
 			return !isNil(rowData.multiple) ? (
 				<StatusIcon active={rowData.multiple ?? false} />
@@ -84,6 +86,7 @@ export const CONTENT_TYPE_COLUMNS = (
 	{
 		label: 'Verplicht',
 		value: 'required',
+		classList: ['u-text-center'],
 		disableSorting: true,
 		component(value: any, rowData: ContentTypeDetailCCRow) {
 			return !isNil(rowData.required) ? (
@@ -95,6 +98,7 @@ export const CONTENT_TYPE_COLUMNS = (
 		label: 'Vertaalbaar',
 		value: 'translatable',
 		disableSorting: true,
+		classList: ['u-text-center'],
 		component(value: any, rowData: ContentTypeDetailCCRow) {
 			return !isNil(rowData.translatable) ? (
 				<StatusIcon active={rowData.translatable ?? false} />
@@ -105,6 +109,7 @@ export const CONTENT_TYPE_COLUMNS = (
 		label: 'Verborgen',
 		value: 'hidden',
 		disableSorting: true,
+		classList: ['u-text-center'],
 		component(value: any, rowData: ContentTypeDetailCCRow) {
 			return !isNil(rowData.hidden) ? <StatusIcon active={rowData.hidden ?? false} /> : null;
 		},

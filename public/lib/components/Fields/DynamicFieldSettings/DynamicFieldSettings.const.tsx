@@ -3,11 +3,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { CORE_TRANSLATIONS } from '../../../connectors/translations';
+import { TableColumn } from '../../../contentTypes.types';
 import StatusIcon from '../../StatusIcon/StatusIcon';
 
 import { DynamicFieldCCRow } from './DynamicFieldSettings.types';
 
-export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): any[] => [
+export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCCRow>[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
@@ -31,6 +32,7 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): any[] => [
 		label: 'Meerdere',
 		value: 'multiple',
 		disableSorting: true,
+		classList: ['u-text-center'],
 		component(value: any, rowData: DynamicFieldCCRow) {
 			return <StatusIcon active={rowData.multiple ?? false} />;
 		},
@@ -39,6 +41,7 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): any[] => [
 		label: 'Verplicht',
 		value: 'required',
 		disableSorting: true,
+		classList: ['u-text-center'],
 		component(value: any, rowData: DynamicFieldCCRow) {
 			return <StatusIcon active={rowData.required ?? false} />;
 		},
@@ -47,6 +50,7 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): any[] => [
 		label: 'Vertaalbaar',
 		value: 'translatable',
 		disableSorting: true,
+		classList: ['u-text-center'],
 		component(value: any, rowData: DynamicFieldCCRow) {
 			return <StatusIcon active={rowData.translatable ?? false} />;
 		},
@@ -55,6 +59,7 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): any[] => [
 		label: 'Verborgen',
 		value: 'hidden',
 		disableSorting: true,
+		classList: ['u-text-center'],
 		component(value: any, rowData: DynamicFieldCCRow) {
 			return <StatusIcon active={rowData.hidden ?? false} />;
 		},
