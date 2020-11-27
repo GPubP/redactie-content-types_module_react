@@ -1,16 +1,16 @@
 import { Button, Card, CardBody, CardDescription, CardTitle } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
+import { SiteModel } from '@redactie/sites-module';
 import { LeavePrompt, LoadingState, useDetectValueChangesWorker } from '@redactie/utils';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import { CTSettingsForm, SiteStatus } from '../../../components';
+import sitesConnector from '../../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import {
 	ContentTypesDetailRouteProps,
 	SiteContentTypesDetailRouteParams,
 } from '../../../contentTypes.types';
-import { useSites, useSitesLoadingStates } from '../../../hooks';
-import { SiteModel, sitesFacade } from '../../../store/sites';
 
 const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetailRouteParams>> = ({
 	contentType,
@@ -24,8 +24,8 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 	 */
 	const [siteData, setSiteData] = useState<SiteModel['data']>();
 	const [t] = useCoreTranslation();
-	const [loadingSites, sites] = useSites();
-	const { isUpdating } = useSitesLoadingStates();
+	const [loadingSites, sites] = sitesConnector.hooks.useSites();
+	const { isUpdating } = sitesConnector.hooks.useSitesLoadingStates();
 	const isUpdatingSite = useMemo(() => isUpdating === LoadingState.Loading, [isUpdating]);
 	const isLoading = useMemo(() => loadingSites === LoadingState.Loading, [loadingSites]);
 	// Calculate on how many sites the content type is used
@@ -46,9 +46,6 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 	/**
 	 * Fetch sites
 	 */
-	useEffect(() => {
-		sitesFacade.getSites();
-	}, []);
 
 	useEffect(() => {
 		if (site) {
@@ -80,8 +77,12 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 		if (!site || !siteData) {
 			return;
 		}
-		// TODO: quick user sites module and stores
-		sitesFacade.updateSite(site.uuid, siteData);
+
+		sitesConnector.sitesFacade.updateSite({
+			id: site.uuid,
+			body: siteData,
+		});
+
 		resetChangeDetection();
 	};
 

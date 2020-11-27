@@ -1,10 +1,31 @@
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
-import { Routes } from '@redactie/redactie-core/dist/routes';
+import { SitesModuleAPI } from '@redactie/sites-module';
 
-// TODO export sites api typings
-const SitesAPI: { routes: Routes } = Core.modules.getModuleAPI('sites-module') as {
-	routes: Routes;
-};
+class SitesConnector {
+	public apiName = 'sites-module';
+	public api: SitesModuleAPI;
 
-export const registerRoutes = (routes: ModuleRouteConfig): any | false =>
-	SitesAPI ? SitesAPI.routes.register(routes) : false;
+	public get sitesFacade(): SitesModuleAPI['store']['sites']['facade'] {
+		return this.api.store.sites.facade;
+	}
+
+	public get hooks(): SitesModuleAPI['hooks'] {
+		return this.api.hooks;
+	}
+
+	public get config(): SitesModuleAPI['config'] {
+		return this.api.config;
+	}
+
+	constructor() {
+		this.api = Core.modules.getModuleAPI<SitesModuleAPI>(this.apiName);
+	}
+
+	public registerRoutes(routes: ModuleRouteConfig): any | false {
+		return this.api ? this.api.routes.register(routes) : false;
+	}
+}
+
+const sitesConnector = new SitesConnector();
+
+export default sitesConnector;

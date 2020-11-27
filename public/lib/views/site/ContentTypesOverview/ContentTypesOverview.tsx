@@ -9,13 +9,13 @@ import React, { ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
+import sitesConnector from '../../../connectors/sites';
 import { useCoreTranslation } from '../../../connectors/translations';
 import { MODULE_PATHS } from '../../../contentTypes.const';
 import { LoadingState } from '../../../contentTypes.types';
-import { useContentTypes, useNavigate, useRoutesBreadcrumbs, useSite } from '../../../hooks';
+import { useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes/contentTypes.service.cont';
 import { ContentTypeModel, contentTypesFacade } from '../../../store/contentTypes';
-import { sitesFacade } from '../../../store/sites';
 import { OrderBy } from '../../tenant';
 
 import { CONTENT_TYPE_OVERVIEW_COLUMNS } from './ContentTypesOverview.const';
@@ -35,7 +35,8 @@ const ContentTypesOverview: React.FC = () => {
 	const [t] = useCoreTranslation();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [loadingContentTypes, contentTypes, meta] = useContentTypes();
-	const [loadingSite, site] = useSite();
+	const { siteId } = useSiteContext();
+	const [loadingSite, site] = sitesConnector.hooks.useSite(siteId);
 	const [
 		mySecurityRightsLoadingState,
 		mySecurityrights,
@@ -44,7 +45,6 @@ const ContentTypesOverview: React.FC = () => {
 		DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
 	);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
-	const { siteId } = useSiteContext();
 
 	useEffect(() => {
 		if (
@@ -71,13 +71,6 @@ const ContentTypesOverview: React.FC = () => {
 	useEffect(() => {
 		contentTypesFacade.getContentTypes(contentTypesSearchParams);
 	}, [contentTypesSearchParams]);
-
-	useEffect(() => {
-		if (!siteId) {
-			return;
-		}
-		sitesFacade.getSite(siteId);
-	}, [siteId]);
 
 	/**
 	 * Functions
