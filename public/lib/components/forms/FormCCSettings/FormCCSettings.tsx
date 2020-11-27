@@ -1,7 +1,6 @@
 import { Checkbox, RadioGroup, Textarea, TextField } from '@acpaas-ui/react-components';
-import { FormikOnChangeHandler } from '@redactie/utils';
+import { CopyValue, FormikOnChangeHandler } from '@redactie/utils';
 import { ErrorMessage, Field, Formik } from 'formik';
-import kebabCase from 'lodash.kebabcase';
 import { equals } from 'ramda';
 import React, { ChangeEvent, FC, useState } from 'react';
 
@@ -16,7 +15,6 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 	initialValues,
 	fieldTypeData,
 	onSubmit,
-	isUpdate,
 	formikRef,
 }) => {
 	const [isMultiple, setIsMultiple] = useState((initialValues?.generalConfig?.max || 0) > 1);
@@ -77,17 +75,6 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 										component="p"
 										name="label"
 									/>
-								</div>
-
-								<div className="col-xs-12 col-md-4 u-margin-top-xs u-margin-bottom">
-									<div>
-										{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
-										<b>
-											{isUpdate
-												? initialValues?.name
-												: kebabCase(values.label)}
-										</b>
-									</div>
 								</div>
 							</div>
 						</div>
@@ -179,6 +166,16 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 								</small>
 							</div>
 						</div>
+						{values.uuid && (
+							<div className="row u-margin-top">
+								<CopyValue
+									label="UUID"
+									value={values.uuid}
+									buttonText={t(CORE_TRANSLATIONS.GENERAL_COPY)}
+									className="col-xs-12"
+								/>
+							</div>
+						)}
 					</>
 				);
 			}}

@@ -6,6 +6,7 @@ import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
 export const generateCCFormState = (
 	initialValues: Partial<ContentTypeFieldDetailModel> = {}
 ): CCSettingsFormState => ({
+	uuid: initialValues.uuid || '',
 	label: initialValues.label || '',
 	name: initialValues.name || '',
 	defaultValue: initialValues.defaultValue || '',

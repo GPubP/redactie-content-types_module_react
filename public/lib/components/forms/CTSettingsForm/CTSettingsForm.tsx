@@ -1,7 +1,6 @@
 import { Textarea, TextField } from '@acpaas-ui/react-components';
-import { ErrorMessage } from '@redactie/utils';
+import { CopyValue, ErrorMessage } from '@redactie/utils';
 import { Field, Formik, isFunction } from 'formik';
-import kebabCase from 'lodash.kebabcase';
 import React, { FC } from 'react';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
@@ -14,7 +13,6 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 	children,
 	contentType,
 	disabled = false,
-	isUpdate = false,
 	formikRef,
 	onSubmit,
 }) => {
@@ -59,17 +57,6 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 										name="meta.label"
 									/>
 								</div>
-
-								<div className="col-xs-12 col-md-4 u-margin-top u-margin-bottom">
-									<div>
-										{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
-										<b>
-											{isUpdate
-												? contentType.meta.safeLabel
-												: kebabCase(values.meta.label)}
-										</b>
-									</div>
-								</div>
 							</div>
 						</div>
 						<div className="row u-margin-bottom-lg">
@@ -94,6 +81,16 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 								/>
 							</div>
 						</div>
+						{values.uuid && (
+							<div className="row u-margin-top">
+								<CopyValue
+									label="UUID"
+									value={values.uuid}
+									buttonText={t(CORE_TRANSLATIONS.GENERAL_COPY)}
+									className="col-xs-12"
+								/>
+							</div>
+						)}
 						{typeof children === 'function'
 							? (children as CTSettingsFormChildrenFn)(formikProps)
 							: children}
