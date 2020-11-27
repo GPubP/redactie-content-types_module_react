@@ -275,11 +275,9 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 
 	return (
 		<>
-			{!invalidCCUuid && (
+			{!invalidCCUuid ?  (
 				<DataLoader loadingState={initialLoading} render={renderCCEdit} />
-			)}
-
-			{invalidCCUuid && (
+			) : (
 				<div>
 					<p className="u-margin-top-xs u-margin-bottom">
 						De content component kan niet worden geladen. Probeer later opnieuw.
