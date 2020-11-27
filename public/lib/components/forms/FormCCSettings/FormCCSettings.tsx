@@ -1,9 +1,8 @@
-import { Button, Checkbox, RadioGroup, Textarea, TextField } from '@acpaas-ui/react-components';
-import { FormikOnChangeHandler } from '@redactie/utils';
+import { Checkbox, RadioGroup, Textarea, TextField } from '@acpaas-ui/react-components';
+import { CopyValue, FormikOnChangeHandler } from '@redactie/utils';
 import { ErrorMessage, Field, Formik } from 'formik';
 import { equals } from 'ramda';
 import React, { ChangeEvent, FC, useState } from 'react';
-import CopyToClipboard from 'react-copy-to-clipboard';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { CCSettingsFormState } from '../../../contentTypes.types';
@@ -16,7 +15,6 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 	initialValues,
 	fieldTypeData,
 	onSubmit,
-	isUpdate,
 	formikRef,
 }) => {
 	const [isMultiple, setIsMultiple] = useState((initialValues?.generalConfig?.max || 0) > 1);
@@ -170,23 +168,12 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 						</div>
 						{values.uuid && (
 							<div className="row u-margin-top">
-								<div className="col-xs-12 ">
-									<label>UUID</label>
-									<p className="u-margin-top-xs">
-										<span className="u-text-light u-margin-right-xs">
-											{values.uuid}
-										</span>
-										<CopyToClipboard text={values.uuid}>
-											<Button
-												className="u-button-as-link"
-												htmlType="button"
-												type="transparent"
-											>
-												{t(CORE_TRANSLATIONS.GENERAL_COPY)}
-											</Button>
-										</CopyToClipboard>
-									</p>
-								</div>
+								<CopyValue
+									label="UUID"
+									value={values.uuid}
+									buttonText={t(CORE_TRANSLATIONS.GENERAL_COPY)}
+									className="col-xs-12"
+								/>
 							</div>
 						)}
 					</>
