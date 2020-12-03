@@ -24,7 +24,7 @@ export const CONTENT_TYPE_COLUMNS = (
 			const { path } = rowData;
 			return (
 				<>
-					<div className="row middle-xs">
+					<div className="row middle-xs u-flex-no-wrap">
 						<div className="u-margin-left-xs u-margin-right-xs">
 							<Icon name="arrows-alt" className="u-text-primary" />
 						</div>
