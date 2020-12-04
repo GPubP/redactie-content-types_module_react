@@ -1,6 +1,6 @@
 import { Button, Card } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
-import { AlertContainer, LeavePrompt } from '@redactie/utils';
+import { AlertContainer, alertService, LeavePrompt } from '@redactie/utils';
 import { FormikHelpers } from 'formik';
 import { move, path, pathOr } from 'ramda';
 import React, { FC, ReactElement, useMemo, useState } from 'react';
@@ -82,6 +82,20 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	const onCCFormSubmit = ({ name, fieldType, compartment }: NewCCFormState): void => {
 		const selectedFieldType = fields.find(ft => ft.uuid === fieldType);
 		if (!selectedFieldType) {
+			return;
+		}
+
+		if (
+			fieldsByCompartments.find(compartment =>
+				compartment.fields?.find(cc => cc.label === name)
+			)
+		) {
+			alertService.danger(
+				{
+					message: `Naam '${name}' bestaat reeds`,
+				},
+				{ containerId: ALERT_CONTAINER_IDS.detailCC }
+			);
 			return;
 		}
 
