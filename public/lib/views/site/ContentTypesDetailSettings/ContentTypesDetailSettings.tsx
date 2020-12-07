@@ -100,7 +100,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 				isUpdate
 				onSubmit={() => undefined}
 			/>
-			<Card>
+			<Card className="u-margin-top">
 				<CardBody>
 					<CardTitle>Status: {siteData && <SiteStatus active={active} />}</CardTitle>
 					<CardDescription>
