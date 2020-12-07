@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
+	CT_SETTINGS_VALIDATION_SCHEMA_DUPLICATE,
 	FormCTEditCompartment,
 	FormCTEditCompartmentState,
 	FormCTNewCC,
@@ -82,20 +83,6 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	const onCCFormSubmit = ({ name, fieldType, compartment }: NewCCFormState): void => {
 		const selectedFieldType = fields.find(ft => ft.uuid === fieldType);
 		if (!selectedFieldType) {
-			return;
-		}
-
-		if (
-			fieldsByCompartments.find(compartment =>
-				compartment.fields?.find(cc => cc.label === name)
-			)
-		) {
-			alertService.danger(
-				{
-					message: `Naam '${name}' bestaat reeds`,
-				},
-				{ containerId: ALERT_CONTAINER_IDS.detailCC }
-			);
 			return;
 		}
 
@@ -376,6 +363,9 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 									name: '',
 									compartment: CONTENT_COMPARTMENT_UUID,
 								}}
+								validationSchema={CT_SETTINGS_VALIDATION_SCHEMA_DUPLICATE(
+									fieldsByCompartments
+								)}
 								onSubmit={onCCFormSubmit}
 							/>
 						</div>
