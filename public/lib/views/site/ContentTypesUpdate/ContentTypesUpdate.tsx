@@ -48,7 +48,15 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	);
 	const { tenantId } = useTenantContext();
 	const { siteId } = useSiteContext();
-	const breadcrumbs = useRoutesBreadcrumbs();
+	const breadcrumbs = useRoutesBreadcrumbs(
+		[
+			{
+				name: 'Content types',
+				target: generatePath(MODULE_PATHS.admin),
+			},
+		],
+		[]
+	);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 
 	useEffect(() => {
