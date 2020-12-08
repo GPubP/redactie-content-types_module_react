@@ -6,17 +6,21 @@ import { NavLinkProps } from 'react-router-dom';
 
 import { registerCTDetailTab } from './api/registerCTDetailTab';
 import { ALERT_CONTAINER_IDS } from './contentTypes.const';
+import { UseActiveFieldType } from './hooks/useActiveFieldType/useActiveFieldType.types';
 import { UseActivePreset } from './hooks/useActivePreset/useActivePreset.types';
+import { UseFieldTypes } from './hooks/useFieldTypes/useFieldTypes.types';
+import { UseFieldTypesUIStates } from './hooks/useFieldTypesUIStates/useFieldTypesUIStates.types';
 import { UsePaginatedPresets } from './hooks/usePaginatedPresets/usePaginatedPresets.types';
 import { UsePresets } from './hooks/usePresets/usePresets.types';
 import { UsePresetsUIStates } from './hooks/usePresetsUIStates/usePresetsUIStates.types';
-import { FieldType, FieldTypeMeta } from './services/fieldTypes';
+import { FieldType, FieldTypeMeta, FieldTypesApiService } from './services/fieldTypes';
 import { Preset, PresetDetail, PresetsApiService } from './services/presets';
 import {
 	ContentTypeDetailModel,
 	ContentTypeFieldDetailModel,
 	FieldsByCompartment,
 } from './store/contentTypes';
+import { FieldTypesFacade } from './store/fieldTypes';
 import { PresetsFacade } from './store/presets';
 import { ExternalTabValue } from './views/tenant/ContentTypesDetailExternal';
 
@@ -146,11 +150,20 @@ export interface ContentTypeAPI {
 			service: PresetsApiService;
 			facade: PresetsFacade;
 		};
+		fieldTypes: {
+			service: FieldTypesApiService;
+			facade: FieldTypesFacade;
+		};
 	};
 	hooks: {
+		// Presets
 		useActivePreset: UseActivePreset;
 		usePaginatedPresets: UsePaginatedPresets;
 		usePresets: UsePresets;
 		usePresetsUIStates: UsePresetsUIStates;
+		// Field types
+		useActiveFieldType: UseActiveFieldType;
+		useFieldTypes: UseFieldTypes;
+		useFieldTypesUIStates: UseFieldTypesUIStates;
 	};
 }

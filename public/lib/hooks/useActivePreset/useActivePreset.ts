@@ -7,9 +7,11 @@ import { UseActivePreset } from './useActivePreset.types';
 
 const useActivePreset: UseActivePreset = (presetId?: string) => {
 	useEffect(() => {
-		if (presetId && !presetsFacade.hasActiveDetail(presetId)) {
+		if (presetId) {
+			if (!presetsFacade.hasActiveDetail(presetId)) {
+				presetsFacade.getPreset(presetId);
+			}
 			presetsFacade.setActiveDetail(presetId);
-			presetsFacade.getPreset(presetId);
 			return;
 		}
 		// remove active detail when presetId is undefined

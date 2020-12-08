@@ -19,7 +19,7 @@ import useNavigate from '../../../hooks/useNavigate/useNavigate';
 import usePresets from '../../../hooks/usePresets/usePresets';
 import { Field } from '../../../services/contentTypes/contentTypes.service.types';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
-import { FieldTypeModel } from '../../../store/fieldTypes';
+import { FieldTypeListModel } from '../../../store/fieldTypes';
 import DataLoader from '../../DataLoader/DataLoader';
 import { FormCTNewCC } from '../../forms';
 import { FormCTNewCCProps } from '../../forms/FormCTNewCC/FormCTNewCC.types';
@@ -71,7 +71,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 				// Filter out dynamic field settings
 				.filter(fieldType => {
 					const hasNestedDynamicFieldSettings = !!(
-						(fieldType as FieldTypeModel).data?.formSchema?.fields || []
+						(fieldType as FieldTypeListModel).data?.formSchema?.fields || []
 					).find(field => field.fieldType.data.name === DYNAMIC_FIELD_SETTINGS_NAME);
 
 					return !hasNestedDynamicFieldSettings;

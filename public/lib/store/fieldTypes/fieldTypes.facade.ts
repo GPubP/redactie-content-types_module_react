@@ -1,70 +1,112 @@
+import { Observable } from 'rxjs';
+
 import { fieldTypesApiService, FieldTypesApiService } from '../../services/fieldTypes';
-import { BaseEntityFacade } from '../shared';
 
-import { FieldTypesQuery, fieldTypesQuery } from './fieldTypes.query';
-import { FieldTypesStore, fieldTypesStore } from './fieldTypes.store';
+import {
+	FieldTypeDetailModel,
+	FieldTypeDetailUIModel,
+	fieldTypesDetailQuery,
+	FieldTypesDetailQuery,
+	fieldTypesDetailStore,
+	FieldTypesDetailStore,
+} from './detail';
+import {
+	fieldTypesListQuery,
+	FieldTypesListQuery,
+	fieldTypesListStore,
+	FieldTypesListStore,
+} from './list';
 
-export class FieldTypesFacade extends BaseEntityFacade<
-	FieldTypesStore,
-	FieldTypesApiService,
-	FieldTypesQuery
-> {
-	constructor(store: FieldTypesStore, service: FieldTypesApiService, query: FieldTypesQuery) {
-		super(store, service, query);
+export class FieldTypesFacade {
+	constructor(
+		protected listStore: FieldTypesListStore,
+		protected listQuery: FieldTypesListQuery,
+		protected detailStore: FieldTypesDetailStore,
+		protected detailQuery: FieldTypesDetailQuery,
+		protected service: FieldTypesApiService
+	) {}
+
+	// LIST STATES
+	public readonly fieldTypes$ = this.listQuery.fieldTypes$;
+	public readonly listError$ = this.listQuery.error$;
+	public readonly isFetching$ = this.listQuery.isFetching$;
+
+	// DETAIL STATES
+	public readonly activeFieldType$ = this.detailQuery.selectActive<
+		FieldTypeDetailModel
+	>() as Observable<FieldTypeDetailModel>;
+	public readonly activeFieldTypeUI$ = this.detailQuery.ui.selectActive<
+		FieldTypeDetailUIModel
+	>() as Observable<FieldTypeDetailUIModel>;
+
+	public selectFieldTypeUIState(fieldTypeId: string): Observable<FieldTypeDetailUIModel> {
+		return this.detailQuery.ui.selectEntity(fieldTypeId);
 	}
 
-	public readonly fieldTypes$ = this.query.fieldTypes$;
-	public readonly fieldType$ = this.query.fieldType$;
+	// LIST FUNCTIONS
 
 	public getFieldTypes(): void {
-		const { isFetching } = this.query.getValue();
+		const { isFetching } = this.listQuery.getValue();
 		if (isFetching) {
 			return;
 		}
 
-		this.store.setIsFetching(true);
+		this.listStore.setIsFetching(true);
 
 		this.service
 			.getFieldTypes()
 			.then(response => {
 				if (response) {
-					this.store.set(response);
+					this.listStore.set(response.data);
 				}
 			})
-			.catch(error => this.store.setError(error))
-			.finally(() => this.store.setIsFetching(false));
+			.catch(error => this.listStore.setError(error))
+			.finally(() => this.listStore.setIsFetching(false));
 	}
 
-	public getFieldType(uuid: string): void {
-		const { isFetchingOne, fieldType } = this.query.getValue();
-		if (isFetchingOne || fieldType?.uuid === uuid) {
+	// DETAIL FUNCTIONS
+	public setActiveDetail(presetId: string): void {
+		this.detailStore.setActive(presetId);
+		this.detailStore.ui.setActive(presetId);
+	}
+
+	public removeActiveDetail(): void {
+		this.detailStore.setActive(null);
+		this.detailStore.ui.setActive(null);
+	}
+
+	public hasActiveDetail(presetId: string): boolean {
+		return this.detailQuery.hasActive(presetId);
+	}
+
+	public getFieldType(fieldTypeId: string, force = false): void {
+		if (this.detailQuery.hasEntity(fieldTypeId) && !force) {
 			return;
 		}
 
-		this.store.setIsFetchingOne(true);
+		this.detailStore.setIsFetchingEntity(true, fieldTypeId);
 
 		this.service
-			.getFieldType(uuid)
+			.getFieldType(fieldTypeId)
 			.then(response => {
 				if (response) {
-					this.store.update({
-						fieldType: response,
-					});
+					this.detailStore.upsert(response.uuid, response);
+					this.detailStore.ui.upsert(response.uuid, { error: null, isFetching: false });
 				}
 			})
-			.catch(error => this.store.setError(error))
-			.finally(() => this.store.setIsFetchingOne(false));
-	}
-
-	public clearFieldType(): void {
-		this.store.update({
-			fieldType: undefined,
-		});
+			.catch(error => {
+				this.detailStore.ui.upsert(fieldTypeId, {
+					error,
+					isFetching: false,
+				});
+			});
 	}
 }
 
 export const fieldTypesFacade = new FieldTypesFacade(
-	fieldTypesStore,
-	fieldTypesApiService,
-	fieldTypesQuery
+	fieldTypesListStore,
+	fieldTypesListQuery,
+	fieldTypesDetailStore,
+	fieldTypesDetailQuery,
+	fieldTypesApiService
 );

@@ -1,7 +1,12 @@
 import { ContentTypeAPI } from '../contentTypes.types';
 import { ExternalTabOptions } from '../store/api/externalTabs';
 import { ContentTypeDetailModel, ContentTypeFieldDetailModel } from '../store/contentTypes';
-import { PresetDetailModel, PresetListModel } from '../store/presets';
+import {
+	FieldTypeDetailModel,
+	FieldTypeDetailUIModel,
+	FieldTypeListModel,
+} from '../store/fieldTypes';
+import { PresetDetailModel, PresetDetailUIModel, PresetListModel } from '../store/presets';
 import { ExternalTabProps } from '../views/tenant/ContentTypesDetailExternal';
 
 export {
@@ -12,7 +17,12 @@ export {
 	// Content type types
 	ContentTypeDetailModel,
 	ContentTypeFieldDetailModel,
-	// Presets Types
-	PresetDetailModel,
+	// Presets types
 	PresetListModel,
+	PresetDetailModel,
+	PresetDetailUIModel,
+	// Field types types
+	FieldTypeListModel,
+	FieldTypeDetailModel,
+	FieldTypeDetailUIModel,
 };

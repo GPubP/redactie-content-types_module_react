@@ -1,4 +1,3 @@
-export * from './fieldTypes.model';
-export * from './fieldTypes.store';
-export * from './fieldTypes.query';
+export * from './list';
+export * from './detail';
 export * from './fieldTypes.facade';

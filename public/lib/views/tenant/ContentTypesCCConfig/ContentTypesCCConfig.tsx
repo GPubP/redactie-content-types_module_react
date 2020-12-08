@@ -114,8 +114,11 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		};
 	}, [fieldType, preset]);
 	const errorMessages: Record<string, string> = useMemo(
-		() => (preset ? preset.errorMessages.configuration : fieldType.errorMessages.configuration),
-		[fieldType.errorMessages.configuration, preset]
+		() =>
+			preset
+				? preset.errorMessages?.configuration || {}
+				: fieldType?.errorMessages?.configuration || {},
+		[fieldType, preset]
 	);
 
 	/**

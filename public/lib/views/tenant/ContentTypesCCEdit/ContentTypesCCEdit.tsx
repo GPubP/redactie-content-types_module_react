@@ -18,17 +18,16 @@ import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentType
 import { filterCompartments, validateCompartments } from '../../../helpers';
 import {
 	useActiveField,
+	useActiveFieldType,
 	useActivePreset,
 	useCompartments,
 	useCompartmentValidation,
-	useFieldType,
 	useNavigate,
 	useNavItemMatcher,
 } from '../../../hooks';
 import { FieldType } from '../../../services/fieldTypes';
 import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
-import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import { CC_EDIT_ALLOWED_PATHS, CC_EDIT_COMPARTMENTS } from './ContentTypesCCEdit.const';
@@ -43,15 +42,14 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [invalidCCUuid, setInvalidCCUuid] = useState(false);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
-	const [fieldTypeLoading, fieldType] = useFieldType();
 	const activeField = useActiveField();
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
 	const activeFieldFTUuid = useMemo(() => activeField?.fieldType.uuid, [activeField]);
 	const activeFieldPSUuid = useMemo(() => activeField?.preset?.uuid, [activeField]);
+	const [fieldType, fieldTypeUI] = useActiveFieldType(activeFieldFTUuid);
 	const [preset, presetUI] = useActivePreset(activeFieldPSUuid);
-	console.log(!!presetUI?.isFetching);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
 	const [hasChanges] = useDetectValueChangesWorker(
@@ -94,12 +92,12 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	}, [fieldType, navItemMatcher]); // eslint-disable-line
 
 	useEffect(() => {
-		if (fieldTypeLoading !== LoadingState.Loading && !presetUI?.isFetching && fieldType) {
+		if (!fieldTypeUI?.isFetching && !presetUI?.isFetching && fieldType) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [fieldTypeLoading, fieldType, presetUI]);
+	}, [fieldType, fieldTypeUI, presetUI]);
 
 	useEffect(() => {
 		if (
@@ -120,14 +118,6 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			setInvalidCCUuid(true);
 		}
 	}, [activeField, activeFieldFTUuid, contentComponentUuid, contentType.fields]);
-
-	useEffect(() => {
-		if (activeFieldFTUuid) {
-			fieldTypesFacade.getFieldType(activeFieldFTUuid);
-		} else {
-			fieldTypesFacade.clearFieldType();
-		}
-	}, [activeFieldFTUuid, activeFieldPSUuid]);
 
 	/**
 	 * Methods

@@ -19,10 +19,10 @@ import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentType
 import { filterCompartments, generateFieldFromType, validateCompartments } from '../../../helpers';
 import {
 	useActiveField,
+	useActiveFieldType,
 	useActivePreset,
 	useCompartments,
 	useCompartmentValidation,
-	useFieldType,
 	useNavigate,
 	useNavItemMatcher,
 	useQuery,
@@ -30,7 +30,6 @@ import {
 import { FieldType } from '../../../services/fieldTypes';
 import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
-import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import { CC_NEW_ALLOWED_PATHS, CC_NEW_COMPARTMENTS } from './ContentTypesCCNew.const';
@@ -52,8 +51,10 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		name,
 		compartment: fieldCompartment,
 	} = useQuery();
-	const [fieldTypeLoadingState, fieldType] = useFieldType();
-	const [preset, presetUI] = useActivePreset(!fieldTypeUuid ? presetUuid : undefined);
+	const [preset, presetUI] = useActivePreset(presetUuid);
+	const [fieldType, fieldTypeUI] = useActiveFieldType(
+		presetUuid ? preset?.data.fieldType.uuid : fieldTypeUuid
+	);
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
@@ -108,33 +109,10 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	}, [fieldType, navItemMatcher]); // eslint-disable-line
 
 	useEffect(() => {
-		if (
-			fieldTypeLoadingState !== LoadingState.Loading &&
-			!presetUI?.isFetching &&
-			activeField
-		) {
+		if (!fieldTypeUI?.isFetching && !presetUI?.isFetching && activeField) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
-	}, [fieldTypeLoadingState, activeField, presetUI]);
-
-	/**
-	 * Get preset or fieldType based on the input of the
-	 * query parameters
-	 */
-	useEffect(() => {
-		if (!presetUuid && fieldTypeUuid) {
-			fieldTypesFacade.getFieldType(fieldTypeUuid);
-		}
-	}, [fieldTypeUuid, presetUuid]);
-
-	/**
-	 * Get the fieldType from a preset when it exists
-	 */
-	useEffect(() => {
-		if (preset) {
-			fieldTypesFacade.getFieldType(preset.data.fieldType.uuid);
-		}
-	}, [preset]);
+	}, [activeField, fieldTypeUI, presetUI]);
 
 	/**
 	 * Generate a new field based on the selected fieldtype and
@@ -163,16 +141,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fieldType, name, preset, fieldCompartment, locationState.keepActiveField]);
-
-	/**
-	 * Clear store on component destroy
-	 */
-	useEffect(
-		() => () => {
-			fieldTypesFacade.clearFieldType();
-		},
-		[]
-	);
 
 	/**
 	 * Methods

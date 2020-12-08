@@ -307,7 +307,6 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			</>
 		);
 	};
-
 	return <DataLoader loadingState={initialLoading} render={renderCCEdit} />;
 };
 
