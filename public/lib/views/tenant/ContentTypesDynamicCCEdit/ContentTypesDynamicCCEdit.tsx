@@ -28,8 +28,6 @@ import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
 import { Preset, PresetDetail } from '../../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
-import { fieldTypesFacade } from '../../../store/fieldTypes';
-import { presetsFacade } from '../../../store/presets';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import {
@@ -56,8 +54,6 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
-	const activeFieldFTUuid = useMemo(() => activeField?.fieldType.uuid, [activeField]);
-	const activeFieldPSUuid = useMemo(() => activeField?.preset?.uuid, [activeField]);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(
 		dynamicActiveField?.preset as PresetDetail,
@@ -154,20 +150,6 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 
 		dynamicFieldFacade.setActiveField(field);
 	}, [dynamicContentComponentUuid, activeField, dynamicActiveField, dynamicField]);
-
-	useEffect(() => {
-		if (activeFieldFTUuid) {
-			fieldTypesFacade.getFieldType(activeFieldFTUuid);
-		} else {
-			fieldTypesFacade.clearFieldType();
-		}
-
-		if (activeFieldPSUuid) {
-			presetsFacade.getPreset(activeFieldPSUuid);
-		} else {
-			presetsFacade.clearPreset();
-		}
-	}, [activeFieldFTUuid, activeFieldPSUuid]);
 
 	/**
 	 * Methods

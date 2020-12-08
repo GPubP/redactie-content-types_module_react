@@ -18,12 +18,12 @@ import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
 import { filterCompartments, generateFieldFromType, validateCompartments } from '../../../helpers';
 import {
+	useActivePreset,
 	useCompartments,
 	useCompartmentValidation,
 	useFieldType,
 	useNavigate,
 	useNavItemMatcher,
-	usePreset,
 	useQuery,
 } from '../../../hooks';
 import useActiveField from '../../../hooks/useActiveField/useActiveField';
@@ -33,7 +33,6 @@ import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel } from '../../../store/contentTypes';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
 import { fieldTypesFacade } from '../../../store/fieldTypes';
-import { presetsFacade } from '../../../store/presets';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import {
@@ -57,7 +56,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const { fieldType: fieldTypeUuid, preset: presetUuid } = useQuery();
 	const [fieldTypeLoadingState, fieldType] = useFieldType();
-	const [presetLoadingState, preset] = usePreset();
+	const [preset, presetUI] = useActivePreset(!fieldTypeUuid ? presetUuid : undefined);
 	const activeField = useActiveField();
 	const dynamicField = useDynamicField();
 	const dynamicActiveField = useDynamicActiveField();
@@ -112,14 +111,14 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	useEffect(() => {
 		if (
 			fieldTypeLoadingState !== LoadingState.Loading &&
-			presetLoadingState !== LoadingState.Loading &&
+			!presetUI?.isFetching &&
 			dynamicField
 		) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [dynamicField, fieldTypeLoadingState, presetLoadingState]);
+	}, [dynamicField, fieldTypeLoadingState, presetUI]);
 
 	useEffect(() => {
 		if (
@@ -150,10 +149,6 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	useEffect(() => {
 		if (!presetUuid && fieldTypeUuid) {
 			fieldTypesFacade.getFieldType(fieldTypeUuid);
-		}
-
-		if (!fieldTypeUuid && presetUuid) {
-			presetsFacade.getPreset(presetUuid);
 		}
 	}, [fieldTypeUuid, presetUuid]);
 
@@ -196,7 +191,6 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	useEffect(
 		() => () => {
 			dynamicFieldFacade.clearActiveField();
-			presetsFacade.clearPreset();
 			fieldTypesFacade.clearFieldType();
 		},
 		[]

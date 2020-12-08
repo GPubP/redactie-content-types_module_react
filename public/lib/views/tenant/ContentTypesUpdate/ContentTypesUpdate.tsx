@@ -57,7 +57,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const { contentTypeUuid } = useParams<ContentTypesRouteParams>();
 	const { navigate, generatePath } = useNavigate();
 	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
-	const [presetsLoadingState, presets] = usePresets();
+	const [presetsLoading, presets] = usePresets();
 	const [
 		contentTypeLoadingState,
 		,
@@ -104,7 +104,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 
 	useEffect(() => {
 		if (
-			presetsLoadingState !== LoadingState.Loading &&
+			!presetsLoading &&
 			fieldTypesLoadingState !== LoadingState.Loading &&
 			contentTypeLoadingState !== LoadingState.Loading &&
 			contentType &&
@@ -116,12 +116,12 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 
 		setInitialLoading(LoadingState.Loading);
 	}, [
-		presetsLoadingState,
 		contentTypeLoadingState,
 		fieldTypesLoadingState,
 		contentType,
 		fieldTypes,
 		presets,
+		presetsLoading,
 	]);
 
 	useEffect(() => {

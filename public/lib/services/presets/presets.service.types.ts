@@ -72,6 +72,11 @@ export interface BasePreset<T, F> {
 export type Preset = BasePreset<string, string>;
 
 export type PresetDetail = BasePreset<Validator, FieldType>;
+export interface PresetsPaging {
+	total: number;
+	skip: number;
+	limit: number;
+}
 
 /**
  * =========================
@@ -82,4 +87,5 @@ export type PresetDetail = BasePreset<Validator, FieldType>;
 
 export interface PresetsResponse {
 	data: Preset[];
+	paging: PresetsPaging;
 }

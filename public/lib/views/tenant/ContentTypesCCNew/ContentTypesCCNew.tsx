@@ -19,19 +19,18 @@ import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentType
 import { filterCompartments, generateFieldFromType, validateCompartments } from '../../../helpers';
 import {
 	useActiveField,
+	useActivePreset,
 	useCompartments,
 	useCompartmentValidation,
 	useFieldType,
 	useNavigate,
 	useNavItemMatcher,
-	usePreset,
 	useQuery,
 } from '../../../hooks';
 import { FieldType } from '../../../services/fieldTypes';
 import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 import { fieldTypesFacade } from '../../../store/fieldTypes';
-import { presetsFacade } from '../../../store/presets';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import { CC_NEW_ALLOWED_PATHS, CC_NEW_COMPARTMENTS } from './ContentTypesCCNew.const';
@@ -54,7 +53,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		compartment: fieldCompartment,
 	} = useQuery();
 	const [fieldTypeLoadingState, fieldType] = useFieldType();
-	const [presetLoadingState, preset] = usePreset();
+	const [preset, presetUI] = useActivePreset(!fieldTypeUuid ? presetUuid : undefined);
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
@@ -111,12 +110,12 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	useEffect(() => {
 		if (
 			fieldTypeLoadingState !== LoadingState.Loading &&
-			presetLoadingState !== LoadingState.Loading &&
+			!presetUI?.isFetching &&
 			activeField
 		) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
-	}, [presetLoadingState, fieldTypeLoadingState, activeField]);
+	}, [fieldTypeLoadingState, activeField, presetUI]);
 
 	/**
 	 * Get preset or fieldType based on the input of the
@@ -125,10 +124,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	useEffect(() => {
 		if (!presetUuid && fieldTypeUuid) {
 			fieldTypesFacade.getFieldType(fieldTypeUuid);
-		}
-
-		if (!fieldTypeUuid && presetUuid) {
-			presetsFacade.getPreset(presetUuid);
 		}
 	}, [fieldTypeUuid, presetUuid]);
 
@@ -174,7 +169,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	 */
 	useEffect(
 		() => () => {
-			presetsFacade.clearPreset();
 			fieldTypesFacade.clearFieldType();
 		},
 		[]

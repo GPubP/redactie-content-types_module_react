@@ -1,15 +1,18 @@
-import { FormsAPI } from '@redactie/form-renderer-module';
-
+import { ContentTypeAPI } from '../contentTypes.types';
 import { ExternalTabOptions } from '../store/api/externalTabs';
+import { ContentTypeDetailModel, ContentTypeFieldDetailModel } from '../store/contentTypes';
+import { PresetDetailModel, PresetListModel } from '../store/presets';
+import { ExternalTabProps } from '../views/tenant/ContentTypesDetailExternal';
 
-import { registerCTDetailTab } from './registerCTDetailTab';
-
-export { ContentTypeDetailModel, ContentTypeFieldDetailModel } from '../store/contentTypes';
-
-export { ExternalTabProps } from '../views/tenant/ContentTypesDetailExternal';
-
-export interface ContentTypeAPI {
-	registerCTDetailTab: typeof registerCTDetailTab;
-	parseFields: FormsAPI['parseFields'];
-}
-export { ExternalTabOptions };
+export {
+	ContentTypeAPI,
+	// External tab types
+	ExternalTabOptions,
+	ExternalTabProps,
+	// Content type types
+	ContentTypeDetailModel,
+	ContentTypeFieldDetailModel,
+	// Presets Types
+	PresetDetailModel,
+	PresetListModel,
+};

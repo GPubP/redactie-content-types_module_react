@@ -1,4 +1,4 @@
-export * from './presets.model';
-export * from './presets.store';
-export * from './presets.query';
+export * from './list';
+export * from './detail';
 export * from './presets.facade';
+export * from './presets.types';
