@@ -3,7 +3,7 @@ import { CacheEntityStore } from '@redactie/utils';
 
 import { PresetListModel, PresetsListState } from './presets-list.model';
 
-@StoreConfig({ name: 'ccc-presets-list', idKey: 'uuid' })
+@StoreConfig({ name: 'content-types-presets-list', idKey: 'uuid' })
 export class PresetsListStore extends CacheEntityStore<any, PresetsListState, PresetListModel> {}
 
 export const presetsListStore = new PresetsListStore();

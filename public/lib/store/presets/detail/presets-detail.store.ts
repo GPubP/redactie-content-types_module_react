@@ -7,7 +7,7 @@ import {
 	PresetsDetailUIState,
 } from './presets-detail.model';
 
-@StoreConfig({ name: 'ccc-presets-detail', idKey: 'uuid' })
+@StoreConfig({ name: 'content-types-presets-detail', idKey: 'uuid' })
 export class PresetsDetailStore extends CacheEntityStore<
 	PresetsDetailUIState,
 	PresetsDetailState,
