@@ -3,12 +3,12 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
-import { useDetectValueChangesWorker, useTenantContext } from '@redactie/utils';
+import { DataLoader, useDetectValueChangesWorker, useTenantContext } from '@redactie/utils';
 import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { DataLoader, RenderChildRoutes } from '../../../components';
+import { RenderChildRoutes } from '../../../components';
 import {
 	CONTENT_DETAIL_TABS,
 	CONTENT_TYPE_DETAIL_TAB_MAP,

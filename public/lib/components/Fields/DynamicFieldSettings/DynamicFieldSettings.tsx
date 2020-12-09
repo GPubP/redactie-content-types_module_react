@@ -1,6 +1,7 @@
 import { Card } from '@acpaas-ui/react-components';
 import { Table } from '@acpaas-ui/react-editorial-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
+import { DataLoader } from '@redactie/utils';
 import classNames from 'classnames/bind';
 import { useFormikContext } from 'formik';
 import { __, compose, equals, pathOr } from 'ramda';
@@ -20,7 +21,6 @@ import usePresets from '../../../hooks/usePresets/usePresets';
 import { Field } from '../../../services/contentTypes/contentTypes.service.types';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
 import { FieldTypeListModel } from '../../../store/fieldTypes';
-import DataLoader from '../../DataLoader/DataLoader';
 import { FormCTNewCC } from '../../forms';
 import { FormCTNewCCProps } from '../../forms/FormCTNewCC/FormCTNewCC.types';
 

@@ -8,9 +8,10 @@ import {
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import { SiteModel } from '@redactie/sites-module';
+import { DataLoader } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
-import { DataLoader, FilterForm, FilterFormState } from '../../../components';
+import { FilterForm, FilterFormState } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
 import sitesConnector from '../../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';

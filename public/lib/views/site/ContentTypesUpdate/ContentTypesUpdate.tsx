@@ -3,11 +3,11 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
-import { AlertContainer, useSiteContext, useTenantContext } from '@redactie/utils';
+import { AlertContainer, DataLoader, useSiteContext, useTenantContext } from '@redactie/utils';
 import React, { FC, MouseEvent, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { DataLoader, RenderChildRoutes } from '../../../components';
+import { RenderChildRoutes } from '../../../components';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import {
 	ContentTypesRouteParams,

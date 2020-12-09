@@ -4,10 +4,9 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { useSiteContext } from '@redactie/utils';
+import { DataLoader, useSiteContext } from '@redactie/utils';
 import React, { ReactElement, useEffect, useState } from 'react';
 
-import { DataLoader } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
 import sitesConnector from '../../../connectors/sites';
 import { useCoreTranslation } from '../../../connectors/translations';
