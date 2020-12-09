@@ -1,6 +1,6 @@
 import { Button, Card } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
-import { AlertContainer, alertService, LeavePrompt } from '@redactie/utils';
+import { AlertContainer, LeavePrompt } from '@redactie/utils';
 import { FormikHelpers } from 'formik';
 import { move, path, pathOr } from 'ramda';
 import React, { FC, ReactElement, useMemo, useState } from 'react';
@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
-	CT_SETTINGS_VALIDATION_SCHEMA_DUPLICATE,
+	CC_ADD_VALIDATION_SCHEMA_DUPLICATE_NAME,
 	FormCTEditCompartment,
 	FormCTEditCompartmentState,
 	FormCTNewCC,
@@ -363,7 +363,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 									name: '',
 									compartment: CONTENT_COMPARTMENT_UUID,
 								}}
-								validationSchema={CT_SETTINGS_VALIDATION_SCHEMA_DUPLICATE(
+								validationSchema={CC_ADD_VALIDATION_SCHEMA_DUPLICATE_NAME(
 									fieldsByCompartments
 								)}
 								onSubmit={onCCFormSubmit}
