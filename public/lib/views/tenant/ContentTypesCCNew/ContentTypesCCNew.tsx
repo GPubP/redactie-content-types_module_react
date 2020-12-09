@@ -4,6 +4,7 @@ import {
 	alertService,
 	DataLoader,
 	LeavePrompt,
+	LoadingState,
 	RenderChildRoutes,
 	useDetectValueChangesWorker,
 	useNavigate,
@@ -17,7 +18,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
-import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
+import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
 import { filterCompartments, generateFieldFromType, validateCompartments } from '../../../helpers';
 import {
 	useActiveField,

@@ -1,7 +1,7 @@
 import { Card } from '@acpaas-ui/react-components';
 import { Table } from '@acpaas-ui/react-editorial-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
-import { DataLoader, useNavigate } from '@redactie/utils';
+import { DataLoader, LoadingState, useNavigate } from '@redactie/utils';
 import classNames from 'classnames/bind';
 import { useFormikContext } from 'formik';
 import { __, compose, equals, pathOr } from 'ramda';
@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom';
 import formRendererConnector from '../../../connectors/formRenderer';
 import { useCoreTranslation } from '../../../connectors/translations';
 import { DYNAMIC_FIELD_SETTINGS_NAME, MODULE_PATHS } from '../../../contentTypes.const';
-import { LoadingState, NewCCFormState } from '../../../contentTypes.types';
+import { NewCCFormState } from '../../../contentTypes.types';
 import { sortFieldTypes } from '../../../helpers';
 import useActiveField from '../../../hooks/useActiveField/useActiveField';
 import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';

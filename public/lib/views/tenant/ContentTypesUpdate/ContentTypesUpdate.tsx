@@ -5,6 +5,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import {
 	DataLoader,
+	LoadingState,
 	RenderChildRoutes,
 	useDetectValueChangesWorker,
 	useNavigate,
@@ -23,7 +24,6 @@ import {
 import {
 	ContentTypesRouteParams,
 	ContentTypesRouteProps,
-	LoadingState,
 	Tab,
 	TabTypes,
 } from '../../../contentTypes.types';

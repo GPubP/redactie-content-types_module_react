@@ -122,12 +122,6 @@ export enum TabTypes {
 	'EXTERNAL',
 }
 
-export enum LoadingState {
-	Loading = 'loading',
-	Loaded = 'loaded',
-	Error = 'error',
-}
-
 export type FormikRef = FormikConfig<FormikValues>['innerRef'];
 
 export interface TableColumn<RowData = unknown> {
