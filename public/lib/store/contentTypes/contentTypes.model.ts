@@ -1,10 +1,11 @@
+import { BaseEntityState } from '@redactie/utils';
+
 import {
 	ContentTypeDetailResponse,
 	ContentTypeFieldDetail,
 	ContentTypePaging,
 	ContentTypeResponse,
 } from '../../services/contentTypes';
-import { BaseEntityState } from '../shared';
 
 export type ContentTypeModel = ContentTypeResponse;
 export type ContentTypeDetailModel = ContentTypeDetailResponse;
