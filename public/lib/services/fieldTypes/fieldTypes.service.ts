@@ -1,5 +1,6 @@
-import api, { parseSearchParams } from '../api/api.service';
-import { SearchParams } from '../api/api.service.types';
+import { parseSearchParams, SearchParams } from '@redactie/utils';
+
+import api from '../api/api.service';
 
 import {
 	DEFAULT_FIELD_TYPES_SEARCH_PARAMS,

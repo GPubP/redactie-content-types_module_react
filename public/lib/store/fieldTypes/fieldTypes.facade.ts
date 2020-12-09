@@ -1,5 +1,7 @@
+import { SearchParams } from '@redactie/sites-module/dist/public/lib/services/api';
 import { Observable } from 'rxjs';
 
+import { showAlert } from '../../helpers';
 import { fieldTypesApiService, FieldTypesApiService } from '../../services/fieldTypes';
 
 import {
@@ -10,6 +12,9 @@ import {
 	fieldTypesDetailStore,
 	FieldTypesDetailStore,
 } from './detail';
+import { FIELD_TYPES_ALERT_MESSAGES } from './fieldTypes.alertMessages';
+import { FIELD_TYPES_ALERT_CONTAINER_IDS } from './fieldTypes.const';
+import { GetFieldTypePayloadOptions, GetFieldTypesPayloadOptions } from './fieldTypes.types';
 import {
 	fieldTypesListQuery,
 	FieldTypesListQuery,
@@ -45,7 +50,12 @@ export class FieldTypesFacade {
 
 	// LIST FUNCTIONS
 
-	public getFieldTypes(): void {
+	public getFieldTypes(
+		searchParams?: SearchParams,
+		options: GetFieldTypesPayloadOptions = {
+			alertContainerId: FIELD_TYPES_ALERT_CONTAINER_IDS.fetch,
+		}
+	): void {
 		const { isFetching } = this.listQuery.getValue();
 		if (isFetching) {
 			return;
@@ -54,14 +64,27 @@ export class FieldTypesFacade {
 		this.listStore.setIsFetching(true);
 
 		this.service
-			.getFieldTypes()
+			.getFieldTypes(searchParams)
 			.then(response => {
 				if (response) {
 					this.listStore.set(response.data);
+					this.listStore.update({
+						isFetching: false,
+						error: null,
+					});
 				}
 			})
-			.catch(error => this.listStore.setError(error))
-			.finally(() => this.listStore.setIsFetching(false));
+			.catch(error => {
+				showAlert(
+					options.alertContainerId,
+					'error',
+					FIELD_TYPES_ALERT_MESSAGES.fetch.error
+				);
+				this.listStore.update({
+					isFetching: false,
+					error,
+				});
+			});
 	}
 
 	// DETAIL FUNCTIONS
@@ -79,8 +102,16 @@ export class FieldTypesFacade {
 		return this.detailQuery.hasActive(presetId);
 	}
 
-	public getFieldType(fieldTypeId: string, force = false): void {
-		if (this.detailQuery.hasEntity(fieldTypeId) && !force) {
+	public getFieldType(fieldTypeId: string, options?: GetFieldTypePayloadOptions): void {
+		const defaultOptions = {
+			alertContainerId: FIELD_TYPES_ALERT_CONTAINER_IDS.fetchOne,
+			force: false,
+		};
+		const serviceOptions = {
+			...defaultOptions,
+			...options,
+		};
+		if (this.detailQuery.hasEntity(fieldTypeId) && !serviceOptions.force) {
 			return;
 		}
 
@@ -95,6 +126,11 @@ export class FieldTypesFacade {
 				}
 			})
 			.catch(error => {
+				showAlert(
+					serviceOptions.alertContainerId,
+					'error',
+					FIELD_TYPES_ALERT_MESSAGES.fetchOne.error
+				);
 				this.detailStore.ui.upsert(fieldTypeId, {
 					error,
 					isFetching: false,

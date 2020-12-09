@@ -1,5 +1,6 @@
 import { FormsAPI } from '@redactie/form-renderer-module';
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
+import { AlertProps } from '@redactie/utils';
 import { FormikConfig, FormikValues } from 'formik';
 import { ReactNode } from 'react';
 import { NavLinkProps } from 'react-router-dom';
@@ -167,3 +168,8 @@ export interface ContentTypeAPI {
 		useFieldTypesUIStates: UseFieldTypesUIStates;
 	};
 }
+
+export type AlertMessages<T extends string | number | symbol> = Record<
+	T,
+	{ [key in 'success' | 'error']?: AlertProps }
+>;

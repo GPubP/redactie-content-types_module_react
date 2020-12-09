@@ -1,9 +1,8 @@
 import { arrayAdd, arrayRemove, arrayUpdate } from '@datorama/akita';
-import { AlertProps, alertService } from '@redactie/utils';
+import { AlertProps, alertService, SearchParams } from '@redactie/utils';
 import { insert, move, omit } from 'ramda';
 
 import { ALERT_CONTAINER_IDS, CONTENT_COMPARTMENT_UUID } from '../../contentTypes.const';
-import { SearchParams } from '../../services/api/api.service.types';
 import {
 	Compartment,
 	ContentTypeCreateRequest,

@@ -1,4 +1,4 @@
-import { SearchParams } from '../api/api.service.types';
+import { SearchParams } from '@redactie/utils';
 
 export const FIELD_TYPES_PREFIX_URL = 'content/v1/field-types';
 
