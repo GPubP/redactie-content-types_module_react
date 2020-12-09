@@ -12,7 +12,6 @@ export { default as useFieldTypes } from './useFieldTypes/useFieldTypes';
 export { default as usePresets } from './usePresets/usePresets';
 export { default as useQuery } from './useQuery/useQuery';
 export { default as useActiveRouteConfig } from './useActiveRouteConfig/useActiveRouteConfig';
-export { default as usePrevious } from './usePrevious/usePrevious';
 export { default as useActivePreset } from './useActivePreset/useActivePreset';
 export { default as usePaginatedPresets } from './usePaginatedPresets/usePaginatedPresets';
 export { default as usePresetsUIStates } from './usePresetsUIStates/usePresetsUIStates';
