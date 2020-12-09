@@ -1,12 +1,11 @@
 // import { akitaDevtools } from '@datorama/akita';
 import Core from '@redactie/redactie-core';
-import { SiteContext, TenantContext } from '@redactie/utils';
+import { RenderChildRoutes, SiteContext, TenantContext } from '@redactie/utils';
 import { omit } from 'ramda';
 import React, { FC, useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { registerContentTypeAPI } from './lib/api/index';
-import { RenderChildRoutes } from './lib/components';
 import ContentTypesSelect from './lib/components/Fields/ContentTypesSelect/ContentTypesSelect';
 import DynamicFieldSettings from './lib/components/Fields/DynamicFieldSettings/DynamicFieldSettings';
 import formRendererConnector from './lib/connectors/formRenderer';

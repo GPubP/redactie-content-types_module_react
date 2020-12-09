@@ -4,6 +4,7 @@ import {
 	alertService,
 	DataLoader,
 	LeavePrompt,
+	RenderChildRoutes,
 	useDetectValueChangesWorker,
 	useTenantContext,
 } from '@redactie/utils';
@@ -12,7 +13,6 @@ import { equals, isEmpty, omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { RenderChildRoutes } from '../../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
