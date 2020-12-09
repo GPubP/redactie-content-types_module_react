@@ -6,6 +6,7 @@ import {
 	LeavePrompt,
 	RenderChildRoutes,
 	useDetectValueChangesWorker,
+	useNavigate,
 	useTenantContext,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
@@ -24,7 +25,6 @@ import {
 	useActivePreset,
 	useCompartments,
 	useCompartmentValidation,
-	useNavigate,
 	useNavItemMatcher,
 	useQuery,
 } from '../../../hooks';

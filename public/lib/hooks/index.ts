@@ -1,5 +1,4 @@
 export { default as useActiveTabs } from './useActiveTabs/useActiveTabs';
-export { default as useNavigate } from './useNavigate/useNavigate';
 export { default as useCompartments } from './useCompartments/useCompartments';
 export { default as useCompartmentValidation } from './useCompartmentValidation/useCompartmentValidation';
 export { default as useNavItemMatcher } from './useNavItemMatcher/useNavItemMatcher';

@@ -7,6 +7,7 @@ import {
 	DataLoader,
 	RenderChildRoutes,
 	useDetectValueChangesWorker,
+	useNavigate,
 	useTenantContext,
 } from '@redactie/utils';
 import { omit } from 'ramda';
@@ -32,7 +33,6 @@ import {
 	useActiveTabs,
 	useContentType,
 	useFieldTypes,
-	useNavigate,
 	usePresets,
 	useRoutesBreadcrumbs,
 } from '../../../hooks';

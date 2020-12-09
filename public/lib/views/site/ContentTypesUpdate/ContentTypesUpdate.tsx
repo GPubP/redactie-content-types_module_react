@@ -7,6 +7,7 @@ import {
 	AlertContainer,
 	DataLoader,
 	RenderChildRoutes,
+	useNavigate,
 	useSiteContext,
 	useTenantContext,
 } from '@redactie/utils';
@@ -25,7 +26,6 @@ import {
 	useActiveRouteConfig,
 	useActiveTabs,
 	useContentType,
-	useNavigate,
 	useRoutesBreadcrumbs,
 } from '../../../hooks';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
