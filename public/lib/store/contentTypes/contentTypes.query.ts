@@ -19,9 +19,7 @@ export class ContentTypesQuery extends BaseEntityQuery<ContentTypesState> {
 	public contentType$ = this.select(state => state.contentType).pipe(
 		filter(contentType => !isNil(contentType), distinctUntilChanged())
 	);
-	public activeField$ = this.select(state => state.activeField).pipe(
-		filter(activeField => !isNil(activeField), distinctUntilChanged())
-	);
+	public activeField$ = this.select(state => state.activeField).pipe(distinctUntilChanged());
 	public pageTitle$ = this.select(state => state.pageTitle);
 
 	public fieldsByCompartments$ = this.contentType$.pipe(

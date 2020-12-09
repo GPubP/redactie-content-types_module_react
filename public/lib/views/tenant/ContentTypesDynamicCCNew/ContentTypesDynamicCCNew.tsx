@@ -141,7 +141,16 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		if (newActiveField) {
 			dynamicFieldFacade.setDynamicField(newActiveField);
 		}
-	}, [activeField, contentComponentUuid, contentType.fields, dynamicField]);
+	}, [
+		activeField,
+		contentComponentUuid,
+		contentType.fields,
+		dynamicField,
+		fieldType,
+		fieldTypeUuid,
+		preset,
+		presetUuid,
+	]);
 
 	/**
 	 * Get preset or fieldType based on the input of the
@@ -171,6 +180,14 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	 * make it the active working field in the store
 	 */
 	useEffect(() => {
+		if (
+			(!fieldType && !preset) ||
+			(fieldType && fieldTypeUuid !== fieldType.uuid) ||
+			(preset && presetUuid !== preset.uuid)
+		) {
+			dynamicFieldFacade.clearActiveField();
+		}
+
 		if (fieldType) {
 			const label =
 				preset?.data.label ||
@@ -188,7 +205,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 				generateFieldFromType(fieldType, initialValues, undefined, preset || undefined)
 			);
 		}
-	}, [fieldType, preset]);
+	}, [fieldType, fieldTypeUuid, preset, presetUuid]);
 
 	/**
 	 * Clear store on component destroy

@@ -163,7 +163,6 @@ Core.routes.register({
 			},
 			component: ContentTypesUpdate,
 			redirect: MODULE_PATHS.detailSettings,
-			title: 'test',
 			routes: [
 				{
 					path: MODULE_PATHS.detailCCEditDynamicNew,

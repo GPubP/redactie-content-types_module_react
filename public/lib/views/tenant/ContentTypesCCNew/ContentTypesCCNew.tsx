@@ -146,6 +146,15 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	 * make it the active working field in the store
 	 */
 	useEffect(() => {
+		if (
+			!locationState.keepActiveField &&
+			((!fieldType && !preset) ||
+				(fieldType && fieldTypeUuid !== fieldType.uuid) ||
+				(preset && presetUuid !== preset.uuid))
+		) {
+			contentTypesFacade.clearActiveField();
+		}
+
 		// Keep the current active field when keepActiveField is set to true
 		// This happens when the user navigates from the ContentTypesDynamicCCNew to the
 		// ContentTypesCCNew view
