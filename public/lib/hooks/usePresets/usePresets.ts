@@ -1,13 +1,13 @@
-import { useObservable } from '@mindspace-io/react';
+import { useObservable } from '@redactie/utils';
 
 import { presetsFacade } from '../../store/presets';
 
 import { UsePresets } from './usePresets.types';
 
 const usePresets: UsePresets = () => {
-	const [loading] = useObservable(presetsFacade.isFetching$, true);
-	const [presets] = useObservable(presetsFacade.presets$, []);
-	const [error] = useObservable(presetsFacade.listError$, null);
+	const loading = useObservable(presetsFacade.isFetching$, true);
+	const presets = useObservable(presetsFacade.presets$, []);
+	const error = useObservable(presetsFacade.listError$, null);
 
 	return [loading, presets, error];
 };

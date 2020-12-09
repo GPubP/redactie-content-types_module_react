@@ -1,5 +1,4 @@
-import { useObservable } from '@mindspace-io/react';
-import { LoadingState } from '@redactie/utils';
+import { LoadingState, useObservable } from '@redactie/utils';
 
 import {
 	ContentTypeDetailModel,
@@ -15,16 +14,16 @@ const useContentType = (): [
 	string | null | undefined,
 	FieldsByCompartment[] | undefined
 ] => {
-	const [isFetching] = useObservable(contentTypesFacade.isFetchingOne$, LoadingState.Loading);
-	const [isUpdating] = useObservable(contentTypesFacade.isUpdating$, LoadingState.Loading);
-	const [isCreating] = useObservable(contentTypesFacade.isCreating$, LoadingState.Loading);
-	const [contentType] = useObservable(contentTypesFacade.contentType$, null);
-	const [fieldsByCompartments] = useObservable(contentTypesFacade.fieldsByCompartments$, []);
-	const [pageTitle] = useObservable(
+	const isFetching = useObservable(contentTypesFacade.isFetchingOne$, LoadingState.Loading);
+	const isUpdating = useObservable(contentTypesFacade.isUpdating$, LoadingState.Loading);
+	const isCreating = useObservable(contentTypesFacade.isCreating$, LoadingState.Loading);
+	const contentType = useObservable(contentTypesFacade.contentType$, null);
+	const fieldsByCompartments = useObservable(contentTypesFacade.fieldsByCompartments$, []);
+	const pageTitle = useObservable(
 		contentTypesFacade.pageTitle$,
 		contentTypesFacade.getPageTitleValue()
 	);
-	const [error] = useObservable(contentTypesFacade.error$, null);
+	const error = useObservable(contentTypesFacade.error$, null);
 
 	const fetchingState = error ? LoadingState.Error : isFetching;
 	const updatingState = error ? LoadingState.Error : isUpdating;
