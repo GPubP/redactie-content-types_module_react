@@ -1,5 +1,6 @@
+import { BaseEntityState } from '@redactie/utils';
+
 import { Field } from '../../services/contentTypes/contentTypes.service.types';
-import { BaseEntityState } from '../shared';
 
 export type DynamicFieldsModel = Field[];
 export type DynamicFieldDetailModel = Field;

@@ -1,9 +1,8 @@
 import { FieldOption, InputFieldProps } from '@redactie/form-renderer-module';
-import { DataLoader } from '@redactie/utils';
+import { DataLoader, LoadingState } from '@redactie/utils';
 import React, { ReactElement, useEffect, useMemo } from 'react';
 
 import formRendererConnector from '../../../connectors/formRenderer';
-import { LoadingState } from '../../../contentTypes.types';
 import { useContentTypes } from '../../../hooks';
 import { contentTypesFacade } from '../../../store/contentTypes';
 

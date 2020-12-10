@@ -1,5 +1,5 @@
 import { arrayAdd, arrayRemove, arrayUpdate } from '@datorama/akita';
-import { AlertProps, alertService, SearchParams } from '@redactie/utils';
+import { AlertProps, alertService, BaseEntityFacade, SearchParams } from '@redactie/utils';
 import { insert, move, omit } from 'ramda';
 
 import { ALERT_CONTAINER_IDS, CONTENT_COMPARTMENT_UUID } from '../../contentTypes.const';
@@ -12,7 +12,6 @@ import {
 	contentTypesApiService,
 	ContentTypeUpdateRequest,
 } from '../../services/contentTypes';
-import { BaseEntityFacade } from '../shared';
 
 import { getAlertMessages } from './contentTypes.messages';
 import { ContentTypeFieldDetailModel } from './contentTypes.model';

@@ -3,12 +3,18 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
-import { DataLoader, useDetectValueChangesWorker, useTenantContext } from '@redactie/utils';
+import {
+	DataLoader,
+	LoadingState,
+	RenderChildRoutes,
+	useDetectValueChangesWorker,
+	useNavigate,
+	useTenantContext,
+} from '@redactie/utils';
 import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { RenderChildRoutes } from '../../../components';
 import {
 	CONTENT_DETAIL_TABS,
 	CONTENT_TYPE_DETAIL_TAB_MAP,
@@ -18,7 +24,6 @@ import {
 import {
 	ContentTypesRouteParams,
 	ContentTypesRouteProps,
-	LoadingState,
 	Tab,
 	TabTypes,
 } from '../../../contentTypes.types';
@@ -28,7 +33,6 @@ import {
 	useActiveTabs,
 	useContentType,
 	useFieldTypes,
-	useNavigate,
 	usePresets,
 	useRoutesBreadcrumbs,
 } from '../../../hooks';

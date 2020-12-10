@@ -4,7 +4,10 @@ import {
 	alertService,
 	DataLoader,
 	LeavePrompt,
+	LoadingState,
+	RenderChildRoutes,
 	useDetectValueChangesWorker,
+	useNavigate,
 	useTenantContext,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
@@ -12,17 +15,11 @@ import { equals, isEmpty, omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { RenderChildRoutes } from '../../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
-import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
+import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
 import { filterCompartments, validateCompartments } from '../../../helpers';
-import {
-	useCompartments,
-	useCompartmentValidation,
-	useNavigate,
-	useNavItemMatcher,
-} from '../../../hooks';
+import { useCompartments, useCompartmentValidation, useNavItemMatcher } from '../../../hooks';
 import useActiveField from '../../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
 import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
