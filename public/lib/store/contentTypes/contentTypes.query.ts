@@ -1,8 +1,8 @@
 import { isNil } from '@datorama/akita';
+import { BaseEntityQuery } from '@redactie/utils';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 import { CONTENT_COMPARTMENT_UUID } from '../../contentTypes.const';
-import { BaseEntityQuery } from '../shared';
 
 import { ContentTypesState, FieldsByCompartment } from './contentTypes.model';
 import { ContentTypesStore, contentTypesStore } from './contentTypes.store';

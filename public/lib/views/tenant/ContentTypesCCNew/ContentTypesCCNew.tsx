@@ -2,8 +2,12 @@ import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import {
 	alertService,
+	DataLoader,
 	LeavePrompt,
+	LoadingState,
+	RenderChildRoutes,
 	useDetectValueChangesWorker,
+	useNavigate,
 	useTenantContext,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
@@ -12,10 +16,9 @@ import { equals, isEmpty } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 
-import { DataLoader, RenderChildRoutes } from '../../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
-import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
+import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
 import { filterCompartments, generateFieldFromType, validateCompartments } from '../../../helpers';
 import {
 	useActiveField,
@@ -23,13 +26,14 @@ import {
 	useActivePreset,
 	useCompartments,
 	useCompartmentValidation,
-	useNavigate,
 	useNavItemMatcher,
 	useQuery,
 } from '../../../hooks';
+import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
 import { FieldType } from '../../../services/fieldTypes';
 import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
+import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import { CC_NEW_ALLOWED_PATHS, CC_NEW_COMPARTMENTS } from './ContentTypesCCNew.const';
@@ -45,6 +49,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const activeField = useActiveField();
+	const dynamicField = useDynamicField();
 	const {
 		fieldType: fieldTypeUuid,
 		preset: presetUuid,
@@ -214,6 +219,27 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			CTField: activeField,
 			fieldType: activeField?.fieldType,
 			preset: preset,
+			dynamicFieldSettingsContext: {
+				dynamicField,
+				getCreatePath: (isPreset: boolean, fieldTypeUuid: string) =>
+					generatePath(
+						MODULE_PATHS.detailCCEditDynamicNewSettings,
+						{
+							contentTypeUuid,
+							contentComponentUuid: activeField?.uuid,
+						},
+						new URLSearchParams(
+							isPreset ? { preset: fieldTypeUuid } : { fieldType: fieldTypeUuid }
+						)
+					),
+				getEditPath: (uuid: string) =>
+					generatePath(MODULE_PATHS.detailCCEditDynamicEditSettings, {
+						contentTypeUuid,
+						contentComponentUuid: activeField?.uuid,
+						dynamicContentComponentUuid: uuid,
+					}),
+				setDynamicField: dynamicFieldFacade.setDynamicField.bind(dynamicFieldFacade),
+			},
 			onSubmit: onFieldTypeChange,
 			formikRef: (instance: FormikProps<FormikValues>) => {
 				if (!equals(activeCompartmentFormikRef.current, instance)) {

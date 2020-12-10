@@ -88,21 +88,25 @@ export class FieldTypesFacade {
 	}
 
 	// DETAIL FUNCTIONS
-	public setActiveDetail(presetId: string): void {
-		this.detailStore.setActive(presetId);
-		this.detailStore.ui.setActive(presetId);
+	public setActiveFieldType(fieldTypeId: string): void {
+		this.detailStore.setActive(fieldTypeId);
+		this.detailStore.ui.setActive(fieldTypeId);
 	}
 
-	public removeActiveDetail(): void {
+	public removeActiveFieldType(): void {
 		this.detailStore.setActive(null);
 		this.detailStore.ui.setActive(null);
 	}
 
-	public hasActiveDetail(presetId: string): boolean {
-		return this.detailQuery.hasActive(presetId);
+	public hasActiveFieldType(fieldTypeId: string): boolean {
+		return this.detailQuery.hasActive(fieldTypeId);
 	}
 
-	public getFieldType(fieldTypeId: string, options?: GetFieldTypePayloadOptions): void {
+	public hasFieldType(fieldTypeId: string): boolean {
+		return this.detailQuery.hasEntity(fieldTypeId);
+	}
+
+	public getFieldType(fieldTypeId: string, options?: GetFieldTypePayloadOptions): Promise<void> {
 		const defaultOptions = {
 			alertContainerId: FIELD_TYPES_ALERT_CONTAINER_IDS.fetchOne,
 			force: false,
@@ -112,12 +116,12 @@ export class FieldTypesFacade {
 			...options,
 		};
 		if (this.detailQuery.hasEntity(fieldTypeId) && !serviceOptions.force) {
-			return;
+			return Promise.resolve();
 		}
 
 		this.detailStore.setIsFetchingEntity(true, fieldTypeId);
 
-		this.service
+		return this.service
 			.getFieldType(fieldTypeId)
 			.then(response => {
 				if (response) {

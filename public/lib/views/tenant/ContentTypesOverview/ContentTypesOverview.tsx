@@ -8,15 +8,16 @@ import {
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import { SiteModel } from '@redactie/sites-module';
+import { DataLoader, LoadingState, useNavigate } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
-import { DataLoader, FilterForm, FilterFormState } from '../../../components';
+import { FilterForm, FilterFormState } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
 import sitesConnector from '../../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { MODULE_PATHS } from '../../../contentTypes.const';
-import { ContentTypesRouteProps, LoadingState } from '../../../contentTypes.types';
-import { useContentTypes, useNavigate, useRoutesBreadcrumbs } from '../../../hooks';
+import { ContentTypesRouteProps } from '../../../contentTypes.types';
+import { useContentTypes, useRoutesBreadcrumbs } from '../../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes/contentTypes.service.cont';
 import { ContentTypeModel, contentTypesFacade } from '../../../store/contentTypes';
 

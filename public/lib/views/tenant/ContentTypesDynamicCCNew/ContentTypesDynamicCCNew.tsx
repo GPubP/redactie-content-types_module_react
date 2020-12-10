@@ -2,8 +2,12 @@ import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import {
 	alertService,
+	DataLoader,
 	LeavePrompt,
+	LoadingState,
+	RenderChildRoutes,
 	useDetectValueChangesWorker,
+	useNavigate,
 	useTenantContext,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
@@ -12,17 +16,15 @@ import { equals, isEmpty, omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { DataLoader, RenderChildRoutes } from '../../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
-import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
+import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
 import { filterCompartments, generateFieldFromType, validateCompartments } from '../../../helpers';
 import {
 	useActiveFieldType,
 	useActivePreset,
 	useCompartments,
 	useCompartmentValidation,
-	useNavigate,
 	useNavItemMatcher,
 	useQuery,
 } from '../../../hooks';
