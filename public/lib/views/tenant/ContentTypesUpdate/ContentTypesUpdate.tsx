@@ -125,10 +125,14 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	]);
 
 	useEffect(() => {
-		if (contentTypeUuid) {
+		if (contentType && contentTypeUuid !== contentType.uuid) {
+			contentTypesFacade.clearContentType();
+		}
+
+		if (contentTypeUuid && contentType?.uuid !== contentTypeUuid) {
 			contentTypesFacade.getContentType(contentTypeUuid);
 		}
-	}, [contentTypeUuid]);
+	}, [contentType, contentTypeUuid]);
 
 	/**
 	 * Methods
