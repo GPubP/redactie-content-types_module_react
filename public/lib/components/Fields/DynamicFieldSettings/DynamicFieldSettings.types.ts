@@ -1,3 +1,5 @@
+import { Field } from '../../../services/contentTypes';
+
 export interface DynamicFieldCCRow {
 	id: string;
 	label: string;
@@ -8,4 +10,12 @@ export interface DynamicFieldCCRow {
 	required: boolean;
 	hidden: boolean;
 	translatable: boolean;
+}
+
+export interface DynamicFieldSettingsContextValue {
+	activeField?: Field;
+	dynamicField?: Field;
+	getCreatePath?: (isPreset: boolean, fieldTypeUuid: string) => string;
+	getEditPath?: (uuid: string) => string;
+	setDynamicField?: (field: Field) => void;
 }
