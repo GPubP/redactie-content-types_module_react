@@ -1,16 +1,15 @@
-import { useObservable } from '@mindspace-io/react';
+import { useObservable } from '@redactie/utils';
 
-import { LoadingState } from '../../contentTypes.types';
-import { FieldTypeModel, fieldTypesFacade } from '../../store/fieldTypes';
+import { fieldTypesFacade } from '../../store/fieldTypes';
 
-const useFieldTypes = (): [LoadingState, FieldTypeModel[]] => {
-	const [loading] = useObservable(fieldTypesFacade.isFetching$, LoadingState.Loading);
-	const [fieldTypes] = useObservable(fieldTypesFacade.fieldTypes$, []);
-	const [error] = useObservable(fieldTypesFacade.error$, null);
+import { UseFieldTypes } from './useFieldTypes.types';
 
-	const loadingState = error ? LoadingState.Error : loading;
+const useFieldTypes: UseFieldTypes = () => {
+	const loading = useObservable(fieldTypesFacade.isFetching$, true);
+	const fieldTypes = useObservable(fieldTypesFacade.fieldTypes$, []);
+	const error = useObservable(fieldTypesFacade.listError$, null);
 
-	return [loadingState, fieldTypes];
+	return [loading, fieldTypes, error];
 };
 
 export default useFieldTypes;

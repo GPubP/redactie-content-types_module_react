@@ -89,3 +89,24 @@ export interface PresetsResponse {
 	data: Preset[];
 	paging: PresetsPaging;
 }
+
+/**
+ * =========================
+ * Payload types
+ * - Define all payload interfaces
+ * =========================
+ */
+
+export interface UpdatePresetPayload {
+	uuid: string;
+	body: PresetDetail;
+}
+
+export interface CreatePresetPayload {
+	data: {
+		name: string;
+		label: string;
+		fields?: string[];
+		validators?: string[];
+	};
+}

@@ -2,7 +2,14 @@ import { PaginationResponse, PaginatorPlugin } from '@datorama/akita';
 import { SearchParams } from '@redactie/utils';
 import { from, Observable } from 'rxjs';
 
-import { presetsApiService, PresetsApiService } from '../../services/presets';
+import { showAlert } from '../../helpers';
+import {
+	CreatePresetPayload,
+	PresetDetail,
+	presetsApiService,
+	PresetsApiService,
+	UpdatePresetPayload,
+} from '../../services/presets';
 
 import {
 	PresetDetailModel,
@@ -21,7 +28,16 @@ import {
 	PresetsListStore,
 	presetsListStore,
 } from './list';
-import { PresetUIModel } from './presets.types';
+import { getAlertMessages } from './presets.alertMessages';
+import { PRESETS_ALERT_CONTAINER_IDS } from './presets.const';
+import {
+	CreatePresetPayloadOptions,
+	GetPresetPayloadOptions,
+	GetPresetsPaginatedPayloadOptions,
+	GetPresetsPayloadOptions,
+	PresetUIModel,
+	UpdatePresetPayloadOptions,
+} from './presets.types';
 
 export class PresetsFacade {
 	constructor(
@@ -63,11 +79,20 @@ export class PresetsFacade {
 	// LIST FUNCTIONS
 	public getPresetsPaginated(
 		searchParams: SearchParams,
-		clearCache = false
+		options?: GetPresetsPaginatedPayloadOptions
 	): Observable<PaginationResponse<PresetListModel>> {
-		if (clearCache) {
+		const defaultOptions = {
+			alertContainerId: PRESETS_ALERT_CONTAINER_IDS.fetch,
+			clearCache: false,
+		};
+		const serviceOptions = {
+			...defaultOptions,
+			...options,
+		};
+		if (serviceOptions.clearCache) {
 			this.listPaginator.clearCache();
 		}
+		const alertMessages = getAlertMessages();
 
 		return from(
 			this.service
@@ -89,6 +114,7 @@ export class PresetsFacade {
 					};
 				})
 				.catch(error => {
+					showAlert(serviceOptions.alertContainerId, 'error', alertMessages.fetch.error);
 					this.listStore.update({
 						error,
 						isFetching: false,
@@ -98,52 +124,146 @@ export class PresetsFacade {
 		);
 	}
 
-	public getPresets(): void {
+	public getPresets(searchParams?: SearchParams, options?: GetPresetsPayloadOptions): void {
+		const defaultOptions: GetPresetsPayloadOptions = {
+			alertContainerId: PRESETS_ALERT_CONTAINER_IDS.fetch,
+		};
+		const serviceOptions = {
+			...defaultOptions,
+			...options,
+		};
 		const { isFetching } = this.listQuery.getValue();
 
 		if (isFetching) {
 			return;
 		}
+		const alertMessages = getAlertMessages();
 		this.listStore.setIsFetching(true);
 
 		this.service
-			.getPresets()
+			.getPresets(searchParams)
 			.then(response => {
 				if (response) {
 					this.listStore.set(response.data);
+					this.listStore.update({
+						error: false,
+						isFetching: false,
+					});
 				}
 			})
-			.catch(error => this.listStore.setError(error))
-			.finally(() => this.listStore.setIsFetching(false));
+			.catch(error => {
+				showAlert(serviceOptions.alertContainerId, 'error', alertMessages.fetch.error);
+				this.listStore.update({
+					isFetching: false,
+					error,
+				});
+			});
 	}
 
 	// DETAIL FUNCTIONS
-	public setActiveDetail(presetId: string): void {
+	public setActivePreset(presetId: string): void {
 		this.detailStore.setActive(presetId);
 		this.detailStore.ui.setActive(presetId);
 	}
 
-	public removeActiveDetail(): void {
+	public removeActivePreset(): void {
 		this.detailStore.setActive(null);
 		this.detailStore.ui.setActive(null);
 	}
 
-	public hasActiveDetail(presetId: string): boolean {
+	public hasActivePreset(presetId: string): boolean {
 		return this.detailQuery.hasActive(presetId);
 	}
 
-	public getPreset(presetId: string, force = false): void {
-		if (this.detailQuery.hasEntity(presetId) && !force) {
-			return;
+	public hasPreset(presetId: string): boolean {
+		return this.detailQuery.hasEntity(presetId);
+	}
+
+	public createPreset(
+		payload: CreatePresetPayload,
+		options: CreatePresetPayloadOptions = {
+			alertContainerId: PRESETS_ALERT_CONTAINER_IDS.create,
 		}
+	): Promise<PresetDetail | void> {
+		this.detailStore.setIsCreating(true);
+		const alertMessages = getAlertMessages(payload.data.name);
+
+		return this.service
+			.createPreset(payload)
+			.then(preset => {
+				this.detailStore.update({
+					isCreating: false,
+					error: null,
+				});
+				this.detailStore.upsert(preset.uuid, preset);
+
+				this.listPaginator.clearCache();
+				showAlert(options.alertContainerId, 'success', alertMessages.create.success);
+				return preset;
+			})
+			.catch(error => {
+				showAlert(options.alertContainerId, 'error', alertMessages.create.error);
+				this.detailStore.update({
+					isCreating: false,
+					error,
+				});
+			});
+	}
+
+	public updatePreset(
+		payload: UpdatePresetPayload,
+		options: UpdatePresetPayloadOptions = {
+			alertContainerId: PRESETS_ALERT_CONTAINER_IDS.create,
+		}
+	): Promise<PresetDetail | void> {
+		this.detailStore.setIsUpdatingEntity(true, payload.uuid);
+		const alertMessages = getAlertMessages(payload.body.data.label);
+
+		return this.service
+			.updatePreset(payload)
+			.then(preset => {
+				this.detailStore.ui.update(payload.uuid, {
+					isUpdating: false,
+					error: null,
+				});
+				this.detailStore.upsert(preset.uuid, preset);
+				// update item in list?
+
+				this.listPaginator.clearCache();
+				showAlert(options.alertContainerId, 'success', alertMessages.update.success);
+				return preset;
+			})
+			.then(error => {
+				showAlert(options.alertContainerId, 'error', alertMessages.update.error);
+				this.detailStore.ui.update(payload.uuid, {
+					isUpdating: false,
+					error,
+				});
+			});
+	}
+
+	public getPreset(presetId: string, options?: GetPresetPayloadOptions): Promise<void> {
+		const defaultOptions = {
+			alertContainerId: PRESETS_ALERT_CONTAINER_IDS.fetchOne,
+			force: false,
+		};
+		const serviceOptions = {
+			...defaultOptions,
+			...options,
+		};
+		if (this.detailQuery.hasEntity(presetId) && !serviceOptions.force) {
+			return Promise.resolve();
+		}
+		const alertMessages = getAlertMessages();
 		this.detailStore.setIsFetchingEntity(true, presetId);
-		this.service
+		return this.service
 			.getPreset(presetId)
 			.then(response => {
 				this.detailStore.upsert(response.uuid, response);
 				this.detailStore.ui.upsert(response.uuid, { error: null, isFetching: false });
 			})
 			.catch(error => {
+				showAlert(serviceOptions.alertContainerId, 'error', alertMessages.fetchOne.error);
 				this.detailStore.ui.upsert(presetId, {
 					error,
 					isFetching: false,

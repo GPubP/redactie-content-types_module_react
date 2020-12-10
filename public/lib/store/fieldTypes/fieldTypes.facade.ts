@@ -1,70 +1,152 @@
+import { SearchParams } from '@redactie/sites-module/dist/public/lib/services/api';
+import { Observable } from 'rxjs';
+
+import { showAlert } from '../../helpers';
 import { fieldTypesApiService, FieldTypesApiService } from '../../services/fieldTypes';
-import { BaseEntityFacade } from '../shared';
 
-import { FieldTypesQuery, fieldTypesQuery } from './fieldTypes.query';
-import { FieldTypesStore, fieldTypesStore } from './fieldTypes.store';
+import {
+	FieldTypeDetailModel,
+	FieldTypeDetailUIModel,
+	fieldTypesDetailQuery,
+	FieldTypesDetailQuery,
+	fieldTypesDetailStore,
+	FieldTypesDetailStore,
+} from './detail';
+import { FIELD_TYPES_ALERT_MESSAGES } from './fieldTypes.alertMessages';
+import { FIELD_TYPES_ALERT_CONTAINER_IDS } from './fieldTypes.const';
+import { GetFieldTypePayloadOptions, GetFieldTypesPayloadOptions } from './fieldTypes.types';
+import {
+	fieldTypesListQuery,
+	FieldTypesListQuery,
+	fieldTypesListStore,
+	FieldTypesListStore,
+} from './list';
 
-export class FieldTypesFacade extends BaseEntityFacade<
-	FieldTypesStore,
-	FieldTypesApiService,
-	FieldTypesQuery
-> {
-	constructor(store: FieldTypesStore, service: FieldTypesApiService, query: FieldTypesQuery) {
-		super(store, service, query);
+export class FieldTypesFacade {
+	constructor(
+		protected listStore: FieldTypesListStore,
+		protected listQuery: FieldTypesListQuery,
+		protected detailStore: FieldTypesDetailStore,
+		protected detailQuery: FieldTypesDetailQuery,
+		protected service: FieldTypesApiService
+	) {}
+
+	// LIST STATES
+	public readonly fieldTypes$ = this.listQuery.fieldTypes$;
+	public readonly listError$ = this.listQuery.error$;
+	public readonly isFetching$ = this.listQuery.isFetching$;
+
+	// DETAIL STATES
+	public readonly activeFieldType$ = this.detailQuery.selectActive<
+		FieldTypeDetailModel
+	>() as Observable<FieldTypeDetailModel>;
+	public readonly activeFieldTypeUI$ = this.detailQuery.ui.selectActive<
+		FieldTypeDetailUIModel
+	>() as Observable<FieldTypeDetailUIModel>;
+
+	public selectFieldTypeUIState(fieldTypeId: string): Observable<FieldTypeDetailUIModel> {
+		return this.detailQuery.ui.selectEntity(fieldTypeId);
 	}
 
-	public readonly fieldTypes$ = this.query.fieldTypes$;
-	public readonly fieldType$ = this.query.fieldType$;
+	// LIST FUNCTIONS
 
-	public getFieldTypes(): void {
-		const { isFetching } = this.query.getValue();
+	public getFieldTypes(
+		searchParams?: SearchParams,
+		options: GetFieldTypesPayloadOptions = {
+			alertContainerId: FIELD_TYPES_ALERT_CONTAINER_IDS.fetch,
+		}
+	): void {
+		const { isFetching } = this.listQuery.getValue();
 		if (isFetching) {
 			return;
 		}
 
-		this.store.setIsFetching(true);
+		this.listStore.setIsFetching(true);
 
 		this.service
-			.getFieldTypes()
+			.getFieldTypes(searchParams)
 			.then(response => {
 				if (response) {
-					this.store.set(response);
-				}
-			})
-			.catch(error => this.store.setError(error))
-			.finally(() => this.store.setIsFetching(false));
-	}
-
-	public getFieldType(uuid: string): void {
-		const { isFetchingOne, fieldType } = this.query.getValue();
-		if (isFetchingOne || fieldType?.uuid === uuid) {
-			return;
-		}
-
-		this.store.setIsFetchingOne(true);
-
-		this.service
-			.getFieldType(uuid)
-			.then(response => {
-				if (response) {
-					this.store.update({
-						fieldType: response,
+					this.listStore.set(response.data);
+					this.listStore.update({
+						isFetching: false,
+						error: null,
 					});
 				}
 			})
-			.catch(error => this.store.setError(error))
-			.finally(() => this.store.setIsFetchingOne(false));
+			.catch(error => {
+				showAlert(
+					options.alertContainerId,
+					'error',
+					FIELD_TYPES_ALERT_MESSAGES.fetch.error
+				);
+				this.listStore.update({
+					isFetching: false,
+					error,
+				});
+			});
 	}
 
-	public clearFieldType(): void {
-		this.store.update({
-			fieldType: undefined,
-		});
+	// DETAIL FUNCTIONS
+	public setActiveFieldType(fieldTypeId: string): void {
+		this.detailStore.setActive(fieldTypeId);
+		this.detailStore.ui.setActive(fieldTypeId);
+	}
+
+	public removeActiveFieldType(): void {
+		this.detailStore.setActive(null);
+		this.detailStore.ui.setActive(null);
+	}
+
+	public hasActiveFieldType(fieldTypeId: string): boolean {
+		return this.detailQuery.hasActive(fieldTypeId);
+	}
+
+	public hasFieldType(fieldTypeId: string): boolean {
+		return this.detailQuery.hasEntity(fieldTypeId);
+	}
+
+	public getFieldType(fieldTypeId: string, options?: GetFieldTypePayloadOptions): Promise<void> {
+		const defaultOptions = {
+			alertContainerId: FIELD_TYPES_ALERT_CONTAINER_IDS.fetchOne,
+			force: false,
+		};
+		const serviceOptions = {
+			...defaultOptions,
+			...options,
+		};
+		if (this.detailQuery.hasEntity(fieldTypeId) && !serviceOptions.force) {
+			return Promise.resolve();
+		}
+
+		this.detailStore.setIsFetchingEntity(true, fieldTypeId);
+
+		return this.service
+			.getFieldType(fieldTypeId)
+			.then(response => {
+				if (response) {
+					this.detailStore.upsert(response.uuid, response);
+					this.detailStore.ui.upsert(response.uuid, { error: null, isFetching: false });
+				}
+			})
+			.catch(error => {
+				showAlert(
+					serviceOptions.alertContainerId,
+					'error',
+					FIELD_TYPES_ALERT_MESSAGES.fetchOne.error
+				);
+				this.detailStore.ui.upsert(fieldTypeId, {
+					error,
+					isFetching: false,
+				});
+			});
 	}
 }
 
 export const fieldTypesFacade = new FieldTypesFacade(
-	fieldTypesStore,
-	fieldTypesApiService,
-	fieldTypesQuery
+	fieldTypesListStore,
+	fieldTypesListQuery,
+	fieldTypesDetailStore,
+	fieldTypesDetailQuery,
+	fieldTypesApiService
 );

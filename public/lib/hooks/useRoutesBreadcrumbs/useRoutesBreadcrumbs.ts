@@ -1,9 +1,8 @@
 import { Breadcrumb, ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
+import { useNavigate, useRoutes } from '@redactie/utils';
 import { ReactNode } from 'react';
 
 import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../contentTypes.const';
-import { useNavigate } from '../../hooks';
-import useRoutes from '../useRoutes/useRoutes';
 
 const useRoutesBreadcrumbs = (
 	extraBreadcrumbs: Breadcrumb[] = [],

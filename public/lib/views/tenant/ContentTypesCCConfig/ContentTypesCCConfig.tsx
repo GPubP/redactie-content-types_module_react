@@ -2,6 +2,7 @@ import { FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-mod
 import { clone, omit } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 
+import { DynamicFieldSettingsContext } from '../../../components/Fields';
 import formRendererConnector from '../../../connectors/formRenderer';
 import { ContentTypesCCRouteProps } from '../../../contentTypes.types';
 import { generateFRFieldFromCTField } from '../../../helpers';
@@ -17,10 +18,19 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	formikRef,
 	preset,
 	onSubmit,
+	dynamicFieldSettingsContext,
 }) => {
 	/**
 	 * Hooks
 	 */
+
+	const dynamicFieldSettingsContextValue = useMemo(
+		() => ({
+			activeField: CTField,
+			...(dynamicFieldSettingsContext || {}),
+		}),
+		[CTField, dynamicFieldSettingsContext]
+	);
 
 	/**
 	 * initialFormValue
@@ -114,8 +124,11 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		};
 	}, [fieldType, preset]);
 	const errorMessages: Record<string, string> = useMemo(
-		() => (preset ? preset.errorMessages.configuration : fieldType.errorMessages.configuration),
-		[fieldType.errorMessages.configuration, preset]
+		() =>
+			preset
+				? preset.errorMessages?.configuration || {}
+				: fieldType?.errorMessages?.configuration || {},
+		[fieldType, preset]
 	);
 
 	/**
@@ -217,14 +230,16 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		}
 
 		return (
-			<formRendererConnector.api.Form
-				formikRef={formikRef}
-				initialValues={initialFormValue}
-				schema={schema}
-				validationSchema={validationSchema}
-				errorMessages={errorMessages}
-				onChange={onFormSubmit}
-			/>
+			<DynamicFieldSettingsContext.Provider value={dynamicFieldSettingsContextValue}>
+				<formRendererConnector.api.Form
+					formikRef={formikRef}
+					initialValues={initialFormValue}
+					schema={schema}
+					validationSchema={validationSchema}
+					errorMessages={errorMessages}
+					onChange={onFormSubmit}
+				/>
+			</DynamicFieldSettingsContext.Provider>
 		);
 	};
 

@@ -3,12 +3,18 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
-import { useDetectValueChangesWorker, useTenantContext } from '@redactie/utils';
+import {
+	DataLoader,
+	LoadingState,
+	RenderChildRoutes,
+	useDetectValueChangesWorker,
+	useNavigate,
+	useTenantContext,
+} from '@redactie/utils';
 import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { DataLoader, RenderChildRoutes } from '../../../components';
 import {
 	CONTENT_DETAIL_TABS,
 	CONTENT_TYPE_DETAIL_TAB_MAP,
@@ -18,7 +24,6 @@ import {
 import {
 	ContentTypesRouteParams,
 	ContentTypesRouteProps,
-	LoadingState,
 	Tab,
 	TabTypes,
 } from '../../../contentTypes.types';
@@ -28,7 +33,6 @@ import {
 	useActiveTabs,
 	useContentType,
 	useFieldTypes,
-	useNavigate,
 	usePresets,
 	useRoutesBreadcrumbs,
 } from '../../../hooks';
@@ -56,7 +60,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const activeRouteConfig = useActiveRouteConfig(location, route);
 	const { contentTypeUuid } = useParams<ContentTypesRouteParams>();
 	const { navigate, generatePath } = useNavigate();
-	const [fieldTypesLoadingState, fieldTypes] = useFieldTypes();
+	const [fieldTypesLoading, fieldTypes] = useFieldTypes();
 	const [presetsLoading, presets] = usePresets();
 	const [
 		contentTypeLoadingState,
@@ -105,7 +109,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	useEffect(() => {
 		if (
 			!presetsLoading &&
-			fieldTypesLoadingState !== LoadingState.Loading &&
+			!fieldTypesLoading &&
 			contentTypeLoadingState !== LoadingState.Loading &&
 			contentType &&
 			fieldTypes &&
@@ -117,11 +121,11 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		setInitialLoading(LoadingState.Loading);
 	}, [
 		contentTypeLoadingState,
-		fieldTypesLoadingState,
 		contentType,
 		fieldTypes,
 		presets,
 		presetsLoading,
+		fieldTypesLoading,
 	]);
 
 	useEffect(() => {

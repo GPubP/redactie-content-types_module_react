@@ -2,8 +2,12 @@ import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import {
 	alertService,
+	DataLoader,
 	LeavePrompt,
+	LoadingState,
+	RenderChildRoutes,
 	useDetectValueChangesWorker,
+	useNavigate,
 	useTenantContext,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
@@ -12,17 +16,15 @@ import { equals, isEmpty, omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { DataLoader, RenderChildRoutes } from '../../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
-import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
+import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
 import { filterCompartments, generateFieldFromType, validateCompartments } from '../../../helpers';
 import {
+	useActiveFieldType,
 	useActivePreset,
 	useCompartments,
 	useCompartmentValidation,
-	useFieldType,
-	useNavigate,
 	useNavItemMatcher,
 	useQuery,
 } from '../../../hooks';
@@ -32,7 +34,6 @@ import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
 import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel } from '../../../store/contentTypes';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
-import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import {
@@ -55,8 +56,10 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const { fieldType: fieldTypeUuid, preset: presetUuid } = useQuery();
-	const [fieldTypeLoadingState, fieldType] = useFieldType();
-	const [preset, presetUI] = useActivePreset(!fieldTypeUuid ? presetUuid : undefined);
+	const [preset, presetUI] = useActivePreset(presetUuid);
+	const [fieldType, fieldTypeUI] = useActiveFieldType(
+		preset ? preset?.data.fieldType.uuid : fieldTypeUuid
+	);
 	const activeField = useActiveField();
 	const dynamicField = useDynamicField();
 	const dynamicActiveField = useDynamicActiveField();
@@ -109,16 +112,12 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	}, [fieldType, navItemMatcher]); // eslint-disable-line
 
 	useEffect(() => {
-		if (
-			fieldTypeLoadingState !== LoadingState.Loading &&
-			!presetUI?.isFetching &&
-			dynamicField
-		) {
+		if (!fieldTypeUI?.isFetching && !presetUI?.isFetching && dynamicField) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [dynamicField, fieldTypeLoadingState, presetUI]);
+	}, [dynamicField, fieldTypeUI, presetUI]);
 
 	useEffect(() => {
 		if (
@@ -141,25 +140,6 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			dynamicFieldFacade.setDynamicField(newActiveField);
 		}
 	}, [activeField, contentComponentUuid, contentType.fields, dynamicField]);
-
-	/**
-	 * Get preset or fieldType based on the input of the
-	 * query parameters
-	 */
-	useEffect(() => {
-		if (!presetUuid && fieldTypeUuid) {
-			fieldTypesFacade.getFieldType(fieldTypeUuid);
-		}
-	}, [fieldTypeUuid, presetUuid]);
-
-	/**
-	 * Get the fieldType from a preset when it exists
-	 */
-	useEffect(() => {
-		if (preset) {
-			fieldTypesFacade.getFieldType(preset.data.fieldType.uuid);
-		}
-	}, [preset]);
 
 	/**
 	 * Generate a new field based on the selected fieldtype and
@@ -191,7 +171,6 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	useEffect(
 		() => () => {
 			dynamicFieldFacade.clearActiveField();
-			fieldTypesFacade.clearFieldType();
 		},
 		[]
 	);
