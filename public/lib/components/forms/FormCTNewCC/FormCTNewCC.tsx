@@ -1,4 +1,5 @@
 import { Button, Select, TextField } from '@acpaas-ui/react-components';
+import { ErrorMessage } from '@redactie/utils';
 import classNames from 'classnames';
 import { Field, Formik } from 'formik';
 import React, { FC } from 'react';
@@ -15,12 +16,13 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({
 	onSubmit,
 	hasName = true,
 	className,
+	validationSchema,
 	...props
 }) => {
 	const [t] = useCoreTranslation();
 
 	return (
-		<Formik initialValues={formState} onSubmit={onSubmit}>
+		<Formik initialValues={formState} validationSchema={validationSchema} onSubmit={onSubmit}>
 			{({ submitForm }) => (
 				<div className={`row ${className || ''}`} {...props}>
 					<div
@@ -52,6 +54,7 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({
 								placeholder="Typ een naam"
 								type="text"
 							/>
+							<ErrorMessage name="name" />
 						</div>
 					) : null}
 
