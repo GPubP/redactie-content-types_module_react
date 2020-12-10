@@ -2,8 +2,12 @@ import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import {
 	alertService,
+	DataLoader,
 	LeavePrompt,
+	LoadingState,
+	RenderChildRoutes,
 	useDetectValueChangesWorker,
+	useNavigate,
 	useTenantContext,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
@@ -11,25 +15,23 @@ import { equals, isEmpty } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { DataLoader, RenderChildRoutes } from '../../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
-import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
+import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
 import { filterCompartments, validateCompartments } from '../../../helpers';
 import {
 	useActiveField,
+	useActiveFieldType,
+	useActivePreset,
 	useCompartments,
 	useCompartmentValidation,
-	useFieldType,
-	useNavigate,
 	useNavItemMatcher,
-	usePreset,
 } from '../../../hooks';
+import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
 import { FieldType } from '../../../services/fieldTypes';
 import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
-import { fieldTypesFacade } from '../../../store/fieldTypes';
-import { presetsFacade } from '../../../store/presets';
+import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import { CC_EDIT_ALLOWED_PATHS, CC_EDIT_COMPARTMENTS } from './ContentTypesCCEdit.const';
@@ -44,14 +46,15 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [invalidCCUuid, setInvalidCCUuid] = useState(false);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
-	const [fieldTypeLoading, fieldType] = useFieldType();
-	const [presetLoading, preset] = usePreset();
 	const activeField = useActiveField();
+	const dynamicField = useDynamicField();
 	const { generatePath, navigate } = useNavigate();
 	const { tenantId } = useTenantContext();
 	const [t] = useCoreTranslation();
 	const activeFieldFTUuid = useMemo(() => activeField?.fieldType.uuid, [activeField]);
 	const activeFieldPSUuid = useMemo(() => activeField?.preset?.uuid, [activeField]);
+	const [fieldType, fieldTypeUI] = useActiveFieldType(activeFieldFTUuid);
+	const [preset, presetUI] = useActivePreset(activeFieldPSUuid);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
 	const [hasChanges] = useDetectValueChangesWorker(
@@ -94,16 +97,12 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	}, [fieldType, navItemMatcher]); // eslint-disable-line
 
 	useEffect(() => {
-		if (
-			fieldTypeLoading !== LoadingState.Loading &&
-			presetLoading !== LoadingState.Loading &&
-			fieldType
-		) {
+		if (!fieldTypeUI?.isFetching && !presetUI?.isFetching && fieldType) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [fieldTypeLoading, fieldType, presetLoading]);
+	}, [fieldType, fieldTypeUI, presetUI]);
 
 	useEffect(() => {
 		if (
@@ -124,20 +123,6 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			setInvalidCCUuid(true);
 		}
 	}, [activeField, activeFieldFTUuid, contentComponentUuid, contentType.fields]);
-
-	useEffect(() => {
-		if (activeFieldFTUuid) {
-			fieldTypesFacade.getFieldType(activeFieldFTUuid);
-		} else {
-			fieldTypesFacade.clearFieldType();
-		}
-
-		if (activeFieldPSUuid) {
-			presetsFacade.getPreset(activeFieldPSUuid);
-		} else {
-			presetsFacade.clearPreset();
-		}
-	}, [activeFieldFTUuid, activeFieldPSUuid]);
 
 	/**
 	 * Methods
@@ -213,6 +198,27 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			CTField: activeField,
 			fieldType: fieldType,
 			preset,
+			dynamicFieldSettingsContext: {
+				dynamicField,
+				getCreatePath: (isPreset: boolean, fieldTypeUuid: string) =>
+					generatePath(
+						MODULE_PATHS.detailCCEditDynamicNewSettings,
+						{
+							contentTypeUuid,
+							contentComponentUuid: activeField?.uuid,
+						},
+						new URLSearchParams(
+							isPreset ? { preset: fieldTypeUuid } : { fieldType: fieldTypeUuid }
+						)
+					),
+				getEditPath: (uuid: string) =>
+					generatePath(MODULE_PATHS.detailCCEditDynamicEditSettings, {
+						contentTypeUuid,
+						contentComponentUuid: activeField?.uuid,
+						dynamicContentComponentUuid: uuid,
+					}),
+				setDynamicField: dynamicFieldFacade.setDynamicField.bind(dynamicFieldFacade),
+			},
 			onDelete: onFieldDelete,
 			onSubmit: onFieldChange,
 			formikRef: (instance: FormikProps<FormikValues>) => {

@@ -4,6 +4,7 @@ import {
 	AlertContainer,
 	alertService,
 	LeavePrompt,
+	LoadingState,
 	useDetectValueChangesWorker,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
@@ -13,7 +14,7 @@ import React, { FC, useMemo, useRef, useState } from 'react';
 import { CTSettingsForm } from '../../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, CONTENT_TYPE_DETAIL_TAB_MAP } from '../../../contentTypes.const';
-import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
+import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
 import { useContentType } from '../../../hooks';
 import { ContentTypeDetailModel } from '../../../store/contentTypes';
 

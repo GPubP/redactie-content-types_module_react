@@ -2,13 +2,13 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { CONTENT_COMPARTMENT_UUID } from '../../contentTypes.const';
 import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
-import { FieldTypeModel } from '../../store/fieldTypes';
+import { FieldTypeDetailModel } from '../../store/fieldTypes';
 import { PresetDetailModel } from '../../store/presets';
 import { generateConfig } from '../generateConfig';
 import { generateValidationChecks } from '../generateValidationChecks';
 
 export const generateFieldFromType = (
-	fieldType: FieldTypeModel,
+	fieldType: FieldTypeDetailModel,
 	initialValues: Partial<ContentTypeFieldDetailModel> = {},
 	fieldCompartmentUUID = CONTENT_COMPARTMENT_UUID,
 	preset?: PresetDetailModel

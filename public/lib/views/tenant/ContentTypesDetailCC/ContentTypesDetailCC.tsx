@@ -1,6 +1,6 @@
 import { Button, Card } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, Table } from '@acpaas-ui/react-editorial-components';
-import { AlertContainer, LeavePrompt } from '@redactie/utils';
+import { AlertContainer, LeavePrompt, LoadingState, useNavigate } from '@redactie/utils';
 import { FormikHelpers } from 'formik';
 import { move, path, pathOr } from 'ramda';
 import React, { FC, ReactElement, useMemo, useState } from 'react';
@@ -25,11 +25,10 @@ import {
 import {
 	ContentTypesDetailRouteParams,
 	ContentTypesDetailRouteProps,
-	LoadingState,
 	NewCCFormState,
 } from '../../../contentTypes.types';
 import { sortFieldTypes } from '../../../helpers';
-import { useContentType, useNavigate } from '../../../hooks';
+import { useContentType } from '../../../hooks';
 import { Compartment, ContentTypeFieldDetail } from '../../../services/contentTypes';
 import { contentTypesFacade } from '../../../store/contentTypes';
 

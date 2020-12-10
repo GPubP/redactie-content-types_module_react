@@ -10,3 +10,4 @@ export * from './generateValidationChecks';
 export * from './onEmit';
 export * from './tabs';
 export * from './typeMap';
+export * from './showAlert';

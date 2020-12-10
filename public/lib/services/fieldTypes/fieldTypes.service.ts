@@ -1,5 +1,6 @@
-import api, { parseSearchParams } from '../api/api.service';
-import { SearchParams } from '../api/api.service.types';
+import { parseSearchParams, SearchParams } from '@redactie/utils';
+
+import api from '../api/api.service';
 
 import {
 	DEFAULT_FIELD_TYPES_SEARCH_PARAMS,
@@ -10,28 +11,12 @@ import { FieldType, FieldTypesResponse } from './fieldTypes.service.types';
 export class FieldTypesApiService {
 	public async getFieldTypes(
 		searchParams: SearchParams = DEFAULT_FIELD_TYPES_SEARCH_PARAMS
-	): Promise<FieldType[] | null> {
-		try {
-			const response: FieldTypesResponse = await api
-				.get(`${FIELD_TYPES_PREFIX_URL}?${parseSearchParams(searchParams)}`)
-				.json();
-
-			return response.data;
-		} catch (err) {
-			console.error(err);
-			return null;
-		}
+	): Promise<FieldTypesResponse | null> {
+		return await api.get(`${FIELD_TYPES_PREFIX_URL}?${parseSearchParams(searchParams)}`).json();
 	}
 
 	public async getFieldType(uuid: string): Promise<FieldType | null> {
-		try {
-			const response: FieldType = await api.get(`${FIELD_TYPES_PREFIX_URL}/${uuid}`).json();
-
-			return response;
-		} catch (err) {
-			console.error(err);
-			return null;
-		}
+		return await api.get(`${FIELD_TYPES_PREFIX_URL}/${uuid}`).json();
 	}
 }
 

@@ -72,6 +72,11 @@ export interface BasePreset<T, F> {
 export type Preset = BasePreset<string, string>;
 
 export type PresetDetail = BasePreset<Validator, FieldType>;
+export interface PresetsPaging {
+	total: number;
+	skip: number;
+	limit: number;
+}
 
 /**
  * =========================
@@ -82,4 +87,26 @@ export type PresetDetail = BasePreset<Validator, FieldType>;
 
 export interface PresetsResponse {
 	data: Preset[];
+	paging: PresetsPaging;
+}
+
+/**
+ * =========================
+ * Payload types
+ * - Define all payload interfaces
+ * =========================
+ */
+
+export interface UpdatePresetPayload {
+	uuid: string;
+	body: PresetDetail;
+}
+
+export interface CreatePresetPayload {
+	data: {
+		name: string;
+		label: string;
+		fields?: string[];
+		validators?: string[];
+	};
 }

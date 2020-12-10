@@ -48,7 +48,7 @@
 		"@redactie/roles-rights-module": "^0.6.1",
 		"@redactie/sites-module": "^0.19.3",
 		"@redactie/translations-module": "^0.6.0",
-		"@redactie/utils": "^0.17.0",
+		"@redactie/utils": "^0.17.3",
 		"@testing-library/jest-dom": "5.0.2",
 		"@testing-library/react": "9.4.0",
 		"@types/classnames": "^2.2.10",
@@ -106,7 +106,6 @@
 		"yup": "0.28.3"
 	},
 	"dependencies": {
-		"@mindspace-io/react": "^1.1.6",
 		"@wcm/jsonschema-generator": "1.0.1",
 		"lodash.debounce": "^4.0.8",
 		"lodash.kebabcase": "4.1.1",

@@ -1,14 +1,14 @@
 import { Button } from '@acpaas-ui/react-components';
 import { PaginatedTable } from '@acpaas-ui/react-editorial-components';
 import { SiteModel, UpdateSitePayload } from '@redactie/sites-module';
-import { AlertContainer, useAPIQueryParams } from '@redactie/utils';
+import { AlertContainer, LoadingState, useAPIQueryParams } from '@redactie/utils';
 import React, { FC, useMemo, useState } from 'react';
 
 import SiteStatus from '../../../components/SiteStatus/SiteStatus';
 import sitesConnector from '../../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS } from '../../../contentTypes.const';
-import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
+import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
 import { parseOrderBy, parseOrderByString } from '../../../services/helpers/helpers.service';
 import { OrderBy } from '../ContentTypesOverview';
 
