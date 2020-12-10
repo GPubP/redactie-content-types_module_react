@@ -1,6 +1,7 @@
+import { LoadingState } from '@redactie/utils';
 import React, { FC, useEffect, useMemo } from 'react';
 
-import { ContentTypesDetailRouteProps, LoadingState, Tab } from '../../../contentTypes.types';
+import { ContentTypesDetailRouteProps, Tab } from '../../../contentTypes.types';
 import { mapExternalTabToTab } from '../../../helpers';
 import { useContentType } from '../../../hooks';
 import { useExternalTabsFacade } from '../../../store/api/externalTabs/externalTabs.facade';

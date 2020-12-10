@@ -1,5 +1,5 @@
 import { ID } from '@datorama/akita';
-import { useObservable } from '@mindspace-io/react';
+import { useObservable } from '@redactie/utils';
 
 import {
 	CompartmentModel,
@@ -28,8 +28,8 @@ const useCompartments = (): [
 	const validate = (name: string, isValid: boolean): void =>
 		compartmentsFacade.setValid(name, isValid);
 
-	const [compartments] = useObservable(compartmentsFacade.all$, []);
-	const [active] = useObservable(compartmentsFacade.active$);
+	const compartments = useObservable(compartmentsFacade.all$, []);
+	const active = useObservable(compartmentsFacade.active$);
 
 	return [{ compartments, active }, register, activate, validate];
 };

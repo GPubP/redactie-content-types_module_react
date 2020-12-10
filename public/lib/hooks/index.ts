@@ -1,9 +1,7 @@
 export { default as useActiveTabs } from './useActiveTabs/useActiveTabs';
-export { default as useNavigate } from './useNavigate/useNavigate';
 export { default as useCompartments } from './useCompartments/useCompartments';
 export { default as useCompartmentValidation } from './useCompartmentValidation/useCompartmentValidation';
 export { default as useNavItemMatcher } from './useNavItemMatcher/useNavItemMatcher';
-export { default as useRoutes } from './useRoutes/useRoutes';
 export { default as useRoutesBreadcrumbs } from './useRoutesBreadcrumbs/useRoutesBreadcrumbs';
 export { default as useContentTypes } from './useContentTypes/useContentTypes';
 export { default as useContentType } from './useContentType/useContentType';

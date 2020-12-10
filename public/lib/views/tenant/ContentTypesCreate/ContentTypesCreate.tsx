@@ -3,7 +3,14 @@ import {
 	ContextHeader,
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
-import { AlertContainer, DataLoader, RenderChildRoutes, useTenantContext } from '@redactie/utils';
+import {
+	AlertContainer,
+	DataLoader,
+	LoadingState,
+	RenderChildRoutes,
+	useNavigate,
+	useTenantContext,
+} from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -13,9 +20,9 @@ import {
 	CONTENT_TYPE_DETAIL_TAB_MAP,
 	MODULE_PATHS,
 } from '../../../contentTypes.const';
-import { ContentTypesRouteProps, LoadingState, Tab } from '../../../contentTypes.types';
+import { ContentTypesRouteProps, Tab } from '../../../contentTypes.types';
 import { generateEmptyContentType } from '../../../helpers';
-import { useActiveTabs, useContentType, useNavigate, useRoutesBreadcrumbs } from '../../../hooks';
+import { useActiveTabs, useContentType, useRoutesBreadcrumbs } from '../../../hooks';
 import { ContentTypeCreateRequest, ContentTypeMeta } from '../../../services/contentTypes';
 import { contentTypesFacade } from '../../../store/contentTypes';
 

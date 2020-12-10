@@ -14,6 +14,7 @@ import { UseFieldTypesUIStates } from './hooks/useFieldTypesUIStates/useFieldTyp
 import { UsePaginatedPresets } from './hooks/usePaginatedPresets/usePaginatedPresets.types';
 import { UsePresets } from './hooks/usePresets/usePresets.types';
 import { UsePresetsUIStates } from './hooks/usePresetsUIStates/usePresetsUIStates.types';
+import { Field } from './services/contentTypes';
 import { FieldType, FieldTypeMeta, FieldTypesApiService } from './services/fieldTypes';
 import { Preset, PresetDetail, PresetsApiService } from './services/presets';
 import {
@@ -21,9 +22,15 @@ import {
 	ContentTypeFieldDetailModel,
 	FieldsByCompartment,
 } from './store/contentTypes';
+import { DynamicFieldDetailModel } from './store/dynamicField/dynamicField.model';
 import { FieldTypesFacade } from './store/fieldTypes';
 import { PresetsFacade } from './store/presets';
-import { ExternalTabValue } from './views/tenant/ContentTypesDetailExternal';
+import {
+	ContentTypesCCConfig,
+	ContentTypesCCSettings,
+	ContentTypesCCValidation,
+	ExternalTabValue,
+} from './views/tenant';
 
 export interface ContentTypesModuleProps<Params extends { [K in keyof Params]?: string } = {}>
 	extends RouteConfigComponentProps<Params> {
@@ -74,6 +81,12 @@ export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
 	readonly CTField: ContentTypeFieldDetailModel;
 	readonly fieldType: FieldType;
 	readonly preset?: PresetDetail;
+	readonly dynamicFieldSettingsContext?: {
+		dynamicField: DynamicFieldDetailModel;
+		getCreatePath: (isPreset: boolean, fieldTypeUuid: string) => string;
+		getEditPath: (uuid: string) => string;
+		setDynamicField: (field: Field) => void;
+	};
 	onDelete?: () => void;
 	onSubmit: (data: any) => void;
 	formikRef: FormikRef;
@@ -122,12 +135,6 @@ export enum TabTypes {
 	'EXTERNAL',
 }
 
-export enum LoadingState {
-	Loading = 'loading',
-	Loaded = 'loaded',
-	Error = 'error',
-}
-
 export type FormikRef = FormikConfig<FormikValues>['innerRef'];
 
 export interface TableColumn<RowData = unknown> {
@@ -166,6 +173,13 @@ export interface ContentTypeAPI {
 		useActiveFieldType: UseActiveFieldType;
 		useFieldTypes: UseFieldTypes;
 		useFieldTypesUIStates: UseFieldTypesUIStates;
+	};
+	views: {
+		tenant: {
+			ContentTypesCCConfig: typeof ContentTypesCCConfig;
+			ContentTypesCCSettings: typeof ContentTypesCCSettings;
+			ContentTypesCCValidation: typeof ContentTypesCCValidation;
+		};
 	};
 }
 

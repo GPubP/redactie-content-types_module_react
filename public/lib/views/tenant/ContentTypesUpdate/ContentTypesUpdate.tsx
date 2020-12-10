@@ -5,8 +5,10 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import {
 	DataLoader,
+	LoadingState,
 	RenderChildRoutes,
 	useDetectValueChangesWorker,
+	useNavigate,
 	useTenantContext,
 } from '@redactie/utils';
 import { omit } from 'ramda';
@@ -22,7 +24,6 @@ import {
 import {
 	ContentTypesRouteParams,
 	ContentTypesRouteProps,
-	LoadingState,
 	Tab,
 	TabTypes,
 } from '../../../contentTypes.types';
@@ -32,7 +33,6 @@ import {
 	useActiveTabs,
 	useContentType,
 	useFieldTypes,
-	useNavigate,
 	usePresets,
 	useRoutesBreadcrumbs,
 } from '../../../hooks';

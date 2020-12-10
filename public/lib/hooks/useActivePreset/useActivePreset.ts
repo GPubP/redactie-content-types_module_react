@@ -8,14 +8,23 @@ import { UseActivePreset } from './useActivePreset.types';
 const useActivePreset: UseActivePreset = (presetId?: string) => {
 	useEffect(() => {
 		if (presetId) {
-			if (!presetsFacade.hasActiveDetail(presetId)) {
-				presetsFacade.getPreset(presetId);
+			const hasPreset = presetsFacade.hasPreset(presetId);
+			if (hasPreset && presetsFacade.hasActivePreset(presetId)) {
+				return;
 			}
-			presetsFacade.setActiveDetail(presetId);
+
+			if (!hasPreset) {
+				presetsFacade
+					.getPreset(presetId)
+					.then(() => presetsFacade.setActivePreset(presetId));
+				return;
+			}
+
+			presetsFacade.setActivePreset(presetId);
 			return;
 		}
-		// remove active detail when presetId is undefined
-		presetsFacade.removeActiveDetail();
+		// remove active Preset when presetId is undefined
+		presetsFacade.removeActivePreset();
 	}, [presetId]);
 
 	const preset = useObservable(presetsFacade.activePreset$);

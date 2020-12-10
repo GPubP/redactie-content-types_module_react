@@ -4,8 +4,10 @@ import {
 	alertService,
 	DataLoader,
 	LeavePrompt,
+	LoadingState,
 	RenderChildRoutes,
 	useDetectValueChangesWorker,
+	useNavigate,
 	useTenantContext,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
@@ -16,14 +18,13 @@ import { NavLink } from 'react-router-dom';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
-import { ContentTypesDetailRouteProps, LoadingState } from '../../../contentTypes.types';
+import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
 import { filterCompartments, generateFieldFromType, validateCompartments } from '../../../helpers';
 import {
 	useActiveFieldType,
 	useActivePreset,
 	useCompartments,
 	useCompartmentValidation,
-	useNavigate,
 	useNavItemMatcher,
 	useQuery,
 } from '../../../hooks';

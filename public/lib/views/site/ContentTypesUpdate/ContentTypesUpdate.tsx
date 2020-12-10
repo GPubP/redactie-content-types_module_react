@@ -6,7 +6,9 @@ import {
 import {
 	AlertContainer,
 	DataLoader,
+	LoadingState,
 	RenderChildRoutes,
+	useNavigate,
 	useSiteContext,
 	useTenantContext,
 } from '@redactie/utils';
@@ -14,18 +16,13 @@ import React, { FC, MouseEvent, ReactElement, useEffect, useMemo, useState } fro
 import { Link, useParams } from 'react-router-dom';
 
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
-import {
-	ContentTypesRouteParams,
-	ContentTypesRouteProps,
-	LoadingState,
-} from '../../../contentTypes.types';
+import { ContentTypesRouteParams, ContentTypesRouteProps } from '../../../contentTypes.types';
 import { disableTabs } from '../../../helpers/tabs';
 import {
 	useActiveField,
 	useActiveRouteConfig,
 	useActiveTabs,
 	useContentType,
-	useNavigate,
 	useRoutesBreadcrumbs,
 } from '../../../hooks';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';

@@ -161,18 +161,22 @@ export class PresetsFacade {
 	}
 
 	// DETAIL FUNCTIONS
-	public setActiveDetail(presetId: string): void {
+	public setActivePreset(presetId: string): void {
 		this.detailStore.setActive(presetId);
 		this.detailStore.ui.setActive(presetId);
 	}
 
-	public removeActiveDetail(): void {
+	public removeActivePreset(): void {
 		this.detailStore.setActive(null);
 		this.detailStore.ui.setActive(null);
 	}
 
-	public hasActiveDetail(presetId: string): boolean {
+	public hasActivePreset(presetId: string): boolean {
 		return this.detailQuery.hasActive(presetId);
+	}
+
+	public hasPreset(presetId: string): boolean {
+		return this.detailQuery.hasEntity(presetId);
 	}
 
 	public createPreset(
@@ -238,7 +242,7 @@ export class PresetsFacade {
 			});
 	}
 
-	public getPreset(presetId: string, options?: GetPresetPayloadOptions): void {
+	public getPreset(presetId: string, options?: GetPresetPayloadOptions): Promise<void> {
 		const defaultOptions = {
 			alertContainerId: PRESETS_ALERT_CONTAINER_IDS.fetchOne,
 			force: false,
@@ -248,11 +252,11 @@ export class PresetsFacade {
 			...options,
 		};
 		if (this.detailQuery.hasEntity(presetId) && !serviceOptions.force) {
-			return;
+			return Promise.resolve();
 		}
 		const alertMessages = getAlertMessages();
 		this.detailStore.setIsFetchingEntity(true, presetId);
-		this.service
+		return this.service
 			.getPreset(presetId)
 			.then(response => {
 				this.detailStore.upsert(response.uuid, response);

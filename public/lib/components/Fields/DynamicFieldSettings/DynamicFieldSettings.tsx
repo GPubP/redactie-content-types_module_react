@@ -1,30 +1,27 @@
 import { Card } from '@acpaas-ui/react-components';
 import { Table } from '@acpaas-ui/react-editorial-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
-import { DataLoader } from '@redactie/utils';
+import { DataLoader, LoadingState } from '@redactie/utils';
 import classNames from 'classnames/bind';
 import { useFormikContext } from 'formik';
 import { __, compose, equals, pathOr } from 'ramda';
-import React, { ReactElement, useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { ReactElement, useContext, useEffect, useMemo, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import formRendererConnector from '../../../connectors/formRenderer';
 import { useCoreTranslation } from '../../../connectors/translations';
-import { DYNAMIC_FIELD_SETTINGS_NAME, MODULE_PATHS } from '../../../contentTypes.const';
-import { LoadingState, NewCCFormState } from '../../../contentTypes.types';
+import { DYNAMIC_FIELD_SETTINGS_NAME } from '../../../contentTypes.const';
+import { NewCCFormState } from '../../../contentTypes.types';
 import { sortFieldTypes } from '../../../helpers';
-import useActiveField from '../../../hooks/useActiveField/useActiveField';
-import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
 import useFieldTypes from '../../../hooks/useFieldTypes/useFieldTypes';
-import useNavigate from '../../../hooks/useNavigate/useNavigate';
 import usePresets from '../../../hooks/usePresets/usePresets';
 import { Field } from '../../../services/contentTypes/contentTypes.service.types';
-import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
 import { FieldTypeListModel } from '../../../store/fieldTypes';
 import { FormCTNewCC } from '../../forms';
 import { FormCTNewCCProps } from '../../forms/FormCTNewCC/FormCTNewCC.types';
 
 import { DYNAMIC_CC_COLUMNS } from './DynamicFieldSettings.const';
+import DynamicFieldSettingsContext from './DynamicFieldSettings.context';
 import styles from './DynamicFieldSettings.module.scss';
 import { DynamicFieldCCRow } from './DynamicFieldSettings.types';
 
@@ -37,12 +34,16 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 	/**
 	 * HOOKS
 	 */
-	const { contentTypeUuid } = useParams<{ contentTypeUuid: string }>();
+	const history = useHistory();
+	const {
+		activeField,
+		dynamicField,
+		setDynamicField = () => null,
+		getCreatePath = () => '',
+		getEditPath = () => '',
+	} = useContext(DynamicFieldSettingsContext);
 	const { setFieldValue, values } = useFormikContext<Record<string, { config: Field[] }>>();
-	const activeField = useActiveField();
-	const dynamicField = useDynamicField();
 	const [, fieldTypes] = useFieldTypes();
-	const { navigate, generatePath } = useNavigate();
 	const [, presets] = usePresets();
 	const value: Field[] = pathOr([], ['config', 'fields'])(dynamicField);
 	const fields = useMemo(() => [...fieldTypes, ...presets].sort(sortFieldTypes), [
@@ -61,9 +62,9 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 		}
 
 		if (!dynamicField || dynamicField.uuid !== activeField.uuid) {
-			dynamicFieldFacade.setDynamicField(activeField);
+			setDynamicField(activeField);
 		}
-	}, [activeField, dynamicField]);
+	}, [activeField, dynamicField, setDynamicField]);
 
 	useEffect(() => {
 		setFieldTypeOptions(
@@ -121,19 +122,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 		// Only presets have a fieldType prop available on the data object
 		const fieldTypeIsPreset = !!selectedFieldType?.data.fieldType;
 
-		navigate(
-			MODULE_PATHS.detailCCEditDynamicNewSettings,
-			{
-				contentTypeUuid,
-				contentComponentUuid: activeField?.uuid,
-			},
-			undefined,
-			new URLSearchParams(
-				fieldTypeIsPreset
-					? { preset: selectedFieldType.uuid }
-					: { fieldType: selectedFieldType.uuid }
-			)
-		);
+		history.push(getCreatePath(fieldTypeIsPreset, selectedFieldType.uuid));
 	};
 
 	/**
@@ -143,11 +132,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 	const renderTableField = (values: Field[]): ReactElement => {
 		const contentTypeRows: DynamicFieldCCRow[] = values.map(cc => ({
 			id: cc.uuid,
-			path: generatePath(MODULE_PATHS.detailCCEditDynamicEditSettings, {
-				contentTypeUuid,
-				contentComponentUuid: activeField?.uuid,
-				dynamicContentComponentUuid: cc.uuid,
-			}),
+			path: getEditPath(cc.uuid),
 			label: cc.label,
 			name: cc.name,
 			fieldType: compose<Field, string, string>(
