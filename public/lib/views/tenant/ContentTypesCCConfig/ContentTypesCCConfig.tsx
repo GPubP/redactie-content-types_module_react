@@ -27,7 +27,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	const dynamicFieldSettingsContextValue = useMemo(
 		() => ({
 			activeField: CTField,
-			...dynamicFieldSettingsContext,
+			...(dynamicFieldSettingsContext || {}),
 		}),
 		[CTField, dynamicFieldSettingsContext]
 	);

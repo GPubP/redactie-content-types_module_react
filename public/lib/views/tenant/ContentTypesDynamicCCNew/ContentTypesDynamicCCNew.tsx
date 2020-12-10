@@ -263,27 +263,6 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			CTField: dynamicActiveField,
 			fieldType: dynamicActiveField?.fieldType,
 			preset: preset,
-			dynamicFieldSettingsContext: {
-				dynamicField,
-				getCreatePath: (isPreset: boolean, fieldTypeUuid: string) =>
-					generatePath(
-						MODULE_PATHS.detailCCEditDynamicNewSettings,
-						{
-							contentTypeUuid,
-							contentComponentUuid: dynamicActiveField.uuid,
-						},
-						new URLSearchParams(
-							isPreset ? { preset: fieldTypeUuid } : { fieldType: fieldTypeUuid }
-						)
-					),
-				getEditPath: (uuid: string) =>
-					generatePath(MODULE_PATHS.detailCCEditDynamicEditSettings, {
-						contentTypeUuid,
-						contentComponentUuid: dynamicActiveField.uuid,
-						dynamicContentComponentUuid: uuid,
-					}),
-				setDynamicField: dynamicFieldFacade.setDynamicField.bind(dynamicFieldFacade),
-			},
 			onSubmit: onFieldTypeChange,
 			formikRef: (instance: any) => {
 				if (!equals(activeCompartmentFormikRef.current, instance)) {

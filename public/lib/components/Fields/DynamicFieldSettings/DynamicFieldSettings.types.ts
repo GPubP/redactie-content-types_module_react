@@ -15,7 +15,7 @@ export interface DynamicFieldCCRow {
 export interface DynamicFieldSettingsContextValue {
 	activeField?: Field;
 	dynamicField?: Field;
-	getCreatePath: (isPreset: boolean, fieldTypeUuid: string) => string;
-	getEditPath: (uuid: string) => string;
-	setDynamicField: (field: Field) => void;
+	getCreatePath?: (isPreset: boolean, fieldTypeUuid: string) => string;
+	getEditPath?: (uuid: string) => string;
+	setDynamicField?: (field: Field) => void;
 }

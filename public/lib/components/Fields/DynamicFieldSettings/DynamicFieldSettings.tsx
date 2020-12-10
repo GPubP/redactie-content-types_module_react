@@ -35,9 +35,13 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 	 * HOOKS
 	 */
 	const history = useHistory();
-	const { activeField, dynamicField, setDynamicField, getCreatePath, getEditPath } = useContext(
-		DynamicFieldSettingsContext
-	);
+	const {
+		activeField,
+		dynamicField,
+		setDynamicField = () => null,
+		getCreatePath = () => '',
+		getEditPath = () => '',
+	} = useContext(DynamicFieldSettingsContext);
 	const { setFieldValue, values } = useFormikContext<Record<string, { config: Field[] }>>();
 	const [, fieldTypes] = useFieldTypes();
 	const [, presets] = usePresets();

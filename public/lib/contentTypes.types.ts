@@ -81,7 +81,7 @@ export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
 	readonly CTField: ContentTypeFieldDetailModel;
 	readonly fieldType: FieldType;
 	readonly preset?: PresetDetail;
-	readonly dynamicFieldSettingsContext: {
+	readonly dynamicFieldSettingsContext?: {
 		dynamicField: DynamicFieldDetailModel;
 		getCreatePath: (isPreset: boolean, fieldTypeUuid: string) => string;
 		getEditPath: (uuid: string) => string;

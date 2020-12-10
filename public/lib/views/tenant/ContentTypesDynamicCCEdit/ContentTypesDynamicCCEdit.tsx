@@ -246,27 +246,6 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			CTField: dynamicActiveField,
 			fieldType: dynamicActiveField?.fieldType,
 			preset: dynamicActiveField?.preset,
-			dynamicFieldSettingsContext: {
-				dynamicField,
-				getCreatePath: (isPreset: boolean, fieldTypeUuid: string) =>
-					generatePath(
-						MODULE_PATHS.detailCCEditDynamicNewSettings,
-						{
-							contentTypeUuid,
-							contentComponentUuid: dynamicActiveField.uuid,
-						},
-						new URLSearchParams(
-							isPreset ? { preset: fieldTypeUuid } : { fieldType: fieldTypeUuid }
-						)
-					),
-				getEditPath: (uuid: string) =>
-					generatePath(MODULE_PATHS.detailCCEditDynamicEditSettings, {
-						contentTypeUuid,
-						contentComponentUuid: dynamicActiveField.uuid,
-						dynamicContentComponentUuid: uuid,
-					}),
-				setDynamicField: dynamicFieldFacade.setDynamicField.bind(dynamicFieldFacade),
-			},
 			onDelete: onFieldDelete,
 			onSubmit: onFieldChange,
 			formikRef: (instance: any) => {
