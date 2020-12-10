@@ -1,7 +1,7 @@
+import { BaseEntityFacade } from '@redactie/utils';
 import { omit } from 'ramda';
 
 import { ContentTypesApiService, contentTypesApiService } from '../../services/contentTypes';
-import { BaseEntityFacade } from '../shared';
 
 import { DynamicFieldDetailModel } from './dynamicField.model';
 import { DynamicFieldQuery, dynamicFieldQuery } from './dynamicField.query';

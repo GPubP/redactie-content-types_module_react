@@ -4,14 +4,13 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { DataLoader, useNavigate, useSiteContext } from '@redactie/utils';
+import { DataLoader, LoadingState, useNavigate, useSiteContext } from '@redactie/utils';
 import React, { ReactElement, useEffect, useState } from 'react';
 
 import rolesRightsConnector from '../../../connectors/rolesRights';
 import sitesConnector from '../../../connectors/sites';
 import { useCoreTranslation } from '../../../connectors/translations';
 import { MODULE_PATHS } from '../../../contentTypes.const';
-import { LoadingState } from '../../../contentTypes.types';
 import { useContentTypes, useRoutesBreadcrumbs } from '../../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes/contentTypes.service.cont';
 import { ContentTypeModel, contentTypesFacade } from '../../../store/contentTypes';

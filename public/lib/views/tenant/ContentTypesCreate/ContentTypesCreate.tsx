@@ -6,6 +6,7 @@ import {
 import {
 	AlertContainer,
 	DataLoader,
+	LoadingState,
 	RenderChildRoutes,
 	useNavigate,
 	useTenantContext,
@@ -19,7 +20,7 @@ import {
 	CONTENT_TYPE_DETAIL_TAB_MAP,
 	MODULE_PATHS,
 } from '../../../contentTypes.const';
-import { ContentTypesRouteProps, LoadingState, Tab } from '../../../contentTypes.types';
+import { ContentTypesRouteProps, Tab } from '../../../contentTypes.types';
 import { generateEmptyContentType } from '../../../helpers';
 import { useActiveTabs, useContentType, useRoutesBreadcrumbs } from '../../../hooks';
 import { ContentTypeCreateRequest, ContentTypeMeta } from '../../../services/contentTypes';
