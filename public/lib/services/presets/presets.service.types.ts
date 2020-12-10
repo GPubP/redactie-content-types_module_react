@@ -71,7 +71,6 @@ export interface BasePreset<T, F> {
 
 export type Preset = BasePreset<string, string>;
 
-export type PresetDetail = BasePreset<Validator, FieldType>;
 export interface PresetsPaging {
 	total: number;
 	skip: number;
@@ -84,6 +83,8 @@ export interface PresetsPaging {
  * - Define all response interfaces coming from the server
  * =========================
  */
+
+export type PresetDetailResponse = BasePreset<Validator, FieldType>;
 
 export interface PresetsResponse {
 	data: Preset[];
@@ -99,14 +100,14 @@ export interface PresetsResponse {
 
 export interface UpdatePresetPayload {
 	uuid: string;
-	body: PresetDetail;
+	body: PresetDetailResponse;
 }
 
 export interface CreatePresetPayload {
 	data: {
 		name: string;
 		label: string;
-		fields?: string[];
-		validators?: string[];
+		fields?: PresetDetailResponse['data']['fields'];
+		validators?: PresetDetailResponse['data']['validators'];
 	};
 }

@@ -23,9 +23,9 @@ import { useCompartments, useCompartmentValidation, useNavItemMatcher } from '..
 import useActiveField from '../../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
 import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
-import { Preset, PresetDetail } from '../../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
+import { PresetDetailModel, PresetListModel } from '../../../store/presets';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import {
@@ -54,7 +54,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	const [t] = useCoreTranslation();
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(
-		dynamicActiveField?.preset as PresetDetail,
+		dynamicActiveField?.preset as PresetDetailModel,
 		dynamicActiveField?.fieldType
 	);
 	const [hasChanges] = useDetectValueChangesWorker(
@@ -178,7 +178,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			data,
 			validate,
 			dynamicActiveField?.fieldType,
-			(dynamicActiveField?.preset as unknown) as Preset
+			(dynamicActiveField?.preset as unknown) as PresetListModel
 		);
 		dynamicFieldFacade.updateActiveField({
 			...data,
@@ -206,7 +206,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			dynamicActiveField,
 			validate,
 			dynamicActiveField?.fieldType,
-			(dynamicActiveField?.preset as unknown) as Preset
+			(dynamicActiveField?.preset as unknown) as PresetListModel
 		);
 
 		// Validate current form to trigger fields error states

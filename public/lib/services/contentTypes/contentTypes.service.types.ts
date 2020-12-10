@@ -1,5 +1,5 @@
 import { DataType, FieldType, Operator } from '../fieldTypes';
-import { Preset, PresetDetail, Validator } from '../presets';
+import { Preset, PresetDetailResponse, Validator } from '../presets';
 
 /**
  * =========================
@@ -43,7 +43,7 @@ export interface Validation {
 
 export type ValidationSchema = Record<string, any>;
 
-export interface Field<D = DataType, F = FieldType, P = Preset | PresetDetail> {
+export interface Field<D = DataType, F = FieldType, P = Preset | PresetDetailResponse> {
 	uuid: string;
 	label: string;
 	module: string;

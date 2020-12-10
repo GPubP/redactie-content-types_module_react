@@ -5,7 +5,7 @@ import { from, Observable } from 'rxjs';
 import { showAlert } from '../../helpers';
 import {
 	CreatePresetPayload,
-	PresetDetail,
+	PresetDetailResponse,
 	presetsApiService,
 	PresetsApiService,
 	UpdatePresetPayload,
@@ -182,9 +182,10 @@ export class PresetsFacade {
 	public createPreset(
 		payload: CreatePresetPayload,
 		options: CreatePresetPayloadOptions = {
-			alertContainerId: PRESETS_ALERT_CONTAINER_IDS.create,
+			successAlertContainerId: PRESETS_ALERT_CONTAINER_IDS.create,
+			errorAlertContainerId: PRESETS_ALERT_CONTAINER_IDS.create,
 		}
-	): Promise<PresetDetail | void> {
+	): Promise<PresetDetailResponse | void> {
 		this.detailStore.setIsCreating(true);
 		const alertMessages = getAlertMessages(payload.data.name);
 
@@ -196,13 +197,21 @@ export class PresetsFacade {
 					error: null,
 				});
 				this.detailStore.upsert(preset.uuid, preset);
-
 				this.listPaginator.clearCache();
-				showAlert(options.alertContainerId, 'success', alertMessages.create.success);
+
+				// Timeout because the alert is visible on the edit page
+				// and not on the create page
+				setTimeout(() => {
+					showAlert(
+						options.successAlertContainerId,
+						'success',
+						alertMessages.create.success
+					);
+				}, 300);
 				return preset;
 			})
 			.catch(error => {
-				showAlert(options.alertContainerId, 'error', alertMessages.create.error);
+				showAlert(options.errorAlertContainerId, 'error', alertMessages.create.error);
 				this.detailStore.update({
 					isCreating: false,
 					error,
@@ -215,7 +224,7 @@ export class PresetsFacade {
 		options: UpdatePresetPayloadOptions = {
 			alertContainerId: PRESETS_ALERT_CONTAINER_IDS.create,
 		}
-	): Promise<PresetDetail | void> {
+	): Promise<PresetDetailResponse | void> {
 		this.detailStore.setIsUpdatingEntity(true, payload.uuid);
 		const alertMessages = getAlertMessages(payload.body.data.label);
 

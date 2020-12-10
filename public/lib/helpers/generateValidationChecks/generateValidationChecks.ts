@@ -10,7 +10,8 @@ import {
 	ValidationCheckField,
 } from '../../services/contentTypes';
 import { FieldTypeData } from '../../services/fieldTypes';
-import { PresetDetail, Validator } from '../../services/presets';
+import { Validator } from '../../services/presets';
+import { PresetDetailModel } from '../../store/presets';
 
 const createCheck = (key: string, val: unknown, validator?: Validator): ValidationCheck => ({
 	key,
@@ -64,7 +65,7 @@ const getChecksFromData = (
 
 const getChecksFromPreset = (
 	data: Record<string, any>,
-	preset: PresetDetail,
+	preset: PresetDetailModel,
 	create = false
 ): ValicationCheckWithFields[] => {
 	return [
@@ -107,7 +108,7 @@ const getChecksFromPreset = (
 export const generateValidationChecks = (
 	data: FormValues,
 	fieldTypeData: FieldTypeData,
-	preset?: PresetDetail,
+	preset?: PresetDetailModel,
 	create = false
 ): Validation => {
 	if (preset) {

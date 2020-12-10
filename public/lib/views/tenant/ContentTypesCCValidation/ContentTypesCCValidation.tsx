@@ -13,7 +13,7 @@ import {
 	ValidationCheckField,
 } from '../../../services/contentTypes';
 import { FieldTypeData } from '../../../services/fieldTypes';
-import { PresetDetail } from '../../../services/presets';
+import { PresetDetailModel } from '../../../store/presets';
 
 const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	CTField,
@@ -81,7 +81,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	 *
 	 * Methods
 	 */
-	const generateFormSchemaFromPreset = (preset: PresetDetail): FormSchema => ({
+	const generateFormSchemaFromPreset = (preset: PresetDetailModel): FormSchema => ({
 		fields: preset?.data?.fields?.reduce((fSchema, field) => {
 			if (field.validators?.length > 0) {
 				field.validators.forEach(validator =>
@@ -114,7 +114,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 
 	const hasValidatorsToConfigure = (
 		fieldTypeData: FieldTypeData,
-		preset?: PresetDetail
+		preset?: PresetDetailModel
 	): boolean => {
 		if (preset) {
 			const { data } = preset;
@@ -128,7 +128,10 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 		 * We need to set the required prop on the generalConfig when a	required validator was set by the user
 		 * The form renderer is using this prop to indicate that a field is required
 		 */
-		const generateConfig = (data: FormValues, preset?: PresetDetail): Record<string, any> => {
+		const generateConfig = (
+			data: FormValues,
+			preset?: PresetDetailModel
+		): Record<string, any> => {
 			return preset
 				? Object.keys(data).reduce(
 						(acc, fieldName) => {
@@ -159,7 +162,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 
 		const generateGeneralConfig = (
 			data: FormValues = {},
-			preset?: PresetDetail
+			preset?: PresetDetailModel
 		): Record<string, any> => {
 			if (!preset && typeof data.required === 'boolean') {
 				return {

@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 
 import { FieldType } from '../../services/fieldTypes';
-import { PresetDetail } from '../../services/presets';
+import { PresetDetailModel } from '../../store/presets';
 
 const useNavItemMatcher = (
-	preset: PresetDetail | null | undefined,
+	preset: PresetDetailModel | null | undefined,
 	fieldType: FieldType | null | undefined
 ): FieldType => {
 	const navItemMatcher = useMemo(() => {
