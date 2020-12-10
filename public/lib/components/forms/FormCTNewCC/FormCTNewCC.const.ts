@@ -16,9 +16,7 @@ export const COMPARTMENT_DEFAULT_OPTION = {
 	disabled: true,
 };
 
-export const CC_ADD_VALIDATION_SCHEMA_DUPLICATE_NAME = (
-	fieldsByCompartments: FieldsByCompartment[]
-): any =>
+export const NEW_CC_FORM_VALIDATION_SCHEMA = (fieldsByCompartments: FieldsByCompartment[]): any =>
 	object().shape({
 		name: string()
 			.required('Naam is een verplicht veld')

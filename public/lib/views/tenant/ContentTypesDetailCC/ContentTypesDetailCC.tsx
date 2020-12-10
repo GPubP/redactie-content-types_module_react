@@ -8,12 +8,12 @@ import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
-	CC_ADD_VALIDATION_SCHEMA_DUPLICATE_NAME,
 	FormCTEditCompartment,
 	FormCTEditCompartmentState,
 	FormCTNewCC,
 	FormCTNewCompartment,
 	FormCTNewCompartmentState,
+	NEW_CC_FORM_VALIDATION_SCHEMA,
 } from '../../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import {
@@ -363,7 +363,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 									name: '',
 									compartment: CONTENT_COMPARTMENT_UUID,
 								}}
-								validationSchema={CC_ADD_VALIDATION_SCHEMA_DUPLICATE_NAME(
+								validationSchema={NEW_CC_FORM_VALIDATION_SCHEMA(
 									fieldsByCompartments
 								)}
 								onSubmit={onCCFormSubmit}
