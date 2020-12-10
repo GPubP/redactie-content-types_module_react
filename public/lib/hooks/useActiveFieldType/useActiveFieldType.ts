@@ -8,14 +8,23 @@ import { UseActiveFieldType } from './useActiveFieldType.types';
 const useActiveFieldType: UseActiveFieldType = (fieldTypeId?: string) => {
 	useEffect(() => {
 		if (fieldTypeId) {
-			if (!fieldTypesFacade.hasActiveDetail(fieldTypeId)) {
-				fieldTypesFacade.getFieldType(fieldTypeId);
+			const hasFieldType = fieldTypesFacade.hasFieldType(fieldTypeId);
+			if (hasFieldType && fieldTypesFacade.hasActiveFieldType(fieldTypeId)) {
+				return;
 			}
-			fieldTypesFacade.setActiveDetail(fieldTypeId);
+
+			if (!hasFieldType) {
+				fieldTypesFacade
+					.getFieldType(fieldTypeId)
+					.then(() => fieldTypesFacade.setActiveFieldType(fieldTypeId));
+				return;
+			}
+
+			fieldTypesFacade.setActiveFieldType(fieldTypeId);
 			return;
 		}
-		// remove active detail when presetId is undefined
-		fieldTypesFacade.removeActiveDetail();
+		// remove active fieldType when fieldTypeId is undefined
+		fieldTypesFacade.removeActiveFieldType();
 	}, [fieldTypeId]);
 
 	const fieldType = useObservable(fieldTypesFacade.activeFieldType$);
