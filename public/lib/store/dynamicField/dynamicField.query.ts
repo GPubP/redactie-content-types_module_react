@@ -1,7 +1,6 @@
 import { isNil } from '@datorama/akita';
+import { BaseEntityQuery } from '@redactie/utils';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
-
-import { BaseEntityQuery } from '../shared';
 
 import { DynamicFieldState } from './dynamicField.model';
 import { DynamicFieldStore, dynamicFieldStore } from './dynamicField.store';
