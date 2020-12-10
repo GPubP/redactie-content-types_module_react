@@ -19,7 +19,8 @@ export interface GetPresetPayloadOptions {
 }
 
 export interface CreatePresetPayloadOptions {
-	alertContainerId: string;
+	successAlertContainerId: string;
+	errorAlertContainerId: string;
 }
 
 export interface UpdatePresetPayloadOptions {

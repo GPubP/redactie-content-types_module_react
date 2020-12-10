@@ -16,7 +16,7 @@ import { UsePresets } from './hooks/usePresets/usePresets.types';
 import { UsePresetsUIStates } from './hooks/usePresetsUIStates/usePresetsUIStates.types';
 import { Field } from './services/contentTypes';
 import { FieldType, FieldTypeMeta, FieldTypesApiService } from './services/fieldTypes';
-import { Preset, PresetDetail, PresetsApiService } from './services/presets';
+import { Preset, PresetsApiService } from './services/presets';
 import {
 	ContentTypeDetailModel,
 	ContentTypeFieldDetailModel,
@@ -24,7 +24,7 @@ import {
 } from './store/contentTypes';
 import { DynamicFieldDetailModel } from './store/dynamicField/dynamicField.model';
 import { FieldTypesFacade } from './store/fieldTypes';
-import { PresetsFacade } from './store/presets';
+import { PresetDetailModel, PresetsFacade } from './store/presets';
 import {
 	ContentTypesCCConfig,
 	ContentTypesCCSettings,
@@ -80,7 +80,7 @@ export interface ContentTypesDetailRouteProps<Params = ContentTypesDetailRoutePa
 export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
 	readonly CTField: ContentTypeFieldDetailModel;
 	readonly fieldType: FieldType;
-	readonly preset?: PresetDetail;
+	readonly preset?: PresetDetailModel;
 	readonly dynamicFieldSettingsContext?: {
 		dynamicField: DynamicFieldDetailModel;
 		getCreatePath: (isPreset: boolean, fieldTypeUuid: string) => string;

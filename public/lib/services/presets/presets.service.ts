@@ -5,7 +5,7 @@ import { api } from '../api';
 import { DEFAULT_PRESETS_SEARCH_PARAMS, PRESETS_PREFIX_URL } from './presets.service.const';
 import {
 	CreatePresetPayload,
-	PresetDetail,
+	PresetDetailResponse,
 	PresetsResponse,
 	UpdatePresetPayload,
 } from './presets.service.types';
@@ -17,15 +17,15 @@ export class PresetsApiService {
 		return api.get(`${PRESETS_PREFIX_URL}?${parseSearchParams(searchParams)}`).json();
 	}
 
-	public getPreset(uuid: string): Promise<PresetDetail> {
+	public getPreset(uuid: string): Promise<PresetDetailResponse> {
 		return api.get(`${PRESETS_PREFIX_URL}/${uuid}`).json();
 	}
 
-	public createPreset(payload: CreatePresetPayload): Promise<PresetDetail> {
+	public createPreset(payload: CreatePresetPayload): Promise<PresetDetailResponse> {
 		return api.post(`${PRESETS_PREFIX_URL}`, { json: payload }).json();
 	}
 
-	public updatePreset({ body, uuid }: UpdatePresetPayload): Promise<PresetDetail> {
+	public updatePreset({ body, uuid }: UpdatePresetPayload): Promise<PresetDetailResponse> {
 		return api.put(`${PRESETS_PREFIX_URL}/${uuid}`, { json: body }).json();
 	}
 }

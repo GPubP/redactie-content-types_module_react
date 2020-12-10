@@ -1,6 +1,6 @@
 import { Field } from '../../services/contentTypes';
 import { FieldTypeData } from '../../services/fieldTypes';
-import { PresetDetail } from '../../services/presets';
+import { PresetDetailModel } from '../../store/presets';
 
 const generateConfigFromDefaultConfig = (
 	defaultConfig: Record<string, any> = {}
@@ -14,7 +14,7 @@ const generateConfigFromDefaultValue = (fields: Field[] = []): Record<string, an
 		return acc;
 	}, {} as Record<string, any>);
 
-const generateConfigFromPreset = (preset: PresetDetail): Field[] =>
+const generateConfigFromPreset = (preset: PresetDetailModel): Field[] =>
 	preset.data?.fields.reduce((acc, field) => {
 		const newField = {
 			...field.field,
@@ -33,7 +33,7 @@ const generateConfigFromPreset = (preset: PresetDetail): Field[] =>
 
 export const generateConfig = (
 	fieldTypeData: FieldTypeData,
-	preset?: PresetDetail
+	preset?: PresetDetailModel
 ): Record<string, any> => ({
 	...generateConfigFromDefaultConfig(fieldTypeData.defaultConfig),
 	...generateConfigFromDefaultValue(fieldTypeData.formSchema?.fields),
