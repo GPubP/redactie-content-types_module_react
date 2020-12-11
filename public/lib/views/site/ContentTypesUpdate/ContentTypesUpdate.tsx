@@ -52,7 +52,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		[
 			{
 				name: 'Content types',
-				target: generatePath(MODULE_PATHS.site.overview),
+				target: generatePath(`/sites${MODULE_PATHS.site.overview}`, { siteId }),
 			},
 		],
 		[]
