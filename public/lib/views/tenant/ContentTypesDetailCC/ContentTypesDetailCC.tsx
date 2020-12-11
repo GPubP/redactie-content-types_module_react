@@ -13,6 +13,7 @@ import {
 	FormCTNewCC,
 	FormCTNewCompartment,
 	FormCTNewCompartmentState,
+	NEW_CC_FORM_VALIDATION_SCHEMA,
 } from '../../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import {
@@ -362,6 +363,9 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 									name: '',
 									compartment: CONTENT_COMPARTMENT_UUID,
 								}}
+								validationSchema={NEW_CC_FORM_VALIDATION_SCHEMA(
+									fieldsByCompartments
+								)}
 								onSubmit={onCCFormSubmit}
 							/>
 						</div>

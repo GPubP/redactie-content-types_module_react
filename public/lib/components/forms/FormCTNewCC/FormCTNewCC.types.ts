@@ -15,5 +15,6 @@ export interface FormCTNewCCProps {
 	onSubmit: (formValues: NewCCFormState) => void;
 	hasName?: boolean;
 	className?: string;
+	validationSchema?: any;
 	[elementProp: string]: unknown;
 }
