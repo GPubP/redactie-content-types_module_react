@@ -16,9 +16,7 @@ export class DynamicFieldQuery extends BaseEntityQuery<DynamicFieldState> {
 	public dynamicField$ = this.select(state => state.dynamicField).pipe(
 		filter(dynamicField => !isNil(dynamicField), distinctUntilChanged())
 	);
-	public activeField$ = this.select(state => state.activeField).pipe(
-		filter(activeField => !isNil(activeField), distinctUntilChanged())
-	);
+	public activeField$ = this.select(state => state.activeField).pipe(distinctUntilChanged());
 }
 
 export const dynamicFieldQuery = new DynamicFieldQuery(dynamicFieldStore);
