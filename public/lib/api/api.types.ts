@@ -1,4 +1,5 @@
 import { ContentTypeAPI } from '../contentTypes.types';
+import { CreatePresetPayload, UpdatePresetPayload } from '../services/presets';
 import { ExternalTabOptions } from '../store/api/externalTabs';
 import { ContentTypeDetailModel, ContentTypeFieldDetailModel } from '../store/contentTypes';
 import {
@@ -18,6 +19,8 @@ export {
 	ContentTypeDetailModel,
 	ContentTypeFieldDetailModel,
 	// Presets types
+	CreatePresetPayload,
+	UpdatePresetPayload,
 	PresetListModel,
 	PresetDetailModel,
 	PresetDetailUIModel,

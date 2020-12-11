@@ -14,6 +14,6 @@ export const showAlert = (
 	const alertFn = alertService[alertType];
 
 	if (typeof alertFn === 'function') {
-		alertFn(alertProps, alertOptions);
+		alertFn.call(alertService, alertProps, alertOptions);
 	}
 };
