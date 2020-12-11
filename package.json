@@ -4,7 +4,7 @@
 	"description": "redactie content types module",
 	"main": "dist/redactie-content-types-module.umd.js",
 	"module": "dist/redactie-content-types-module.umd.js",
-	"types": "dist/public/index.d.ts",
+	"types": "dist/index.d.ts",
 	"jsnext:main": "dist/redactie-content-types-module.umd.js",
 	"scripts": {
 		"build:types": "tsc --emitDeclarationOnly",
