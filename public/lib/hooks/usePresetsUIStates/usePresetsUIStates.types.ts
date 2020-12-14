@@ -1,3 +1,5 @@
 import { PresetDetailUIModel, PresetUIModel } from '../../store/presets';
 
-export type UsePresetsUIStates = () => [PresetUIModel, PresetDetailUIModel | undefined];
+export type UsePresetsUIStates = (
+	presetId?: string
+) => [PresetUIModel, PresetDetailUIModel | undefined];
