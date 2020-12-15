@@ -1,4 +1,12 @@
 import { ContentTypeAPI } from '../contentTypes.types';
+import {
+	Field,
+	ValicationCheckWithAllowedFields,
+	ValicationCheckWithFields,
+	Validation,
+	ValidationCheck,
+	ValidationCheckField,
+} from '../services/contentTypes';
 import { CreatePresetPayload, UpdatePresetPayload } from '../services/presets';
 import { ExternalTabOptions } from '../store/api/externalTabs';
 import { ContentTypeDetailModel, ContentTypeFieldDetailModel } from '../store/contentTypes';
@@ -16,6 +24,12 @@ export {
 	ExternalTabOptions,
 	ExternalTabProps,
 	// Content type types
+	Field,
+	ValicationCheckWithAllowedFields,
+	ValicationCheckWithFields,
+	Validation,
+	ValidationCheck,
+	ValidationCheckField,
 	ContentTypeDetailModel,
 	ContentTypeFieldDetailModel,
 	// Presets types

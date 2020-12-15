@@ -7,6 +7,7 @@ import { NavLinkProps } from 'react-router-dom';
 
 import { registerCTDetailTab } from './api/registerCTDetailTab';
 import { ALERT_CONTAINER_IDS } from './contentTypes.const';
+import { generateConfig, generateValidationChecks } from './helpers';
 import { UseActiveFieldType } from './hooks/useActiveFieldType/useActiveFieldType.types';
 import { UseActivePreset } from './hooks/useActivePreset/useActivePreset.types';
 import { UseFieldTypes } from './hooks/useFieldTypes/useFieldTypes.types';
@@ -183,6 +184,10 @@ export interface ContentTypeAPI {
 			ContentTypesCCSettings: typeof ContentTypesCCSettings;
 			ContentTypesCCValidation: typeof ContentTypesCCValidation;
 		};
+	};
+	helpers: {
+		generateConfig: typeof generateConfig;
+		generateValidationChecks: typeof generateValidationChecks;
 	};
 }
 
