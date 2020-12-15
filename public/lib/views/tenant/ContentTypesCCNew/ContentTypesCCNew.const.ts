@@ -1,7 +1,7 @@
-import { FORM_CC_SETTINGS_VALIDATION_SCHEMA } from '../../../components/forms/FormCCSettings/FormCCSettings.const';
 import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
 import {
 	configurationCompartmentValidator,
+	settingsCompartmentValidator,
 	validationCompartmentValidator,
 } from '../../../helpers';
 import { CompartmentModel, CompartmentType } from '../../../store/ui/compartments';
@@ -13,7 +13,7 @@ export const CC_NEW_COMPARTMENTS: CompartmentModel[] = [
 		slug: MODULE_PATHS.detailCCNewSettings,
 		type: CompartmentType.INTERNAL,
 		isValid: false,
-		validate: values => FORM_CC_SETTINGS_VALIDATION_SCHEMA.isValidSync(values),
+		validate: settingsCompartmentValidator,
 	},
 	{
 		name: 'configuration',

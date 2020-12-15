@@ -1,7 +1,7 @@
-import { FORM_CC_SETTINGS_VALIDATION_SCHEMA } from '../../../components/forms/FormCCSettings/FormCCSettings.const';
 import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
 import {
 	configurationCompartmentValidator,
+	settingsCompartmentValidator,
 	validationCompartmentValidator,
 } from '../../../helpers';
 import { FieldType } from '../../../services/fieldTypes';
@@ -14,7 +14,7 @@ export const DYNAMIC_CC_EDIT_COMPARTMENTS: CompartmentModel[] = [
 		slug: MODULE_PATHS.detailCCEditDynamicEditSettings,
 		type: CompartmentType.INTERNAL,
 		isValid: false,
-		validate: values => FORM_CC_SETTINGS_VALIDATION_SCHEMA.isValidSync(values),
+		validate: settingsCompartmentValidator,
 	},
 	{
 		label: 'Configuratie',

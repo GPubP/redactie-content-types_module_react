@@ -7,7 +7,14 @@ import { NavLinkProps } from 'react-router-dom';
 
 import { registerCTDetailTab } from './api/registerCTDetailTab';
 import { ALERT_CONTAINER_IDS } from './contentTypes.const';
-import { generateConfig, generateValidationChecks } from './helpers';
+import {
+	configurationCompartmentValidator,
+	defaultValueCompartmentValidator,
+	generateConfig,
+	generateValidationChecks,
+	settingsCompartmentValidator,
+	validationCompartmentValidator,
+} from './helpers';
 import { UseActiveFieldType } from './hooks/useActiveFieldType/useActiveFieldType.types';
 import { UseActivePreset } from './hooks/useActivePreset/useActivePreset.types';
 import { UseFieldTypes } from './hooks/useFieldTypes/useFieldTypes.types';
@@ -186,6 +193,10 @@ export interface ContentTypeAPI {
 		};
 	};
 	helpers: {
+		configurationCompartmentValidator: typeof configurationCompartmentValidator;
+		defaultValueCompartmentValidator: typeof defaultValueCompartmentValidator;
+		settingsCompartmentValidator: typeof settingsCompartmentValidator;
+		validationCompartmentValidator: typeof validationCompartmentValidator;
 		generateConfig: typeof generateConfig;
 		generateValidationChecks: typeof generateValidationChecks;
 	};
