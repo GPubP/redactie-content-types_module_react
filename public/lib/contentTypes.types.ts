@@ -11,6 +11,7 @@ import { UseActiveFieldType } from './hooks/useActiveFieldType/useActiveFieldTyp
 import { UseActivePreset } from './hooks/useActivePreset/useActivePreset.types';
 import { UseFieldTypes } from './hooks/useFieldTypes/useFieldTypes.types';
 import { UseFieldTypesUIStates } from './hooks/useFieldTypesUIStates/useFieldTypesUIStates.types';
+import { UseNavItemMatcher } from './hooks/useNavItemMatcher/useNavitemMatcher.types';
 import { UsePaginatedPresets } from './hooks/usePaginatedPresets/usePaginatedPresets.types';
 import { UsePresets } from './hooks/usePresets/usePresets.types';
 import { UsePresetsUIStates } from './hooks/usePresetsUIStates/usePresetsUIStates.types';
@@ -173,6 +174,8 @@ export interface ContentTypeAPI {
 		useActiveFieldType: UseActiveFieldType;
 		useFieldTypes: UseFieldTypes;
 		useFieldTypesUIStates: UseFieldTypesUIStates;
+		// Other
+		useNavItemMatcher: UseNavItemMatcher;
 	};
 	views: {
 		tenant: {
