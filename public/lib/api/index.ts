@@ -3,6 +3,7 @@ import Core from '@redactie/redactie-core';
 import formRendererConnector from '../connectors/formRenderer';
 
 import { ContentTypeAPI } from './api.types';
+import { helpers } from './helpers';
 import { hooks } from './hooks';
 import { registerCTDetailTab } from './registerCTDetailTab';
 import { store } from './store';
@@ -15,6 +16,7 @@ export const registerContentTypeAPI = (): void => {
 		store,
 		hooks,
 		views,
+		helpers,
 	};
 	Core.modules.exposeModuleApi('content-type-module', api);
 };

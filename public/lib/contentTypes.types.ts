@@ -7,10 +7,12 @@ import { NavLinkProps } from 'react-router-dom';
 
 import { registerCTDetailTab } from './api/registerCTDetailTab';
 import { ALERT_CONTAINER_IDS } from './contentTypes.const';
+import { generateConfig, generateValidationChecks } from './helpers';
 import { UseActiveFieldType } from './hooks/useActiveFieldType/useActiveFieldType.types';
 import { UseActivePreset } from './hooks/useActivePreset/useActivePreset.types';
 import { UseFieldTypes } from './hooks/useFieldTypes/useFieldTypes.types';
 import { UseFieldTypesUIStates } from './hooks/useFieldTypesUIStates/useFieldTypesUIStates.types';
+import { UseNavItemMatcher } from './hooks/useNavItemMatcher/useNavitemMatcher.types';
 import { UsePaginatedPresets } from './hooks/usePaginatedPresets/usePaginatedPresets.types';
 import { UsePresets } from './hooks/usePresets/usePresets.types';
 import { UsePresetsUIStates } from './hooks/usePresetsUIStates/usePresetsUIStates.types';
@@ -173,6 +175,8 @@ export interface ContentTypeAPI {
 		useActiveFieldType: UseActiveFieldType;
 		useFieldTypes: UseFieldTypes;
 		useFieldTypesUIStates: UseFieldTypesUIStates;
+		// Other
+		useNavItemMatcher: UseNavItemMatcher;
 	};
 	views: {
 		tenant: {
@@ -180,6 +184,10 @@ export interface ContentTypeAPI {
 			ContentTypesCCSettings: typeof ContentTypesCCSettings;
 			ContentTypesCCValidation: typeof ContentTypesCCValidation;
 		};
+	};
+	helpers: {
+		generateConfig: typeof generateConfig;
+		generateValidationChecks: typeof generateValidationChecks;
 	};
 }
 
