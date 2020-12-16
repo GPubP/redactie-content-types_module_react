@@ -15,7 +15,12 @@ import {
 	FieldTypeDetailUIModel,
 	FieldTypeListModel,
 } from '../store/fieldTypes';
-import { PresetDetailModel, PresetDetailUIModel, PresetListModel } from '../store/presets';
+import {
+	PresetDetailFieldModel,
+	PresetDetailModel,
+	PresetDetailUIModel,
+	PresetListModel,
+} from '../store/presets';
 import { ExternalTabProps } from '../views/tenant/ContentTypesDetailExternal';
 
 export {
@@ -37,6 +42,7 @@ export {
 	UpdatePresetPayload,
 	PresetListModel,
 	PresetDetailModel,
+	PresetDetailFieldModel,
 	PresetDetailUIModel,
 	// Field types types
 	FieldTypeListModel,

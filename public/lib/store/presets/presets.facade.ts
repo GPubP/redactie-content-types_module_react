@@ -1,4 +1,4 @@
-import { PaginationResponse, PaginatorPlugin } from '@datorama/akita';
+import { arrayAdd, PaginationResponse, PaginatorPlugin } from '@datorama/akita';
 import { SearchParams } from '@redactie/utils';
 import { from, Observable } from 'rxjs';
 
@@ -12,6 +12,7 @@ import {
 } from '../../services/presets';
 
 import {
+	PresetDetailFieldModel,
 	PresetDetailModel,
 	PresetDetailUIModel,
 	presetsDetailQuery,
@@ -71,6 +72,10 @@ export class PresetsFacade {
 
 	public selectPresetUIState(presetId: string): Observable<PresetDetailUIModel> {
 		return this.detailQuery.ui.selectEntity(presetId);
+	}
+
+	public selectPreset(presetId: string): Observable<PresetDetailModel> {
+		return this.detailQuery.selectEntity(presetId);
 	}
 
 	// LIST FUNCTIONS
@@ -275,6 +280,46 @@ export class PresetsFacade {
 					isFetching: false,
 				});
 			});
+	}
+
+	public addField(presetId: string, field: PresetDetailFieldModel): void {
+		this.detailStore.update(presetId, state => ({
+			data: {
+				...state.data,
+				fields: arrayAdd(state.data.fields, {
+					field,
+					formSchema: {
+						fields: [],
+					},
+					validators: [],
+				}),
+			},
+		}));
+	}
+
+	public updateField(presetId: string, field: PresetDetailFieldModel): void {
+		this.detailStore.update(presetId, state => ({
+			data: {
+				...state.data,
+				fields: state.data.fields.map(f => {
+					return f.field.uuid === field.uuid
+						? {
+								...f,
+								field,
+						  }
+						: f;
+				}),
+			},
+		}));
+	}
+
+	public deleteField(presetId: string, fieldId: string): void {
+		this.detailStore.update(presetId, state => ({
+			data: {
+				...state.data,
+				fields: state.data.fields.filter(f => f.field.uuid !== fieldId),
+			},
+		}));
 	}
 }
 
