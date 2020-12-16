@@ -1,8 +1,9 @@
 import { CacheEntityState, CacheEntityUI, CacheEntityUIState } from '@redactie/utils';
 
-import { PresetDetailResponse } from '../../../services/presets';
+import { PresetDetailField, PresetDetailResponse } from '../../../services/presets';
 
 export type PresetDetailModel = PresetDetailResponse;
+export type PresetDetailFieldModel = PresetDetailField;
 export type PresetDetailUIModel = CacheEntityUI;
 
 export type PresetsDetailState = CacheEntityState<PresetDetailModel, string>;
