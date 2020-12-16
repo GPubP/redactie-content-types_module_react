@@ -16,3 +16,4 @@ export { default as usePresetsUIStates } from './usePresetsUIStates/usePresetsUI
 export { default as useActiveFieldType } from './useActiveFieldType/useActiveFieldType';
 export { default as useFieldTypesUIStates } from './useFieldTypesUIStates/useFieldTypesUIStates';
 export { default as usePreset } from './usePreset/usePreset';
+export { default as useFieldType } from './useFieldType/useFieldType';

@@ -47,6 +47,9 @@ export class FieldTypesFacade {
 	public selectFieldTypeUIState(fieldTypeId: string): Observable<FieldTypeDetailUIModel> {
 		return this.detailQuery.ui.selectEntity(fieldTypeId);
 	}
+	public selectFieldType(fieldTypeId: string): Observable<FieldTypeDetailModel> {
+		return this.detailQuery.selectEntity(fieldTypeId);
+	}
 
 	// LIST FUNCTIONS
 

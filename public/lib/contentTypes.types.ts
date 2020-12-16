@@ -17,6 +17,7 @@ import {
 } from './helpers';
 import { UseActiveFieldType } from './hooks/useActiveFieldType/useActiveFieldType.types';
 import { UseActivePreset } from './hooks/useActivePreset/useActivePreset.types';
+import { UseFieldType } from './hooks/useFieldType/useFieldType.types';
 import { UseFieldTypes } from './hooks/useFieldTypes/useFieldTypes.types';
 import { UseFieldTypesUIStates } from './hooks/useFieldTypesUIStates/useFieldTypesUIStates.types';
 import { UseNavItemMatcher } from './hooks/useNavItemMatcher/useNavitemMatcher.types';
@@ -182,6 +183,7 @@ export interface ContentTypeAPI {
 		usePresetsUIStates: UsePresetsUIStates;
 		// Field types
 		useActiveFieldType: UseActiveFieldType;
+		useFieldType: UseFieldType;
 		useFieldTypes: UseFieldTypes;
 		useFieldTypesUIStates: UseFieldTypesUIStates;
 		// Other

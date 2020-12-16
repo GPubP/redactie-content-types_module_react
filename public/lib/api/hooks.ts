@@ -2,6 +2,7 @@ import { ContentTypeAPI } from '../contentTypes.types';
 import {
 	useActiveFieldType,
 	useActivePreset,
+	useFieldType,
 	useFieldTypes,
 	useFieldTypesUIStates,
 	useNavItemMatcher,
@@ -20,6 +21,7 @@ export const hooks: ContentTypeAPI['hooks'] = {
 	usePresetsUIStates,
 	// Field types
 	useActiveFieldType,
+	useFieldType,
 	useFieldTypes,
 	useFieldTypesUIStates,
 	// Other
