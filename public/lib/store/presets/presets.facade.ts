@@ -1,11 +1,5 @@
-import {
-	arrayAdd,
-	arrayUpdate,
-	PaginationResponse,
-	PaginatorPlugin,
-	UpdateEntityPredicate,
-} from '@datorama/akita';
-import { FormikOnChangeHandler, SearchParams } from '@redactie/utils';
+import { arrayAdd, PaginationResponse, PaginatorPlugin } from '@datorama/akita';
+import { SearchParams } from '@redactie/utils';
 import { from, Observable } from 'rxjs';
 
 import { showAlert } from '../../helpers';
@@ -78,6 +72,10 @@ export class PresetsFacade {
 
 	public selectPresetUIState(presetId: string): Observable<PresetDetailUIModel> {
 		return this.detailQuery.ui.selectEntity(presetId);
+	}
+
+	public selectPreset(presetId: string): Observable<PresetDetailModel> {
+		return this.detailQuery.selectEntity(presetId);
 	}
 
 	// LIST FUNCTIONS

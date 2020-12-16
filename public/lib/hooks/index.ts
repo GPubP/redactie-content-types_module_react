@@ -15,3 +15,4 @@ export { default as usePaginatedPresets } from './usePaginatedPresets/usePaginat
 export { default as usePresetsUIStates } from './usePresetsUIStates/usePresetsUIStates';
 export { default as useActiveFieldType } from './useActiveFieldType/useActiveFieldType';
 export { default as useFieldTypesUIStates } from './useFieldTypesUIStates/useFieldTypesUIStates';
+export { default as usePreset } from './usePreset/usePreset';

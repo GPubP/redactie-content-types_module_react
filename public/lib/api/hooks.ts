@@ -6,6 +6,7 @@ import {
 	useFieldTypesUIStates,
 	useNavItemMatcher,
 	usePaginatedPresets,
+	usePreset,
 	usePresets,
 	usePresetsUIStates,
 } from '../hooks';
@@ -13,6 +14,7 @@ import {
 export const hooks: ContentTypeAPI['hooks'] = {
 	// Presets
 	useActivePreset,
+	usePreset,
 	usePaginatedPresets,
 	usePresets,
 	usePresetsUIStates,

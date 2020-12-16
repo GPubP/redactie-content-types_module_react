@@ -21,6 +21,7 @@ import { UseFieldTypes } from './hooks/useFieldTypes/useFieldTypes.types';
 import { UseFieldTypesUIStates } from './hooks/useFieldTypesUIStates/useFieldTypesUIStates.types';
 import { UseNavItemMatcher } from './hooks/useNavItemMatcher/useNavitemMatcher.types';
 import { UsePaginatedPresets } from './hooks/usePaginatedPresets/usePaginatedPresets.types';
+import { UsePreset } from './hooks/usePreset/usePreset.types';
 import { UsePresets } from './hooks/usePresets/usePresets.types';
 import { UsePresetsUIStates } from './hooks/usePresetsUIStates/usePresetsUIStates.types';
 import { Field } from './services/contentTypes';
@@ -175,6 +176,7 @@ export interface ContentTypeAPI {
 	hooks: {
 		// Presets
 		useActivePreset: UseActivePreset;
+		usePreset: UsePreset;
 		usePaginatedPresets: UsePaginatedPresets;
 		usePresets: UsePresets;
 		usePresetsUIStates: UsePresetsUIStates;

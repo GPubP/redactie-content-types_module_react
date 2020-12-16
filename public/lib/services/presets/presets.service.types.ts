@@ -45,7 +45,7 @@ export interface BasePreset<V = string, D = string, F = string> {
 		fields: {
 			field: PresetField<D, F>;
 			formSchema: {
-				fields: PresetField<D, F>[];
+				fields: Field[];
 			};
 			validators: V[];
 		}[];
