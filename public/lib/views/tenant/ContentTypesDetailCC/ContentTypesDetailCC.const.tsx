@@ -1,4 +1,4 @@
-import { Button, Icon } from '@acpaas-ui/react-components';
+import { Button, ButtonGroup } from '@acpaas-ui/react-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import { isNil } from 'ramda';
 import React from 'react';
@@ -21,14 +21,11 @@ export const CONTENT_TYPE_COLUMNS = (
 		value: 'label',
 		disableSorting: true,
 		component(value: string, rowData: ContentTypeDetailCCRow) {
-			const { path } = rowData;
+			const { name, path } = rowData;
 			return (
 				<>
-					<div className="row middle-xs u-flex-no-wrap">
-						<div className="u-margin-left-xs u-margin-right-xs">
-							<Icon name="arrows-alt" className="u-text-primary" />
-						</div>
-						<div className="m-button-group m-button-group--vertical u-margin-left-xs u-margin-right-xs">
+					<div className="u-flex u-flex-align-center u-flex-no-wrap">
+						<ButtonGroup direction="vertical">
 							<Button
 								onClick={() => moveRow(rowData.id, MoveAction.UP)}
 								icon="chevron-up"
@@ -51,16 +48,14 @@ export const CONTENT_TYPE_COLUMNS = (
 								transparent
 								negative
 							/>
-						</div>
-						<div>
+						</ButtonGroup>
+						<div className="u-margin-left-xs">
 							{path ? (
 								<Link to={path}>{value}</Link>
 							) : (
 								<p className="u-text-bold">{value}</p>
 							)}
-							{rowData.name && (
-								<p className="u-text-light">systeemnaam: [{rowData.name}]</p>
-							)}
+							{name && <p className="u-text-light">systeemnaam: [{name}]</p>}
 						</div>
 					</div>
 				</>
