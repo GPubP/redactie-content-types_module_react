@@ -9,11 +9,11 @@ export const validationCompartmentValidator = (
 	preset?: Preset
 ): boolean => {
 	const validationSchema =
-		preset?.validateSchema.validation.dataSchema ||
-		fieldType?.validateSchema.validation.dataSchema;
+		preset?.validateSchema?.validation?.dataSchema ||
+		fieldType?.validateSchema?.validation?.dataSchema;
 	const errorMessages =
-		preset?.errorMessages.validation.dataSchema ||
-		fieldType?.errorMessages.validation.dataSchema ||
+		preset?.errorMessages?.validation?.dataSchema ||
+		fieldType?.errorMessages?.validation?.dataSchema ||
 		{};
 
 	const validator = new (formRendererConnector.api as any).CustomValidator(
