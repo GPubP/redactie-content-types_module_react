@@ -224,7 +224,7 @@ export class PresetsFacade {
 	public updatePreset(
 		payload: UpdatePresetPayload,
 		options: UpdatePresetPayloadOptions = {
-			alertContainerId: PRESETS_ALERT_CONTAINER_IDS.create,
+			alertContainerId: PRESETS_ALERT_CONTAINER_IDS.update,
 		}
 	): Promise<PresetDetailResponse | void> {
 		this.detailStore.setIsUpdatingEntity(true, payload.uuid);
@@ -239,12 +239,11 @@ export class PresetsFacade {
 				});
 				this.detailStore.upsert(preset.uuid, preset);
 				// update item in list?
-
 				this.listPaginator.clearCache();
 				showAlert(options.alertContainerId, 'success', alertMessages.update.success);
 				return preset;
 			})
-			.then(error => {
+			.catch(error => {
 				showAlert(options.alertContainerId, 'error', alertMessages.update.error);
 				this.detailStore.ui.update(payload.uuid, {
 					isUpdating: false,

@@ -72,9 +72,9 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	const errorMessages: Record<string, string> = useMemo(
 		() =>
 			preset
-				? preset.errorMessages.validation.formSchema || {}
-				: fieldType.errorMessages.validation.formSchema || {},
-		[fieldType.errorMessages.validation, preset]
+				? preset.errorMessages?.validation?.formSchema || {}
+				: fieldType.errorMessages?.validation?.formSchema || {},
+		[fieldType.errorMessages, preset]
 	);
 
 	/**
