@@ -1,5 +1,6 @@
 import { arrayAdd, PaginationResponse, PaginatorPlugin } from '@datorama/akita';
 import { SearchParams } from '@redactie/utils';
+import { move } from 'ramda';
 import { from, Observable } from 'rxjs';
 
 import { showAlert } from '../../helpers';
@@ -308,6 +309,16 @@ export class PresetsFacade {
 						  }
 						: f;
 				}),
+			},
+		}));
+	}
+
+	public moveField(presetId: string, fromIndex: number, toIndex: number): void {
+		this.detailStore.update(presetId, state => ({
+			...state,
+			data: {
+				...state.data,
+				fields: move(fromIndex, toIndex, state.data.fields),
 			},
 		}));
 	}
