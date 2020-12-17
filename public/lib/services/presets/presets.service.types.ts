@@ -103,14 +103,17 @@ export interface PresetsResponse {
 
 export interface UpdatePresetPayload {
 	uuid: string;
-	body: PresetDetailResponse;
+	body: {
+		data: PresetDetailResponse['data'];
+	};
 }
 
 export interface CreatePresetPayload {
 	data: {
 		name: string;
 		label: string;
+		fieldType: string;
 		fields?: PresetDetailResponse['data']['fields'];
-		validators?: PresetDetailResponse['data']['validators'];
+		validators?: string[];
 	};
 }
