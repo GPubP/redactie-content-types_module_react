@@ -125,6 +125,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 
 		if (newActiveField) {
 			contentTypesFacade.setActiveField(newActiveField);
+			dynamicFieldFacade.setDynamicField(newActiveField);
 		}
 	}, [activeField, contentComponentUuid, contentType, contentType.fields]);
 

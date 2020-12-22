@@ -135,11 +135,11 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	public updateContentType(
 		payload: ContentTypeUpdateRequest,
 		containerId: ALERT_CONTAINER_IDS
-	): void {
+	): Promise<void> {
 		this.store.setIsUpdating(true);
 		const alertMessages = getAlertMessages((payload as unknown) as ContentTypeDetailResponse);
 
-		this.service
+		return this.service
 			.updateContentType(payload)
 			.then(response => {
 				if (response) {
