@@ -70,12 +70,18 @@ export class ContentTypesFacade extends BaseEntityFacade<
 				if (response) {
 					this.store.set(response.data);
 					this.store.update({
+						error: null,
+						isFetching: false,
 						meta: response.paging,
 					});
 				}
 			})
-			.catch(error => this.store.setError(error))
-			.finally(() => this.store.setIsFetching(false));
+			.catch(error => {
+				this.store.update({
+					error,
+					isFetching: false,
+				});
+			});
 	}
 
 	public getContentType(uuid: string): void {
@@ -91,24 +97,32 @@ export class ContentTypesFacade extends BaseEntityFacade<
 			.then(response => {
 				if (response) {
 					this.store.update({
+						error: null,
+						isFetchingOne: false,
 						contentType: response,
 					});
 				}
 			})
-			.catch(error => this.store.setError(error))
-			.finally(() => this.store.setIsFetchingOne(false));
+			.catch(error => {
+				this.store.update({
+					error,
+					isFetchingOne: false,
+				});
+			});
 	}
 
-	public createContentType(payload: ContentTypeCreateRequest): void {
+	public createContentType(payload: ContentTypeCreateRequest): Promise<void> {
 		this.store.setIsCreating(true);
 
 		const alertMessages = getAlertMessages((payload as unknown) as ContentTypeDetailResponse);
 
-		this.service
+		return this.service
 			.createContentType(payload)
 			.then(response => {
 				if (response) {
 					this.store.update({
+						error: null,
+						isCreating: false,
 						contentType: response,
 					});
 
@@ -120,10 +134,12 @@ export class ContentTypesFacade extends BaseEntityFacade<
 				}
 			})
 			.catch(error => {
-				this.store.setError(error);
+				this.store.update({
+					error,
+					isCreating: false,
+				});
 				this.alertService(alertMessages.create.error, ALERT_CONTAINER_IDS.create, 'error');
-			})
-			.finally(() => this.store.setIsCreating(false));
+			});
 	}
 
 	public clearContentType(): void {
@@ -150,6 +166,8 @@ export class ContentTypesFacade extends BaseEntityFacade<
 					);
 
 					this.store.update({
+						error: null,
+						isUpdating: false,
 						contentType: {
 							...response,
 							fields,
@@ -159,10 +177,12 @@ export class ContentTypesFacade extends BaseEntityFacade<
 				}
 			})
 			.catch(error => {
-				this.store.setError(error);
+				this.store.update({
+					error,
+					isUpdating: false,
+				});
 				this.alertService(alertMessages.update.error, containerId, 'error');
-			})
-			.finally(() => this.store.setIsUpdating(false));
+			});
 	}
 
 	public addField(field: ContentTypeFieldDetailModel): void {

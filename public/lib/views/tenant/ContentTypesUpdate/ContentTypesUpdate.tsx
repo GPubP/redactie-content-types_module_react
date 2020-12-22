@@ -216,7 +216,8 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 
 	const updateCT = (
 		sectionData: ContentTypeFieldDetailModel[] | ContentTypeMeta,
-		tab: Tab
+		tab: Tab,
+		cb?: () => void
 	): void => {
 		const newCT = getRequestBody(sectionData, tab);
 
@@ -224,9 +225,12 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			return;
 		}
 
-		contentTypesFacade
-			.updateContentType(newCT, tab.containerId)
-			.then(() => resetFieldsHaveChanged());
+		contentTypesFacade.updateContentType(newCT, tab.containerId).then(() => {
+			if (cb && typeof cb === 'function') {
+				cb();
+			}
+			resetFieldsHaveChanged();
+		});
 	};
 
 	const showTabs = !/\/(aanmaken|bewerken)\//.test(location.pathname);
