@@ -71,16 +71,22 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	/**
 	 * Methods
 	 */
-	const upsertCT = (sectionData: any, tab: Tab): void => {
+	const upsertCT = (sectionData: any, tab: Tab, cb: () => void): void => {
 		switch (tab.name) {
 			case CONTENT_TYPE_DETAIL_TAB_MAP.settings.name:
-				contentTypesFacade.createContentType({
-					...generateEmptyContentType(),
-					meta: {
-						...(sectionData as ContentTypeMeta),
-						canBeFiltered: true,
-					},
-				} as ContentTypeCreateRequest);
+				contentTypesFacade
+					.createContentType({
+						...generateEmptyContentType(),
+						meta: {
+							...(sectionData as ContentTypeMeta),
+							canBeFiltered: true,
+						},
+					} as ContentTypeCreateRequest)
+					.then(() => {
+						if (cb && typeof cb === 'function') {
+							cb();
+						}
+					});
 				break;
 		}
 	};
@@ -93,7 +99,8 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			allowedPaths: CT_SETTINGS_CREATE_ALLOWED_PATHS,
 			contentType: contentType || generateEmptyContentType(),
 			onCancel: () => navigate(MODULE_PATHS.admin),
-			onSubmit: (sectionData: any, tab: Tab) => upsertCT(sectionData, tab),
+			onSubmit: (sectionData: any, tab: Tab, cb: () => void) =>
+				upsertCT(sectionData, tab, cb),
 		};
 
 		return (

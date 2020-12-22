@@ -82,7 +82,8 @@ export interface ContentTypesDetailRouteProps<Params = ContentTypesDetailRoutePa
 			| ContentTypeFieldDetailModel[]
 			| FieldTypeMeta
 			| ExternalTabValue,
-		tab: Tab
+		tab: Tab,
+		cb?: () => void
 	) => void;
 	readonly activeField: ContentTypeFieldDetailModel | null;
 	readonly fieldsHaveChanged: boolean;
