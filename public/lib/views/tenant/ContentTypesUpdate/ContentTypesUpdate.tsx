@@ -226,7 +226,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 
 		contentTypesFacade
 			.updateContentType(newCT, tab.containerId)
-			.finally(() => resetFieldsHaveChanged());
+			.then(() => resetFieldsHaveChanged());
 	};
 
 	const showTabs = !/\/(aanmaken|bewerken)\//.test(location.pathname);
