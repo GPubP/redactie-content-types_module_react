@@ -4,7 +4,7 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { DataLoader, LoadingState, useNavigate, useSiteContext } from '@redactie/utils';
+import { DataLoader, LoadingState, SearchParams, useNavigate, useSiteContext } from '@redactie/utils';
 import React, { ReactElement, useEffect, useState } from 'react';
 
 import rolesRightsConnector from '../../../connectors/rolesRights';
@@ -39,9 +39,10 @@ const ContentTypesOverview: React.FC = () => {
 		mySecurityRightsLoadingState,
 		mySecurityrights,
 	] = rolesRightsConnector.api.hooks.useMySecurityRightsForTenant(true);
-	const [contentTypesSearchParams, setContentTypesSearchParams] = useState(
-		DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
-	);
+	const [contentTypesSearchParams, setContentTypesSearchParams] = useState<SearchParams>({
+		...DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
+		site: siteId
+	});
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
 
 	useEffect(() => {
