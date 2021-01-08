@@ -30,15 +30,11 @@ export class PresetsApiService {
 	}
 
 	public activate(uuid: string): Promise<void> {
-		return api
-			.put(`${PRESETS_PREFIX_URL}/${uuid}/activate`, { json: { dummy: 'test' } })
-			.json();
+		return api.put(`${PRESETS_PREFIX_URL}/${uuid}/activate`).json();
 	}
 
 	public deactivate(uuid: string): Promise<void> {
-		return api
-			.put(`${PRESETS_PREFIX_URL}/${uuid}/deactivate`, { json: { dummy: 'test' } })
-			.json();
+		return api.put(`${PRESETS_PREFIX_URL}/${uuid}/deactivate`).json();
 	}
 }
 
