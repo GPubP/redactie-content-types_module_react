@@ -4,7 +4,9 @@ import { PresetDetailField, PresetDetailResponse } from '../../../services/prese
 
 export type PresetDetailModel = PresetDetailResponse;
 export type PresetDetailFieldModel = PresetDetailField;
-export type PresetDetailUIModel = CacheEntityUI;
+export interface PresetDetailUIModel extends CacheEntityUI {
+	isActivating: boolean;
+}
 
 export type PresetsDetailState = CacheEntityState<PresetDetailModel, string>;
 

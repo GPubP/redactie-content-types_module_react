@@ -17,8 +17,8 @@ export class PresetsApiService {
 		return api.get(`${PRESETS_PREFIX_URL}?${parseSearchParams(searchParams)}`).json();
 	}
 
-	public getPreset(uuid: string): Promise<PresetDetailResponse> {
-		return api.get(`${PRESETS_PREFIX_URL}/${uuid}`).json();
+	public getPreset(uuid: string, searchParams: SearchParams = {}): Promise<PresetDetailResponse> {
+		return api.get(`${PRESETS_PREFIX_URL}/${uuid}?${parseSearchParams(searchParams)}`).json();
 	}
 
 	public createPreset(payload: CreatePresetPayload): Promise<PresetDetailResponse> {
@@ -27,6 +27,18 @@ export class PresetsApiService {
 
 	public updatePreset({ body, uuid }: UpdatePresetPayload): Promise<PresetDetailResponse> {
 		return api.put(`${PRESETS_PREFIX_URL}/${uuid}`, { json: body }).json();
+	}
+
+	public activate(uuid: string): Promise<void> {
+		return api
+			.put(`${PRESETS_PREFIX_URL}/${uuid}/activate`, { json: { dummy: 'test' } })
+			.json();
+	}
+
+	public deactivate(uuid: string): Promise<void> {
+		return api
+			.put(`${PRESETS_PREFIX_URL}/${uuid}/deactivate`, { json: { dummy: 'test' } })
+			.json();
 	}
 }
 

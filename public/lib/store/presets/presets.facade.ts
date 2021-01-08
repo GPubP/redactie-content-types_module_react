@@ -253,7 +253,51 @@ export class PresetsFacade {
 			});
 	}
 
-	public getPreset(presetId: string, options?: GetPresetPayloadOptions): Promise<void> {
+	public activatePreset(presetId: string): Promise<void> {
+		this.detailStore.ui.update(presetId, { isActivating: true });
+		return this.service
+			.activate(presetId)
+			.then(() => {
+				this.detailStore.update(presetId, preset => ({
+					meta: {
+						...preset.meta,
+						active: false,
+					},
+				}));
+				this.detailStore.ui.update(presetId, { isActivating: false, error: null });
+				// update item in list?
+				this.listPaginator.clearCache();
+			})
+			.catch(error => {
+				this.detailStore.ui.update(presetId, { isActivating: false, error });
+			});
+	}
+
+	public deactivatePreset(presetId: string): Promise<void> {
+		this.detailStore.ui.update(presetId, { isActivating: true });
+		return this.service
+			.deactivate(presetId)
+			.then(() => {
+				this.detailStore.update(presetId, preset => ({
+					meta: {
+						...preset.meta,
+						active: false,
+					},
+				}));
+				this.detailStore.ui.update(presetId, { isActivating: false, error: null });
+				// update item in list?
+				this.listPaginator.clearCache();
+			})
+			.catch(error => {
+				this.detailStore.ui.update(presetId, { isActivating: false, error });
+			});
+	}
+
+	public getPreset(
+		presetId: string,
+		searchParams?: SearchParams,
+		options?: GetPresetPayloadOptions
+	): Promise<void> {
 		const defaultOptions = {
 			alertContainerId: PRESETS_ALERT_CONTAINER_IDS.fetchOne,
 			force: false,
@@ -268,7 +312,7 @@ export class PresetsFacade {
 		const alertMessages = getAlertMessages();
 		this.detailStore.setIsFetchingEntity(true, presetId);
 		return this.service
-			.getPreset(presetId)
+			.getPreset(presetId, searchParams)
 			.then(response => {
 				this.detailStore.upsert(response.uuid, response);
 				this.detailStore.ui.upsert(response.uuid, { error: null, isFetching: false });

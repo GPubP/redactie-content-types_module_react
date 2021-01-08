@@ -50,12 +50,18 @@ export interface BasePreset<V = string, D = string, F = string> {
 			validators: V[];
 		}[];
 		validators: V[];
-		meta: {
-			created: string;
-			lastModified: string;
-			deleted: boolean;
-		};
 	};
+	meta: {
+		created: string;
+		lastModified: string;
+		deleted: boolean;
+		active: boolean;
+		default: boolean;
+	};
+	occurrences: {
+		name: string;
+		uuid: string;
+	}[];
 	validateSchema: {
 		configuration: object;
 		validation: {

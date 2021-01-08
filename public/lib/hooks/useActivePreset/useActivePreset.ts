@@ -1,11 +1,11 @@
-import { useObservable } from '@redactie/utils';
+import { SearchParams, useObservable } from '@redactie/utils';
 import { useEffect } from 'react';
 
 import { presetsFacade } from '../../store/presets';
 
 import { UseActivePreset } from './useActivePreset.types';
 
-const useActivePreset: UseActivePreset = (presetId?: string) => {
+const useActivePreset: UseActivePreset = (presetId?: string, searchParams?: SearchParams) => {
 	useEffect(() => {
 		if (presetId) {
 			const hasPreset = presetsFacade.hasPreset(presetId);
@@ -15,7 +15,7 @@ const useActivePreset: UseActivePreset = (presetId?: string) => {
 
 			if (!hasPreset) {
 				presetsFacade
-					.getPreset(presetId)
+					.getPreset(presetId, searchParams)
 					.then(() => presetsFacade.setActivePreset(presetId));
 				return;
 			}
@@ -25,7 +25,7 @@ const useActivePreset: UseActivePreset = (presetId?: string) => {
 		}
 		// remove active Preset when presetId is undefined
 		presetsFacade.removeActivePreset();
-	}, [presetId]);
+	}, [presetId, searchParams]);
 
 	const preset = useObservable(presetsFacade.activePreset$);
 	const presetUI = useObservable(presetsFacade.activePresetUI$);

@@ -14,4 +14,9 @@ export class PresetsDetailStore extends CacheEntityStore<
 	PresetDetailModel
 > {}
 
-export const presetsDetailStore = new PresetsDetailStore();
+export const presetsDetailStore = new PresetsDetailStore(
+	{},
+	{
+		isActivating: false,
+	}
+);

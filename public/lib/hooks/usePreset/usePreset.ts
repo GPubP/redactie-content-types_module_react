@@ -1,10 +1,11 @@
+import { SearchParams } from '@redactie/utils';
 import { useEffect, useState } from 'react';
 
 import { PresetDetailModel, PresetDetailUIModel, presetsFacade } from '../../store/presets';
 
 import { UsePreset } from './usePreset.types';
 
-const usePreset: UsePreset = (presetId?: string) => {
+const usePreset: UsePreset = (presetId?: string, searchParams?: SearchParams) => {
 	const [preset, setPreset] = useState<PresetDetailModel>();
 	const [presetUI, setPresetUI] = useState<PresetDetailUIModel>();
 	useEffect(() => {
@@ -15,7 +16,7 @@ const usePreset: UsePreset = (presetId?: string) => {
 		const hasPreset = presetsFacade.hasPreset(presetId);
 
 		if (!hasPreset) {
-			presetsFacade.getPreset(presetId);
+			presetsFacade.getPreset(presetId, searchParams);
 		}
 
 		const presetSubscription = presetsFacade.selectPreset(presetId).subscribe(setPreset);
@@ -27,7 +28,7 @@ const usePreset: UsePreset = (presetId?: string) => {
 			presetSubscription.unsubscribe();
 			presetUISubscription.unsubscribe();
 		};
-	}, [presetId]);
+	}, [presetId, searchParams]);
 
 	return [preset, presetUI];
 };

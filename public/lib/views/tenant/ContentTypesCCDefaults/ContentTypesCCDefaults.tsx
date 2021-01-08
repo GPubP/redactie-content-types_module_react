@@ -1,5 +1,5 @@
 import { Checkbox } from '@acpaas-ui/react-components';
-import { FormSchema } from '@redactie/form-renderer-module';
+import { ContentTypeFieldSchema, FormSchema } from '@redactie/form-renderer-module';
 import { FormikOnChangeHandler } from '@redactie/utils';
 import { Field, Formik, FormikValues } from 'formik';
 import React, { FC, ReactElement, useMemo } from 'react';
@@ -34,7 +34,7 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 						required: false,
 					},
 					name: 'defaultValue',
-				},
+				} as ContentTypeFieldSchema,
 			]),
 		}),
 		[CTField]
