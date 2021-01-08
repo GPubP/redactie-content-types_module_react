@@ -7,7 +7,7 @@ import {
 	PresetsDetailUIState,
 } from './presets-detail.model';
 
-@StoreConfig({ name: 'content-types-presets-detail', idKey: 'uuid' })
+@StoreConfig({ name: 'content-types-presets-detail', idKey: 'uuid', resettable: true })
 export class PresetsDetailStore extends CacheEntityStore<
 	PresetsDetailUIState,
 	PresetsDetailState,

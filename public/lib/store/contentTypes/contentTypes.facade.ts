@@ -12,6 +12,7 @@ import {
 	contentTypesApiService,
 	ContentTypeUpdateRequest,
 } from '../../services/contentTypes';
+import { presetsFacade, PresetsFacade } from '../presets';
 
 import { getAlertMessages } from './contentTypes.messages';
 import { ContentTypeFieldDetailModel } from './contentTypes.model';
@@ -23,20 +24,23 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	ContentTypesApiService,
 	ContentTypesQuery
 > {
-	constructor(
-		store: ContentTypesStore,
-		service: ContentTypesApiService,
-		query: ContentTypesQuery
-	) {
-		super(store, service, query);
-	}
-
 	public readonly meta$ = this.query.meta$;
 	public readonly contentTypes$ = this.query.contentTypes$;
 	public readonly contentType$ = this.query.contentType$;
 	public readonly activeField$ = this.query.activeField$;
 	public readonly pageTitle$ = this.query.pageTitle$;
 	public readonly fieldsByCompartments$ = this.query.fieldsByCompartments$;
+	private readonly presetFacade: PresetsFacade;
+
+	constructor(
+		store: ContentTypesStore,
+		service: ContentTypesApiService,
+		query: ContentTypesQuery,
+		presetFacade: PresetsFacade
+	) {
+		super(store, service, query);
+		this.presetFacade = presetFacade;
+	}
 
 	public setPageTitle(pageTitle: string): void {
 		this.store.update({
@@ -173,6 +177,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 							fields,
 						},
 					});
+					this.presetFacade.resetDetailStore();
 					this.alertService(alertMessages.update.success, containerId, 'success');
 				}
 			})
@@ -449,5 +454,6 @@ export class ContentTypesFacade extends BaseEntityFacade<
 export const contentTypesFacade = new ContentTypesFacade(
 	contentTypesStore,
 	contentTypesApiService,
-	contentTypesQuery
+	contentTypesQuery,
+	presetsFacade
 );

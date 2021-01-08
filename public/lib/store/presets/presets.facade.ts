@@ -182,6 +182,10 @@ export class PresetsFacade {
 		return this.detailQuery.hasEntity(presetId);
 	}
 
+	public resetDetailStore(): void {
+		this.detailStore.reset();
+	}
+
 	public createPreset(
 		payload: CreatePresetPayload,
 		options: CreatePresetPayloadOptions = {
