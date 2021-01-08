@@ -261,11 +261,10 @@ export class PresetsFacade {
 				this.detailStore.update(presetId, preset => ({
 					meta: {
 						...preset.meta,
-						active: false,
+						active: true,
 					},
 				}));
 				this.detailStore.ui.update(presetId, { isActivating: false, error: null });
-				// update item in list?
 				this.listPaginator.clearCache();
 			})
 			.catch(error => {
@@ -285,7 +284,6 @@ export class PresetsFacade {
 					},
 				}));
 				this.detailStore.ui.update(presetId, { isActivating: false, error: null });
-				// update item in list?
 				this.listPaginator.clearCache();
 			})
 			.catch(error => {
