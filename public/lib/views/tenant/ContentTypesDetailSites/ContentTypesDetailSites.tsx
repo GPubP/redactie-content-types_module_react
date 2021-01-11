@@ -95,7 +95,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			id: site.uuid,
 			name: site.data.name,
 			description: site.data.description,
-			active: (site.data?.contentTypes || []).includes(contentType._id),
+			active: site.meta.active,
 			contentTypes: site.data?.contentTypes,
 			contentItems: site.data?.contentTypes?.length ?? 0,
 		}));
