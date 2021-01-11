@@ -6,6 +6,11 @@ import React, { FC, useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { registerContentTypeAPI } from './lib/api/index';
+import {
+	ContentTypeBreadcrumb,
+	ContentTypeCCBreadcrumb,
+	DynamicFieldBreadcrumb,
+} from './lib/components/Breadcrumbs';
 import { ContentTypesSelect, DynamicFieldSettings } from './lib/components/Fields';
 import formRendererConnector from './lib/connectors/formRenderer';
 import rolesRightsConnector from './lib/connectors/rolesRights';
@@ -123,6 +128,7 @@ Core.routes.register({
 	routes: [
 		{
 			path: MODULE_PATHS.admin,
+			breadcrumb: null,
 			component: ContentTypesOverview,
 			navigation: {
 				label: 'Content types',
@@ -145,6 +151,7 @@ Core.routes.register({
 			routes: [
 				{
 					path: MODULE_PATHS.createSettings,
+					breadcrumb: null,
 					component: ContentTypesDetailSettings,
 				},
 			],
@@ -164,27 +171,31 @@ Core.routes.register({
 			routes: [
 				{
 					path: MODULE_PATHS.detailCCEditDynamicNew,
-					breadcrumb: null,
+					breadcrumb: ContentTypeCCBreadcrumb,
 					component: ContentTypesDynamicCCNew,
 					redirect: MODULE_PATHS.detailCCEditDynamicNewSettings,
 					routes: [
 						{
 							path: MODULE_PATHS.detailCCEditDynamicNewSettings,
+							breadcrumb: DynamicFieldBreadcrumb,
 							title: contentTypeTitleHelper(TitleTypes.DynamicField),
 							component: ContentTypesCCSettings,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditDynamicNewConfig,
+							breadcrumb: DynamicFieldBreadcrumb,
 							title: contentTypeTitleHelper(TitleTypes.DynamicField),
 							component: ContentTypesCCConfig,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditDynamicNewValidation,
+							breadcrumb: DynamicFieldBreadcrumb,
 							title: contentTypeTitleHelper(TitleTypes.DynamicField),
 							component: ContentTypesCCValidation,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditDynamicNewDefaults,
+							breadcrumb: DynamicFieldBreadcrumb,
 							title: contentTypeTitleHelper(TitleTypes.DynamicField),
 							component: ContentTypesCCDefaults,
 						},
@@ -192,27 +203,31 @@ Core.routes.register({
 				},
 				{
 					path: MODULE_PATHS.detailCCEditDynamicEdit,
-					breadcrumb: null,
+					breadcrumb: ContentTypeCCBreadcrumb,
 					component: ContentTypesDynamicCCEdit,
 					redirect: MODULE_PATHS.detailCCEditDynamicEditSettings,
 					routes: [
 						{
 							path: MODULE_PATHS.detailCCEditDynamicEditSettings,
+							breadcrumb: DynamicFieldBreadcrumb,
 							title: contentTypeTitleHelper(TitleTypes.DynamicField),
 							component: ContentTypesCCSettings,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditDynamicEditConfig,
+							breadcrumb: DynamicFieldBreadcrumb,
 							title: contentTypeTitleHelper(TitleTypes.DynamicField),
 							component: ContentTypesCCConfig,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditDynamicEditValidation,
+							breadcrumb: DynamicFieldBreadcrumb,
 							title: contentTypeTitleHelper(TitleTypes.DynamicField),
 							component: ContentTypesCCValidation,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditDynamicEditDefaults,
+							breadcrumb: DynamicFieldBreadcrumb,
 							title: contentTypeTitleHelper(TitleTypes.DynamicField),
 							component: ContentTypesCCDefaults,
 						},
@@ -220,27 +235,31 @@ Core.routes.register({
 				},
 				{
 					path: MODULE_PATHS.detailCCNew,
-					breadcrumb: 'Vrije paragraaf',
+					breadcrumb: ContentTypeBreadcrumb,
 					component: ContentTypesCCNew,
 					redirect: MODULE_PATHS.detailCCNewSettings,
 					routes: [
 						{
 							path: MODULE_PATHS.detailCCNewSettings,
+							breadcrumb: ContentTypeCCBreadcrumb,
 							title: contentTypeTitleHelper(TitleTypes.Field),
 							component: ContentTypesCCSettings,
 						},
 						{
 							path: MODULE_PATHS.detailCCNewConfig,
+							breadcrumb: ContentTypeCCBreadcrumb,
 							title: contentTypeTitleHelper(TitleTypes.Field),
 							component: ContentTypesCCConfig,
 						},
 						{
 							path: MODULE_PATHS.detailCCNewValidation,
+							breadcrumb: ContentTypeCCBreadcrumb,
 							title: contentTypeTitleHelper(TitleTypes.Field),
 							component: ContentTypesCCValidation,
 						},
 						{
 							path: MODULE_PATHS.detailCCNewDefaults,
+							breadcrumb: ContentTypeCCBreadcrumb,
 							title: contentTypeTitleHelper(TitleTypes.Field),
 							component: ContentTypesCCDefaults,
 						},
@@ -248,27 +267,31 @@ Core.routes.register({
 				},
 				{
 					path: MODULE_PATHS.detailCCEdit,
-					breadcrumb: 'Vrije paragraaf',
+					breadcrumb: ContentTypeBreadcrumb,
 					component: ContentTypesCCEdit,
 					redirect: MODULE_PATHS.detailCCEditSettings,
 					routes: [
 						{
 							path: MODULE_PATHS.detailCCEditSettings,
+							breadcrumb: ContentTypeCCBreadcrumb,
 							title: contentTypeTitleHelper(TitleTypes.Field),
 							component: ContentTypesCCSettings,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditConfig,
+							breadcrumb: ContentTypeCCBreadcrumb,
 							title: contentTypeTitleHelper(TitleTypes.Field),
 							component: ContentTypesCCConfig,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditValidation,
+							breadcrumb: ContentTypeCCBreadcrumb,
 							title: contentTypeTitleHelper(TitleTypes.Field),
 							component: ContentTypesCCValidation,
 						},
 						{
 							path: MODULE_PATHS.detailCCEditDefaults,
+							breadcrumb: ContentTypeCCBreadcrumb,
 							title: contentTypeTitleHelper(TitleTypes.Field),
 							component: ContentTypesCCDefaults,
 						},
@@ -276,21 +299,25 @@ Core.routes.register({
 				},
 				{
 					path: MODULE_PATHS.detailSettings,
+					breadcrumb: null,
 					title: contentTypeTitleHelper(TitleTypes.ContentType),
 					component: ContentTypesDetailSettings,
 				},
 				{
 					path: MODULE_PATHS.detailCC,
+					breadcrumb: null,
 					title: contentTypeTitleHelper(TitleTypes.ContentType),
 					component: ContentTypesDetailCC,
 				},
 				{
 					path: MODULE_PATHS.detailSites,
+					breadcrumb: null,
 					title: contentTypeTitleHelper(TitleTypes.ContentType),
 					component: ContentTypesDetailSites,
 				},
 				{
 					path: MODULE_PATHS.detailExternal,
+					breadcrumb: null,
 					title: contentTypeTitleHelper(TitleTypes.ContentType),
 					component: ContentTypesDetailExternal,
 				},

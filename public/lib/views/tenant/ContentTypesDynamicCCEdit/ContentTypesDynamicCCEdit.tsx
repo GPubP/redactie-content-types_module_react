@@ -19,10 +19,14 @@ import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/trans
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
 import { filterCompartments, validateCompartments } from '../../../helpers';
-import { useCompartments, useCompartmentValidation, useNavItemMatcher } from '../../../hooks';
+import {
+	useCompartments,
+	useCompartmentValidation,
+	useDynamicField,
+	useNavItemMatcher,
+} from '../../../hooks';
 import useActiveField from '../../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
-import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
 import { PresetDetailModel, PresetListModel } from '../../../store/presets';
