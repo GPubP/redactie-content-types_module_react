@@ -107,7 +107,7 @@ if (!rolesRightsConnector.api) {
 Core.routes.register({
 	path: MODULE_PATHS.root,
 	component: ContentTypesComponent,
-	breadcrumb: null,
+	breadcrumb: false,
 	guardOptions: {
 		guards: [
 			rolesRightsConnector.api.guards.securityRightsTenantGuard([
@@ -128,7 +128,7 @@ Core.routes.register({
 	routes: [
 		{
 			path: MODULE_PATHS.admin,
-			breadcrumb: null,
+			breadcrumb: false,
 			component: ContentTypesOverview,
 			navigation: {
 				label: 'Content types',
@@ -139,7 +139,7 @@ Core.routes.register({
 		{
 			path: MODULE_PATHS.create,
 			component: ContentTypesCreate,
-			breadcrumb: null,
+			breadcrumb: false,
 			redirect: MODULE_PATHS.createSettings,
 			guardOptions: {
 				guards: [
@@ -151,14 +151,14 @@ Core.routes.register({
 			routes: [
 				{
 					path: MODULE_PATHS.createSettings,
-					breadcrumb: null,
+					breadcrumb: false,
 					component: ContentTypesDetailSettings,
 				},
 			],
 		},
 		{
 			path: MODULE_PATHS.detail,
-			breadcrumb: null,
+			breadcrumb: false,
 			guardOptions: {
 				guards: [
 					rolesRightsConnector.api.guards.securityRightsTenantGuard([
@@ -299,25 +299,25 @@ Core.routes.register({
 				},
 				{
 					path: MODULE_PATHS.detailSettings,
-					breadcrumb: null,
+					breadcrumb: false,
 					title: contentTypeTitleHelper(TitleTypes.ContentType),
 					component: ContentTypesDetailSettings,
 				},
 				{
 					path: MODULE_PATHS.detailCC,
-					breadcrumb: null,
+					breadcrumb: false,
 					title: contentTypeTitleHelper(TitleTypes.ContentType),
 					component: ContentTypesDetailCC,
 				},
 				{
 					path: MODULE_PATHS.detailSites,
-					breadcrumb: null,
+					breadcrumb: false,
 					title: contentTypeTitleHelper(TitleTypes.ContentType),
 					component: ContentTypesDetailSites,
 				},
 				{
 					path: MODULE_PATHS.detailExternal,
-					breadcrumb: null,
+					breadcrumb: false,
 					title: contentTypeTitleHelper(TitleTypes.ContentType),
 					component: ContentTypesDetailExternal,
 				},
@@ -328,7 +328,7 @@ Core.routes.register({
 
 sitesConnector.registerRoutes({
 	path: MODULE_PATHS.site.root,
-	breadcrumb: null,
+	breadcrumb: false,
 	component: SiteContentTypesComponent,
 	redirect: MODULE_PATHS.site.overview,
 	navigation: {
@@ -340,7 +340,7 @@ sitesConnector.registerRoutes({
 	routes: [
 		{
 			path: MODULE_PATHS.site.overview,
-			breadcrumb: null,
+			breadcrumb: false,
 			component: SiteContentTypesOverview,
 			navigation: {
 				context: 'site',
@@ -351,13 +351,13 @@ sitesConnector.registerRoutes({
 		},
 		{
 			path: MODULE_PATHS.site.detail,
-			breadcrumb: null,
+			breadcrumb: false,
 			component: SiteContentTypesUpdate,
 			redirect: MODULE_PATHS.site.detailSettings,
 			routes: [
 				{
 					path: MODULE_PATHS.site.detailSettings,
-					breadcrumb: null,
+					breadcrumb: false,
 					title: contentTypeTitleHelper(TitleTypes.ContentType),
 					component: SiteContentTypesDetailSettings,
 				},

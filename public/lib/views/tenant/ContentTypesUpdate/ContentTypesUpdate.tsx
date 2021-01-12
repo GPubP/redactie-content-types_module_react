@@ -19,7 +19,6 @@ import {
 	CONTENT_DETAIL_TABS,
 	CONTENT_TYPE_DETAIL_TAB_MAP,
 	MODULE_PATHS,
-	TENANT_ROOT,
 } from '../../../contentTypes.const';
 import {
 	ContentTypesRouteParams,
