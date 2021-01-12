@@ -29,12 +29,7 @@ const ContentTypesOverview: React.FC = () => {
 	/**
 	 * Hooks
 	 */
-	const breadcrumbs = useRoutesBreadcrumbs([
-		{
-			name: 'Structuur',
-			target: '',
-		},
-	]);
+	const breadcrumbs = useRoutesBreadcrumbs();
 	const { navigate } = useNavigate();
 	const [t] = useCoreTranslation();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);

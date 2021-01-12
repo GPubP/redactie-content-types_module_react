@@ -328,6 +328,7 @@ Core.routes.register({
 
 sitesConnector.registerRoutes({
 	path: MODULE_PATHS.site.root,
+	breadcrumb: null,
 	component: SiteContentTypesComponent,
 	redirect: MODULE_PATHS.site.overview,
 	navigation: {
@@ -339,6 +340,7 @@ sitesConnector.registerRoutes({
 	routes: [
 		{
 			path: MODULE_PATHS.site.overview,
+			breadcrumb: null,
 			component: SiteContentTypesOverview,
 			navigation: {
 				context: 'site',
@@ -355,6 +357,7 @@ sitesConnector.registerRoutes({
 			routes: [
 				{
 					path: MODULE_PATHS.site.detailSettings,
+					breadcrumb: null,
 					title: contentTypeTitleHelper(TitleTypes.ContentType),
 					component: SiteContentTypesDetailSettings,
 				},
