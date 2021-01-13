@@ -26,10 +26,10 @@ import {
 	useActivePreset,
 	useCompartments,
 	useCompartmentValidation,
+	useDynamicField,
 	useNavItemMatcher,
 	useQuery,
 } from '../../../hooks';
-import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
 import { FieldType } from '../../../services/fieldTypes';
 import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';

@@ -25,12 +25,12 @@ import {
 	useActivePreset,
 	useCompartments,
 	useCompartmentValidation,
+	useDynamicField,
 	useNavItemMatcher,
 	useQuery,
 } from '../../../hooks';
 import useActiveField from '../../../hooks/useActiveField/useActiveField';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
-import useDynamicField from '../../../hooks/useDynamicField/useDynamicField';
 import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel } from '../../../store/contentTypes';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';

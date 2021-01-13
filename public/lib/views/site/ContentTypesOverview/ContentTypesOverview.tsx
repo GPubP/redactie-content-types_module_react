@@ -4,7 +4,13 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { DataLoader, LoadingState, SearchParams, useNavigate, useSiteContext } from '@redactie/utils';
+import {
+	DataLoader,
+	LoadingState,
+	SearchParams,
+	useNavigate,
+	useSiteContext,
+} from '@redactie/utils';
 import React, { ReactElement, useEffect, useState } from 'react';
 
 import rolesRightsConnector from '../../../connectors/rolesRights';
@@ -23,12 +29,7 @@ const ContentTypesOverview: React.FC = () => {
 	/**
 	 * Hooks
 	 */
-	const breadcrumbs = useRoutesBreadcrumbs([
-		{
-			name: 'Structuur',
-			target: '',
-		},
-	]);
+	const breadcrumbs = useRoutesBreadcrumbs();
 	const { navigate } = useNavigate();
 	const [t] = useCoreTranslation();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
@@ -41,7 +42,7 @@ const ContentTypesOverview: React.FC = () => {
 	] = rolesRightsConnector.api.hooks.useMySecurityRightsForTenant(true);
 	const [contentTypesSearchParams, setContentTypesSearchParams] = useState<SearchParams>({
 		...DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
-		site: siteId
+		site: siteId,
 	});
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
 
