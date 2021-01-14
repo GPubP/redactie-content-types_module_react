@@ -1,4 +1,9 @@
-import { FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-module';
+import {
+	ContentTypeFieldSchema,
+	FieldSchema,
+	FormSchema,
+	FormValues,
+} from '@redactie/form-renderer-module';
 import { clone, omit } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 
@@ -103,7 +108,9 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	});
 
 	const generateFormSchemaFromFieldTypeData = (fieldTypeData: FieldTypeData): FormSchema => ({
-		fields: formRendererConnector.api.parseFields(fieldTypeData?.formSchema?.fields),
+		fields: formRendererConnector.api.parseFields(
+			fieldTypeData?.formSchema?.fields as ContentTypeFieldSchema[]
+		),
 	});
 
 	const schema: FormSchema = useMemo(

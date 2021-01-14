@@ -1,4 +1,4 @@
-import { FieldSchema } from '@redactie/form-renderer-module';
+import { ContentTypeFieldSchema, FieldSchema } from '@redactie/form-renderer-module';
 
 import formRendererConnector from '../../connectors/formRenderer';
 import { Field } from '../../services/contentTypes';
@@ -8,7 +8,7 @@ export const generateFRFieldFromCTField = (field: Field, name?: string): FieldSc
 		{
 			...field,
 			name: name ?? field.name,
-		},
+		} as ContentTypeFieldSchema,
 	]);
 
 	return fields[0];
