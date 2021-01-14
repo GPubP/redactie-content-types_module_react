@@ -11,7 +11,7 @@ import {
 	ContentTypesDetailRouteProps,
 	SiteContentTypesDetailRouteParams,
 } from '../../../contentTypes.types';
-import useSites from '../../../hooks/useSites/useSites';
+import { useSites } from '../../../hooks';
 
 const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetailRouteParams>> = ({
 	contentType,

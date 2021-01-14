@@ -16,8 +16,7 @@ import rolesRightsConnector from '../../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesRouteProps } from '../../../contentTypes.types';
-import { useContentTypes, useRoutesBreadcrumbs } from '../../../hooks';
-import useSites from '../../../hooks/useSites/useSites';
+import { useContentTypes, useRoutesBreadcrumbs, useSites } from '../../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes/contentTypes.service.cont';
 import { ContentTypeModel, contentTypesFacade } from '../../../store/contentTypes';
 
