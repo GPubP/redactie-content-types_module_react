@@ -45,7 +45,6 @@ const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, tenantId })
 	useEffect(() => {
 		fieldTypesFacade.getFieldTypes();
 		presetsFacade.getPresets();
-		sitesConnector.sitesFacade.getSites();
 	}, []);
 
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);

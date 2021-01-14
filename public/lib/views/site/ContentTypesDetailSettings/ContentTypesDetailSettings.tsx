@@ -11,6 +11,7 @@ import {
 	ContentTypesDetailRouteProps,
 	SiteContentTypesDetailRouteParams,
 } from '../../../contentTypes.types';
+import useSites from '../../../hooks/useSites/useSites';
 
 const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetailRouteParams>> = ({
 	contentType,
@@ -24,7 +25,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 	 */
 	const [siteData, setSiteData] = useState<SiteModel['data']>();
 	const [t] = useCoreTranslation();
-	const [loadingSites, sites] = sitesConnector.hooks.useSites();
+	const [loadingSites, sites] = useSites();
 	const { isUpdating } = sitesConnector.hooks.useSitesLoadingStates();
 	const isUpdatingSite = useMemo(() => isUpdating === LoadingState.Loading, [isUpdating]);
 	const isLoading = useMemo(() => loadingSites === LoadingState.Loading, [loadingSites]);

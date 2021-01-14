@@ -13,11 +13,11 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { FilterForm, FilterFormState } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
-import sitesConnector from '../../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesRouteProps } from '../../../contentTypes.types';
 import { useContentTypes, useRoutesBreadcrumbs } from '../../../hooks';
+import useSites from '../../../hooks/useSites/useSites';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes/contentTypes.service.cont';
 import { ContentTypeModel, contentTypesFacade } from '../../../store/contentTypes';
 
@@ -45,7 +45,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	const { navigate } = useNavigate();
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const [loadingContentTypes, contentTypes, meta] = useContentTypes();
-	const [loadingSites, sites] = sitesConnector.hooks.useSites();
+	const [loadingSites, sites] = useSites();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
 	const [
