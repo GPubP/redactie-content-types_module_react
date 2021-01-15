@@ -47,10 +47,6 @@ const ContentTypesOverview: React.FC = () => {
 	const [activeSorting, setActiveSorting] = useState<OrderBy>();
 
 	useEffect(() => {
-		sitesConnector.sitesFacade.getSite({ id: siteId });
-	}, [siteId]);
-
-	useEffect(() => {
 		if (
 			loadingContentTypes !== LoadingState.Loading &&
 			loadingSite !== LoadingState.Loading &&
