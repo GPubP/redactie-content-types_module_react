@@ -252,7 +252,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 
 	return (
 		<>
-			<h2 className="h5 u-margin-bottom">Configuratie</h2>
+			<h2 className="h3 u-margin-bottom">Configuratie</h2>
 			{renderCCConfig()}
 		</>
 	);

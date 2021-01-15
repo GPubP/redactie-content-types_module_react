@@ -207,7 +207,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 
 	return (
 		<>
-			<h2 className="h5 u-margin-bottom">Validatie</h2>
+			<h2 className="h3 u-margin-bottom">Validatie</h2>
 			{renderCCValidation()}
 		</>
 	);

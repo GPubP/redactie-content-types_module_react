@@ -81,7 +81,7 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 
 	return (
 		<>
-			<h2 className="h5 u-margin-bottom">Standaard waarde</h2>
+			<h2 className="h3 u-margin-bottom">Standaard waarde</h2>
 			<p className="u-margin-bottom">
 				De standaard waarde is de content die vooringevuld zal zijn voor deze content
 				component bij het aanmaken van een content item.
