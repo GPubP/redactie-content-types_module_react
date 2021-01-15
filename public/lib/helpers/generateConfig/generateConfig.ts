@@ -14,8 +14,16 @@ const generateConfigFromDefaultValue = (fields: Field[] = []): Record<string, an
 		return acc;
 	}, {} as Record<string, any>);
 
-const generateConfigFromPreset = (preset: PresetDetailModel): PresetDetailFieldModel[] =>
-	preset.data?.fields.reduce((acc, field) => {
+const generateConfigFromPreset = (
+	preset?: PresetDetailModel
+): { fields: PresetDetailFieldModel[] } => {
+	if (!preset) {
+		return {
+			fields: [],
+		};
+	}
+
+	const fields = preset.data?.fields.reduce((acc, field) => {
 		const newField = {
 			...field.field,
 		};
@@ -31,11 +39,22 @@ const generateConfigFromPreset = (preset: PresetDetailModel): PresetDetailFieldM
 		return acc;
 	}, [] as PresetDetailFieldModel[]);
 
+	const validationConfig = fields.reduce((acc, field) => {
+		acc[field.name] = field.config;
+		return acc;
+	}, {} as Record<string, any>);
+
+	return {
+		fields,
+		...validationConfig,
+	};
+};
+
 export const generateConfig = (
 	fieldTypeData: FieldTypeData,
 	preset?: PresetDetailModel
 ): Record<string, any> => ({
 	...generateConfigFromDefaultConfig(fieldTypeData.defaultConfig),
 	...generateConfigFromDefaultValue(fieldTypeData.formSchema?.fields),
-	fields: preset ? generateConfigFromPreset(preset) : [],
+	...generateConfigFromPreset(preset),
 });
