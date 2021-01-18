@@ -17,6 +17,8 @@ import { FieldTypeData } from '../../../services/fieldTypes';
 import { ContentTypeFieldDetailModel } from '../../../store/contentTypes';
 import { PresetDetailModel } from '../../../store/presets';
 
+import { ALLOWED_FORM_HEADERS } from './ContentTypesCCConfig.const';
+
 const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	CTField,
 	fieldType,
@@ -245,6 +247,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 					validationSchema={validationSchema}
 					errorMessages={errorMessages}
 					onChange={onFormSubmit}
+					allowedHeaders={ALLOWED_FORM_HEADERS}
 				/>
 			</DynamicFieldSettingsContext.Provider>
 		);

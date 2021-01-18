@@ -15,6 +15,8 @@ import {
 import { FieldTypeData } from '../../../services/fieldTypes';
 import { PresetDetailModel } from '../../../store/presets';
 
+import { ALLOWED_FORM_HEADERS } from './ContentTypesCCValidation.const';
+
 const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	CTField,
 	fieldType,
@@ -201,6 +203,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 				initialValues={initialFormValue}
 				errorMessages={errorMessages}
 				onChange={onFormSubmit}
+				allowedHeaders={ALLOWED_FORM_HEADERS}
 			/>
 		);
 	};
