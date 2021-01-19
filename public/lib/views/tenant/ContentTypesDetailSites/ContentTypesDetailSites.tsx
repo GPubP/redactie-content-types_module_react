@@ -106,7 +106,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			description: site.data.description,
 			active: site.meta.active,
 			contentTypes: site.data?.contentTypes,
-			contentItems: site.meta?.contentItemsCount,
+			contentItems: site.meta?.contentItemsCount ?? 0,
 		}));
 
 		const sitesColumns = [
