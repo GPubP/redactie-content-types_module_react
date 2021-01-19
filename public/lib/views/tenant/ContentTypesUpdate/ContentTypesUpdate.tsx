@@ -80,8 +80,11 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	]);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const [fieldsHaveChanged, resetFieldsHaveChanged] = useDetectValueChangesWorker(
-		contentTypeLoadingState === LoadingState.Loaded,
-		contentType?.fields,
+		contentTypeLoadingState === LoadingState.Loaded && !!contentType?.fields,
+		{
+			fields: contentType?.fields,
+			compartments: contentType?.compartments,
+		},
 		BFF_MODULE_PUBLIC_PATH
 	);
 

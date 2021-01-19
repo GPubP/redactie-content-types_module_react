@@ -19,7 +19,7 @@ const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
 	 */
 	return (
 		<>
-			<h6 className="u-margin-bottom">Instellingen</h6>
+			<h2 className="h3 u-margin-bottom">Instellingen</h2>
 			<FormCCSettings
 				initialValues={initialFormValues}
 				fieldTypeData={fieldType.data}
