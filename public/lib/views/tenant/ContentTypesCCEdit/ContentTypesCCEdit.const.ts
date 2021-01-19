@@ -43,7 +43,6 @@ export const CC_EDIT_COMPARTMENTS: CompartmentModel[] = [
 ];
 
 export const CC_EDIT_ALLOWED_PATHS = [
-	`${TENANT_ROOT}${MODULE_PATHS.detailCC}`,
 	`${TENANT_ROOT}${MODULE_PATHS.detailCCEdit}`,
 	`${TENANT_ROOT}${MODULE_PATHS.detailCCEditSettings}`,
 	`${TENANT_ROOT}${MODULE_PATHS.detailCCEditConfig}`,
