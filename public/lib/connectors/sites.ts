@@ -9,6 +9,10 @@ class SitesConnector {
 		return this.api.store.sites.facade;
 	}
 
+	public get sitesService(): SitesModuleAPI['store']['sites']['service'] {
+		return this.api.store.sites.service;
+	}
+
 	public get hooks(): SitesModuleAPI['hooks'] {
 		return this.api.hooks;
 	}

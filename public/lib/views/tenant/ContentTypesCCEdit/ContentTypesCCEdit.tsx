@@ -150,6 +150,12 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		}
 	};
 
+	const onLeavePromptDelete = (): void => {
+		if (activeField?.uuid) {
+			contentTypesFacade.clearActiveField();
+		}
+	};
+
 	const onFieldSubmit = (): void => {
 		if (!activeField) {
 			return;
@@ -271,6 +277,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 				</ActionBar>
 				<LeavePrompt
 					allowedPaths={CC_EDIT_ALLOWED_PATHS}
+					onDelete={onLeavePromptDelete}
 					onConfirm={onFieldSubmit}
 					shouldBlockNavigationOnConfirm
 					when={hasChanges}

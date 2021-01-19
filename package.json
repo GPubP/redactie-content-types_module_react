@@ -1,6 +1,6 @@
 {
 	"name": "@redactie/content-types-module",
-	"version": "0.23.14",
+	"version": "0.23.15",
 	"description": "redactie content types module",
 	"main": "dist/redactie-content-types-module.umd.js",
 	"module": "dist/redactie-content-types-module.umd.js",
@@ -46,7 +46,7 @@
 		"@redactie/react-router-guards": "^1.0.2",
 		"@redactie/redactie-core": "^2.0.0",
 		"@redactie/roles-rights-module": "^0.6.1",
-		"@redactie/sites-module": "^0.19.3",
+		"@redactie/sites-module": "^0.19.8",
 		"@redactie/translations-module": "^0.6.0",
 		"@redactie/utils": "^1.0.0",
 		"@testing-library/jest-dom": "5.0.2",

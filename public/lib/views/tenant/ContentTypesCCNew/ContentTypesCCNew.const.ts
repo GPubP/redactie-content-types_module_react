@@ -40,7 +40,6 @@ export const CC_NEW_COMPARTMENTS: CompartmentModel[] = [
 ];
 
 export const CC_NEW_ALLOWED_PATHS = [
-	`${TENANT_ROOT}${MODULE_PATHS.detailCC}`,
 	`${TENANT_ROOT}${MODULE_PATHS.detailCCNew}`,
 	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewSettings}`,
 	`${TENANT_ROOT}${MODULE_PATHS.detailCCNewConfig}`,
