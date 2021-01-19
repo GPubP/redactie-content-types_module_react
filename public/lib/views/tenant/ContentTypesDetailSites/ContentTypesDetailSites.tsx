@@ -3,12 +3,16 @@ import { PaginatedTable } from '@acpaas-ui/react-editorial-components';
 import { SiteModel, UpdateSitePayload } from '@redactie/sites-module';
 import { AlertContainer, LoadingState, useAPIQueryParams } from '@redactie/utils';
 import React, { FC, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import SiteStatus from '../../../components/SiteStatus/SiteStatus';
 import sitesConnector from '../../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS } from '../../../contentTypes.const';
-import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
+import {
+	ContentTypesDetailRouteProps,
+	SiteContentTypesDetailRouteParams,
+} from '../../../contentTypes.types';
 import { parseOrderBy, parseOrderByString } from '../../../services/helpers/helpers.service';
 import { OrderBy } from '../ContentTypesOverview';
 
@@ -16,9 +20,14 @@ import { SitesOverviewRowData } from './ContentTypesSites.types';
 
 const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => {
 	const [t] = useCoreTranslation();
+	const { contentTypeUuid } = useParams<SiteContentTypesDetailRouteParams>();
 	const [query, setQuery] = useAPIQueryParams({
 		sort: {
 			defaultValue: 'data.name',
+			type: 'string',
+		},
+		'content-type': {
+			defaultValue: contentTypeUuid,
 			type: 'string',
 		},
 	});
@@ -97,7 +106,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			description: site.data.description,
 			active: site.meta.active,
 			contentTypes: site.data?.contentTypes,
-			contentItems: site.data?.contentTypes?.length ?? 0,
+			contentItems: site.meta?.contentItemsCount ?? 0,
 		}));
 
 		const sitesColumns = [
@@ -142,7 +151,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 						return (
 							<Button
 								iconLeft={loading ? 'circle-o-notch fa-spin' : null}
-								disabled={loading}
+								disabled={loading || rowData.contentItems > 0}
 								onClick={() => {
 									setUpdateSiteId(rowData.id);
 									removeCTsFromSites(rowData.id);
