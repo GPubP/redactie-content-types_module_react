@@ -20,7 +20,7 @@ export const generateFieldFromType = (
 	name: '',
 	config: generateConfig(fieldType.data, preset),
 	validators: [],
-	validation: generateValidationChecks({}, fieldType.data, preset, true),
+	validation: generateValidationChecks({}, fieldType.data, preset),
 	operators: [],
 	...initialValues,
 	generalConfig: {

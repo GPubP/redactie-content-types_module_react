@@ -63,67 +63,50 @@ const getChecksFromData = (
 	}, [] as ValidationCheck[]);
 };
 
-const getChecksFromPreset = (
+function getChecksFromPreset(
 	data: Record<string, any>,
-	preset: PresetDetailModel,
-	create = false
-): ValicationCheckWithFields[] => {
+	preset: PresetDetailModel
+): ValicationCheckWithFields[] {
 	return [
 		{
 			type: 'object',
 			fields: preset?.data?.fields?.reduce((fields, field) => {
-				const check = {
+				const fieldValidationData = data[field.field?.name];
+				const fieldType = {
+					...field.field?.fieldType?.data,
+					validators: field.validators,
+				};
+
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				const response = generateValidationChecks(
+					fieldValidationData,
+					fieldType,
+					field.field.preset as PresetDetailModel | undefined
+				);
+
+				fields.push({
 					type: field.field?.dataType?.data?.type,
 					name: field.field?.name,
-					checks: [],
-				};
-				const fieldValidationData = data[field.field?.name];
-
-				if (create) {
-					fields.push({
-						...check,
-						checks: getChecksFromDefaultValue(field.validators),
-					});
-
-					return fields;
-				}
-
-				if (fieldValidationData) {
-					fields.push({
-						...check,
-						checks: [...getChecksFromData(fieldValidationData, field.validators)],
-					});
-
-					return fields;
-				}
-
-				fields.push(check);
+					checks: response.checks as ValidationCheck[],
+				});
 
 				return fields;
 			}, [] as ValidationCheckField[]),
 		},
 	];
-};
+}
 
-export const generateValidationChecks = (
+export function generateValidationChecks(
 	data: FormValues,
 	fieldTypeData: FieldTypeData,
-	preset?: PresetDetailModel,
-	create = false
-): Validation => {
-	if (preset) {
-		return {
-			type: 'object',
-			checks: getChecksFromPreset(data, preset, create),
-		};
-	}
-
+	preset?: PresetDetailModel
+): Validation {
 	const allChecksReverseOrder: ValidationCheck[] = [
-		...getChecksFromData(data, fieldTypeData.validators),
+		...getChecksFromData(data, preset?.data?.validators || fieldTypeData.validators),
 		...(getChecksFromDefaultValidatorValues(
 			fieldTypeData.defaultValidatorValues
 		) as ValidationCheck[]),
-		...getChecksFromDefaultValue(fieldTypeData.validators),
+		...getChecksFromDefaultValue(preset?.data?.validators || fieldTypeData.validators),
 	];
 	const { checks } = allChecksReverseOrder.reduce(
 		(acc, check) => {
@@ -142,8 +125,13 @@ export const generateValidationChecks = (
 		}
 	);
 
-	return {
-		type: fieldTypeData?.dataType?.data?.type,
-		checks,
-	};
-};
+	return preset
+		? {
+				type: 'object',
+				checks: [...checks, ...getChecksFromPreset(data, preset)],
+		  }
+		: {
+				type: fieldTypeData?.dataType?.data?.type,
+				checks,
+		  };
+}

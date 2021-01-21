@@ -1,12 +1,15 @@
-import { FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-module';
+import { FormValues } from '@redactie/form-renderer-module';
 import { omit } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 
 import formRendererConnector from '../../../connectors/formRenderer';
 import { ContentTypesCCRouteProps } from '../../../contentTypes.types';
-import { generateFRFieldFromCTField, generateValidationChecks } from '../../../helpers';
+import { generateValidationChecks } from '../../../helpers';
 import {
-	Field,
+	generateFormSchemaFromFieldTypeData,
+	generateFormSchemaFromPreset,
+} from '../../../helpers/generateFormSchema';
+import {
 	ValicationCheckWithAllowedFields,
 	ValicationCheckWithFields,
 	ValidationCheck,
@@ -59,6 +62,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 
 		return createInitialValuesFromChecks(validation.checks);
 	}, [CTField]);
+
 	const validationSchema: Record<string, any> = useMemo(() => {
 		const schema: Record<string, any> = preset
 			? preset?.validateSchema.validation.formSchema
@@ -69,6 +73,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 			$schema: schema.schema,
 		};
 	}, [fieldType, preset]);
+
 	const errorMessages: Record<string, string> = useMemo(
 		() =>
 			preset
@@ -77,41 +82,18 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 		[fieldType.errorMessages, preset]
 	);
 
+	const schema = useMemo(
+		() =>
+			preset
+				? generateFormSchemaFromPreset(preset)
+				: generateFormSchemaFromFieldTypeData(fieldType.data),
+		[fieldType.data, preset]
+	);
+
 	/**
 	 *
 	 * Methods
 	 */
-	const generateFormSchemaFromPreset = (preset: PresetDetailModel): FormSchema => ({
-		fields: preset?.data?.fields?.reduce((fSchema, field) => {
-			if (field.validators?.length > 0) {
-				field.validators.forEach(validator =>
-					validator.data?.formSchema?.fields.forEach(validatorField =>
-						fSchema.push(
-							generateFRFieldFromCTField(
-								validatorField,
-								`${field.field.name}.${validatorField.name}`
-							)
-						)
-					)
-				);
-			}
-			return fSchema;
-		}, [] as FieldSchema[]),
-	});
-
-	const generateFormSchemaFromFieldTypeData = (fieldTypeData: FieldTypeData): FormSchema => ({
-		fields: Array.isArray(fieldTypeData?.validators)
-			? fieldTypeData.validators.reduce((acc, validator) => {
-					return [
-						...acc,
-						...validator.data?.formSchema?.fields?.map((validatorField: Field) =>
-							generateFRFieldFromCTField(validatorField)
-						),
-					];
-			  }, [])
-			: [],
-	});
-
 	const hasValidatorsToConfigure = (
 		fieldTypeData: FieldTypeData,
 		preset?: PresetDetailModel
@@ -160,11 +142,8 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 				: {};
 		};
 
-		const generateGeneralConfig = (
-			data: FormValues = {},
-			preset?: PresetDetailModel
-		): Record<string, any> => {
-			if (!preset && typeof data.required === 'boolean') {
+		const generateGeneralConfig = (data: FormValues = {}): Record<string, any> => {
+			if (typeof data.required === 'boolean') {
 				return {
 					...CTField.generalConfig,
 					required: data.required,
@@ -177,7 +156,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 			...CTField,
 			validation: generateValidationChecks(data, fieldType.data, preset),
 			config: generateConfig(data, preset),
-			generalConfig: generateGeneralConfig(data, preset),
+			generalConfig: generateGeneralConfig(data),
 		});
 	};
 
@@ -192,11 +171,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 		return (
 			<formRendererConnector.api.Form
 				formikRef={formikRef}
-				schema={
-					preset
-						? generateFormSchemaFromPreset(preset)
-						: generateFormSchemaFromFieldTypeData(fieldType.data)
-				}
+				schema={schema}
 				validationSchema={validationSchema}
 				initialValues={initialFormValue}
 				errorMessages={errorMessages}
