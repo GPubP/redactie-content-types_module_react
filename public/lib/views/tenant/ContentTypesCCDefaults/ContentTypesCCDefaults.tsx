@@ -8,6 +8,8 @@ import formRendererConnector from '../../../connectors/formRenderer';
 import { ContentTypesCCRouteProps } from '../../../contentTypes.types';
 import { getDefaultValueSchemas } from '../../../helpers';
 
+import { ALLOWED_FORM_HEADERS } from './ContentTypesCCDefaults.const';
+
 const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 	CTField,
 	formikRef,
@@ -75,6 +77,7 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 				validationSchema={validationSchema}
 				errorMessages={errorMessages}
 				onChange={onSubmit}
+				allowedHeaders={ALLOWED_FORM_HEADERS}
 			/>
 		);
 	};
