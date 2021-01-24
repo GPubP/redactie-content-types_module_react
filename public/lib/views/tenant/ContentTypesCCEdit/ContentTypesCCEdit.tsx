@@ -253,8 +253,9 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 
 	const renderCCEdit = (): ReactElement | null => {
 		if (!fieldType || !activeField) {
-			return null;
+			return <DataLoader loadingState={LoadingState.Loading} render={() => null} />;
 		}
+
 		return (
 			<>
 				<div className="u-margin-bottom-lg">
