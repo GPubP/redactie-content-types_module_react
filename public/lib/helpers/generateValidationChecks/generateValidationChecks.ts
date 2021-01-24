@@ -1,5 +1,5 @@
 import { FormValues } from '@redactie/form-renderer-module';
-import { pathOr } from 'ramda';
+import { pathOr, prop } from 'ramda';
 
 import { DEFAULT_VALIDATOR_ERROR_MESSAGES } from '../../contentTypes.const';
 import {
@@ -71,7 +71,8 @@ function getChecksFromPreset(
 		{
 			type: 'object',
 			fields: preset?.data?.fields?.reduce((fields, field) => {
-				const fieldValidationData = data[field.field?.name];
+				const fieldValidationData = prop(field.field?.name, data);
+
 				const fieldType = {
 					...field.field?.fieldType?.data,
 					validators: field.validators,

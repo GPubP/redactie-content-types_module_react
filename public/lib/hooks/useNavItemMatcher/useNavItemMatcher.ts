@@ -19,7 +19,10 @@ const useNavItemMatcher: UseNavItemMatcher = (preset, fieldType) => {
 			({
 				data: {
 					formSchema: { fields: [...(fieldType?.data?.formSchema?.fields || [])] },
-					validators: [...(fieldType?.data?.validators || [])],
+					validators: [
+						...(fieldType?.data?.validators || []),
+						...(preset?.data?.validators || []),
+					],
 				},
 			} as unknown) as FieldType
 		);

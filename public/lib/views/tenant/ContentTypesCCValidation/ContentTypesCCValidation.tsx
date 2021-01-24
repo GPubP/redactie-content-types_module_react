@@ -4,17 +4,15 @@ import React, { FC, ReactElement, useMemo } from 'react';
 
 import formRendererConnector from '../../../connectors/formRenderer';
 import { ContentTypesCCRouteProps } from '../../../contentTypes.types';
-import { generateValidationChecks } from '../../../helpers';
+import {
+	createInitialValuesFromChecks,
+	generateConfigFromValidationData,
+	generateValidationChecks,
+} from '../../../helpers';
 import {
 	generateFormSchemaFromFieldTypeData,
 	generateFormSchemaFromPreset,
 } from '../../../helpers/generateFormSchema';
-import {
-	ValicationCheckWithAllowedFields,
-	ValicationCheckWithFields,
-	ValidationCheck,
-	ValidationCheckField,
-} from '../../../services/contentTypes';
 import { FieldTypeData } from '../../../services/fieldTypes';
 import { PresetDetailModel } from '../../../store/presets';
 
@@ -34,33 +32,8 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 		if (!CTField || !CTField.validation) {
 			return {};
 		}
+
 		const { validation } = CTField;
-		function createInitialValuesFromFields(fields: ValidationCheckField[]): FormValues {
-			return fields.reduce((value, field) => {
-				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				value[field.name] = createInitialValuesFromChecks(field.checks);
-				return value;
-			}, {} as FormValues);
-		}
-		function createInitialValuesFromChecks(
-			checks: (
-				| ValidationCheck
-				| ValicationCheckWithFields
-				| ValicationCheckWithAllowedFields
-			)[] = []
-		): FormValues {
-			// NOTE!: We need to set the checks to any because typescript can not reduce over a tuple type
-			return (checks as any).reduce((value: FormValues, check: any) => {
-				if (check.fields) {
-					return {
-						...value,
-						...createInitialValuesFromFields(check.fields),
-					};
-				}
-				value[check.key] = check.val;
-				return value;
-			}, {} as FormValues);
-		}
 
 		return createInitialValuesFromChecks(validation.checks);
 	}, [CTField]);
@@ -102,7 +75,10 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 	): boolean => {
 		if (preset) {
 			const { data } = preset;
-			return !!data.fields.find(field => field?.validators?.length > 0);
+			return (
+				data.validators.length > 0 ||
+				!!data.fields.find(field => field?.validators?.length > 0)
+			);
 		}
 		return !!fieldTypeData?.validators?.length;
 	};
@@ -112,38 +88,6 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 		 * We need to set the required prop on the generalConfig when a	required validator was set by the user
 		 * The form renderer is using this prop to indicate that a field is required
 		 */
-		const generateConfig = (
-			data: FormValues,
-			preset?: PresetDetailModel
-		): Record<string, any> => {
-			return preset
-				? Object.keys(data).reduce(
-						(acc, fieldName) => {
-							const required = data[fieldName]?.required;
-
-							return {
-								...acc,
-								fields: acc.fields?.map((field: any) => {
-									if (field.name === fieldName && typeof required === 'boolean') {
-										return {
-											...field,
-											generalConfig: {
-												...field.generalConfig,
-												required,
-											},
-										};
-									}
-									return field;
-								}),
-							};
-						},
-						{
-							...CTField.config,
-						}
-				  )
-				: {};
-		};
-
 		const generateGeneralConfig = (data: FormValues = {}): Record<string, any> => {
 			if (typeof data.required === 'boolean') {
 				return {
@@ -157,7 +101,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 		onSubmit({
 			...CTField,
 			validation: generateValidationChecks(data, fieldType.data, preset),
-			config: generateConfig(data, preset),
+			config: generateConfigFromValidationData(data, preset, CTField?.config),
 			generalConfig: generateGeneralConfig(data),
 		});
 	};
