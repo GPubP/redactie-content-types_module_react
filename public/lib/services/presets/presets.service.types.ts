@@ -41,6 +41,7 @@ export interface BasePreset<V = string, D = string, F = string> {
 			isQueryable: boolean;
 			isTranslate: boolean;
 			isMultiple: boolean;
+			allowDefault: boolean;
 		};
 		fields: {
 			field: PresetField<D, F>;

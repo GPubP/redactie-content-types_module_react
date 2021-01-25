@@ -23,6 +23,10 @@ const useNavItemMatcher: UseNavItemMatcher = (preset, fieldType) => {
 						...(fieldType?.data?.validators || []),
 						...(preset?.data?.validators || []),
 					],
+					generalConfig: {
+						...(fieldType?.data?.generalConfig ?? {}),
+						...(preset?.data?.generalConfig ?? {}),
+					},
 				},
 			} as unknown) as FieldType
 		);
