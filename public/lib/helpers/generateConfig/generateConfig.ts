@@ -11,6 +11,7 @@ const generateConfigFromDefaultValue = (fields: Field[] = []): Record<string, an
 		if (field.defaultValue) {
 			acc[field.name] = field.defaultValue;
 		}
+
 		return acc;
 	}, {} as Record<string, any>);
 
@@ -27,6 +28,7 @@ const generateConfigFromPreset = (
 		const newField = {
 			...field.field,
 		};
+
 		field.formSchema.fields.forEach(f => {
 			if (f.defaultValue) {
 				newField.config = {
@@ -35,12 +37,15 @@ const generateConfigFromPreset = (
 				};
 			}
 		});
+
 		acc.push(newField);
+
 		return acc;
 	}, [] as PresetDetailFieldModel[]);
 
 	const validationConfig = fields.reduce((acc, field) => {
 		acc[field.name] = field.config;
+
 		return acc;
 	}, {} as Record<string, any>);
 

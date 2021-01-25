@@ -65,6 +65,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	const [t] = useCoreTranslation();
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
+	const [isSubmitting, setIsSubmiting] = useState<boolean>(false);
 	const [hasChanges] = useDetectValueChangesWorker(
 		initialLoading === LoadingState.Loaded,
 		activeField,
@@ -138,7 +139,11 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		// ContentTypesCCNew view
 		// We can not generate a new field because when we do, all changes on the current active
 		// field will be lost
-		if (fieldType?.data?.generalConfig && !locationState.keepActiveField) {
+		if (
+			isSubmitting === false &&
+			fieldType?.data?.generalConfig &&
+			!locationState.keepActiveField
+		) {
 			const initialValues = {
 				label: name || fieldType.data.generalConfig.defaultLabel || '',
 				name: kebabCase(name || ''),
@@ -156,13 +161,17 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fieldType, name, preset, fieldCompartment, locationState.keepActiveField]);
 
-	/**
-	 * Methods
-	 */
 	const navigateToDetail = (): void => {
 		navigate(MODULE_PATHS.detailCC, { contentTypeUuid });
 	};
 
+	useEffect(() => {
+		isSubmitting && navigateToDetail();
+	}, [isSubmitting]); // eslint-disable-line
+
+	/**
+	 * Methods
+	 */
 	const onCTSubmit = (): void => {
 		if (!activeField) {
 			return;
@@ -187,9 +196,9 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		}
 		// Only submit the form if all compartments are valid
 		if (compartmentsAreValid) {
+			setIsSubmiting(true);
 			contentTypesFacade.addField(activeField);
 			contentTypesFacade.clearActiveField();
-			navigateToDetail();
 		} else {
 			alertService.danger(
 				{
@@ -266,43 +275,57 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		);
 	};
 
-	const renderCCNew = (): ReactElement | null => (
-		<>
-			<div className="u-margin-bottom-lg">
-				<div className="row between-xs top-xs">
-					<div className="col-xs-12 col-md-3 u-margin-bottom">
-						<NavList items={navListItems} linkComponent={NavLink} />
-					</div>
+	const renderCCNew = (): ReactElement | null => {
+		if (!fieldType || !activeField) {
+			return <DataLoader loadingState={LoadingState.Loading} render={() => null} />;
+		}
 
-					<div className="col-xs-12 col-md-9">
-						<Card>
-							<CardBody>{renderChildRoutes()}</CardBody>
-						</Card>
+		return (
+			<>
+				<div className="u-margin-bottom-lg">
+					<div className="row between-xs top-xs">
+						<div className="col-xs-12 col-md-3 u-margin-bottom">
+							<NavList items={navListItems} linkComponent={NavLink} />
+						</div>
+
+						<div className="col-xs-12 col-md-9">
+							<Card>
+								<CardBody>{renderChildRoutes()}</CardBody>
+							</Card>
+						</div>
 					</div>
 				</div>
-			</div>
-			<ActionBar className="o-action-bar--fixed" isOpen>
-				<ActionBarContentSection>
-					<div className="u-wrapper row end-xs">
-						<Button onClick={navigateToDetail} negative>
-							{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
-						</Button>
-						<Button className="u-margin-left-xs" onClick={onCTSubmit} type="success">
-							{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
-						</Button>
-					</div>
-				</ActionBarContentSection>
-			</ActionBar>
+				<ActionBar className="o-action-bar--fixed" isOpen>
+					<ActionBarContentSection>
+						<div className="u-wrapper row end-xs">
+							<Button onClick={navigateToDetail} negative>
+								{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
+							</Button>
+							<Button
+								className="u-margin-left-xs"
+								onClick={onCTSubmit}
+								type="primary"
+							>
+								{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
+							</Button>
+						</div>
+					</ActionBarContentSection>
+				</ActionBar>
+			</>
+		);
+	};
+
+	return (
+		<>
+			<DataLoader loadingState={initialLoading} render={renderCCNew} />
 			<LeavePrompt
 				allowedPaths={CC_NEW_ALLOWED_PATHS}
 				onConfirm={onCTSubmit}
 				shouldBlockNavigationOnConfirm
-				when={hasChanges}
+				when={hasChanges && !isSubmitting}
 			/>
 		</>
 	);
-
-	return <DataLoader loadingState={initialLoading} render={renderCCNew} />;
 };
 
 export default ContentTypesCCNew;

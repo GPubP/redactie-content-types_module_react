@@ -9,6 +9,7 @@ const useActiveFieldType: UseActiveFieldType = (fieldTypeId?: string) => {
 	useEffect(() => {
 		if (fieldTypeId) {
 			const hasFieldType = fieldTypesFacade.hasFieldType(fieldTypeId);
+
 			if (hasFieldType && fieldTypesFacade.hasActiveFieldType(fieldTypeId)) {
 				return;
 			}

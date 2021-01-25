@@ -97,6 +97,9 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 				allowedFields: (Array.isArray(value) ? value : []).map(field => ({
 					type: field.validation?.type,
 					fieldType: field.fieldType.uuid,
+					uuid: field.uuid,
+					min: field.generalConfig.min,
+					max: field.generalConfig.max,
 					checks: field.validation?.checks,
 				})),
 			},

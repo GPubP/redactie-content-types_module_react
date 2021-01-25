@@ -57,6 +57,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	const [preset, presetUI] = useActivePreset(activeFieldPSUuid);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const navItemMatcher = useNavItemMatcher(preset, fieldType);
+	const [isSubmitting, setIsSubmiting] = useState<boolean>(false);
 	const [hasChanges] = useDetectValueChangesWorker(
 		initialLoading === LoadingState.Loaded,
 		activeField,
@@ -106,6 +107,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 
 	useEffect(() => {
 		if (
+			isSubmitting === true ||
 			!contentComponentUuid ||
 			!Array.isArray(contentType.fields) ||
 			(activeField && activeField?.uuid === contentComponentUuid)
@@ -122,14 +124,19 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		} else {
 			setInvalidCCUuid(true);
 		}
-	}, [activeField, activeFieldFTUuid, contentComponentUuid, contentType.fields]);
+	}, [activeField, activeFieldFTUuid, contentComponentUuid, contentType.fields, isSubmitting]);
+
+	const navigateToDetail = (): void => {
+		navigate(MODULE_PATHS.detailCC, { contentTypeUuid });
+	};
+
+	useEffect(() => {
+		isSubmitting && navigateToDetail();
+	}, [isSubmitting]); // eslint-disable-line
 
 	/**
 	 * Methods
 	 */
-	const navigateToDetail = (): void => {
-		navigate(MODULE_PATHS.detailCC, { contentTypeUuid });
-	};
 
 	const onFieldChange = (data: ContentTypeFieldDetailModel): void => {
 		validateCompartments(
@@ -178,11 +185,12 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 				}
 			});
 		}
+
 		// Only submit the form if all compartments are valid
 		if (compartmentsAreValid) {
+			setIsSubmiting(true);
 			contentTypesFacade.updateField(activeField);
 			contentTypesFacade.clearActiveField();
-			navigateToDetail();
 		} else {
 			alertService.danger(
 				{
@@ -244,6 +252,10 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	};
 
 	const renderCCEdit = (): ReactElement | null => {
+		if (!fieldType || !activeField) {
+			return <DataLoader loadingState={LoadingState.Loading} render={() => null} />;
+		}
+
 		return (
 			<>
 				<div className="u-margin-bottom-lg">
@@ -268,20 +280,13 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 							<Button
 								className="u-margin-left-xs"
 								onClick={onFieldSubmit}
-								type="success"
+								type="primary"
 							>
-								{t(CORE_TRANSLATIONS.BUTTON_SAVE)}
+								{t(CORE_TRANSLATIONS.BUTTON_NEXT)}
 							</Button>
 						</div>
 					</ActionBarContentSection>
 				</ActionBar>
-				<LeavePrompt
-					allowedPaths={CC_EDIT_ALLOWED_PATHS}
-					onDelete={onLeavePromptDelete}
-					onConfirm={onFieldSubmit}
-					shouldBlockNavigationOnConfirm
-					when={hasChanges}
-				/>
 			</>
 		);
 	};
@@ -300,6 +305,13 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 					</Button>
 				</div>
 			)}
+			<LeavePrompt
+				allowedPaths={CC_EDIT_ALLOWED_PATHS}
+				onDelete={onLeavePromptDelete}
+				onConfirm={onFieldSubmit}
+				shouldBlockNavigationOnConfirm
+				when={hasChanges && !isSubmitting}
+			/>
 		</>
 	);
 };
