@@ -9,8 +9,10 @@ import { registerCTDetailTab } from './api/registerCTDetailTab';
 import { ALERT_CONTAINER_IDS } from './contentTypes.const';
 import {
 	configurationCompartmentValidator,
+	createInitialValuesFromChecks,
 	defaultValueCompartmentValidator,
 	generateConfig,
+	generateConfigFromValidationData,
 	generateValidationChecks,
 	settingsCompartmentValidator,
 	validationCompartmentValidator,
@@ -204,6 +206,8 @@ export interface ContentTypeAPI {
 		validationCompartmentValidator: typeof validationCompartmentValidator;
 		generateConfig: typeof generateConfig;
 		generateValidationChecks: typeof generateValidationChecks;
+		createInitialValuesFromChecks: typeof createInitialValuesFromChecks;
+		generateConfigFromValidationData: typeof generateConfigFromValidationData;
 	};
 }
 

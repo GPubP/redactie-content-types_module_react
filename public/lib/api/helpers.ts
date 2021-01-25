@@ -1,18 +1,22 @@
 import { ContentTypeAPI } from '../contentTypes.types';
 import {
 	configurationCompartmentValidator,
+	createInitialValuesFromChecks,
 	defaultValueCompartmentValidator,
 	generateConfig,
+	generateConfigFromValidationData,
 	generateValidationChecks,
 	settingsCompartmentValidator,
 	validationCompartmentValidator,
 } from '../helpers';
 
 export const helpers: ContentTypeAPI['helpers'] = {
-	generateConfig,
-	generateValidationChecks,
 	configurationCompartmentValidator,
+	createInitialValuesFromChecks,
 	defaultValueCompartmentValidator,
+	generateConfig,
+	generateConfigFromValidationData,
+	generateValidationChecks,
 	settingsCompartmentValidator,
 	validationCompartmentValidator,
 };
