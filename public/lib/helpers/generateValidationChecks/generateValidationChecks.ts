@@ -73,8 +73,6 @@ function getChecksFromPreset(
 			fields: preset?.data?.fields?.reduce((fields, field) => {
 				const fieldValidationData = prop(field.field?.name, data);
 
-				console.log(field);
-
 				const fieldType = {
 					...field.field?.fieldType?.data,
 					validators: field.validators,
