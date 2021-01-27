@@ -88,7 +88,10 @@ function getChecksFromPreset(
 				fields.push({
 					type: field.field?.dataType?.data?.type,
 					name: field.field?.name,
-					checks: response.checks as ValidationCheck[],
+					checks: [
+						...(field.field?.validation?.checks || []),
+						...response.checks,
+					] as ValidationCheck[],
 				});
 
 				return fields;
