@@ -132,11 +132,7 @@ export class DynamicFieldFacade extends BaseEntityFacade<
 						...(payload.validation?.checks || []),
 					],
 				},
-				defaultValue: clearDefaultValue
-					? undefined
-					: payload.defaultValue !== undefined
-					? payload.defaultValue
-					: activeField.defaultValue,
+				defaultValue: clearDefaultValue ? undefined : payload.defaultValue,
 			} as DynamicFieldDetailModel,
 		});
 	}
