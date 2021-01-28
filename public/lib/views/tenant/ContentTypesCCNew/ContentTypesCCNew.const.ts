@@ -1,6 +1,7 @@
 import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
 import {
 	configurationCompartmentValidator,
+	defaultValueCompartmentValidator,
 	settingsCompartmentValidator,
 	validationCompartmentValidator,
 } from '../../../helpers';
@@ -36,6 +37,7 @@ export const CC_NEW_COMPARTMENTS: CompartmentModel[] = [
 		label: 'Standaard waarde',
 		slug: MODULE_PATHS.detailCCNewDefaults,
 		type: CompartmentType.INTERNAL,
+		validate: defaultValueCompartmentValidator,
 	},
 ];
 

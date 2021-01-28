@@ -2,6 +2,7 @@ import { Card } from '@acpaas-ui/react-components';
 import { Table } from '@acpaas-ui/react-editorial-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
 import { DataLoader, LoadingState } from '@redactie/utils';
+import { ValidationCheckWithAllowedFields } from '@wcm/jsonschema-generator';
 import classNames from 'classnames/bind';
 import { useFormikContext } from 'formik';
 import { __, compose, equals, pathOr } from 'ramda';
@@ -42,7 +43,14 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 		getCreatePath = () => '',
 		getEditPath = () => '',
 	} = useContext(DynamicFieldSettingsContext);
-	const { setFieldValue, values } = useFormikContext<Record<string, { config: Field[] }>>();
+	const { setFieldValue, values } = useFormikContext<{
+		[key: string]: {
+			config: Field[];
+			validation: ValidationCheckWithAllowedFields;
+			minValue: number;
+			maxValue: number;
+		};
+	}>();
 	const [, fieldTypes] = useFieldTypes();
 	const [, presets] = usePresets();
 	const value: Field[] = pathOr([], ['config', 'fields'])(dynamicField);
@@ -86,7 +94,11 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 	}, [fields]);
 
 	useEffect(() => {
-		if (equals(value, values[fieldSchema.name]?.config)) {
+		if (
+			equals(value, values[fieldSchema.name]?.config) &&
+			values[fieldSchema.name]?.validation.checks[0].val === values.amount.minValue &&
+			values[fieldSchema.name]?.validation.checks[1].val === values.amount.maxValue
+		) {
 			return;
 		}
 
@@ -102,9 +114,26 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 					max: field.generalConfig.max,
 					checks: field.validation?.checks,
 				})),
+				...(values?.amount
+					? {
+							checks: [
+								{
+									key: 'minItems',
+									val: values.amount.minValue,
+									err: 'Voeg op zen minst ${params.limit} item(s) toe',
+								},
+								{
+									key: 'maxItems',
+									val: values.amount.maxValue,
+									err: 'Er zijn maximum ${params.limit} item(s) toegelaten',
+								},
+							],
+					  }
+					: {}),
 			},
 		});
-	}, [value, fieldSchema.name, setFieldValue, values]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [value, fieldSchema.name, values]);
 
 	/**
 	 * VARIABLES

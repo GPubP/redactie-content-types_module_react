@@ -113,12 +113,12 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	}, [fieldType, navItemMatcher]); // eslint-disable-line
 
 	useEffect(() => {
-		if (!fieldTypeUI?.isFetching && !presetUI?.isFetching && dynamicField) {
+		if (!fieldTypeUI?.isFetching && !presetUI?.isFetching && dynamicActiveField) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [dynamicField, fieldTypeUI, presetUI]);
+	}, [dynamicActiveField, dynamicField, fieldTypeUI, presetUI]);
 
 	useEffect(() => {
 		if (

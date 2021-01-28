@@ -107,12 +107,12 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	}, [activeField, navItemMatcher]); // eslint-disable-line
 
 	useEffect(() => {
-		if (activeField) {
+		if (activeField && dynamicActiveField) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [activeField]);
+	}, [activeField, dynamicActiveField]);
 
 	useEffect(() => {
 		if (
