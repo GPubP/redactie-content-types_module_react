@@ -9,7 +9,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { SiteModel } from '@redactie/sites-module';
 import { DataLoader, LoadingState, useNavigate } from '@redactie/utils';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { FilterForm, FilterFormState } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
@@ -149,18 +149,27 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 		setActiveSorting(orderBy);
 	};
 
-	const findSitesForContentType = (contentType: ContentTypeModel): any =>
-		sites.reduce((acc: string[], site: SiteModel) => {
-			const containsCT = site.data.contentTypes.includes(contentType._id);
+	const sitesForContentTypeList = useMemo(() => {
+		return contentTypes.reduce((acc, contentType) => {
+			if (contentType.uuid) {
+				acc[contentType.uuid] = sites
+					.reduce((acc: string[], site: SiteModel) => {
+						const containsCT = site.data.contentTypes.includes(contentType._id);
 
-			if (!containsCT) {
-				return acc;
+						if (!containsCT) {
+							return acc;
+						}
+
+						acc.push(site.data.name);
+
+						return acc;
+					}, [])
+					.join(', ');
 			}
 
-			acc.push(site.data.name);
-
 			return acc;
-		}, []);
+		}, {} as Record<string, any>);
+	}, [contentTypes, sites]);
 
 	/**
 	 * Render
@@ -174,7 +183,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 			uuid: contentType.uuid as string,
 			label: contentType.meta.label,
 			description: contentType.meta.description,
-			sites: findSitesForContentType(contentType),
+			sites: sitesForContentTypeList[contentType.uuid as string],
 			contentItemCount: contentType.meta.contentItemCount || 0,
 			deleted: contentType.meta.deleted || false,
 			navigate: contentTypeUuid => navigate(MODULE_PATHS.detailCC, { contentTypeUuid }),
@@ -192,6 +201,8 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					/>
 				</div>
 				<PaginatedTable
+					fixed
+					tableClassName="a-table--fixed--lg"
 					className="u-margin-top"
 					columns={CONTENT_TYPE_OVERVIEW_COLUMNS(t, mySecurityrights)}
 					rows={contentTypesRows}

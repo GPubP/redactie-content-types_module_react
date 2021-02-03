@@ -1,5 +1,9 @@
 import { Button } from '@acpaas-ui/react-components';
-import { PaginatedTable } from '@acpaas-ui/react-editorial-components';
+import {
+	EllipsisWithTooltip,
+	PaginatedTable,
+	TooltipTypeMap,
+} from '@acpaas-ui/react-editorial-components';
 import { SiteModel, UpdateSitePayload } from '@redactie/sites-module';
 import { AlertContainer, LoadingState, useAPIQueryParams } from '@redactie/utils';
 import React, { FC, useMemo, useState } from 'react';
@@ -116,14 +120,23 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 				component(value: any, rowData: SitesOverviewRowData) {
 					return (
 						<div>
-							<p>{rowData.name}</p>
-							<p className="u-text-light">{rowData.description}</p>
+							<p>
+								<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
+									{value}
+								</EllipsisWithTooltip>
+							</p>
+							<p className="u-text-light">
+								<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
+									{rowData.description}
+								</EllipsisWithTooltip>
+							</p>
 						</div>
 					);
 				},
 			},
 			{
 				label: 'Aantal content items',
+				width: '200px',
 				value: 'contentItems',
 				disableSorting: true,
 				component(value: string) {
@@ -133,6 +146,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 				value: 'active',
+				width: '150px',
 				component(value: string) {
 					const isActive = !!value;
 					return <SiteStatus active={isActive} />;
@@ -141,6 +155,8 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			{
 				label: '',
 				disableSorting: true,
+				classList: ['u-text-right'],
+				width: '200px',
 				component(value: string, rowData: SitesOverviewRowData) {
 					const isActive = (rowData.contentTypes || []).includes(contentType._id);
 					const loading =
@@ -198,7 +214,9 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 					meer bestaan binnen de desbetreffende site.
 				</p>
 				<PaginatedTable
+					fixed
 					className="u-margin-top"
+					tableClassName="a-table--fixed--lg"
 					columns={sitesColumns}
 					rows={sitesRows}
 					currentPage={sitesPagination?.currentPage}

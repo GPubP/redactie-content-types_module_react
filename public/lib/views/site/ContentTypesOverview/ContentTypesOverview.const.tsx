@@ -1,4 +1,5 @@
 import { Link as AUILink, Button } from '@acpaas-ui/react-components';
+import { EllipsisWithTooltip, TooltipTypeMap } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -29,15 +30,22 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 				return (
 					<>
 						<AUILink to={`${rowData?.uuid}/instellingen`} component={Link}>
-							{value}
+							<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
+								{value}
+							</EllipsisWithTooltip>
 						</AUILink>
-						<p className="u-text-light u-margin-top-xs">{rowData?.description}</p>
+						<p className="u-text-light u-margin-top-xs">
+							<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
+								{rowData?.description}
+							</EllipsisWithTooltip>
+						</p>
 					</>
 				);
 			},
 		},
 		{
 			label: 'Aantal content items',
+			width: '200px',
 			component(value: any, rowData: ContentTypesPerSiteOverviewTableRow) {
 				return rowData.contentItemCount > 0 ? (
 					<span>{rowData.contentItemCount}</span>
@@ -49,6 +57,7 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		},
 		{
 			label: 'Status voor site',
+			width: '100px',
 			component(value: string, rowData: ContentTypesPerSiteOverviewTableRow) {
 				return <SiteStatus active={rowData.activated} />;
 			},
@@ -66,6 +75,7 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 			label: '',
 			classList: ['u-text-right'],
 			disableSorting: true,
+			width: '100px',
 			component(value: unknown, rowData: ContentTypesOverviewTableRow) {
 				const { navigate, uuid } = rowData;
 

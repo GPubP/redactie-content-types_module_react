@@ -28,4 +28,5 @@ export const NEW_CC_FORM_VALIDATION_SCHEMA = (fieldsByCompartments: FieldsByComp
 						compartment.fields?.find(cc => cc.label === name)
 					),
 			}),
+		fieldType: string().required('Gelieve een content component te selecteren'),
 	});
