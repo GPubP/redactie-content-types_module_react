@@ -57,7 +57,7 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		},
 		{
 			label: 'Status voor site',
-			width: '100px',
+			width: '150px',
 			component(value: string, rowData: ContentTypesPerSiteOverviewTableRow) {
 				return <SiteStatus active={rowData.activated} />;
 			},
