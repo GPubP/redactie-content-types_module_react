@@ -1,5 +1,6 @@
 import { Field } from '../contentTypes';
 import { DataType, FieldType } from '../fieldTypes';
+
 /**
  * =========================
  * Base types
@@ -35,6 +36,7 @@ export interface BasePreset<V = string, D = string, F = string> {
 	data: {
 		name: string;
 		label: string;
+		description: string;
 		defaultConfig: Record<string, any>;
 		fieldType: F;
 		generalConfig: {
