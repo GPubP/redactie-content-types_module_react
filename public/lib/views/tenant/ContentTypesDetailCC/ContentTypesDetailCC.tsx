@@ -325,8 +325,10 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		);
 		return (
 			<Table
+				fixed
 				dataKey="id"
 				className="u-margin-top"
+				tableClassName="a-table--fixed--lg"
 				draggable
 				moveRow={onMoveRowDnD}
 				columns={CONTENT_TYPE_COLUMNS(t, onRowExpand, onMoveRow)}

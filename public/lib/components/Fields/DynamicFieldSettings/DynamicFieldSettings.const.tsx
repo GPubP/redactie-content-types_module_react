@@ -1,5 +1,6 @@
+import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
 import { CORE_TRANSLATIONS } from '../../../connectors/translations';
@@ -8,17 +9,30 @@ import StatusIcon from '../../StatusIcon/StatusIcon';
 
 import { DynamicFieldCCRow } from './DynamicFieldSettings.types';
 
+const renderEllipsisWithTooltip = (value: string): ReactElement => (
+	<EllipsisWithTooltip>{value}</EllipsisWithTooltip>
+);
+
 export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCCRow>[] => [
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
 		disableSorting: true,
+		width: '30%',
 		component(value: string, rowData: DynamicFieldCCRow) {
 			const { path } = rowData;
 			return (
 				<>
-					{path ? <Link to={path}>{value}</Link> : <p>{value}</p>}
-					{rowData.name && <p className="u-text-light">systeemnaam: [{rowData.name}]</p>}
+					{path ? (
+						<Link to={path}>{renderEllipsisWithTooltip(value)}</Link>
+					) : (
+						<p>{renderEllipsisWithTooltip(value)}</p>
+					)}
+					{rowData.name && (
+						<p className="u-text-light">
+							{renderEllipsisWithTooltip(`systeemnaam: [${rowData.name}]`)}
+						</p>
+					)}
 				</>
 			);
 		},
@@ -26,12 +40,15 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCC
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_TYPE),
 		value: 'fieldType',
+		ellipsis: true,
+		width: '20%',
 		disableSorting: true,
 	},
 	{
 		label: 'Meerdere',
 		value: 'multiple',
 		disableSorting: true,
+		width: '12.5%',
 		classList: ['u-text-center'],
 		component(value: any, rowData: DynamicFieldCCRow) {
 			return <StatusIcon active={rowData.multiple ?? false} />;
@@ -41,6 +58,7 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCC
 		label: 'Verplicht',
 		value: 'required',
 		disableSorting: true,
+		width: '12.5%',
 		classList: ['u-text-center'],
 		component(value: any, rowData: DynamicFieldCCRow) {
 			return <StatusIcon active={rowData.required ?? false} />;
@@ -50,6 +68,7 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCC
 		label: 'Vertaalbaar',
 		value: 'translatable',
 		disableSorting: true,
+		width: '12.5%',
 		classList: ['u-text-center'],
 		component(value: any, rowData: DynamicFieldCCRow) {
 			return <StatusIcon active={rowData.translatable ?? false} />;
@@ -59,6 +78,7 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCC
 		label: 'Verborgen',
 		value: 'hidden',
 		disableSorting: true,
+		width: '12.5%',
 		classList: ['u-text-center'],
 		component(value: any, rowData: DynamicFieldCCRow) {
 			return <StatusIcon active={rowData.hidden ?? false} />;

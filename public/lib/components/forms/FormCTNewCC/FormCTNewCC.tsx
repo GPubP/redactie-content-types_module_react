@@ -32,6 +32,7 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({
 						})}
 					>
 						<Field
+							required
 							id="fieldType"
 							label="Selecteer"
 							name="fieldType"
@@ -41,11 +42,13 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({
 						<small className="u-block u-text-light u-margin-top-xs">
 							Selecteer een content component van een bepaald type.
 						</small>
+						<ErrorMessage name="fieldType" />
 					</div>
 
 					{hasName ? (
 						<div className="col-xs-12 col-md u-margin-bottom-xs">
 							<Field
+								required
 								as={TextField}
 								description="Kies een gebruiksvriendelijke redactie naam, bijvoorbeeld 'Titel'."
 								id="name"
@@ -61,6 +64,7 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({
 					{compartmentOptions && compartmentOptions.length > 1 ? (
 						<div className="col-xs-12 col-md u-margin-bottom-xs">
 							<Field
+								required
 								id="compartment"
 								label="Compartiment"
 								name="compartment"

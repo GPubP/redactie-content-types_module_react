@@ -1,9 +1,11 @@
 import { Button, Modal, TextField } from '@acpaas-ui/react-components';
+import { ErrorMessage } from '@redactie/utils';
 import { Field, Formik } from 'formik';
 import React, { FC } from 'react';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 
+import { EDIT_COMPARTMENT_FORM_VALIDATION_SCHEMA } from './FormCTEditCompartment.const';
 import { FormCTEditCompartmentProps } from './FormCTEditCompartment.types';
 
 const FormCTEditCompartment: FC<FormCTEditCompartmentProps> = ({
@@ -17,12 +19,17 @@ const FormCTEditCompartment: FC<FormCTEditCompartmentProps> = ({
 	const [t] = useCoreTranslation();
 
 	return (
-		<Formik initialValues={formState} onSubmit={onSubmit}>
+		<Formik
+			initialValues={formState}
+			validationSchema={EDIT_COMPARTMENT_FORM_VALIDATION_SCHEMA}
+			onSubmit={onSubmit}
+		>
 			{({ submitForm }) => (
 				<div className={className}>
 					<div className="row">
 						<div className="col-xs-12 col-md-6">
 							<Field
+								required
 								as={TextField}
 								description="Kies een gebruiksvriendelijke naam voor het compartiment."
 								id="edit-compartment-name"
@@ -31,6 +38,7 @@ const FormCTEditCompartment: FC<FormCTEditCompartmentProps> = ({
 								type="small"
 								placeholder="Typ een naam"
 							/>
+							<ErrorMessage name="name" />
 						</div>
 					</div>
 					<div className="row u-margin-top">
