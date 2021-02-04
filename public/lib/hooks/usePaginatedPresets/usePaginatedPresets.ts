@@ -31,9 +31,7 @@ const usePaginatedPresets: UsePaginatedPresets = (searchParams, clearCache = fal
 				}),
 				tap(() => presetsFacade.setIsFetching(true)),
 				switchMap(([, searchParams]) =>
-					paginator.getPage(() =>
-						presetsFacade.getPresetsPaginated(searchParams)
-					)
+					paginator.getPage(() => presetsFacade.getPresetsPaginated(searchParams))
 				)
 			)
 			.subscribe(result => {
