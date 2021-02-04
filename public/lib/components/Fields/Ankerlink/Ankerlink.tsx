@@ -29,7 +29,8 @@ const Ankerlink: React.FC<AnkerLinkFieldProps> = ({
 	// Debounce because calculation shouldn't run on every keystroke (value change)
 	const debouncedAnkerlinkOptions = useCallback(
 		debounce(
-			(schema, values) => setAnkerlinkOptions(parseAnkerlinkOptions(schema, values)),
+			(schema, values, required) =>
+				setAnkerlinkOptions(parseAnkerlinkOptions(schema, values, required)),
 			1000
 		),
 		[]
@@ -37,9 +38,9 @@ const Ankerlink: React.FC<AnkerLinkFieldProps> = ({
 
 	useEffect(() => {
 		if (schema) {
-			debouncedAnkerlinkOptions(schema, values);
+			debouncedAnkerlinkOptions(schema, values, config.required);
 		}
-	}, [debouncedAnkerlinkOptions, schema, values]);
+	}, [config.required, debouncedAnkerlinkOptions, schema, values]);
 
 	/**
 	 * METHODS
@@ -89,7 +90,6 @@ const Ankerlink: React.FC<AnkerLinkFieldProps> = ({
 				/>
 				<formRendererConnector.api.ErrorMessage name={`${field.name}.label`} />
 			</div>
-			<formRendererConnector.api.ErrorMessage name={field.name} />
 		</>
 	);
 };

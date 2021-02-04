@@ -3,6 +3,8 @@ import { FormikValues } from 'formik';
 import { ContentTypeFieldDetail } from '../../services/contentTypes';
 import { PresetDetailModel } from '../../store/presets';
 
+import { parseRequiredToBool } from './parseRequiredToBool';
+
 export const generateConfigFromValidationData = (
 	data: FormikValues,
 	preset?: PresetDetailModel,
@@ -11,12 +13,12 @@ export const generateConfigFromValidationData = (
 	return preset
 		? Object.keys(data).reduce(
 				(acc, fieldName) => {
-					const required = data[fieldName]?.required;
+					const required = parseRequiredToBool(data[fieldName]?.required);
 
 					return {
 						...acc,
 						fields: acc.fields?.map(subField => {
-							if (subField.name !== fieldName || typeof required !== 'boolean') {
+							if (subField.name !== fieldName || required === null) {
 								return subField;
 							}
 
