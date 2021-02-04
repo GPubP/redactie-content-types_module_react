@@ -18,7 +18,7 @@ import { MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesRouteProps } from '../../../contentTypes.types';
 import { useContentTypes, useRoutesBreadcrumbs, useSites } from '../../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes/contentTypes.service.cont';
-import { ContentTypeModel, contentTypesFacade } from '../../../store/contentTypes';
+import { contentTypesFacade } from '../../../store/contentTypes';
 
 import {
 	CONTENT_INITIAL_FILTER_STATE,

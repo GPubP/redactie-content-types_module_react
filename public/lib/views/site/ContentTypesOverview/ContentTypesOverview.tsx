@@ -120,7 +120,7 @@ const ContentTypesOverview: React.FC = () => {
 			<>
 				<PaginatedTable
 					fixed
-					tableClassName="a-table--fixed--lg"
+					tableClassName="a-table--fixed--sm"
 					className="u-margin-top"
 					columns={CONTENT_TYPE_OVERVIEW_COLUMNS(t, mySecurityrights)}
 					rows={contentTypesRows}

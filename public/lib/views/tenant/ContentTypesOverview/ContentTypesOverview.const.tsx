@@ -1,5 +1,5 @@
 import { Link as AUILink, Button } from '@acpaas-ui/react-components';
-import { EllipsisWithTooltip, TooltipTypeMap } from '@acpaas-ui/react-editorial-components';
+import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -25,19 +25,16 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		{
 			label: t(CORE_TRANSLATIONS.TABLE_NAME),
 			value: 'label',
+			width: canUpdate ? '30%' : '35%',
 			component(value: any, rowData: ContentTypesOverviewTableRow) {
 				return (
 					<>
 						<AUILink to={`${rowData?.uuid}/instellingen`} component={Link}>
-							<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
-								{value}
-							</EllipsisWithTooltip>
+							<EllipsisWithTooltip>{value}</EllipsisWithTooltip>
 						</AUILink>
 
 						<p className="u-text-light u-margin-top-xs">
-							<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
-								{rowData?.description}
-							</EllipsisWithTooltip>
+							<EllipsisWithTooltip>{rowData?.description}</EllipsisWithTooltip>
 						</p>
 					</>
 				);
@@ -48,11 +45,11 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 			value: 'sites',
 			ellipsis: true,
 			disableSorting: true,
-			width: '300px',
+			width: canUpdate ? '25%' : '30%',
 		},
 		{
 			label: 'Aantal content items',
-			width: '200px',
+			width: '15%',
 			component(value: any, rowData: ContentTypesOverviewTableRow) {
 				return rowData.contentItemCount > 0 ? (
 					<span>{rowData.contentItemCount}</span>
@@ -64,7 +61,7 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		},
 		{
 			label: t(CORE_TRANSLATIONS.TABLE_STATUS),
-			width: '100px',
+			width: canUpdate ? '10%' : '15%',
 			component(value: string, rowData: ContentTypesOverviewTableRow) {
 				return <SiteStatus active={!rowData.deleted} />;
 			},
@@ -82,7 +79,7 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 			label: '',
 			classList: ['u-text-right'],
 			disableSorting: true,
-			width: '100px',
+			width: '10%',
 			component(value: unknown, rowData: ContentTypesOverviewTableRow) {
 				const { navigate, uuid } = rowData;
 

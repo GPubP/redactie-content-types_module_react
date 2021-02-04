@@ -1,5 +1,5 @@
 import { Button, ButtonGroup } from '@acpaas-ui/react-components';
-import { EllipsisWithTooltip, TooltipTypeMap } from '@acpaas-ui/react-editorial-components';
+import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import { isNil } from 'ramda';
 import React, { ReactElement } from 'react';
@@ -13,7 +13,7 @@ import { TableColumn } from '../../../contentTypes.types';
 import { ContentTypeDetailCCRow, MoveAction } from './ContentTypesDetailCC.types';
 
 const renderEllipsisWithTooltip = (value: string): ReactElement => (
-	<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>{value}</EllipsisWithTooltip>
+	<EllipsisWithTooltip>{value}</EllipsisWithTooltip>
 );
 
 export const CONTENT_TYPE_COLUMNS = (
@@ -25,6 +25,7 @@ export const CONTENT_TYPE_COLUMNS = (
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
 		disableSorting: true,
+		width: '35%',
 		component(value: string, rowData: ContentTypeDetailCCRow) {
 			const { name, path } = rowData;
 			return (
@@ -74,7 +75,7 @@ export const CONTENT_TYPE_COLUMNS = (
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_TYPE),
 		value: 'fieldType',
-		width: '150px',
+		width: '15%',
 		ellipsis: true,
 		disableSorting: true,
 	},
@@ -82,7 +83,7 @@ export const CONTENT_TYPE_COLUMNS = (
 		label: 'Meerdere',
 		value: 'multiple',
 		disableSorting: true,
-		width: '100px',
+		width: '10%',
 		classList: ['u-text-center'],
 		component(value: any, rowData: ContentTypeDetailCCRow) {
 			return !isNil(rowData.multiple) ? (
@@ -93,7 +94,7 @@ export const CONTENT_TYPE_COLUMNS = (
 	{
 		label: 'Verplicht',
 		value: 'required',
-		width: '100px',
+		width: '10%',
 		classList: ['u-text-center'],
 		disableSorting: true,
 		component(value: any, rowData: ContentTypeDetailCCRow) {
@@ -105,7 +106,7 @@ export const CONTENT_TYPE_COLUMNS = (
 	{
 		label: 'Vertaalbaar',
 		value: 'translatable',
-		width: '100px',
+		width: '10%',
 		disableSorting: true,
 		classList: ['u-text-center'],
 		component(value: any, rowData: ContentTypeDetailCCRow) {
@@ -117,7 +118,7 @@ export const CONTENT_TYPE_COLUMNS = (
 	{
 		label: 'Verborgen',
 		value: 'hidden',
-		width: '100px',
+		width: '10%',
 		disableSorting: true,
 		classList: ['u-text-center'],
 		component(value: any, rowData: ContentTypeDetailCCRow) {
@@ -127,7 +128,7 @@ export const CONTENT_TYPE_COLUMNS = (
 	{
 		label: '',
 		disableSorting: true,
-		width: '100px',
+		width: '10%',
 		classList: ['is-condensed', 'u-text-right'],
 		component(value: any, rowData: ContentTypeDetailCCRow) {
 			return (

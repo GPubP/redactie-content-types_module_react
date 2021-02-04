@@ -117,6 +117,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			{
 				label: 'Site',
 				value: 'name',
+				width: '35%',
 				component(value: any, rowData: SitesOverviewRowData) {
 					return (
 						<div>
@@ -136,7 +137,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			},
 			{
 				label: 'Aantal content items',
-				width: '200px',
+				width: '25%',
 				value: 'contentItems',
 				disableSorting: true,
 				component(value: string) {
@@ -146,7 +147,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 				value: 'active',
-				width: '150px',
+				width: '10%',
 				component(value: string) {
 					const isActive = !!value;
 					return <SiteStatus active={isActive} />;
@@ -156,7 +157,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 				label: '',
 				disableSorting: true,
 				classList: ['u-text-right'],
-				width: '200px',
+				width: '25%',
 				component(value: string, rowData: SitesOverviewRowData) {
 					const isActive = (rowData.contentTypes || []).includes(contentType._id);
 					const loading =
@@ -216,7 +217,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 				<PaginatedTable
 					fixed
 					className="u-margin-top"
-					tableClassName="a-table--fixed--lg"
+					tableClassName="a-table--fixed--sm"
 					columns={sitesColumns}
 					rows={sitesRows}
 					currentPage={sitesPagination?.currentPage}

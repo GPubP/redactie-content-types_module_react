@@ -1,4 +1,4 @@
-import { EllipsisWithTooltip, TooltipTypeMap } from '@acpaas-ui/react-editorial-components';
+import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
@@ -10,7 +10,7 @@ import StatusIcon from '../../StatusIcon/StatusIcon';
 import { DynamicFieldCCRow } from './DynamicFieldSettings.types';
 
 const renderEllipsisWithTooltip = (value: string): ReactElement => (
-	<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>{value}</EllipsisWithTooltip>
+	<EllipsisWithTooltip>{value}</EllipsisWithTooltip>
 );
 
 export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCCRow>[] => [
@@ -18,6 +18,7 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCC
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
 		disableSorting: true,
+		width: '30%',
 		component(value: string, rowData: DynamicFieldCCRow) {
 			const { path } = rowData;
 			return (
@@ -40,14 +41,14 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCC
 		label: t(CORE_TRANSLATIONS.TABLE_TYPE),
 		value: 'fieldType',
 		ellipsis: true,
-		width: '150px',
+		width: '20%',
 		disableSorting: true,
 	},
 	{
 		label: 'Meerdere',
 		value: 'multiple',
 		disableSorting: true,
-		width: '100px',
+		width: '12.5%',
 		classList: ['u-text-center'],
 		component(value: any, rowData: DynamicFieldCCRow) {
 			return <StatusIcon active={rowData.multiple ?? false} />;
@@ -57,7 +58,7 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCC
 		label: 'Verplicht',
 		value: 'required',
 		disableSorting: true,
-		width: '100px',
+		width: '12.5%',
 		classList: ['u-text-center'],
 		component(value: any, rowData: DynamicFieldCCRow) {
 			return <StatusIcon active={rowData.required ?? false} />;
@@ -67,7 +68,7 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCC
 		label: 'Vertaalbaar',
 		value: 'translatable',
 		disableSorting: true,
-		width: '100px',
+		width: '12.5%',
 		classList: ['u-text-center'],
 		component(value: any, rowData: DynamicFieldCCRow) {
 			return <StatusIcon active={rowData.translatable ?? false} />;
@@ -77,7 +78,7 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCC
 		label: 'Verborgen',
 		value: 'hidden',
 		disableSorting: true,
-		width: '100px',
+		width: '12.5%',
 		classList: ['u-text-center'],
 		component(value: any, rowData: DynamicFieldCCRow) {
 			return <StatusIcon active={rowData.hidden ?? false} />;

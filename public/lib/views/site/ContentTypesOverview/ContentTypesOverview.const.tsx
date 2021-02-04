@@ -1,5 +1,5 @@
 import { Link as AUILink, Button } from '@acpaas-ui/react-components';
-import { EllipsisWithTooltip, TooltipTypeMap } from '@acpaas-ui/react-editorial-components';
+import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -26,18 +26,15 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		{
 			label: t(CORE_TRANSLATIONS.TABLE_NAME),
 			value: 'label',
+			width: canUpdate ? '40%' : '50%',
 			component(value: any, rowData: ContentTypesOverviewTableRow) {
 				return (
 					<>
 						<AUILink to={`${rowData?.uuid}/instellingen`} component={Link}>
-							<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
-								{value}
-							</EllipsisWithTooltip>
+							<EllipsisWithTooltip>{value}</EllipsisWithTooltip>
 						</AUILink>
 						<p className="u-text-light u-margin-top-xs">
-							<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
-								{rowData?.description}
-							</EllipsisWithTooltip>
+							<EllipsisWithTooltip>{rowData?.description}</EllipsisWithTooltip>
 						</p>
 					</>
 				);
@@ -45,7 +42,7 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		},
 		{
 			label: 'Aantal content items',
-			width: '200px',
+			width: canUpdate ? '25%' : '30%',
 			component(value: any, rowData: ContentTypesPerSiteOverviewTableRow) {
 				return rowData.contentItemCount > 0 ? (
 					<span>{rowData.contentItemCount}</span>
@@ -57,7 +54,7 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		},
 		{
 			label: 'Status voor site',
-			width: '150px',
+			width: '20%',
 			component(value: string, rowData: ContentTypesPerSiteOverviewTableRow) {
 				return <SiteStatus active={rowData.activated} />;
 			},
@@ -75,7 +72,7 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 			label: '',
 			classList: ['u-text-right'],
 			disableSorting: true,
-			width: '100px',
+			width: '15%',
 			component(value: unknown, rowData: ContentTypesOverviewTableRow) {
 				const { navigate, uuid } = rowData;
 
