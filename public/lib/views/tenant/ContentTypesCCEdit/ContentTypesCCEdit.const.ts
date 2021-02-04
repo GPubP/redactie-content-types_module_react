@@ -20,17 +20,17 @@ export const CC_EDIT_COMPARTMENTS: CompartmentModel[] = [
 	{
 		label: 'Configuratie',
 		name: 'configuration',
-		filter: (CtField: FieldType) => !!CtField?.data?.formSchema?.fields?.length,
 		slug: MODULE_PATHS.detailCCEditConfig,
 		type: CompartmentType.INTERNAL,
+		filter: (CtField: FieldType) => !!CtField?.data?.formSchema?.fields?.length,
 		validate: configurationCompartmentValidator,
 	},
 	{
 		label: 'Validatie',
 		name: 'validation',
-		filter: (CtField: FieldType) => !!CtField?.data?.validators?.length,
 		slug: MODULE_PATHS.detailCCEditValidation,
 		type: CompartmentType.INTERNAL,
+		filter: (CtField: FieldType) => !!CtField?.data?.validators?.length,
 		validate: validationCompartmentValidator,
 	},
 	{
@@ -38,6 +38,7 @@ export const CC_EDIT_COMPARTMENTS: CompartmentModel[] = [
 		name: 'default',
 		slug: MODULE_PATHS.detailCCEditDefaults,
 		type: CompartmentType.INTERNAL,
+		filter: ctField => !!ctField?.data?.generalConfig?.allowDefault,
 		validate: defaultValueCompartmentValidator,
 	},
 ];

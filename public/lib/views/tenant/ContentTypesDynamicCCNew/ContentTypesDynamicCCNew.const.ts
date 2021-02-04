@@ -20,16 +20,16 @@ export const DYNAMIC_CC_NEW_COMPARTMENTS: CompartmentModel[] = [
 		label: 'Configuratie',
 		name: 'configuration',
 		slug: MODULE_PATHS.detailCCEditDynamicNewConfig,
-		filter: (CtField: FieldType) => !!CtField?.data?.formSchema?.fields?.length,
 		type: CompartmentType.INTERNAL,
+		filter: (CtField: FieldType) => !!CtField?.data?.formSchema?.fields?.length,
 		validate: configurationCompartmentValidator,
 	},
 	{
 		label: 'Validatie',
 		name: 'validation',
 		slug: MODULE_PATHS.detailCCEditDynamicNewValidation,
-		filter: (CtField: FieldType) => !!CtField?.data?.validators?.length,
 		type: CompartmentType.INTERNAL,
+		filter: (CtField: FieldType) => !!CtField?.data?.validators?.length,
 		validate: validationCompartmentValidator,
 	},
 	{
@@ -37,6 +37,7 @@ export const DYNAMIC_CC_NEW_COMPARTMENTS: CompartmentModel[] = [
 		name: 'default',
 		slug: MODULE_PATHS.detailCCEditDynamicNewDefaults,
 		type: CompartmentType.INTERNAL,
+		filter: ctField => !!ctField?.data?.generalConfig?.allowDefault,
 	},
 ];
 

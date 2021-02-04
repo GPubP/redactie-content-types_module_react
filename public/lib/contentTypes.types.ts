@@ -162,6 +162,8 @@ export interface TableColumn<RowData = unknown> {
 	disableSorting?: boolean;
 	classList?: string[];
 	fallback?: string;
+	ellipsis?: boolean;
+	width?: string;
 }
 
 export interface ContentTypeAPI {

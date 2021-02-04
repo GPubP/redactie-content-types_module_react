@@ -1,5 +1,6 @@
 import { Field } from '../contentTypes';
 import { DataType, FieldType } from '../fieldTypes';
+
 /**
  * =========================
  * Base types
@@ -35,12 +36,14 @@ export interface BasePreset<V = string, D = string, F = string> {
 	data: {
 		name: string;
 		label: string;
+		description: string;
 		defaultConfig: Record<string, any>;
 		fieldType: F;
 		generalConfig: {
 			isQueryable: boolean;
 			isTranslate: boolean;
 			isMultiple: boolean;
+			allowDefault: boolean;
 		};
 		fields: {
 			field: PresetField<D, F>;
@@ -81,9 +84,10 @@ export interface BasePreset<V = string, D = string, F = string> {
 export type Preset = BasePreset<string, string, string>;
 
 export interface PresetsPaging {
-	total: number;
-	skip: number;
-	limit: number;
+	number: number;
+	size: number;
+	totalElements: number;
+	totalPages: number;
 }
 
 /**
@@ -96,8 +100,8 @@ export interface PresetsPaging {
 export type PresetDetailResponse = BasePreset<Validator, DataType, FieldType>;
 
 export interface PresetsResponse {
-	data: Preset[];
-	paging: PresetsPaging;
+	_embedded: Preset[];
+	_page: PresetsPaging;
 }
 
 /**

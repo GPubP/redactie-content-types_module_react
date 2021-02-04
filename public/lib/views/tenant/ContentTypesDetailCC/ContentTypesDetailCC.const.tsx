@@ -1,7 +1,8 @@
 import { Button, ButtonGroup } from '@acpaas-ui/react-components';
+import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
 import { isNil } from 'ramda';
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
 import { StatusIcon } from '../../../components';
@@ -10,6 +11,10 @@ import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
 import { TableColumn } from '../../../contentTypes.types';
 
 import { ContentTypeDetailCCRow, MoveAction } from './ContentTypesDetailCC.types';
+
+const renderEllipsisWithTooltip = (value: string): ReactElement => (
+	<EllipsisWithTooltip>{value}</EllipsisWithTooltip>
+);
 
 export const CONTENT_TYPE_COLUMNS = (
 	t: TranslateFunc,
@@ -20,6 +25,7 @@ export const CONTENT_TYPE_COLUMNS = (
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'label',
 		disableSorting: true,
+		width: '35%',
 		component(value: string, rowData: ContentTypeDetailCCRow) {
 			const { name, path } = rowData;
 			return (
@@ -49,13 +55,17 @@ export const CONTENT_TYPE_COLUMNS = (
 								negative
 							/>
 						</ButtonGroup>
-						<div className="u-margin-left-xs">
+						<div className="u-margin-left-xs u-min-w-0">
 							{path ? (
-								<Link to={path}>{value}</Link>
+								<Link to={path}>{renderEllipsisWithTooltip(value)}</Link>
 							) : (
-								<p className="u-text-bold">{value}</p>
+								<p className="u-text-bold">{renderEllipsisWithTooltip(value)}</p>
 							)}
-							{name && <p className="u-text-light">systeemnaam: [{name}]</p>}
+							{name && (
+								<p className="u-text-light">
+									{renderEllipsisWithTooltip(`systeemnaam: [${name}]`)}
+								</p>
+							)}
 						</div>
 					</div>
 				</>
@@ -65,12 +75,15 @@ export const CONTENT_TYPE_COLUMNS = (
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_TYPE),
 		value: 'fieldType',
+		width: '15%',
+		ellipsis: true,
 		disableSorting: true,
 	},
 	{
 		label: 'Meerdere',
 		value: 'multiple',
 		disableSorting: true,
+		width: '10%',
 		classList: ['u-text-center'],
 		component(value: any, rowData: ContentTypeDetailCCRow) {
 			return !isNil(rowData.multiple) ? (
@@ -81,6 +94,7 @@ export const CONTENT_TYPE_COLUMNS = (
 	{
 		label: 'Verplicht',
 		value: 'required',
+		width: '10%',
 		classList: ['u-text-center'],
 		disableSorting: true,
 		component(value: any, rowData: ContentTypeDetailCCRow) {
@@ -92,6 +106,7 @@ export const CONTENT_TYPE_COLUMNS = (
 	{
 		label: 'Vertaalbaar',
 		value: 'translatable',
+		width: '10%',
 		disableSorting: true,
 		classList: ['u-text-center'],
 		component(value: any, rowData: ContentTypeDetailCCRow) {
@@ -103,6 +118,7 @@ export const CONTENT_TYPE_COLUMNS = (
 	{
 		label: 'Verborgen',
 		value: 'hidden',
+		width: '10%',
 		disableSorting: true,
 		classList: ['u-text-center'],
 		component(value: any, rowData: ContentTypeDetailCCRow) {
@@ -112,7 +128,8 @@ export const CONTENT_TYPE_COLUMNS = (
 	{
 		label: '',
 		disableSorting: true,
-		classList: ['is-condensed'],
+		width: '10%',
+		classList: ['is-condensed', 'u-text-right'],
 		component(value: any, rowData: ContentTypeDetailCCRow) {
 			return (
 				<Button
