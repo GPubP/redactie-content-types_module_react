@@ -36,6 +36,7 @@ export const CC_NEW_COMPARTMENTS: CompartmentModel[] = [
 		label: 'Standaard waarde',
 		slug: MODULE_PATHS.detailCCNewDefaults,
 		type: CompartmentType.INTERNAL,
+		filter: ctField => !!ctField?.data?.generalConfig?.allowDefault,
 	},
 ];
 

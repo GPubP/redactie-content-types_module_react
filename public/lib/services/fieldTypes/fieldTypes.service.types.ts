@@ -45,6 +45,7 @@ export interface FieldTypeData {
 		isMultiple: boolean;
 		defaultLabel?: string;
 		defaultGuideline?: string;
+		allowDefault: boolean;
 	};
 	operators: Operator[];
 	module: string;
