@@ -38,6 +38,7 @@ export const CC_NEW_COMPARTMENTS: CompartmentModel[] = [
 		slug: MODULE_PATHS.detailCCNewDefaults,
 		type: CompartmentType.INTERNAL,
 		validate: defaultValueCompartmentValidator,
+		filter: ctField => !!ctField?.data?.generalConfig?.allowDefault,
 	},
 ];
 

@@ -101,7 +101,7 @@ export class PresetsFacade {
 			this.service
 				.getPresets(searchParams)
 				.then(response => {
-					const paging = response.paging;
+					const paging = response._page;
 
 					this.listStore.update({
 						paging,
@@ -109,11 +109,11 @@ export class PresetsFacade {
 					});
 
 					return {
-						perPage: paging.limit,
+						perPage: paging.size,
 						currentPage: presetsListPaginator.currentPage,
-						lastPage: paging.total / paging.limit,
-						total: paging.total,
-						data: response.data,
+						lastPage: paging.totalPages,
+						total: paging.totalElements,
+						data: response?._embedded,
 					};
 				})
 				.catch(error => {
@@ -147,7 +147,7 @@ export class PresetsFacade {
 			.getPresets(searchParams)
 			.then(response => {
 				if (response) {
-					this.listStore.set(response.data);
+					this.listStore.set(response._embedded);
 					this.listStore.update({
 						error: false,
 						isFetching: false,
