@@ -106,7 +106,7 @@
 		"yup": "0.28.3"
 	},
 	"dependencies": {
-		"@wcm/jsonschema-generator": "1.0.1",
+		"@wcm/jsonschema-generator": "^1.2.0",
 		"lodash.debounce": "^4.0.8",
 		"lodash.kebabcase": "4.1.1",
 		"query-string": "^6.13.1",

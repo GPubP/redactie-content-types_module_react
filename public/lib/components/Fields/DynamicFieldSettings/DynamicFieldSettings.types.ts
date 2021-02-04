@@ -1,3 +1,5 @@
+import { ValidationCheckWithAllowedFields } from '@wcm/jsonschema-generator';
+
 import { Field } from '../../../services/contentTypes';
 
 export interface DynamicFieldCCRow {
@@ -18,4 +20,13 @@ export interface DynamicFieldSettingsContextValue {
 	getCreatePath?: (isPreset: boolean, fieldTypeUuid: string) => string;
 	getEditPath?: (uuid: string) => string;
 	setDynamicField?: (field: Field) => void;
+}
+
+export interface DynamicFieldFormikContextValues {
+	[key: string]: {
+		config: Field[];
+		validation: ValidationCheckWithAllowedFields;
+		minValue: number;
+		maxValue: number;
+	};
 }
