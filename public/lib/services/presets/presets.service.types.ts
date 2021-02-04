@@ -81,9 +81,10 @@ export interface BasePreset<V = string, D = string, F = string> {
 export type Preset = BasePreset<string, string, string>;
 
 export interface PresetsPaging {
-	total: number;
-	skip: number;
-	limit: number;
+	number: number;
+	size: number;
+	totalElements: number;
+	totalPages: number;
 }
 
 /**
@@ -96,8 +97,8 @@ export interface PresetsPaging {
 export type PresetDetailResponse = BasePreset<Validator, DataType, FieldType>;
 
 export interface PresetsResponse {
-	data: Preset[];
-	paging: PresetsPaging;
+	_embedded: Preset[];
+	_page: PresetsPaging;
 }
 
 /**
