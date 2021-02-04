@@ -24,7 +24,7 @@ import { FormCTNewCCProps } from '../../forms/FormCTNewCC/FormCTNewCC.types';
 import { DYNAMIC_CC_COLUMNS } from './DynamicFieldSettings.const';
 import DynamicFieldSettingsContext from './DynamicFieldSettings.context';
 import styles from './DynamicFieldSettings.module.scss';
-import { DynamicFieldCCRow } from './DynamicFieldSettings.types';
+import { DynamicFieldCCRow, DynamicFieldFormikContextValues } from './DynamicFieldSettings.types';
 
 const cx = classNames.bind(styles);
 
@@ -43,14 +43,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 		getCreatePath = () => '',
 		getEditPath = () => '',
 	} = useContext(DynamicFieldSettingsContext);
-	const { setFieldValue, values } = useFormikContext<{
-		[key: string]: {
-			config: Field[];
-			validation: ValidationCheckWithAllowedFields;
-			minValue: number;
-			maxValue: number;
-		};
-	}>();
+	const { setFieldValue, values } = useFormikContext<DynamicFieldFormikContextValues>();
 	const [, fieldTypes] = useFieldTypes();
 	const [, presets] = usePresets();
 	const value: Field[] = pathOr([], ['config', 'fields'])(dynamicField);
