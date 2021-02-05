@@ -18,11 +18,7 @@ const Anchorlink: React.FC<AnchorlinkFieldProps> = ({
 	const config = fieldSchema.config || {};
 	const { field } = fieldProps;
 	const { setValue } = fieldHelperProps;
-	const FormRendererFieldTitle = (formRendererConnector.api
-		.FormRendererFieldTitle as unknown) as React.FC<{
-		isRequired: boolean;
-		className?: string;
-	}>;
+	const FormRendererFieldTitle = formRendererConnector.api.FormRendererFieldTitle;
 	const { schema } = formRendererConnector.api.useFormContext();
 	const { values } = useFormikContext<FormikValues>();
 	const [anchorlinkOptions, setAnchorlinkOptions] = useState<FieldOption['value'][]>([]);
