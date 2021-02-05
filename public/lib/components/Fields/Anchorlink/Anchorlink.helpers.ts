@@ -1,9 +1,9 @@
 import { FieldOption, FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-module';
 import pointer from 'json-pointer';
 
-import { DynamicRepeaterItem } from './Ankerlink.types';
+import { DynamicRepeaterItem } from './Anchorlink.types';
 
-const generateAnkerlinkOption = (fieldPath: string[], value: string): FieldOption['value'] => {
+const generateAnchorlinkOption = (fieldPath: string[], value: string): FieldOption['value'] => {
 	const jsonPointer = pointer.compile(fieldPath);
 	return {
 		label: value,
@@ -12,7 +12,7 @@ const generateAnkerlinkOption = (fieldPath: string[], value: string): FieldOptio
 	};
 };
 
-export const parseAnkerlinkOptions = (
+export const parseAnchorlinkOptions = (
 	schema: FormSchema,
 	values: FormValues,
 	required: boolean
@@ -24,7 +24,7 @@ export const parseAnkerlinkOptions = (
 				Array.isArray(values[field.name]) &&
 				field?.config?.max &&
 				field.config.max !== 1 &&
-				field.config?.textType?.isAnkerlink
+				field.config?.textType?.isAnchorlink
 			) {
 				return [
 					...acc,
@@ -33,7 +33,7 @@ export const parseAnkerlinkOptions = (
 							value?.value?.text
 								? [
 										...acc,
-										generateAnkerlinkOption(
+										generateAnchorlinkOption(
 											[field.name, `${index}`],
 											value.value.text
 										),
@@ -57,12 +57,12 @@ export const parseAnkerlinkOptions = (
 							value?.value?.text &&
 							!!field.config?.fields.find(
 								(field: FieldSchema) =>
-									!!field.config?.textType?.isAnkerlink &&
+									!!field.config?.textType?.isAnchorlink &&
 									value.fieldRef === field.uuid
 							)
 								? [
 										...acc,
-										generateAnkerlinkOption(
+										generateAnchorlinkOption(
 											[field.name, `${index}`],
 											value.value.text
 										),
@@ -73,19 +73,19 @@ export const parseAnkerlinkOptions = (
 				];
 			}
 
-			// Field is not a text field or is not marked as possible ankerlink
-			if (!values[field.name]?.text || !field.config?.textType?.isAnkerlink) {
+			// Field is not a text field or is not marked as possible anchorlink
+			if (!values[field.name]?.text || !field.config?.textType?.isAnchorlink) {
 				return acc;
 			}
 
 			// Field is a single item
-			return [...acc, generateAnkerlinkOption([field.name], values[field.name].text)];
+			return [...acc, generateAnchorlinkOption([field.name], values[field.name].text)];
 		},
 		[
 			{
 				value: '',
 				key: '',
-				label: required ? 'Selecteer een ankerlink' : 'Geen ankerlink',
+				label: required ? 'Selecteer een anchorlink' : 'Geen anchorlink',
 				disabled: required,
 			},
 		]

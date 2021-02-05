@@ -11,7 +11,7 @@ import {
 	ContentTypeCCBreadcrumb,
 	DynamicFieldBreadcrumb,
 } from './lib/components/Breadcrumbs';
-import { Ankerlink, ContentTypesSelect, DynamicFieldSettings } from './lib/components/Fields';
+import { Anchorlink, ContentTypesSelect, DynamicFieldSettings } from './lib/components/Fields';
 import formRendererConnector from './lib/connectors/formRenderer';
 import rolesRightsConnector from './lib/connectors/rolesRights';
 import sitesConnector from './lib/connectors/sites';
@@ -381,8 +381,8 @@ formRendererConnector.api.fieldRegistry.add([
 	{
 		name: 'ankerlink',
 		module: 'content-types',
-		// Typing of react-form-renderer expects a string but this returns an Ankerlink object
-		component: Ankerlink as FC<any>,
+		// Typing of react-form-renderer expects a string but this returns an Anchorlink object
+		component: Anchorlink as FC<any>,
 	},
 ]);
 

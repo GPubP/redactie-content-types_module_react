@@ -7,10 +7,10 @@ import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 
 import formRendererConnector from '../../../connectors/formRenderer';
 
-import { parseAnkerlinkOptions } from './Ankerlink.helpers';
-import { AnkerLinkFieldProps, AnkerlinkValue } from './Ankerlink.types';
+import { parseAnchorlinkOptions } from './Anchorlink.helpers';
+import { AnchorlinkFieldProps, AnchorlinkValue } from './Anchorlink.types';
 
-const Ankerlink: React.FC<AnkerLinkFieldProps> = ({
+const Anchorlink: React.FC<AnchorlinkFieldProps> = ({
 	fieldProps,
 	fieldSchema,
 	fieldHelperProps,
@@ -25,12 +25,12 @@ const Ankerlink: React.FC<AnkerLinkFieldProps> = ({
 	}>;
 	const { schema } = formRendererConnector.api.useFormContext();
 	const { values } = useFormikContext<FormikValues>();
-	const [ankerlinkOptions, setAnkerlinkOptions] = useState<FieldOption['value'][]>([]);
+	const [anchorlinkOptions, setAnchorlinkOptions] = useState<FieldOption['value'][]>([]);
 	// Debounce because calculation shouldn't run on every keystroke (value change)
-	const debouncedAnkerlinkOptions = useCallback(
+	const debouncedAnchorlinkOptions = useCallback(
 		debounce(
 			(schema, values, required) =>
-				setAnkerlinkOptions(parseAnkerlinkOptions(schema, values, required)),
+				setAnchorlinkOptions(parseAnchorlinkOptions(schema, values, required)),
 			1000
 		),
 		[]
@@ -38,14 +38,14 @@ const Ankerlink: React.FC<AnkerLinkFieldProps> = ({
 
 	useEffect(() => {
 		if (schema) {
-			debouncedAnkerlinkOptions(schema, values, config.required);
+			debouncedAnchorlinkOptions(schema, values, config.required);
 		}
-	}, [config.required, debouncedAnkerlinkOptions, schema, values]);
+	}, [config.required, debouncedAnchorlinkOptions, schema, values]);
 
 	/**
 	 * METHODS
 	 */
-	const onChange = (value: Partial<AnkerlinkValue>): void => {
+	const onChange = (value: Partial<AnchorlinkValue>): void => {
 		setValue({
 			...field.value,
 			...value,
@@ -63,7 +63,7 @@ const Ankerlink: React.FC<AnkerLinkFieldProps> = ({
 					id={`${field.name}.link`}
 					name={`${field.name}.link`}
 					label="Link"
-					options={ankerlinkOptions}
+					options={anchorlinkOptions}
 					value={field.value?.link}
 					onChange={(event: ChangeEvent<any>) =>
 						onChange({
@@ -90,8 +90,9 @@ const Ankerlink: React.FC<AnkerLinkFieldProps> = ({
 				/>
 				<formRendererConnector.api.ErrorMessage name={`${field.name}.label`} />
 			</div>
+			<formRendererConnector.api.ErrorMessage name={field.name} />
 		</>
 	);
 };
 
-export default Ankerlink;
+export default Anchorlink;

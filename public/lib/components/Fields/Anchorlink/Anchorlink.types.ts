@@ -1,13 +1,13 @@
 import { FormValues, InputFieldProps } from '@redactie/form-renderer-module';
 import { FieldProps } from 'formik';
 
-export interface AnkerlinkValue {
+export interface AnchorlinkValue {
 	link: string;
 	label: string;
 }
 
-export interface AnkerLinkFieldProps extends Omit<InputFieldProps, 'fieldProps'> {
-	fieldProps: FieldProps<AnkerlinkValue, FormValues>;
+export interface AnchorlinkFieldProps extends Omit<InputFieldProps, 'fieldProps'> {
+	fieldProps: FieldProps<AnchorlinkValue, FormValues>;
 }
 
 export interface DynamicRepeaterItem<Value = unknown> {
