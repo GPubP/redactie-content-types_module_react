@@ -26,15 +26,20 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 			label: t(CORE_TRANSLATIONS.TABLE_NAME),
 			value: 'label',
 			width: canUpdate ? '30%' : '35%',
-			component(value: any, rowData: ContentTypesOverviewTableRow) {
+			component(label: string, { uuid, description }: ContentTypesOverviewTableRow) {
 				return (
 					<>
-						<AUILink to={`${rowData?.uuid}/instellingen`} component={Link}>
-							<EllipsisWithTooltip>{value}</EllipsisWithTooltip>
+						<AUILink to={`${uuid}/instellingen`} component={Link}>
+							<EllipsisWithTooltip>{label}</EllipsisWithTooltip>
 						</AUILink>
-
-						<p className="u-text-light u-margin-top-xs">
-							<EllipsisWithTooltip>{rowData?.description}</EllipsisWithTooltip>
+						<p className="small">
+							{description ? (
+								<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
+							) : (
+								<span className="u-text-italic">
+									{t(CORE_TRANSLATIONS['TABLE_NO-DESCRIPTION'])}
+								</span>
+							)}
 						</p>
 					</>
 				);
