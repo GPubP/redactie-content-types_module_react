@@ -204,7 +204,6 @@ export class PresetsFacade {
 					error: null,
 				});
 				this.detailStore.upsert(preset.uuid, preset);
-				this.listPaginator.clearCache();
 
 				// Timeout because the alert is visible on the edit page
 				// and not on the create page
@@ -243,8 +242,6 @@ export class PresetsFacade {
 					error: null,
 				});
 				this.detailStore.upsert(preset.uuid, preset);
-				// update item in list?
-				this.listPaginator.clearCache();
 				showAlert(options.alertContainerId, 'success', alertMessages.update.success);
 				return preset;
 			})
