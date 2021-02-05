@@ -8,6 +8,7 @@ import {
 	createInitialValuesFromChecks,
 	generateConfigFromValidationData,
 	generateValidationChecks,
+	parseRequiredToBool,
 } from '../../../helpers';
 import {
 	generateFormSchemaFromFieldTypeData,
@@ -89,12 +90,15 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 		 * The form renderer is using this prop to indicate that a field is required
 		 */
 		const generateGeneralConfig = (data: FormValues = {}): Record<string, any> => {
-			if (typeof data.required === 'boolean') {
+			const required = parseRequiredToBool(data.required);
+
+			if (required !== null) {
 				return {
 					...CTField.generalConfig,
-					required: data.required,
+					required: required,
 				};
 			}
+
 			return CTField.generalConfig;
 		};
 
