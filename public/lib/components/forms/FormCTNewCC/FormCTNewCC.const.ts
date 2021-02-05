@@ -1,3 +1,4 @@
+import kebabCase from 'lodash.kebabcase';
 import { object, string } from 'yup';
 
 import { FieldsByCompartment } from '../../../store/contentTypes';
@@ -21,11 +22,19 @@ export const NEW_CC_FORM_VALIDATION_SCHEMA = (fieldsByCompartments: FieldsByComp
 		name: string()
 			.required('Naam is een verplicht veld')
 			.test({
-				name: 'No duplicate',
+				name: 'noDuplicateLabel',
 				message: value => `Naam ${value.originalValue} bestaat reeds`,
-				test: name =>
+				test: label =>
 					!fieldsByCompartments.find(compartment =>
-						compartment.fields?.find(cc => cc.label === name)
+						compartment.fields?.find(cc => cc.label === label)
+					),
+			})
+			.test({
+				name: 'noDuplicateSystemName',
+				message: value => `Systeemnaam ${kebabCase(value.originalValue)} bestaat reeds`,
+				test: label =>
+					!fieldsByCompartments.find(compartment =>
+						compartment.fields?.find(cc => cc.name === kebabCase(label))
 					),
 			}),
 		fieldType: string().required('Gelieve een content component te selecteren'),
