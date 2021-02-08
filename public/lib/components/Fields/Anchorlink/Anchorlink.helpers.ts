@@ -27,7 +27,6 @@ export const parseAnchorlinkOptions = (
 				field.config.max !== 1 &&
 				field.config?.textType?.isAnchorlink
 			) {
-				console.log(values[field.name]);
 				return [
 					...acc,
 					...values[field.name].reduce(
@@ -36,7 +35,7 @@ export const parseAnchorlinkOptions = (
 								? [
 										...acc,
 										generateAnchorlinkOption(
-											[field.name, `${value.uuid}`],
+											[field.name, 'uuid', `${value.uuid}`],
 											value.value.text
 										),
 								  ]
@@ -88,7 +87,7 @@ export const parseAnchorlinkOptions = (
 								? [
 										...acc,
 										generateAnchorlinkOption(
-											[field.name, `${value.uuid}`],
+											[field.name, 'uuid', `${value.uuid}`],
 											value.value.text
 										),
 								  ]
