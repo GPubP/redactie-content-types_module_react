@@ -1,10 +1,17 @@
-import { FieldOption, FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-module';
+import { FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-module';
+import { FormikValues } from 'formik';
 import pointer from 'json-pointer';
-import { is, path } from 'ramda';
+import { is, prop } from 'ramda';
 
-import { DynamicRepeaterItem } from './Anchorlink.types';
+import {
+	DynamicRepeaterItem,
+	FieldSchemaForAnchorlink,
+	MultipleItem,
+	SelectOption,
+	TextFieldValue,
+} from './Anchorlink.types';
 
-const generateAnchorlinkOption = (fieldPath: string[], value: string): FieldOption['value'] => {
+const generateAnchorlinkOption = (fieldPath: string[], value: string): SelectOption => {
 	const jsonPointer = pointer.compile(fieldPath);
 	return {
 		label: value,
@@ -13,11 +20,105 @@ const generateAnchorlinkOption = (fieldPath: string[], value: string): FieldOpti
 	};
 };
 
+const parseFieldNameToPath = (field: FieldSchemaForAnchorlink): string[] => [
+	...(field._jsonPointerName ? field._jsonPointerName : [field.name]),
+];
+
+const handlePreset = (field: FieldSchemaForAnchorlink, values: FormikValues): SelectOption[] =>
+	Object.keys(values).reduce((acc, key: string) => {
+		const value = prop(key)(values) as any;
+		const subField = field.config?.fields.find((f: FieldSchema) => key === f.name);
+
+		if (!subField || !value) {
+			return acc;
+		}
+
+		if (
+			!subField.config?.textType?.isAnchorlink &&
+			is(Object)(value) &&
+			!Array.isArray(value) &&
+			Array.isArray(subField?.config?.fields)
+		) {
+			return [
+				...acc,
+				...handlePreset(
+					{
+						...subField,
+						_jsonPointerName: [...parseFieldNameToPath(field), subField.name],
+					},
+					value
+				),
+			];
+		}
+
+		if (value?.text && !!subField.config?.textType?.isAnchorlink) {
+			return [
+				...acc,
+				generateAnchorlinkOption([...parseFieldNameToPath(field), `${key}`], value.text),
+			];
+		}
+
+		return acc;
+	}, [] as SelectOption[]);
+
+const handleMultiple = (field: FieldSchemaForAnchorlink, values: FormikValues): SelectOption[] =>
+	values.reduce(
+		(acc: SelectOption[], value: MultipleItem<TextFieldValue>) =>
+			value?.value?.text
+				? [
+						...acc,
+						generateAnchorlinkOption(
+							[...parseFieldNameToPath(field), 'uuid', `${value.uuid}`],
+							value.value.text
+						),
+				  ]
+				: acc,
+		[] as SelectOption[]
+	);
+
+const handleParagraph = (field: FieldSchemaForAnchorlink, values: FormikValues): SelectOption[] =>
+	values.reduce((acc: SelectOption[], value: DynamicRepeaterItem<TextFieldValue>) => {
+		const subField = field.config?.fields.find((f: FieldSchema) => value.fieldRef === f.uuid);
+
+		if (!subField || !value?.value) {
+			return acc;
+		}
+
+		if (
+			!subField.config?.textType?.isAnchorlink &&
+			is(Object)(value?.value) &&
+			!Array.isArray(value?.value) &&
+			Array.isArray(subField.config?.fields)
+		) {
+			return [
+				...acc,
+				...handlePreset(
+					{
+						...subField,
+						_jsonPointerName: [...parseFieldNameToPath(field), subField.name],
+					},
+					value.value
+				),
+			];
+		}
+
+		if (value?.value?.text && !!subField.config?.textType?.isAnchorlink) {
+			return [
+				...acc,
+				generateAnchorlinkOption(
+					[...parseFieldNameToPath(field), 'uuid', `${value.uuid}`],
+					value.value.text
+				),
+			];
+		}
+		return acc;
+	}, [] as SelectOption[]);
+
 export const parseAnchorlinkOptions = (
 	schema: FormSchema,
 	values: FormValues,
 	required: boolean
-): FieldOption['value'][] =>
+): SelectOption[] =>
 	(schema?.fields || []).reduce(
 		(acc, field) => {
 			// Field is a multiple field
@@ -27,74 +128,26 @@ export const parseAnchorlinkOptions = (
 				field.config.max !== 1 &&
 				field.config?.textType?.isAnchorlink
 			) {
-				return [
-					...acc,
-					...values[field.name].reduce(
-						(acc: FieldOption['value'][], value: { value?: any; uuid: string }) =>
-							value?.value?.text
-								? [
-										...acc,
-										generateAnchorlinkOption(
-											[field.name, 'uuid', `${value.uuid}`],
-											value.value.text
-										),
-								  ]
-								: acc,
-						[] as FieldOption['value'][]
-					),
-				];
+				return [...acc, ...handleMultiple(field, values[field.name])];
 			}
 
 			// Field is a preset
 			if (
+				!field.config?.textType?.isAnchorlink &&
 				is(Object)(values[field.name]) &&
 				!Array.isArray(values[field.name]) &&
 				Array.isArray(field.config?.fields)
 			) {
-				return [
-					...acc,
-					...Object.keys(values[field.name]).reduce((acc, key: string) => {
-						const value = path([field.name, key])(values) as DynamicRepeaterItem<{
-							text: string;
-						}>['value'];
-
-						return value?.text &&
-							!!field.config?.fields.find(
-								(field: FieldSchema) =>
-									!!field.config?.textType?.isAnchorlink && key === field.name
-							)
-							? [...acc, generateAnchorlinkOption([field.name, `${key}`], value.text)]
-							: acc;
-					}, [] as FieldOption['value'][]),
-				];
+				return [...acc, ...handlePreset(field, values[field.name])];
 			}
 
 			// Field is a paragraph
-			if (Array.isArray(values[field.name]) && Array.isArray(field.config?.fields)) {
-				return [
-					...acc,
-					...values[field.name].reduce(
-						(
-							acc: FieldOption['value'][],
-							value: DynamicRepeaterItem<{ text: string }>
-						) =>
-							value?.value?.text &&
-							!!field.config?.fields.find(
-								(field: FieldSchema) =>
-									!!field.config?.textType?.isAnchorlink &&
-									value.fieldRef === field.uuid
-							)
-								? [
-										...acc,
-										generateAnchorlinkOption(
-											[field.name, 'uuid', `${value.uuid}`],
-											value.value.text
-										),
-								  ]
-								: acc,
-						[] as FieldOption['value'][]
-					),
-				];
+			if (
+				!field.config?.textType?.isAnchorlink &&
+				Array.isArray(values[field.name]) &&
+				Array.isArray(field.config?.fields)
+			) {
+				return [...acc, ...handleParagraph(field, values[field.name])];
 			}
 
 			// Field is not a text field or is not marked as possible anchorlink
@@ -112,5 +165,5 @@ export const parseAnchorlinkOptions = (
 				label: required ? 'Selecteer een anchorlink' : 'Geen anchorlink',
 				disabled: required,
 			},
-		]
+		] as SelectOption[]
 	);
