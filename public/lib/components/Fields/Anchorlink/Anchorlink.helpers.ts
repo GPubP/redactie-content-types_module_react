@@ -1,5 +1,6 @@
 import { FieldOption, FieldSchema, FormSchema, FormValues } from '@redactie/form-renderer-module';
 import pointer from 'json-pointer';
+import { is, path } from 'ramda';
 
 import { DynamicRepeaterItem } from './Anchorlink.types';
 
@@ -26,21 +27,46 @@ export const parseAnchorlinkOptions = (
 				field.config.max !== 1 &&
 				field.config?.textType?.isAnchorlink
 			) {
+				console.log(values[field.name]);
 				return [
 					...acc,
 					...values[field.name].reduce(
-						(acc: string[], value: { value?: any }, index: number) =>
+						(acc: FieldOption['value'][], value: { value?: any; uuid: string }) =>
 							value?.value?.text
 								? [
 										...acc,
 										generateAnchorlinkOption(
-											[field.name, `${index}`],
+											[field.name, `${value.uuid}`],
 											value.value.text
 										),
 								  ]
 								: acc,
-						[] as string[]
+						[] as FieldOption['value'][]
 					),
+				];
+			}
+
+			// Field is a preset
+			if (
+				is(Object)(values[field.name]) &&
+				!Array.isArray(values[field.name]) &&
+				Array.isArray(field.config?.fields)
+			) {
+				return [
+					...acc,
+					...Object.keys(values[field.name]).reduce((acc, key: string) => {
+						const value = path([field.name, key])(values) as DynamicRepeaterItem<{
+							text: string;
+						}>['value'];
+
+						return value?.text &&
+							!!field.config?.fields.find(
+								(field: FieldSchema) =>
+									!!field.config?.textType?.isAnchorlink && key === field.name
+							)
+							? [...acc, generateAnchorlinkOption([field.name, `${key}`], value.text)]
+							: acc;
+					}, [] as FieldOption['value'][]),
 				];
 			}
 
@@ -50,9 +76,8 @@ export const parseAnchorlinkOptions = (
 					...acc,
 					...values[field.name].reduce(
 						(
-							acc: string[],
-							value: DynamicRepeaterItem<{ text: string }>,
-							index: number
+							acc: FieldOption['value'][],
+							value: DynamicRepeaterItem<{ text: string }>
 						) =>
 							value?.value?.text &&
 							!!field.config?.fields.find(
@@ -63,12 +88,12 @@ export const parseAnchorlinkOptions = (
 								? [
 										...acc,
 										generateAnchorlinkOption(
-											[field.name, `${index}`],
+											[field.name, `${value.uuid}`],
 											value.value.text
 										),
 								  ]
 								: acc,
-						[] as string[]
+						[] as FieldOption['value'][]
 					),
 				];
 			}
