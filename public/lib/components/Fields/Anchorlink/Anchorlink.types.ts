@@ -1,4 +1,4 @@
-import { FormValues, InputFieldProps } from '@redactie/form-renderer-module';
+import { FieldSchema, FormValues, InputFieldProps } from '@redactie/form-renderer-module';
 import { FieldProps } from 'formik';
 
 export interface AnchorlinkValue {
@@ -10,6 +10,11 @@ export interface AnchorlinkFieldProps extends Omit<InputFieldProps, 'fieldProps'
 	fieldProps: FieldProps<AnchorlinkValue, FormValues>;
 }
 
+export interface TextFieldValue {
+	text: string;
+	textType: string;
+}
+
 export interface DynamicRepeaterItem<Value = unknown> {
 	value: Value;
 	uuid: string;
@@ -17,4 +22,20 @@ export interface DynamicRepeaterItem<Value = unknown> {
 	fieldRef: string;
 	fieldType: string;
 	preset?: string;
+}
+
+export interface MultipleItem<Value = unknown> {
+	value: Value;
+	uuid: string;
+}
+
+export interface SelectOption {
+	label: string;
+	key?: string;
+	value: string | number | boolean;
+	disabled?: boolean;
+}
+
+export interface FieldSchemaForAnchorlink extends FieldSchema {
+	_jsonPointerName?: string[];
 }

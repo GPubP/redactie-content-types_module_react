@@ -1,5 +1,4 @@
 import { Select, TextField } from '@acpaas-ui/react-components';
-import { FieldOption } from '@redactie/form-renderer-module';
 import { FormikValues, useFormikContext } from 'formik';
 import debounce from 'lodash.debounce';
 import { omit } from 'ramda';
@@ -8,7 +7,7 @@ import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import formRendererConnector from '../../../connectors/formRenderer';
 
 import { parseAnchorlinkOptions } from './Anchorlink.helpers';
-import { AnchorlinkFieldProps, AnchorlinkValue } from './Anchorlink.types';
+import { AnchorlinkFieldProps, AnchorlinkValue, SelectOption } from './Anchorlink.types';
 
 const Anchorlink: React.FC<AnchorlinkFieldProps> = ({
 	fieldProps,
@@ -21,7 +20,7 @@ const Anchorlink: React.FC<AnchorlinkFieldProps> = ({
 	const FormRendererFieldTitle = formRendererConnector.api.FormRendererFieldTitle;
 	const { schema } = formRendererConnector.api.useFormContext();
 	const { values } = useFormikContext<FormikValues>();
-	const [anchorlinkOptions, setAnchorlinkOptions] = useState<FieldOption['value'][]>([]);
+	const [anchorlinkOptions, setAnchorlinkOptions] = useState<SelectOption[]>([]);
 	// Debounce because calculation shouldn't run on every keystroke (value change)
 	const debouncedAnchorlinkOptions = useCallback(
 		debounce(
