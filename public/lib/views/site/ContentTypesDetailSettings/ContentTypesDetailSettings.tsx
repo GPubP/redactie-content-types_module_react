@@ -106,8 +106,8 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 					<CardTitle>Status: {siteData && <SiteStatus active={active} />}</CardTitle>
 					<CardDescription>
 						{active
-							? `Dit content type wordt gebruikt op ${amountUsedOnSites} site(s)`
-							: 'Deze content type is niet actief binnen deze tenant en dus voor geen enkele site beschikbaar om te activeren.'}
+							? `Dit content type wordt gebruikt op ${amountUsedOnSites !== 0 ? amountUsedOnSites : 1} site(s)`
+							: 'Deze content type is niet actief binnen deze site.'}
 					</CardDescription>
 					<Button
 						onClick={onActiveToggle}
