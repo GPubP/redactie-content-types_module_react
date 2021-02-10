@@ -41,7 +41,7 @@
 		"@commitlint/cli": "8.3.5",
 		"@commitlint/config-conventional": "8.3.4",
 		"@datorama/akita": "^4.22.1",
-		"@redactie/form-renderer-module": "0.16.0",
+		"@redactie/form-renderer-module": "^0.16.1-0",
 		"@redactie/module-webpack-plugin": "2.0.0",
 		"@redactie/react-router-guards": "^1.0.2",
 		"@redactie/redactie-core": "^2.0.0",
@@ -53,6 +53,7 @@
 		"@testing-library/react": "9.4.0",
 		"@types/classnames": "^2.2.10",
 		"@types/jest": "24.9.1",
+		"@types/json-pointer": "^1.0.30",
 		"@types/lodash.debounce": "^4.0.6",
 		"@types/lodash.kebabcase": "4.1.6",
 		"@types/ramda": "0.26.44",
@@ -103,7 +104,6 @@
 		"webpack-bundle-analyzer": "3.6.1",
 		"webpack-cli": "3.3.10",
 		"worker-loader": "^3.0.5",
-		"@types/json-pointer": "^1.0.30",
 		"yup": "0.28.3"
 	},
 	"dependencies": {

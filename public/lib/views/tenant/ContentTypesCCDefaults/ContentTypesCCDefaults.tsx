@@ -26,21 +26,25 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 	 */
 	const parsedFormSchema: FormSchema = useMemo(
 		() => ({
-			fields: formRendererConnector.api.parseFields([
-				{
-					...CTField,
-					generalConfig: {
-						...CTField.generalConfig,
-						hidden: false,
-						disabled: false,
-						required: false,
-					},
-					name: 'defaultValue',
-				} as ContentTypeFieldSchema,
-			]),
+			fields: formRendererConnector.api.parseFields(
+				[
+					{
+						...CTField,
+						generalConfig: {
+							...CTField.generalConfig,
+							hidden: false,
+							disabled: false,
+							required: false,
+						},
+						name: 'defaultValue',
+					} as ContentTypeFieldSchema,
+				],
+				{ noHiddenFields: true, noDisabledFields: true }
+			),
 		}),
 		[CTField]
 	);
+
 	const { validationSchema, errorMessages } = useMemo(
 		() => getDefaultValueSchemas(CTField, fieldType),
 		[CTField, fieldType]
