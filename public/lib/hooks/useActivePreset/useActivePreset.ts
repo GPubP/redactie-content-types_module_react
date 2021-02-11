@@ -14,6 +14,8 @@ const useActivePreset: UseActivePreset = (presetId?: string, searchParams?: Sear
 			}
 
 			if (!hasPreset) {
+				presetsFacade.removeActivePreset();
+
 				presetsFacade
 					.getPreset(presetId, searchParams)
 					.then(() => presetsFacade.setActivePreset(presetId));
