@@ -7,6 +7,7 @@ export const SITE_CT_DETAIL_TABS: Tab[] = [
 		target: 'instellingen',
 		type: TabTypes.INTERNAL,
 		active: true,
+		disabled: false,
 		containerId: ALERT_CONTAINER_IDS.detailSettings,
 	},
 	{
