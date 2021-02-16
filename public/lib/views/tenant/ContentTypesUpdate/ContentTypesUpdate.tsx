@@ -102,7 +102,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 				activeRouteConfig.title(contentType, activeField, dynamicActiveField, t)
 			)
 		);
-	}, [activeField, activeRouteConfig, contentType, dynamicActiveField, t]);
+	}, [activeField, activeRouteConfig, contentType, dynamicActiveField]);
 
 	useEffect(() => {
 		if (
@@ -142,7 +142,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		}
 
 		return activeRouteConfig.badges(activeField, dynamicActiveField, t);
-	}, [activeField, activeRouteConfig, dynamicActiveField, t]);
+	}, [activeField, activeRouteConfig, dynamicActiveField]);
 
 	/**
 	 * Methods
