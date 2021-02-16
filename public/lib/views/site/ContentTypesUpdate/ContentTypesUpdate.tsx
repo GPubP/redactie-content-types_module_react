@@ -5,6 +5,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import {
 	AlertContainer,
+	ContextHeaderBadge,
 	DataLoader,
 	LoadingState,
 	RenderChildRoutes,
@@ -25,6 +26,7 @@ import {
 	useContentType,
 	useRoutesBreadcrumbs,
 } from '../../../hooks';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
 import { ExternalTabModel, useExternalTabsFacade } from '../../../store/api/externalTabs';
 import { contentTypesFacade } from '../../../store/contentTypes';
@@ -36,6 +38,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	 * Hooks
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [t] = useCoreTranslation();
 	const activeField = useActiveField();
 	const dynamicActiveField = useDynamicActiveField();
 	const activeRouteConfig = useActiveRouteConfig(location, route);
@@ -67,7 +70,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		}
 
 		contentTypesFacade.setPageTitle(
-			activeRouteConfig.title(contentType, activeField, dynamicActiveField)
+			activeRouteConfig.title(contentType, activeField, dynamicActiveField, t)
 		);
 	}, [activeField, activeRouteConfig, contentType, dynamicActiveField]);
 
@@ -84,6 +87,14 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			contentTypesFacade.getContentType(contentTypeUuid);
 		}
 	}, [contentTypeUuid]);
+
+	const pageBadges: ContextHeaderBadge = useMemo(() => {
+		if (!activeRouteConfig || typeof activeRouteConfig.badges !== 'function') {
+			return [];
+		}
+
+		return activeRouteConfig.badges(activeField, dynamicActiveField, t);
+	}, [activeField, activeRouteConfig, dynamicActiveField]);
 
 	/**
 	 * Methods
@@ -129,6 +140,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 					component: Link,
 				})}
 				title={title}
+				badges={pageBadges}
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>

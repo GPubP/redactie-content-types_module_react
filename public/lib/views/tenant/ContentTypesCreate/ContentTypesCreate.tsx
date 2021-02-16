@@ -23,6 +23,7 @@ import {
 import { ContentTypesRouteProps, Tab } from '../../../contentTypes.types';
 import { generateEmptyContentType } from '../../../helpers';
 import { useActiveTabs, useContentType, useRoutesBreadcrumbs } from '../../../hooks';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ContentTypeCreateRequest, ContentTypeMeta } from '../../../services/contentTypes';
 import { contentTypesFacade } from '../../../store/contentTypes';
 
@@ -34,6 +35,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const { generatePath, navigate } = useNavigate();
+	const [t] = useCoreTranslation();
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
 			name: 'Content types',
@@ -91,6 +93,8 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		}
 	};
 
+	const pageTitle = `Content type ${t(CORE_TRANSLATIONS.ROUTING_CREATE)}`;
+
 	/**
 	 * Render
 	 */
@@ -121,7 +125,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 					to: generatePath(`${MODULE_PATHS.create}/${props.href}`),
 					component: Link,
 				})}
-				title="Content type aanmaken"
+				title={pageTitle}
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
