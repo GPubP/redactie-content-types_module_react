@@ -21,9 +21,9 @@ export const getPageBadges = (type: TitleTypes) => (
 				: [];
 		}
 		case TitleTypes.Field: {
-			const fieldTypeLabel = activeField?.preset
-				? activeField?.preset.data.label
-				: activeField?.fieldType?.data.label;
+			const fieldTypeLabel = activeField?.preset?.data?.label
+				? activeField.preset.data.label
+				: activeField?.fieldType?.data?.label;
 
 			return fieldTypeLabel
 				? [
