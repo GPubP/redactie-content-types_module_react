@@ -16,6 +16,7 @@ import {
 import React, { FC, MouseEvent, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import { useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesRouteParams, ContentTypesRouteProps } from '../../../contentTypes.types';
 import { disableTabs } from '../../../helpers/tabs';
@@ -26,7 +27,6 @@ import {
 	useContentType,
 	useRoutesBreadcrumbs,
 } from '../../../hooks';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
 import { ExternalTabModel, useExternalTabsFacade } from '../../../store/api/externalTabs';
 import { contentTypesFacade } from '../../../store/contentTypes';
@@ -72,7 +72,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		contentTypesFacade.setPageTitle(
 			activeRouteConfig.title(contentType, activeField, dynamicActiveField, t)
 		);
-	}, [activeField, activeRouteConfig, contentType, dynamicActiveField]);
+	}, [activeField, activeRouteConfig, contentType, dynamicActiveField, t]);
 
 	useEffect(() => {
 		if (contentTypeLoadingState !== LoadingState.Loading && contentType) {
@@ -94,7 +94,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		}
 
 		return activeRouteConfig.badges(activeField, dynamicActiveField, t);
-	}, [activeField, activeRouteConfig, dynamicActiveField]);
+	}, [activeField, activeRouteConfig, dynamicActiveField, t]);
 
 	/**
 	 * Methods

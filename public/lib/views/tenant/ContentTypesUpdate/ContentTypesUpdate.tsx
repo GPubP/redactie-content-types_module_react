@@ -16,6 +16,7 @@ import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import { useCoreTranslation } from '../../../connectors/translations';
 import {
 	CONTENT_DETAIL_TABS,
 	CONTENT_TYPE_DETAIL_TAB_MAP,
@@ -36,7 +37,6 @@ import {
 	usePresets,
 	useRoutesBreadcrumbs,
 } from '../../../hooks';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
 import {
 	ContentTypeMeta,
@@ -102,7 +102,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 				activeRouteConfig.title(contentType, activeField, dynamicActiveField, t)
 			)
 		);
-	}, [activeField, activeRouteConfig, contentType, dynamicActiveField]);
+	}, [activeField, activeRouteConfig, contentType, dynamicActiveField, t]);
 
 	useEffect(() => {
 		if (
@@ -142,7 +142,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		}
 
 		return activeRouteConfig.badges(activeField, dynamicActiveField, t);
-	}, [activeField, activeRouteConfig, dynamicActiveField]);
+	}, [activeField, activeRouteConfig, dynamicActiveField, t]);
 
 	/**
 	 * Methods

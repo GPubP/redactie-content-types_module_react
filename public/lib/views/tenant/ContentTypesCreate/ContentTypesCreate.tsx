@@ -14,6 +14,7 @@ import {
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import {
 	ALERT_CONTAINER_IDS,
 	CONTENT_DETAIL_TABS,
@@ -23,7 +24,6 @@ import {
 import { ContentTypesRouteProps, Tab } from '../../../contentTypes.types';
 import { generateEmptyContentType } from '../../../helpers';
 import { useActiveTabs, useContentType, useRoutesBreadcrumbs } from '../../../hooks';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ContentTypeCreateRequest, ContentTypeMeta } from '../../../services/contentTypes';
 import { contentTypesFacade } from '../../../store/contentTypes';
 

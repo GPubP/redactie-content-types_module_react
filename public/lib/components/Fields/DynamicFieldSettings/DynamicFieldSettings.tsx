@@ -2,7 +2,6 @@ import { Card } from '@acpaas-ui/react-components';
 import { Table } from '@acpaas-ui/react-editorial-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
 import { DataLoader, LoadingState } from '@redactie/utils';
-import { ValidationCheckWithAllowedFields } from '@wcm/jsonschema-generator';
 import classNames from 'classnames/bind';
 import { useFormikContext } from 'formik';
 import { __, compose, equals, pathOr } from 'ramda';

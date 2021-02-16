@@ -17,7 +17,7 @@ import rolesRightsConnector from './lib/connectors/rolesRights';
 import sitesConnector from './lib/connectors/sites';
 import { DYNAMIC_FIELD_SETTINGS_NAME, MODULE_PATHS } from './lib/contentTypes.const';
 import { ContentTypesModuleProps } from './lib/contentTypes.types';
-import { getPageTitle, TitleTypes, getPageBadges } from './lib/helpers';
+import { getPageBadges, getPageTitle, TitleTypes } from './lib/helpers';
 import { fieldTypesFacade } from './lib/store/fieldTypes';
 import { presetsFacade } from './lib/store/presets';
 import {
