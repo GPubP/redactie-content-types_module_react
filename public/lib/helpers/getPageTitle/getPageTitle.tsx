@@ -26,6 +26,6 @@ export const getPageTitle = (type: TitleTypes) => (
 			return getTitleElement(field?.label || 'Content component');
 		case TitleTypes.ContentType:
 		default:
-			return getTitleElement(ct?.meta?.label || 'Content-type');
+			return getTitleElement(ct?.meta?.label || 'Content type');
 	}
 };
