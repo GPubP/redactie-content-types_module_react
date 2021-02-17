@@ -71,8 +71,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	 * }
 	 */
 	const initialFormValue: FormValues = useMemo(() => {
-		// Clone the config because we can not mutate the store
-		const config = clone(CTField.config) ?? {};
+		const { config = {} } = CTField;
 
 		if (preset && Array.isArray(config.fields)) {
 			return config.fields.reduce((initialValues: FormValues, field: Field) => {
