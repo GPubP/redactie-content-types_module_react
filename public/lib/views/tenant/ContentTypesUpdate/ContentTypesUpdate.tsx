@@ -11,6 +11,7 @@ import {
 	useDetectValueChangesWorker,
 	useNavigate,
 	useTenantContext,
+	useWillUnmount,
 } from '@redactie/utils';
 import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
@@ -90,6 +91,10 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		},
 		BFF_MODULE_PUBLIC_PATH
 	);
+
+	useWillUnmount(() => {
+		contentTypesFacade.clearContentType();
+	});
 
 	useEffect(() => {
 		if (typeof activeRouteConfig?.title !== 'function') {
