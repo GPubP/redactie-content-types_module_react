@@ -24,6 +24,7 @@ export const CONTENT_TYPE_DETAIL_TAB_MAP: {
 		target: 'instellingen',
 		type: TabTypes.INTERNAL,
 		active: true,
+		disabled: false,
 		containerId: ALERT_CONTAINER_IDS.detailSettings,
 	},
 	contentComponents: {
@@ -31,6 +32,7 @@ export const CONTENT_TYPE_DETAIL_TAB_MAP: {
 		target: 'content-componenten',
 		type: TabTypes.INTERNAL,
 		active: false,
+		disabled: false,
 		containerId: ALERT_CONTAINER_IDS.detailCC,
 	},
 	sites: {
@@ -38,6 +40,7 @@ export const CONTENT_TYPE_DETAIL_TAB_MAP: {
 		target: 'sites',
 		type: TabTypes.INTERNAL,
 		active: false,
+		disabled: false,
 		containerId: ALERT_CONTAINER_IDS.detailSites,
 	},
 };

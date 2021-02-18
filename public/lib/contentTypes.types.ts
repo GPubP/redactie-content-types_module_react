@@ -1,6 +1,6 @@
 import { FormsAPI } from '@redactie/form-renderer-module';
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
-import { AlertProps } from '@redactie/utils';
+import { AlertProps, ContextHeaderTab } from '@redactie/utils';
 import { FormikConfig, FormikValues } from 'formik';
 import { ReactNode } from 'react';
 import { NavLinkProps } from 'react-router-dom';
@@ -134,13 +134,9 @@ export interface NavListItem extends NavLinkProps {
 	label: string;
 }
 
-export interface Tab {
+export interface Tab extends ContextHeaderTab {
 	id?: string;
-	name: string;
-	target: string;
-	active: boolean;
 	type: TabTypes;
-	disabled?: boolean;
 	containerId: ALERT_CONTAINER_IDS;
 }
 

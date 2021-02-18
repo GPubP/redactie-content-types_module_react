@@ -5,6 +5,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import {
 	AlertContainer,
+	ContextHeaderBadge,
 	DataLoader,
 	LoadingState,
 	RenderChildRoutes,
@@ -15,6 +16,7 @@ import {
 import React, { FC, MouseEvent, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import { useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesRouteParams, ContentTypesRouteProps } from '../../../contentTypes.types';
 import { disableTabs } from '../../../helpers/tabs';
@@ -36,6 +38,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	 * Hooks
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [t] = useCoreTranslation();
 	const activeField = useActiveField();
 	const dynamicActiveField = useDynamicActiveField();
 	const activeRouteConfig = useActiveRouteConfig(location, route);
@@ -67,8 +70,11 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		}
 
 		contentTypesFacade.setPageTitle(
-			activeRouteConfig.title(contentType, activeField, dynamicActiveField)
+			activeRouteConfig.title(contentType, activeField, dynamicActiveField, t)
 		);
+		// The t function will be redefined on every render cycle
+		// This will cause a render loop if we add it to the dependency array
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeField, activeRouteConfig, contentType, dynamicActiveField]);
 
 	useEffect(() => {
@@ -84,6 +90,17 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			contentTypesFacade.getContentType(contentTypeUuid);
 		}
 	}, [contentTypeUuid]);
+
+	const pageBadges: ContextHeaderBadge = useMemo(() => {
+		if (!activeRouteConfig || typeof activeRouteConfig.badges !== 'function') {
+			return [];
+		}
+
+		return activeRouteConfig.badges(activeField, dynamicActiveField, t);
+		// The t function will be redefined on every render cycle
+		// This will cause a render loop if we add it to the dependency array
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeField, activeRouteConfig, dynamicActiveField]);
 
 	/**
 	 * Methods
@@ -129,6 +146,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 					component: Link,
 				})}
 				title={title}
+				badges={pageBadges}
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>

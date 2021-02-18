@@ -4,17 +4,20 @@ import {
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import {
+	ContextHeaderBadge,
 	DataLoader,
 	LoadingState,
 	RenderChildRoutes,
 	useDetectValueChangesWorker,
 	useNavigate,
 	useTenantContext,
+	useWillUnmount,
 } from '@redactie/utils';
 import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import { useCoreTranslation } from '../../../connectors/translations';
 import {
 	CONTENT_DETAIL_TABS,
 	CONTENT_TYPE_DETAIL_TAB_MAP,
@@ -55,6 +58,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	 */
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const activeField = useActiveField();
+	const [t] = useCoreTranslation();
 	const dynamicActiveField = useDynamicActiveField();
 	const activeRouteConfig = useActiveRouteConfig(location, route);
 	const { contentTypeUuid } = useParams<ContentTypesRouteParams>();
@@ -88,6 +92,10 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		BFF_MODULE_PUBLIC_PATH
 	);
 
+	useWillUnmount(() => {
+		contentTypesFacade.clearContentType();
+	});
+
 	useEffect(() => {
 		if (typeof activeRouteConfig?.title !== 'function') {
 			return;
@@ -96,9 +104,12 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		// TODO: figure out why this is needed (last set of title does not update component)
 		setTimeout(() =>
 			contentTypesFacade.setPageTitle(
-				activeRouteConfig.title(contentType, activeField, dynamicActiveField)
+				activeRouteConfig.title(contentType, activeField, dynamicActiveField, t)
 			)
 		);
+		// The t function will be redefined on every render cycle
+		// This will cause a render loop if we add it to the dependency array
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeField, activeRouteConfig, contentType, dynamicActiveField]);
 
 	useEffect(() => {
@@ -132,6 +143,17 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			contentTypesFacade.getContentType(contentTypeUuid);
 		}
 	}, [contentType, contentTypeUuid]);
+
+	const pageBadges: ContextHeaderBadge = useMemo(() => {
+		if (!activeRouteConfig || typeof activeRouteConfig.badges !== 'function') {
+			return [];
+		}
+
+		return activeRouteConfig.badges(activeField, dynamicActiveField, t);
+		// The t function will be redefined on every render cycle
+		// This will cause a render loop if we add it to the dependency array
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeField, activeRouteConfig, dynamicActiveField]);
 
 	/**
 	 * Methods
@@ -268,6 +290,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 					};
 				}}
 				title={title}
+				badges={pageBadges}
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
