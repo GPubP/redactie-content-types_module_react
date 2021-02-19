@@ -9,7 +9,9 @@ export const getPageBadges = (type: TitleTypes) => (
 ): ContextHeaderBadge[] => {
 	switch (type) {
 		case TitleTypes.DynamicField: {
-			const dynamicFieldTypeLabel = activeDynamicField?.fieldType?.data?.label;
+			const dynamicFieldTypeLabel = activeDynamicField?.preset?.data?.label
+				? activeDynamicField.preset.data.label
+				: activeDynamicField?.fieldType?.data?.label;
 
 			return dynamicFieldTypeLabel
 				? [
