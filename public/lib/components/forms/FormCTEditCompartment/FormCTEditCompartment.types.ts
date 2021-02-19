@@ -5,6 +5,7 @@ export interface FormCTEditCompartmentState {
 export interface FormCTEditCompartmentProps {
 	formState: FormCTEditCompartmentState;
 	className?: string;
+	isLoading: boolean;
 	isRemovable: boolean;
 	onSubmit: (formValues: FormCTEditCompartmentState) => void;
 	onDelete?: () => void;

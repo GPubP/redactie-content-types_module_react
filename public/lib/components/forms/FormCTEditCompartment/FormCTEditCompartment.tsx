@@ -1,7 +1,7 @@
-import { Button, Modal, TextField } from '@acpaas-ui/react-components';
-import { ErrorMessage } from '@redactie/utils';
+import { Button, TextField } from '@acpaas-ui/react-components';
+import { DeletePrompt, ErrorMessage } from '@redactie/utils';
 import { Field, Formik } from 'formik';
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 
@@ -9,6 +9,7 @@ import { EDIT_COMPARTMENT_FORM_VALIDATION_SCHEMA } from './FormCTEditCompartment
 import { FormCTEditCompartmentProps } from './FormCTEditCompartment.types';
 
 const FormCTEditCompartment: FC<FormCTEditCompartmentProps> = ({
+	isLoading,
 	formState,
 	className,
 	isRemovable = true,
@@ -17,6 +18,17 @@ const FormCTEditCompartment: FC<FormCTEditCompartmentProps> = ({
 	onDelete,
 }) => {
 	const [t] = useCoreTranslation();
+	const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+	const onDeletePromptConfirm = (): void => {
+		if (onDelete) {
+			onDelete();
+		};
+	};
+
+	const onDeletePromptCancel = (): void => {
+		setShowDeleteModal(false);
+	};
 
 	return (
 		<Formik
@@ -60,26 +72,22 @@ const FormCTEditCompartment: FC<FormCTEditCompartmentProps> = ({
 								{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 							</Button>
 							{onDelete && isRemovable && (
-								<div style={{ display: 'inline-block' }}>
-									<Modal
-										appElement="#root"
-										title="Ben je zeker dat je het compartiment wil verwijderen?"
-										confirmText={t(CORE_TRANSLATIONS.BUTTON_REMOVE)}
-										denyText={t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
-										shouldCloseOnEsc={true}
-										shouldCloseOnOverlayClick={true}
-										onConfirm={onDelete}
-										triggerElm={
-											<Button
-												icon="trash"
-												size="small"
-												onClick={onDelete}
-												type="danger"
-												transparent
-											/>
-										}
+								<>
+									<Button
+										icon="trash"
+										size="small"
+										onClick={() => setShowDeleteModal(true)}
+										type="danger"
+										transparent
 									/>
-								</div>
+									<DeletePrompt
+										isDeleting={isLoading}
+										body="Ben je zeker dat je dit compartement wil verwijderen?"
+										show={showDeleteModal}
+										onCancel={onDeletePromptCancel}
+										onConfirm={onDeletePromptConfirm}
+									/>
+								</>
 							)}
 						</div>
 					</div>

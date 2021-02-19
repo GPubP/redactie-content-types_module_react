@@ -4,6 +4,7 @@ import {
 	alertService,
 	DataLoader,
 	LeavePrompt,
+	DeletePrompt,
 	LoadingState,
 	RenderChildRoutes,
 	useDetectValueChangesWorker,
@@ -43,6 +44,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	 * Hooks
 	 */
 	const [hasSubmit, setHasSubmit] = useState(false);
+	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [invalidCCUuid, setInvalidCCUuid] = useState(false);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
@@ -150,11 +152,19 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	};
 
 	const onFieldDelete = (): void => {
+		setShowDeleteModal(true);
+	};
+
+	const onDeletePromptConfirm = (): void => {
 		if (activeField?.uuid) {
 			contentTypesFacade.deleteField(activeField.uuid);
 			contentTypesFacade.clearActiveField();
 			navigateToDetail();
 		}
+	};
+
+	const onDeletePromptCancel = (): void => {
+		setShowDeleteModal(false);
 	};
 
 	const onLeavePromptDelete = (): void => {
@@ -311,6 +321,11 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 				onConfirm={onFieldSubmit}
 				shouldBlockNavigationOnConfirm
 				when={hasChanges && !isSubmitting}
+			/>
+			<DeletePrompt
+				show={showDeleteModal}
+				onCancel={onDeletePromptCancel}
+				onConfirm={onDeletePromptConfirm}
 			/>
 		</>
 	);

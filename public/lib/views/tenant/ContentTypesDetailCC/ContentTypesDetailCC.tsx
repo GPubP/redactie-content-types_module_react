@@ -140,6 +140,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		return (
 			<div className="u-margin-xs">
 				<FormCTEditCompartment
+					isLoading={isLoading}
 					formState={{ name: row.label }}
 					isRemovable={isRemovable}
 					onSubmit={value =>
