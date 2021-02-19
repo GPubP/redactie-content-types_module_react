@@ -3,6 +3,7 @@ import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-c
 import {
 	AlertContainer,
 	alertService,
+	FormikOnChangeHandler,
 	LeavePrompt,
 	LoadingState,
 	useDetectValueChangesWorker,
@@ -37,7 +38,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			? contentTypeIsUpdating === LoadingState.Loading
 			: contentTypeIsCreating === LoadingState.Loading;
 	}, [contentTypeIsCreating, contentTypeIsUpdating, isUpdate]);
-	const [formValue, setFormValue] = useState<ContentTypeDetailModel | null>(null);
+	const [formValue, setFormValue] = useState<ContentTypeDetailModel | null>(contentType ?? null);
 	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
 		!isLoading,
 		formValue,
@@ -116,8 +117,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 				isUpdate={isUpdate}
 				onSubmit={onFormSubmit}
 			>
-				{({ submitForm, values }) => {
-					setFormValue(values);
+				{({ submitForm }) => {
 					const submit = (): void => {
 						beforeSubmit();
 						submitForm();
@@ -125,6 +125,9 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 
 					return (
 						<>
+							<FormikOnChangeHandler
+								onChange={values => setFormValue(values as ContentTypeDetailModel)}
+							/>
 							<ActionBar className="o-action-bar--fixed" isOpen>
 								<ActionBarContentSection>
 									<div className="u-wrapper u-text-right">

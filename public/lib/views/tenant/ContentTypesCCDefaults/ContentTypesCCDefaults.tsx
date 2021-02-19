@@ -45,6 +45,13 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 		[CTField]
 	);
 
+	const initialDefaultValueFormValue = useMemo(
+		() => ({
+			defaultValue: CTField.defaultValue,
+		}),
+		[CTField]
+	);
+
 	const { validationSchema, errorMessages } = useMemo(
 		() => getDefaultValueSchemas(CTField, fieldType),
 		[CTField, fieldType]
@@ -58,6 +65,13 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 			generalConfig: {
 				disabled: !values.editable,
 			},
+		});
+	};
+
+	const onDefaultValueFormSubmit = (values: FormikValues): void => {
+		onSubmit({
+			...CTField,
+			...values,
 		});
 	};
 
@@ -77,10 +91,10 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 			<formRendererConnector.api.Form
 				formikRef={formikRef}
 				schema={parsedFormSchema}
-				initialValues={CTField}
+				initialValues={initialDefaultValueFormValue}
 				validationSchema={validationSchema}
 				errorMessages={errorMessages}
-				onChange={onSubmit}
+				onChange={onDefaultValueFormSubmit}
 				allowedHeaders={ALLOWED_FORM_HEADERS}
 			/>
 		);
