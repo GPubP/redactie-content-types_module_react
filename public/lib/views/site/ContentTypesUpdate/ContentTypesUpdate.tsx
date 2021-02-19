@@ -44,7 +44,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const activeRouteConfig = useActiveRouteConfig(location, route);
 	const { contentTypeUuid } = useParams<ContentTypesRouteParams>();
 	const { navigate, generatePath } = useNavigate();
-	const [contentTypeLoadingState, , , contentType, title] = useContentType();
+	const [contentTypeLoadingState, , , contentType] = useContentType();
 	const [{ all: externalTabs }] = useExternalTabsFacade();
 	const activeTabs = useActiveTabs(
 		SITE_CT_DETAIL_TABS,
@@ -65,19 +65,6 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 
 	useEffect(() => {
-		if (typeof activeRouteConfig?.title !== 'function') {
-			return;
-		}
-
-		contentTypesFacade.setPageTitle(
-			activeRouteConfig.title(contentType, activeField, dynamicActiveField, t)
-		);
-		// The t function will be redefined on every render cycle
-		// This will cause a render loop if we add it to the dependency array
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeField, activeRouteConfig, contentType, dynamicActiveField]);
-
-	useEffect(() => {
 		if (contentTypeLoadingState !== LoadingState.Loading && contentType) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
@@ -91,23 +78,22 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		}
 	}, [contentTypeUuid]);
 
-	const pageBadges: ContextHeaderBadge = useMemo(() => {
-		if (!activeRouteConfig || typeof activeRouteConfig.badges !== 'function') {
-			return [];
-		}
-
-		return activeRouteConfig.badges(activeField, dynamicActiveField, t);
-		// The t function will be redefined on every render cycle
-		// This will cause a render loop if we add it to the dependency array
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeField, activeRouteConfig, dynamicActiveField]);
-
 	/**
 	 * Methods
 	 */
 	const navigateToOverview = (): void => {
 		navigate(`/sites${MODULE_PATHS.site.overview}`, { siteId });
 	};
+
+	const pageTitle =
+		typeof activeRouteConfig?.title === 'function'
+			? activeRouteConfig.title(contentType, activeField, dynamicActiveField, t)
+			: '';
+
+	const pageBadges: ContextHeaderBadge =
+		typeof activeRouteConfig?.badges === 'function'
+			? activeRouteConfig.badges(activeField, dynamicActiveField)
+			: [];
 
 	/**
 	 * Render
@@ -145,7 +131,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 					}),
 					component: Link,
 				})}
-				title={title}
+				title={pageTitle}
 				badges={pageBadges}
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>

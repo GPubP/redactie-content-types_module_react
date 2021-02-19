@@ -23,7 +23,7 @@ const FormCTEditCompartment: FC<FormCTEditCompartmentProps> = ({
 	const onDeletePromptConfirm = (): void => {
 		if (onDelete) {
 			onDelete();
-		};
+		}
 	};
 
 	const onDeletePromptCancel = (): void => {

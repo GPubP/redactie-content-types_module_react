@@ -3,8 +3,8 @@ import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-ed
 import {
 	alertService,
 	DataLoader,
-	LeavePrompt,
 	DeletePrompt,
+	LeavePrompt,
 	LoadingState,
 	RenderChildRoutes,
 	useDetectValueChangesWorker,

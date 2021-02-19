@@ -65,14 +65,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const { navigate, generatePath } = useNavigate();
 	const [fieldTypesLoading, fieldTypes] = useFieldTypes();
 	const [presetsLoading, presets] = usePresets();
-	const [
-		contentTypeLoadingState,
-		,
-		,
-		contentType,
-		title,
-		fieldsByCompartments,
-	] = useContentType();
+	const [contentTypeLoadingState, , , contentType, fieldsByCompartments] = useContentType();
 	const [{ all: externalTabs, active: activeExternalTab }] = useExternalTabsFacade();
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, externalTabs, location.pathname);
 	const { tenantId } = useTenantContext();
@@ -96,21 +89,15 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		contentTypesFacade.clearContentType();
 	});
 
-	useEffect(() => {
-		if (typeof activeRouteConfig?.title !== 'function') {
-			return;
-		}
+	const pageTitle =
+		typeof activeRouteConfig?.title === 'function'
+			? activeRouteConfig.title(contentType, activeField, dynamicActiveField, t)
+			: '';
 
-		// TODO: figure out why this is needed (last set of title does not update component)
-		setTimeout(() =>
-			contentTypesFacade.setPageTitle(
-				activeRouteConfig.title(contentType, activeField, dynamicActiveField, t)
-			)
-		);
-		// The t function will be redefined on every render cycle
-		// This will cause a render loop if we add it to the dependency array
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeField, activeRouteConfig, contentType, dynamicActiveField]);
+	const pageBadges: ContextHeaderBadge =
+		typeof activeRouteConfig?.badges === 'function'
+			? activeRouteConfig.badges(activeField, dynamicActiveField)
+			: [];
 
 	useEffect(() => {
 		if (
@@ -143,17 +130,6 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			contentTypesFacade.getContentType(contentTypeUuid);
 		}
 	}, [contentType, contentTypeUuid]);
-
-	const pageBadges: ContextHeaderBadge = useMemo(() => {
-		if (!activeRouteConfig || typeof activeRouteConfig.badges !== 'function') {
-			return [];
-		}
-
-		return activeRouteConfig.badges(activeField, dynamicActiveField, t);
-		// The t function will be redefined on every render cycle
-		// This will cause a render loop if we add it to the dependency array
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeField, activeRouteConfig, dynamicActiveField]);
 
 	/**
 	 * Methods
@@ -289,7 +265,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 						component: Link,
 					};
 				}}
-				title={title}
+				title={pageTitle}
 				badges={pageBadges}
 			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
