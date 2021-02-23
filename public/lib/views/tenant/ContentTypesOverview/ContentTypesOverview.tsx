@@ -17,7 +17,7 @@ import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/trans
 import { MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesRouteProps } from '../../../contentTypes.types';
 import { useContentTypes, useRoutesBreadcrumbs, useSites } from '../../../hooks';
-import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes/contentTypes.service.cont';
+import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes';
 import { contentTypesFacade } from '../../../store/contentTypes';
 
 import {

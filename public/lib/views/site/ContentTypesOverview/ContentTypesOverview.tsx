@@ -18,7 +18,7 @@ import sitesConnector from '../../../connectors/sites';
 import { useCoreTranslation } from '../../../connectors/translations';
 import { MODULE_PATHS } from '../../../contentTypes.const';
 import { useContentTypes, useRoutesBreadcrumbs } from '../../../hooks';
-import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes/contentTypes.service.cont';
+import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes';
 import { ContentTypeModel, contentTypesFacade } from '../../../store/contentTypes';
 import { OrderBy } from '../../tenant';
 
