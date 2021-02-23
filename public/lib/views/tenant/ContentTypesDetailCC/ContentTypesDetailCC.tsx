@@ -33,7 +33,7 @@ import { Compartment, ContentTypeFieldDetail } from '../../../services/contentTy
 import { contentTypesFacade } from '../../../store/contentTypes';
 
 import { CONTENT_TYPE_COLUMNS, CT_DETAIL_CC_ALLOWED_PATHS } from './ContentTypesDetailCC.const';
-import { ContentTypeDetailCCRow, MoveAction } from './ContentTypesDetailCC.types';
+import { ContentTypeDetailCCRow, MoveAction, RowDnDEvent } from './ContentTypesDetailCC.types';
 
 const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	presets,
@@ -234,15 +234,23 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 		moveField(uuid, action);
 	};
 
-	const onMoveRowDnD = (source: any, target: any): void => {
+	const onMoveRowDnD = (source: RowDnDEvent, target: RowDnDEvent): void => {
 		const targetCompartmentUuid =
-			contentType.fields.find(f => f.uuid === target.id)?.compartment.uuid || target.id;
-		const moveFieldToCompartment = source.type === 'row-2' && target.type === 'row-1';
+			contentType.fields.find(f => f.uuid === target.id)?.compartment.uuid ?? target.id;
+		const sourceRow = contentType.fields.find(f => f.uuid === source.id);
+		const sourceCompartmentUuid = sourceRow?.compartment.uuid ?? source.id;
+		const sourcePosition =
+			sourceRow?.compartment.position ??
+			fieldsByCompartments.findIndex(comp => comp.uuid == source.id);
+
+		const moveFieldToCompartment =
+			source.type === 'row-2' && sourceCompartmentUuid !== targetCompartmentUuid;
 		const moveFieldToField = source.type === 'row-2' && target.type === 'row-2';
 		const moveCompartment = source.type === 'row-1' && target.type === 'row-1';
+
 		if (moveCompartment) {
 			contentTypesFacade.updateCompartments(
-				move(source.index, target.index, contentType.compartments)
+				move(sourcePosition, target.index, contentType.compartments)
 			);
 			return;
 		}
@@ -251,7 +259,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 			contentTypesFacade.updateFieldCompartment(
 				source.id,
 				targetCompartmentUuid,
-				source.index,
+				sourcePosition,
 				target.index,
 				moveFieldToCompartment
 			);
