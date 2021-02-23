@@ -39,6 +39,9 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		[CTField, dynamicFieldSettingsContext]
 	);
 
+	const spreadIfObject = (item: any): any =>
+		typeof item === 'object' && item !== null ? { ...item } : item;
+
 	/**
 	 * initialFormValue
 	 *
@@ -75,14 +78,15 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 
 		if (preset && Array.isArray(config.fields)) {
 			return config.fields.reduce((initialValues: FormValues, field: Field) => {
-				initialValues[field.name] = field.config;
+				// Spreads are necessary because Formik seems to mark objects as readonly ¯\_(ツ)_/¯
+				initialValues[field.name] = spreadIfObject(field.config);
 				const presetField = preset.data.fields.find(f => f.field.name === field.name);
 
 				if (Array.isArray(presetField?.formSchema?.fields)) {
 					presetField?.formSchema?.fields.forEach(f => {
 						if (field.config[f.name]) {
-							initialValues[presetField.field.name][f.name] = field.config[f.name];
-							return initialValues;
+							initialValues[presetField.field.name][f.name] =
+								initialValues[field.name][f.name];
 						}
 					});
 				}
@@ -148,19 +152,18 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		CTField: ContentTypeFieldDetailModel,
 		preset?: PresetDetailModel
 	): { config: Record<string, any>; validationChecks: Validation['checks'] } => {
-		const newConfig = clone(data);
+		const newConfig = { ...data };
 
 		if (preset && (CTField.config?.fields || []).length > 0) {
 			newConfig['fields'] = CTField.config.fields?.map(field => {
 				const fieldConfig = newConfig[field.name];
 
-				if (fieldConfig) {
-					return {
-						...field,
-						config: fieldConfig,
-					};
-				}
-				return field;
+				return {
+					...field,
+					config: {
+						...(fieldConfig || field.config),
+					},
+				};
 			});
 		}
 
