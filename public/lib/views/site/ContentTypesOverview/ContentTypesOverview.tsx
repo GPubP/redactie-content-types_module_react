@@ -4,9 +4,11 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/dist/lib/i18next/translations.const';
 import {
 	DataLoader,
 	LoadingState,
+	OrderBy,
 	SearchParams,
 	useNavigate,
 	useSiteContext,
@@ -20,7 +22,6 @@ import { MODULE_PATHS } from '../../../contentTypes.const';
 import { useContentTypes, useRoutesBreadcrumbs } from '../../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes';
 import { ContentTypeModel, contentTypesFacade } from '../../../store/contentTypes';
-import { OrderBy } from '../../tenant';
 
 import { CONTENT_TYPE_OVERVIEW_COLUMNS } from './ContentTypesOverview.const';
 import { ContentTypesPerSiteOverviewTableRow } from './ContentTypesOverview.types';
@@ -133,6 +134,8 @@ const ContentTypesOverview: React.FC = () => {
 					activeSorting={activeSorting}
 					totalValues={meta.total || 0}
 					loading={loadingContentTypes === LoadingState.Loading}
+					loadDataMessage="Content types ophalen"
+					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 				/>
 			</>
 		);

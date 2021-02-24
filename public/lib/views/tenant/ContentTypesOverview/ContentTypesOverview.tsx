@@ -8,7 +8,7 @@ import {
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import { SiteModel } from '@redactie/sites-module';
-import { DataLoader, LoadingState, useNavigate } from '@redactie/utils';
+import { DataLoader, LoadingState, OrderBy, useAPIQueryParams, useNavigate } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { FilterForm, FilterFormState } from '../../../components';
@@ -24,11 +24,7 @@ import {
 	CONTENT_INITIAL_FILTER_STATE,
 	CONTENT_TYPE_OVERVIEW_COLUMNS,
 } from './ContentTypesOverview.const';
-import {
-	ContentTypesOverviewTableRow,
-	FilterItemSchema,
-	OrderBy,
-} from './ContentTypesOverview.types';
+import { ContentTypesOverviewTableRow, FilterItemSchema } from './ContentTypesOverview.types';
 
 const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	/**
@@ -215,6 +211,8 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					activeSorting={activeSorting}
 					totalValues={meta.total || 0}
 					loading={loadingContentTypes === LoadingState.Loading}
+					loadDataMessage="Content types ophalen"
+					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 				/>
 			</>
 		);

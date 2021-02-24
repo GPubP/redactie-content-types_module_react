@@ -5,7 +5,14 @@ import {
 	TooltipTypeMap,
 } from '@acpaas-ui/react-editorial-components';
 import { SiteModel, UpdateSitePayload } from '@redactie/sites-module';
-import { AlertContainer, LoadingState, useAPIQueryParams } from '@redactie/utils';
+import {
+	AlertContainer,
+	LoadingState,
+	OrderBy,
+	parseOrderByToString,
+	parseStringToOrderBy,
+	useAPIQueryParams,
+} from '@redactie/utils';
 import React, { FC, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -17,8 +24,6 @@ import {
 	ContentTypesDetailRouteProps,
 	SiteContentTypesDetailRouteParams,
 } from '../../../contentTypes.types';
-import { parseOrderBy, parseOrderByString } from '../../../services/helpers/helpers.service';
-import { OrderBy } from '../ContentTypesOverview';
 
 import { SitesOverviewRowData } from './ContentTypesSites.types';
 
@@ -36,7 +41,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 		},
 	});
 	const [updateSiteId, setUpdateSiteId] = useState<string | null>(null);
-	const sitesActiveSorting = useMemo(() => parseOrderByString(query.sort), [query.sort]);
+	const sitesActiveSorting = useMemo(() => parseStringToOrderBy(query.sort), [query.sort]);
 	const [sitesPagination, refreshPage] = sitesConnector.hooks.useSitesPagination(query as any);
 	const sitesLoadingStates = sitesConnector.hooks.useSitesLoadingStates();
 
@@ -50,7 +55,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 	const handleOrderBy = (orderBy: OrderBy): void => {
 		setQuery({
 			...query,
-			sort: parseOrderBy({
+			sort: parseOrderByToString({
 				...orderBy,
 				key: `${orderBy.key === 'active' ? 'meta' : 'data'}.${orderBy.key}`,
 			}),
@@ -224,7 +229,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 					itemsPerPage={query.pagesize}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
-					noDataMessage="Er zijn geen resultaten voor de ingestelde filters"
+					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 					loadDataMessage="Sites ophalen"
 					activeSorting={sitesActiveSorting}
 					totalValues={sitesPagination?.total ?? 0}
