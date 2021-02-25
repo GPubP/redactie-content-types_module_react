@@ -21,6 +21,8 @@ export interface ValicationCheckWithFields {
 export interface ValidationCheckField {
 	name: string;
 	type: string;
+	min?: number;
+	max?: number;
 	checks: ValidationCheck[];
 }
 
