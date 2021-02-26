@@ -104,7 +104,7 @@ const ContentTypesCCValidation: FC<ContentTypesCCRouteProps> = ({
 
 		onSubmit({
 			...CTField,
-			validation: generateValidationChecks(data, fieldType.data, preset),
+			validation: generateValidationChecks(data, fieldType.data, preset, CTField),
 			config: generateConfigFromValidationData(data, preset, CTField?.config),
 			generalConfig: generateGeneralConfig(data),
 		});
