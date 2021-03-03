@@ -18,9 +18,9 @@ export enum ALERT_CONTAINER_IDS {
 export const CONTENT_COMPARTMENT_UUID = 'ce569384-6497-4e1b-84c6-52fa43592c69';
 
 export const OVERVIEW_QUERY_PARAMS_CONFIG = {
-	skip: { defaultValue: 0, type: 'number' },
-	limit: { defaultValue: 10, type: 'number' },
-	sparse: { defaultValue: true, type: 'boolean' },
+	skip: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.skip, type: 'number' },
+	limit: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit, type: 'number' },
+	sparse: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.sparse, type: 'boolean' },
 	search: { type: 'string' },
 	sort: { type: 'string' },
 	direction: { type: 'number' },
