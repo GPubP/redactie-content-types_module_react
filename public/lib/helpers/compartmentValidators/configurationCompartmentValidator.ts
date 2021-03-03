@@ -9,9 +9,9 @@ export const configurationCompartmentValidator = (
 	preset?: Preset
 ): boolean => {
 	const validationSchema =
-		preset?.validateSchema.configuration || fieldType?.validateSchema.configuration;
+		preset?.validateSchema?.configuration || fieldType?.validateSchema?.configuration || {};
 	const errorMessages =
-		preset?.errorMessages.configuration || fieldType?.errorMessages.configuration;
+		preset?.errorMessages?.configuration || fieldType?.errorMessages?.configuration || {};
 
 	const validator = new (formRendererConnector.api as any).CustomValidator(
 		validationSchema,
