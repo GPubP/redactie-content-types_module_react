@@ -6,6 +6,7 @@ import {
 import {
 	AlertContainer,
 	ContextHeaderBadge,
+	ContextHeaderTabLinkProps,
 	DataLoader,
 	LoadingState,
 	RenderChildRoutes,
@@ -117,7 +118,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		<>
 			<ContextHeader
 				tabs={activeTabs}
-				linkProps={(props: any) => ({
+				linkProps={(props: ContextHeaderTabLinkProps) => ({
 					...props,
 					onClick: (e: MouseEvent) => {
 						const tab = activeTabs.find(tab => tab.target === props.href);

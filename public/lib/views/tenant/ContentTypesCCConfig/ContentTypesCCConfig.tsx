@@ -4,7 +4,7 @@ import {
 	FormSchema,
 	FormValues,
 } from '@redactie/form-renderer-module';
-import { clone, omit } from 'ramda';
+import { omit } from 'ramda';
 import React, { FC, ReactElement, useMemo } from 'react';
 
 import { DynamicFieldSettingsContext } from '../../../components/Fields';

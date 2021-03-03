@@ -31,7 +31,7 @@ class SitesConnector {
 		this.api = api;
 	}
 
-	public registerRoutes(routes: ModuleRouteConfig): any | false {
+	public registerRoutes(routes: ModuleRouteConfig): void | false {
 		return this.api ? this.api.routes.register(routes) : false;
 	}
 }

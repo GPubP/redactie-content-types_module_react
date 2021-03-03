@@ -78,7 +78,7 @@ const Anchorlink: React.FC<AnchorlinkFieldProps> = ({
 					label="Label"
 					component={TextField}
 					value={field.value?.label}
-					onChange={(event: ChangeEvent<any>) =>
+					onChange={(event: ChangeEvent<HTMLInputElement>) =>
 						onChange({
 							label: event.target.value,
 						})

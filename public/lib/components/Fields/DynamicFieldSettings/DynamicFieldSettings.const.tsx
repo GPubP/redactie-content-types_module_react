@@ -1,10 +1,10 @@
 import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
+import { TableColumn } from '@redactie/utils';
 import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
 import { CORE_TRANSLATIONS } from '../../../connectors/translations';
-import { TableColumn } from '../../../contentTypes.types';
 import StatusIcon from '../../StatusIcon/StatusIcon';
 
 import { DynamicFieldCCRow } from './DynamicFieldSettings.types';
@@ -19,18 +19,17 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCC
 		value: 'label',
 		disableSorting: true,
 		width: '30%',
-		component(value: string, rowData: DynamicFieldCCRow) {
-			const { path } = rowData;
+		component(label: string, { name, path }) {
 			return (
 				<>
 					{path ? (
-						<Link to={path}>{renderEllipsisWithTooltip(value)}</Link>
+						<Link to={path}>{renderEllipsisWithTooltip(label)}</Link>
 					) : (
-						<p>{renderEllipsisWithTooltip(value)}</p>
+						<p>{renderEllipsisWithTooltip(label)}</p>
 					)}
-					{rowData.name && (
+					{name && (
 						<p className="u-text-light">
-							{renderEllipsisWithTooltip(`systeemnaam: [${rowData.name}]`)}
+							{renderEllipsisWithTooltip(`systeemnaam: [${name}]`)}
 						</p>
 					)}
 				</>
@@ -50,8 +49,8 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCC
 		disableSorting: true,
 		width: '12.5%',
 		classList: ['u-text-center'],
-		component(value: any, rowData: DynamicFieldCCRow) {
-			return <StatusIcon active={rowData.multiple ?? false} />;
+		component(multiple: boolean | undefined) {
+			return <StatusIcon active={multiple ?? false} />;
 		},
 	},
 	{
@@ -60,8 +59,8 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCC
 		disableSorting: true,
 		width: '12.5%',
 		classList: ['u-text-center'],
-		component(value: any, rowData: DynamicFieldCCRow) {
-			return <StatusIcon active={rowData.required ?? false} />;
+		component(required: boolean | undefined) {
+			return <StatusIcon active={required ?? false} />;
 		},
 	},
 	{
@@ -70,8 +69,8 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCC
 		disableSorting: true,
 		width: '12.5%',
 		classList: ['u-text-center'],
-		component(value: any, rowData: DynamicFieldCCRow) {
-			return <StatusIcon active={rowData.translatable ?? false} />;
+		component(translatable: boolean | undefined) {
+			return <StatusIcon active={translatable ?? false} />;
 		},
 	},
 	{
@@ -80,8 +79,8 @@ export const DYNAMIC_CC_COLUMNS = (t: TranslateFunc): TableColumn<DynamicFieldCC
 		disableSorting: true,
 		width: '12.5%',
 		classList: ['u-text-center'],
-		component(value: any, rowData: DynamicFieldCCRow) {
-			return <StatusIcon active={rowData.hidden ?? false} />;
+		component(hidden: boolean | undefined) {
+			return <StatusIcon active={hidden ?? false} />;
 		},
 	},
 ];

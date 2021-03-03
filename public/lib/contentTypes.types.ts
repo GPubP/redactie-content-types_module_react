@@ -1,9 +1,7 @@
 import { FormsAPI } from '@redactie/form-renderer-module';
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
-import { AlertProps, ContextHeaderTab } from '@redactie/utils';
+import { AlertProps, ContextHeaderTab, FilterItem } from '@redactie/utils';
 import { FormikConfig, FormikValues } from 'formik';
-import { ReactNode } from 'react';
-import { NavLinkProps } from 'react-router-dom';
 
 import { registerCTDetailTab } from './api/registerCTDetailTab';
 import { ALERT_CONTAINER_IDS } from './contentTypes.const';
@@ -127,13 +125,6 @@ export interface CCSettingsFormState {
 	};
 }
 
-export interface NavListItem extends NavLinkProps {
-	description?: string;
-	filter?: (values: any) => boolean;
-	hasError?: boolean;
-	label: string;
-}
-
 export interface Tab extends ContextHeaderTab {
 	id?: string;
 	type: TabTypes;
@@ -146,21 +137,6 @@ export enum TabTypes {
 }
 
 export type FormikRef = FormikConfig<FormikValues>['innerRef'];
-
-export interface TableColumn<RowData = unknown> {
-	label: string;
-	value?: string;
-	component?: (value: any, rowData: RowData, rowIndex: number) => ReactNode;
-	headerComponent?: (value: any) => ReactNode;
-	format?: (value: any, col: TableColumn<RowData>, rowData: RowData, rowIndex: number) => string;
-	hidden?: boolean;
-	disabled?: boolean;
-	disableSorting?: boolean;
-	classList?: string[];
-	fallback?: string;
-	ellipsis?: boolean;
-	width?: string;
-}
 
 export interface ContentTypeAPI {
 	registerCTDetailTab: typeof registerCTDetailTab;
@@ -213,3 +189,8 @@ export type AlertMessages<T extends string | number | symbol> = Record<
 	T,
 	{ [key in 'success' | 'error']?: AlertProps }
 >;
+
+export interface OverviewFilterItem extends FilterItem {
+	filterKey: string;
+	formvalue?: any;
+}
