@@ -74,11 +74,11 @@ const FormCTEditCompartment: FC<FormCTEditCompartmentProps> = ({
 							{onDelete && isRemovable && (
 								<>
 									<Button
-										icon="trash"
+										icon="trash-o"
 										size="small"
 										onClick={() => setShowDeleteModal(true)}
-										type="danger"
-										transparent
+										type="secondary"
+										negative
 									/>
 									<DeletePrompt
 										isDeleting={isLoading}
