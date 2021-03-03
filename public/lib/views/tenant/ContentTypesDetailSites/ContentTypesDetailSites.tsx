@@ -11,6 +11,7 @@ import {
 	OrderBy,
 	parseOrderByToString,
 	parseStringToOrderBy,
+	TableColumn,
 	useAPIQueryParams,
 } from '@redactie/utils';
 import React, { FC, useMemo, useState } from 'react';
@@ -41,7 +42,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 		},
 	});
 	const [updateSiteId, setUpdateSiteId] = useState<string | null>(null);
-	const sitesActiveSorting = useMemo(() => parseStringToOrderBy(query.sort), [query.sort]);
+	const sitesActiveSorting = useMemo(() => parseStringToOrderBy(query.sort ?? ''), [query.sort]);
 	const [sitesPagination, refreshPage] = sitesConnector.hooks.useSitesPagination(query as any);
 	const sitesLoadingStates = sitesConnector.hooks.useSitesLoadingStates();
 
@@ -118,22 +119,22 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			contentItems: site.meta?.contentItemsCount ?? 0,
 		}));
 
-		const sitesColumns = [
+		const sitesColumns: TableColumn<SitesOverviewRowData>[] = [
 			{
 				label: 'Site',
 				value: 'name',
 				width: '35%',
-				component(value: any, rowData: SitesOverviewRowData) {
+				component(name: string, { description }) {
 					return (
 						<div>
 							<p>
 								<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
-									{value}
+									{name}
 								</EllipsisWithTooltip>
 							</p>
 							<p className="u-text-light">
 								<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
-									{rowData.description}
+									{description}
 								</EllipsisWithTooltip>
 							</p>
 						</div>
@@ -145,17 +146,16 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 				width: '25%',
 				value: 'contentItems',
 				disableSorting: true,
-				component(value: string) {
-					return <div>{value || 0}</div>;
+				component(contentItemsAmount: number | undefined) {
+					return <div>{contentItemsAmount ?? 0}</div>;
 				},
 			},
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 				value: 'active',
 				width: '10%',
-				component(value: string) {
-					const isActive = !!value;
-					return <SiteStatus active={isActive} />;
+				component(active: boolean | undefined) {
+					return <SiteStatus active={!!active} />;
 				},
 			},
 			{
@@ -163,20 +163,20 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 				disableSorting: true,
 				classList: ['u-text-right'],
 				width: '25%',
-				component(value: string, rowData: SitesOverviewRowData) {
-					const isActive = (rowData.contentTypes || []).includes(contentType._id);
+				component(value, { contentItems, contentTypes, id }) {
+					const isActive = (contentTypes || []).includes(contentType._id);
 					const loading =
 						sitesLoadingStates.isUpdating === LoadingState.Loading &&
-						updateSiteId === rowData.id;
+						updateSiteId === id;
 
 					if (isActive) {
 						return (
 							<Button
 								iconLeft={loading ? 'circle-o-notch fa-spin' : null}
-								disabled={loading || rowData.contentItems > 0}
+								disabled={loading || contentItems > 0}
 								onClick={() => {
-									setUpdateSiteId(rowData.id);
-									removeCTsFromSites(rowData.id);
+									setUpdateSiteId(id);
+									removeCTsFromSites(id);
 								}}
 								type="danger"
 								outline
@@ -191,8 +191,8 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 							iconLeft={loading ? 'circle-o-notch fa-spin' : null}
 							disabled={loading}
 							onClick={() => {
-								setUpdateSiteId(rowData.id);
-								setCTsOnSites(rowData.id);
+								setUpdateSiteId(id);
+								setCTsOnSites(id);
 							}}
 							type="success"
 							outline

@@ -1,7 +1,7 @@
 import { Select, TextField } from '@acpaas-ui/react-components';
 import { FormikValues, useFormikContext } from 'formik';
 import debounce from 'lodash.debounce';
-import { omit } from 'ramda';
+import { find, omit, propEq } from 'ramda';
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 
 import formRendererConnector from '../../../connectors/formRenderer';
@@ -63,6 +63,8 @@ const Anchorlink: React.FC<AnchorlinkFieldProps> = ({
 					onChange={(event: ChangeEvent<any>) =>
 						onChange({
 							link: event.target.value,
+							label: find(propEq('value', event.target.value), anchorlinkOptions)
+								?.label,
 						})
 					}
 					{...omit(['multiLanguage', 'min', 'max', 'options'])(config)}
@@ -76,7 +78,7 @@ const Anchorlink: React.FC<AnchorlinkFieldProps> = ({
 					label="Label"
 					component={TextField}
 					value={field.value?.label}
-					onChange={(event: ChangeEvent<any>) =>
+					onChange={(event: ChangeEvent<HTMLInputElement>) =>
 						onChange({
 							label: event.target.value,
 						})

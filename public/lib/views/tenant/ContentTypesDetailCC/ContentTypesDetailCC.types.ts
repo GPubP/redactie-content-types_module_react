@@ -19,3 +19,9 @@ export enum MoveAction {
 	UP = 'up',
 	DOWN = 'down',
 }
+
+export interface RowDnDEvent {
+	index: number;
+	type: string;
+	id: string;
+}

@@ -3,6 +3,7 @@ import { pathOr, prop } from 'ramda';
 
 import { DEFAULT_VALIDATOR_ERROR_MESSAGES } from '../../contentTypes.const';
 import {
+	ContentTypeFieldDetail,
 	ValicationCheckWithAllowedFields,
 	ValicationCheckWithFields,
 	Validation,
@@ -10,7 +11,7 @@ import {
 	ValidationCheckField,
 } from '../../services/contentTypes';
 import { FieldTypeData } from '../../services/fieldTypes';
-import { Validator } from '../../services/presets';
+import { PresetDetailField, Validator } from '../../services/presets';
 import { PresetDetailModel } from '../../store/presets';
 
 const createCheck = (key: string, val: unknown, validator?: Validator): ValidationCheck => ({
@@ -63,6 +64,9 @@ const getChecksFromData = (
 	}, [] as ValidationCheck[]);
 };
 
+const CTFieldIsMultiple = (CTField?: ContentTypeFieldDetail | PresetDetailField): boolean =>
+	!!CTField?.generalConfig.max && CTField?.generalConfig.max > 1;
+
 function getChecksFromPreset(
 	data: Record<string, any>,
 	preset: PresetDetailModel
@@ -75,18 +79,16 @@ function getChecksFromPreset(
 
 				const fieldType = {
 					...field.field?.fieldType?.data,
+					dataType: field.field?.dataType,
 					validators: field.validators,
 				};
 
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				const response = generateValidationChecks(
-					fieldValidationData,
-					fieldType,
-					field.field.preset as PresetDetailModel | undefined
-				);
+				const response = generateValidationChecks(fieldValidationData, fieldType);
 
 				fields.push({
-					type: field.field?.dataType?.data?.type,
+					...field.field.validation,
+					type: field.field.validation?.type || field.field?.dataType?.data?.type,
 					name: field.field?.name,
 					checks: [
 						...(field.field?.validation?.checks || []),
@@ -103,7 +105,8 @@ function getChecksFromPreset(
 export function generateValidationChecks(
 	data: FormValues,
 	fieldTypeData: FieldTypeData,
-	preset?: PresetDetailModel
+	preset?: PresetDetailModel,
+	ctField?: ContentTypeFieldDetail | PresetDetailField
 ): Validation {
 	const allChecksReverseOrder: ValidationCheck[] = [
 		...getChecksFromData(data, preset?.data?.validators || fieldTypeData.validators),
@@ -128,14 +131,27 @@ export function generateValidationChecks(
 			checks: [] as ValidationCheck[],
 		}
 	);
+	const fieldIsMultiple = CTFieldIsMultiple(ctField);
 
 	return preset
 		? {
-				type: 'object',
+				type: fieldIsMultiple ? 'array' : fieldTypeData?.dataType?.data?.type || 'object',
 				checks: [...checks, ...getChecksFromPreset(data, preset)],
+				...(fieldIsMultiple
+					? {
+							min: ctField?.generalConfig?.min ?? 0,
+							max: ctField?.generalConfig?.max,
+					  }
+					: {}),
 		  }
 		: {
 				type: fieldTypeData?.dataType?.data?.type,
 				checks,
+				...(fieldIsMultiple
+					? {
+							min: ctField?.generalConfig?.min ?? 0,
+							max: ctField?.generalConfig?.max,
+					  }
+					: {}),
 		  };
 }

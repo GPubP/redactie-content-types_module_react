@@ -1,3 +1,5 @@
+import { EmbeddedResponse } from '@redactie/utils';
+
 import { Field } from '../contentTypes';
 import { DataType, FieldType } from '../fieldTypes';
 
@@ -83,13 +85,6 @@ export interface BasePreset<V = string, D = string, F = string> {
 
 export type Preset = BasePreset<string, string, string>;
 
-export interface PresetsPaging {
-	number: number;
-	size: number;
-	totalElements: number;
-	totalPages: number;
-}
-
 /**
  * =========================
  * Response types
@@ -99,10 +94,7 @@ export interface PresetsPaging {
 
 export type PresetDetailResponse = BasePreset<Validator, DataType, FieldType>;
 
-export interface PresetsResponse {
-	_embedded: Preset[];
-	_page: PresetsPaging;
-}
+export type PresetsResponse = EmbeddedResponse<Preset>;
 
 /**
  * =========================

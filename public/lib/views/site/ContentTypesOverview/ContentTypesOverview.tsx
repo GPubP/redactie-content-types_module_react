@@ -4,7 +4,6 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/dist/lib/i18next/translations.const';
 import {
 	DataLoader,
 	LoadingState,
@@ -17,7 +16,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 
 import rolesRightsConnector from '../../../connectors/rolesRights';
 import sitesConnector from '../../../connectors/sites';
-import { useCoreTranslation } from '../../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { MODULE_PATHS } from '../../../contentTypes.const';
 import { useContentTypes, useRoutesBreadcrumbs } from '../../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes';
@@ -84,7 +83,7 @@ const ContentTypesOverview: React.FC = () => {
 		});
 	};
 
-	const handleOrderBy = (orderBy: { key: string; order: string }): void => {
+	const handleOrderBy = (orderBy: OrderBy): void => {
 		setContentTypesSearchParams({
 			...contentTypesSearchParams,
 			sort: `meta.${orderBy.key}`,
