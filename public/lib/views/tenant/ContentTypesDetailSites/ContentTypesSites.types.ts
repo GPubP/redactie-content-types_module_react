@@ -5,4 +5,5 @@ export interface SitesOverviewRowData {
 	description: string;
 	contentTypes: string[];
 	contentItems: number;
+	isUpdating: boolean;
 }

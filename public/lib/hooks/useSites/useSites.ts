@@ -1,12 +1,12 @@
-import { SiteModel, SitesResponse } from '@redactie/sites-module';
+import { SiteListModel, SitesResponse } from '@redactie/sites-module';
 import { LoadingState } from '@redactie/utils';
 import { useEffect, useState } from 'react';
 
 import sitesConnector from '../../connectors/sites';
 
-const useSites: () => [LoadingState, SiteModel[]] = () => {
+const useSites: () => [LoadingState, SiteListModel[]] = () => {
 	const [loading, setLoading] = useState(LoadingState.Loading);
-	const [sites, setSites] = useState<SiteModel[]>([]);
+	const [sites, setSites] = useState<SiteListModel[]>([]);
 
 	useEffect(() => {
 		const fetchSites = async (): Promise<void> => {
