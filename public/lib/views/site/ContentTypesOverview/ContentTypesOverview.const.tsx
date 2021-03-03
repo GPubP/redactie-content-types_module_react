@@ -1,13 +1,13 @@
 import { Link as AUILink, Button } from '@acpaas-ui/react-components';
 import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
+import { TableColumn } from '@redactie/utils';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { FilterFormState, SiteStatus } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
 import { CORE_TRANSLATIONS } from '../../../connectors/translations';
-import { ContentTypesOverviewTableRow } from '../../tenant';
 
 import { ContentTypesPerSiteOverviewTableRow } from './ContentTypesOverview.types';
 
@@ -18,16 +18,16 @@ export const CONTENT_INITIAL_FILTER_STATE = (): FilterFormState => ({
 export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 	t: TranslateFunc,
 	mySecurityRights: string[]
-): any[] => {
+): TableColumn<ContentTypesPerSiteOverviewTableRow>[] => {
 	const canUpdate = rolesRightsConnector.api.helpers.checkSecurityRights(mySecurityRights, [
 		rolesRightsConnector.securityRights.update,
 	]);
-	const defaultColumns = [
+	const defaultColumns: TableColumn<ContentTypesPerSiteOverviewTableRow>[] = [
 		{
 			label: t(CORE_TRANSLATIONS.TABLE_NAME),
 			value: 'label',
 			width: canUpdate ? '40%' : '50%',
-			component(label: string, { uuid, description }: ContentTypesOverviewTableRow) {
+			component(label: string, { uuid, description }) {
 				return (
 					<>
 						<AUILink to={`${uuid}/instellingen`} component={Link}>
@@ -48,10 +48,11 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		},
 		{
 			label: 'Aantal content items',
+			value: 'contentItemCount',
 			width: canUpdate ? '25%' : '30%',
-			component(value: any, rowData: ContentTypesPerSiteOverviewTableRow) {
-				return rowData.contentItemCount > 0 ? (
-					<span>{rowData.contentItemCount}</span>
+			component(contentItemCount: number) {
+				return contentItemCount > 0 ? (
+					<span>{contentItemCount}</span>
 				) : (
 					<span className="u-text-light">Geen</span>
 				);
@@ -60,11 +61,12 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		},
 		{
 			label: 'Status voor site',
+			value: 'activated',
 			width: '20%',
-			component(value: string, rowData: ContentTypesPerSiteOverviewTableRow) {
-				return <SiteStatus active={rowData.activated} />;
-			},
 			disableSorting: true,
+			component(activated: boolean) {
+				return <SiteStatus active={activated} />;
+			},
 		},
 	];
 
@@ -79,9 +81,7 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 			classList: ['u-text-right'],
 			disableSorting: true,
 			width: '15%',
-			component(value: unknown, rowData: ContentTypesOverviewTableRow) {
-				const { navigate, uuid } = rowData;
-
+			component(value, { navigate, uuid }) {
 				return (
 					<Button
 						ariaLabel="Edit"

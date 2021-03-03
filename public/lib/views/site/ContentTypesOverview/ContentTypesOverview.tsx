@@ -8,7 +8,10 @@ import {
 	DataLoader,
 	LoadingState,
 	OrderBy,
+	parseObjToOrderBy,
+	parseOrderByToObj,
 	SearchParams,
+	useAPIQueryParams,
 	useNavigate,
 	useSiteContext,
 } from '@redactie/utils';
@@ -17,7 +20,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import rolesRightsConnector from '../../../connectors/rolesRights';
 import sitesConnector from '../../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
-import { MODULE_PATHS } from '../../../contentTypes.const';
+import { MODULE_PATHS, OVERVIEW_QUERY_PARAMS_CONFIG } from '../../../contentTypes.const';
 import { useContentTypes, useRoutesBreadcrumbs } from '../../../hooks';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes';
 import { ContentTypeModel, contentTypesFacade } from '../../../store/contentTypes';
@@ -29,6 +32,7 @@ const ContentTypesOverview: React.FC = () => {
 	/**
 	 * Hooks
 	 */
+
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const { navigate } = useNavigate();
 	const [t] = useCoreTranslation();
@@ -40,11 +44,7 @@ const ContentTypesOverview: React.FC = () => {
 		mySecurityRightsLoadingState,
 		mySecurityrights,
 	] = rolesRightsConnector.api.hooks.useMySecurityRightsForTenant(true);
-	const [contentTypesSearchParams, setContentTypesSearchParams] = useState<SearchParams>({
-		...DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
-		site: siteId,
-	});
-	const [activeSorting, setActiveSorting] = useState<OrderBy>();
+	const [query, setQuery] = useAPIQueryParams(OVERVIEW_QUERY_PARAMS_CONFIG, false);
 
 	useEffect(() => {
 		if (
@@ -69,29 +69,32 @@ const ContentTypesOverview: React.FC = () => {
 	]);
 
 	useEffect(() => {
-		contentTypesFacade.getContentTypes(contentTypesSearchParams);
-	}, [contentTypesSearchParams]);
+		contentTypesFacade.getContentTypes(query as SearchParams);
+	}, [query]);
 
 	/**
 	 * Functions
 	 */
 
 	const handlePageChange = (page: number): void => {
-		setContentTypesSearchParams({
-			...contentTypesSearchParams,
+		setQuery({
 			skip: (page - 1) * DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit,
 		});
 	};
 
 	const handleOrderBy = (orderBy: OrderBy): void => {
-		setContentTypesSearchParams({
-			...contentTypesSearchParams,
-			sort: `meta.${orderBy.key}`,
-			direction: orderBy.order === 'desc' ? 1 : -1,
-		});
-		setActiveSorting(orderBy);
+		setQuery(
+			parseOrderByToObj({
+				...orderBy,
+				key: `meta.${orderBy.key}`,
+			})
+		);
 	};
 
+	const activeSorting = parseObjToOrderBy({
+		sort: query.sort ? query.sort.split('.')[1] : '',
+		direction: query.direction ?? 1,
+	});
 	const siteIncludesContentType = (contentType: ContentTypeModel): boolean =>
 		site?.data.contentTypes.includes(contentType._id) || false;
 
