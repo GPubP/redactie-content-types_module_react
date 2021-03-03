@@ -5,6 +5,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import {
 	AlertContainer,
+	ContextHeaderTabLinkProps,
 	DataLoader,
 	LoadingState,
 	RenderChildRoutes,
@@ -120,7 +121,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		<>
 			<ContextHeader
 				tabs={activeTabs.slice(0, 1)}
-				linkProps={(props: any) => ({
+				linkProps={(props: ContextHeaderTabLinkProps) => ({
 					...props,
 					to: generatePath(`${MODULE_PATHS.create}/${props.href}`),
 					component: Link,

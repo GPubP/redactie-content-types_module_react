@@ -1,6 +1,7 @@
 import kebabCase from 'lodash.kebabcase';
-import { object, string } from 'yup';
+import { object, ObjectSchema, string } from 'yup';
 
+import { NewCCFormState } from '../../../contentTypes.types';
 import { FieldsByCompartment } from '../../../store/contentTypes';
 
 export const FIELD_TYPES_DEFAULT_OPTION = {
@@ -17,7 +18,9 @@ export const COMPARTMENT_DEFAULT_OPTION = {
 	disabled: true,
 };
 
-export const NEW_CC_FORM_VALIDATION_SCHEMA = (fieldsByCompartments: FieldsByCompartment[]): any =>
+export const NEW_CC_FORM_VALIDATION_SCHEMA = (
+	fieldsByCompartments: FieldsByCompartment[]
+): ObjectSchema<NewCCFormState> =>
 	object().shape({
 		name: string()
 			.required('Naam is een verplicht veld')

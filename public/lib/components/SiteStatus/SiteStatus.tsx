@@ -1,8 +1,8 @@
+import { Status } from '@acpaas-ui/react-editorial-components';
 import React, { FC } from 'react';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { StatusTypes } from '../../helpers';
-import Status from '../Status/Status';
 
 import { SiteStatusProps } from './SiteStatus.types';
 

@@ -6,7 +6,7 @@ import {
 	CONTENT_TYPES_PREFIX_URL,
 	CONTENT_TYPES_PROXY_PREFIX_URL,
 	DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
-} from './contentTypes.service.cont';
+} from './contentTypes.service.const';
 import {
 	ContentTypeCreateRequest,
 	ContentTypeDetailResponse,

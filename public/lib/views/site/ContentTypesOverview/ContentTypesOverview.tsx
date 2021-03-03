@@ -7,6 +7,7 @@ import {
 import {
 	DataLoader,
 	LoadingState,
+	OrderBy,
 	SearchParams,
 	useNavigate,
 	useSiteContext,
@@ -18,9 +19,8 @@ import sitesConnector from '../../../connectors/sites';
 import { useCoreTranslation } from '../../../connectors/translations';
 import { MODULE_PATHS } from '../../../contentTypes.const';
 import { useContentTypes, useRoutesBreadcrumbs } from '../../../hooks';
-import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes/contentTypes.service.cont';
+import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes';
 import { ContentTypeModel, contentTypesFacade } from '../../../store/contentTypes';
-import { OrderBy } from '../../tenant';
 
 import { CONTENT_TYPE_OVERVIEW_COLUMNS } from './ContentTypesOverview.const';
 import { ContentTypesPerSiteOverviewTableRow } from './ContentTypesOverview.types';
@@ -83,7 +83,7 @@ const ContentTypesOverview: React.FC = () => {
 		});
 	};
 
-	const handleOrderBy = (orderBy: { key: string; order: string }): void => {
+	const handleOrderBy = (orderBy: OrderBy): void => {
 		setContentTypesSearchParams({
 			...contentTypesSearchParams,
 			sort: `meta.${orderBy.key}`,

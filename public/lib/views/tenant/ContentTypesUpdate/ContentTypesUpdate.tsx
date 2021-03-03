@@ -5,6 +5,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import {
 	ContextHeaderBadge,
+	ContextHeaderTabLinkProps,
 	DataLoader,
 	LoadingState,
 	RenderChildRoutes,
@@ -255,7 +256,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		<>
 			<ContextHeader
 				tabs={showTabs ? activeTabs : undefined}
-				linkProps={(props: any) => {
+				linkProps={(props: ContextHeaderTabLinkProps) => {
 					const to = generatePath(`${MODULE_PATHS.detail}/${props.href}`, {
 						contentTypeUuid,
 					});
