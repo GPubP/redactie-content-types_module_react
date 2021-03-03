@@ -20,9 +20,12 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import rolesRightsConnector from '../../../connectors/rolesRights';
 import sitesConnector from '../../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
-import { MODULE_PATHS, OVERVIEW_QUERY_PARAMS_CONFIG } from '../../../contentTypes.const';
+import {
+	DEFAULT_OVERVIEW_QUERY_PARAMS,
+	MODULE_PATHS,
+	OVERVIEW_QUERY_PARAMS_CONFIG,
+} from '../../../contentTypes.const';
 import { useContentTypes, useRoutesBreadcrumbs } from '../../../hooks';
-import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes';
 import { ContentTypeModel, contentTypesFacade } from '../../../store/contentTypes';
 
 import { CONTENT_TYPE_OVERVIEW_COLUMNS } from './ContentTypesOverview.const';
@@ -78,7 +81,7 @@ const ContentTypesOverview: React.FC = () => {
 
 	const handlePageChange = (page: number): void => {
 		setQuery({
-			skip: (page - 1) * DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit,
+			skip: (page - 1) * DEFAULT_OVERVIEW_QUERY_PARAMS.limit,
 		});
 	};
 
@@ -127,10 +130,8 @@ const ContentTypesOverview: React.FC = () => {
 					className="u-margin-top"
 					columns={CONTENT_TYPE_OVERVIEW_COLUMNS(t, mySecurityrights)}
 					rows={contentTypesRows}
-					currentPage={
-						Math.ceil(meta.skip / DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit) + 1
-					}
-					itemsPerPage={DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit}
+					currentPage={Math.ceil(meta.skip / DEFAULT_OVERVIEW_QUERY_PARAMS.limit) + 1}
+					itemsPerPage={DEFAULT_OVERVIEW_QUERY_PARAMS.limit}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
 					activeSorting={activeSorting}

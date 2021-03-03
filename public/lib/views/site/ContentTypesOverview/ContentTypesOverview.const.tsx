@@ -5,15 +5,11 @@ import { TableColumn } from '@redactie/utils';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { FilterFormState, SiteStatus } from '../../../components';
+import { SiteStatus } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
 import { CORE_TRANSLATIONS } from '../../../connectors/translations';
 
 import { ContentTypesPerSiteOverviewTableRow } from './ContentTypesOverview.types';
-
-export const CONTENT_INITIAL_FILTER_STATE = (): FilterFormState => ({
-	name: '',
-});
 
 export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 	t: TranslateFunc,

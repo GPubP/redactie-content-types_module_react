@@ -8,41 +8,44 @@ import {
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import { SiteModel } from '@redactie/sites-module';
-import { DataLoader, LoadingState, OrderBy, useNavigate } from '@redactie/utils';
+import {
+	DataLoader,
+	LoadingState,
+	OrderBy,
+	parseObjToOrderBy,
+	parseOrderByToObj,
+	SearchParams,
+	useAPIQueryParams,
+	useNavigate,
+} from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { FilterForm, FilterFormState } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
-import { MODULE_PATHS } from '../../../contentTypes.const';
+import {
+	DEFAULT_OVERVIEW_QUERY_PARAMS,
+	MODULE_PATHS,
+	OVERVIEW_QUERY_PARAMS_CONFIG,
+} from '../../../contentTypes.const';
 import { ContentTypesRouteProps, OverviewFilterItem } from '../../../contentTypes.types';
 import { useContentTypes, useRoutesBreadcrumbs, useSites } from '../../../hooks';
-import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes';
 import { contentTypesFacade } from '../../../store/contentTypes';
 
-import {
-	CONTENT_INITIAL_FILTER_STATE,
-	CONTENT_TYPE_OVERVIEW_COLUMNS,
-} from './ContentTypesOverview.const';
+import { CONTENT_TYPE_OVERVIEW_COLUMNS } from './ContentTypesOverview.const';
 import { ContentTypesOverviewTableRow } from './ContentTypesOverview.types';
 
 const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	/**
 	 * Hooks
 	 */
-	const [filterItems, setFilterItems] = useState<OverviewFilterItem[]>([]);
-	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
-		CONTENT_INITIAL_FILTER_STATE()
-	);
-	const [contentTypesSearchParams, setContentTypesSearchParams] = useState(
-		DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
-	);
+
+	const [query, setQuery] = useAPIQueryParams(OVERVIEW_QUERY_PARAMS_CONFIG, false);
 	const { navigate } = useNavigate();
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const [loadingContentTypes, contentTypes, meta] = useContentTypes();
 	const [loadingSites, sites] = useSites();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const [activeSorting, setActiveSorting] = useState<OrderBy>();
 	const [
 		mySecurityRightsLoadingState,
 		mySecurityrights,
@@ -72,77 +75,55 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	]);
 
 	useEffect(() => {
-		contentTypesFacade.getContentTypes(contentTypesSearchParams);
-	}, [contentTypesSearchParams]);
+		contentTypesFacade.getContentTypes(query as SearchParams);
+	}, [query]);
 
 	/**
 	 * Functions
 	 */
-	const createFilterItems = ({
-		name,
-	}: FilterFormState): {
-		filters: OverviewFilterItem[];
-	} => {
-		const filters = [
-			{
-				filterKey: 'search',
-				valuePrefix: 'Zoekterm',
-				value: name,
-			},
-		];
-
-		return {
-			filters: [...filters].filter(item => !!item.value),
-		};
-	};
+	const createFilterItems = ({ name }: FilterFormState): OverviewFilterItem[] => [
+		...(name
+			? [
+					{
+						filterKey: 'search',
+						valuePrefix: 'Zoekterm',
+						value: name,
+					},
+			  ]
+			: []),
+	];
 
 	const onSubmit = (filterFormState: FilterFormState): void => {
-		// Update filters
-		setFilterFormState(filterFormState);
-		const filterItems = createFilterItems(filterFormState);
-		setFilterItems(filterItems.filters);
-		// Update searchParams
-		setContentTypesSearchParams({
-			...contentTypesSearchParams,
+		setQuery({
 			search: filterFormState.name,
 			skip: 0,
 		});
 	};
 
 	const deleteAllFilters = (): void => {
-		// Reset filters
-		setFilterItems([]);
-		// Reset search params and filter form
-		setContentTypesSearchParams(DEFAULT_CONTENT_TYPES_SEARCH_PARAMS);
-		setFilterFormState(CONTENT_INITIAL_FILTER_STATE());
+		setQuery(DEFAULT_OVERVIEW_QUERY_PARAMS);
 	};
 
 	const deleteFilter = (item: OverviewFilterItem): void => {
-		// Delete item from filters
-		const setFilter = filterItems?.filter(el => el.value !== item.value);
-		setFilterItems(setFilter);
-		// Update searchParams
-		setContentTypesSearchParams(DEFAULT_CONTENT_TYPES_SEARCH_PARAMS);
-		setFilterFormState({
-			...filterFormState,
-			[item.filterKey]: '',
+		setQuery({
+			skip: 0,
+			[item.filterKey]: undefined,
 		});
 	};
 
 	const handlePageChange = (page: number): void => {
-		setContentTypesSearchParams({
-			...contentTypesSearchParams,
-			skip: (page - 1) * DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit,
+		setQuery({
+			skip: (page - 1) * DEFAULT_OVERVIEW_QUERY_PARAMS.limit,
 		});
 	};
 
 	const handleOrderBy = (orderBy: OrderBy): void => {
-		setContentTypesSearchParams({
-			...contentTypesSearchParams,
-			sort: `meta.${orderBy.key}`,
-			direction: orderBy.order === 'desc' ? 1 : -1,
-		});
-		setActiveSorting(orderBy);
+		setQuery(
+			parseOrderByToObj({
+				...orderBy,
+				key: `meta.${orderBy.key}`,
+			})
+		);
 	};
 
 	const sitesForContentTypeList = useMemo(() => {
@@ -167,6 +148,13 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 		}, {} as Record<string, any>);
 	}, [contentTypes, sites]);
 
+	const filterFormState: FilterFormState = { name: query.search ?? '' };
+	const activeFilters = createFilterItems(filterFormState);
+	const activeSorting = parseObjToOrderBy({
+		sort: query.sort ? query.sort.split('.')[1] : '',
+		direction: query.direction ?? 1,
+	});
+
 	/**
 	 * Render
 	 */
@@ -189,11 +177,11 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 			<>
 				<div className="u-margin-top">
 					<FilterForm
-						initialState={CONTENT_INITIAL_FILTER_STATE()}
+						initialState={filterFormState}
 						onCancel={deleteAllFilters}
 						onSubmit={onSubmit}
 						deleteActiveFilter={deleteFilter}
-						activeFilters={filterItems}
+						activeFilters={activeFilters}
 					/>
 				</div>
 				<PaginatedTable
@@ -202,10 +190,8 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					className="u-margin-top"
 					columns={CONTENT_TYPE_OVERVIEW_COLUMNS(t, mySecurityrights)}
 					rows={contentTypesRows}
-					currentPage={
-						Math.ceil(meta.skip / DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit) + 1
-					}
-					itemsPerPage={DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit}
+					currentPage={Math.ceil(meta.skip / DEFAULT_OVERVIEW_QUERY_PARAMS.limit) + 1}
+					itemsPerPage={DEFAULT_OVERVIEW_QUERY_PARAMS.limit}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
 					activeSorting={activeSorting}

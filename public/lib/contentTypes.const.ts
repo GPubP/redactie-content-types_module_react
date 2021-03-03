@@ -1,4 +1,5 @@
 import { Tab, TabTypes } from './contentTypes.types';
+import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from './services/contentTypes';
 
 export const DEFAULT_VALIDATION_SCHEMA = {
 	$schema: 'http://json-schema.org/draft-07/schema#',
@@ -20,9 +21,17 @@ export const OVERVIEW_QUERY_PARAMS_CONFIG = {
 	skip: { defaultValue: 0, type: 'number' },
 	limit: { defaultValue: 10, type: 'number' },
 	sparse: { defaultValue: true, type: 'boolean' },
+	search: { type: 'string' },
 	sort: { type: 'string' },
 	direction: { type: 'number' },
 } as const;
+
+export const DEFAULT_OVERVIEW_QUERY_PARAMS = {
+	...DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
+	search: undefined,
+	sort: undefined,
+	direction: undefined,
+};
 
 export const CONTENT_TYPE_DETAIL_TAB_MAP: {
 	[key in 'settings' | 'contentComponents' | 'sites']: Tab;
