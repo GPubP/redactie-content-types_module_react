@@ -55,6 +55,7 @@ const usePaginatedPresets: UsePaginatedPresets = (searchParams, clearCache = fal
 		if (
 			searchParams.sort !== prevSearchParams?.sort ||
 			searchParams.search !== prevSearchParams?.search ||
+			searchParams.status !== prevSearchParams?.status ||
 			clearCache
 		) {
 			paginator.clearCache();
