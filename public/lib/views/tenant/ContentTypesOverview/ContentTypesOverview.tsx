@@ -8,33 +8,29 @@ import {
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import { SiteListModel } from '@redactie/sites-module';
-import { DataLoader, LoadingState, useNavigate } from '@redactie/utils';
+import { DataLoader, LoadingState, OrderBy, useNavigate } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { FilterForm, FilterFormState } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { MODULE_PATHS } from '../../../contentTypes.const';
-import { ContentTypesRouteProps } from '../../../contentTypes.types';
+import { ContentTypesRouteProps, OverviewFilterItem } from '../../../contentTypes.types';
 import { useContentTypes, useRoutesBreadcrumbs, useSites } from '../../../hooks';
-import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes/contentTypes.service.cont';
+import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes';
 import { contentTypesFacade } from '../../../store/contentTypes';
 
 import {
 	CONTENT_INITIAL_FILTER_STATE,
 	CONTENT_TYPE_OVERVIEW_COLUMNS,
 } from './ContentTypesOverview.const';
-import {
-	ContentTypesOverviewTableRow,
-	FilterItemSchema,
-	OrderBy,
-} from './ContentTypesOverview.types';
+import { ContentTypesOverviewTableRow } from './ContentTypesOverview.types';
 
 const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	/**
 	 * Hooks
 	 */
-	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
+	const [filterItems, setFilterItems] = useState<OverviewFilterItem[]>([]);
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
 		CONTENT_INITIAL_FILTER_STATE()
 	);
@@ -85,7 +81,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	const createFilterItems = ({
 		name,
 	}: FilterFormState): {
-		filters: FilterItemSchema[];
+		filters: OverviewFilterItem[];
 	} => {
 		const filters = [
 			{
@@ -121,7 +117,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 		setFilterFormState(CONTENT_INITIAL_FILTER_STATE());
 	};
 
-	const deleteFilter = (item: any): void => {
+	const deleteFilter = (item: OverviewFilterItem): void => {
 		// Delete item from filters
 		const setFilter = filterItems?.filter(el => el.value !== item.value);
 		setFilterItems(setFilter);
@@ -140,7 +136,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 		});
 	};
 
-	const handleOrderBy = (orderBy: { key: string; order: string }): void => {
+	const handleOrderBy = (orderBy: OrderBy): void => {
 		setContentTypesSearchParams({
 			...contentTypesSearchParams,
 			sort: `meta.${orderBy.key}`,

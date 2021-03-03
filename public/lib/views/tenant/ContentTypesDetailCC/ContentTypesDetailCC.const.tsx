@@ -1,6 +1,7 @@
 import { Button, ButtonGroup } from '@acpaas-ui/react-components';
 import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
 import { TranslateFunc } from '@redactie/translations-module';
+import { TableColumn } from '@redactie/utils';
 import { isNil } from 'ramda';
 import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
@@ -8,7 +9,6 @@ import { Link } from 'react-router-dom';
 import { StatusIcon } from '../../../components';
 import { CORE_TRANSLATIONS } from '../../../connectors/translations';
 import { MODULE_PATHS, TENANT_ROOT } from '../../../contentTypes.const';
-import { TableColumn } from '../../../contentTypes.types';
 
 import { ContentTypeDetailCCRow, MoveAction } from './ContentTypesDetailCC.types';
 
@@ -26,40 +26,39 @@ export const CONTENT_TYPE_COLUMNS = (
 		value: 'label',
 		disableSorting: true,
 		width: '35%',
-		component(value: string, rowData: ContentTypeDetailCCRow) {
-			const { name, path } = rowData;
+		component(label: string, { canMoveDown, canMoveUp, id, name, path }) {
 			return (
 				<>
 					<div className="u-flex u-flex-align-center u-flex-no-wrap">
 						<ButtonGroup direction="vertical">
 							<Button
-								onClick={() => moveRow(rowData.id, MoveAction.UP)}
+								onClick={() => moveRow(id, MoveAction.UP)}
 								icon="chevron-up"
 								ariaLabel="Move item up"
 								type="primary"
 								htmlType="button"
 								size="tiny"
 								transparent
-								disabled={!rowData.canMoveUp}
+								disabled={!canMoveUp}
 								negative
 							/>
 							<Button
-								onClick={() => moveRow(rowData.id, MoveAction.DOWN)}
+								onClick={() => moveRow(id, MoveAction.DOWN)}
 								icon="chevron-down"
 								ariaLabel="Move item down"
 								type="primary"
 								htmlType="button"
 								size="tiny"
-								disabled={!rowData.canMoveDown}
+								disabled={!canMoveDown}
 								transparent
 								negative
 							/>
 						</ButtonGroup>
 						<div className="u-margin-left-xs u-min-w-0">
 							{path ? (
-								<Link to={path}>{renderEllipsisWithTooltip(value)}</Link>
+								<Link to={path}>{renderEllipsisWithTooltip(label)}</Link>
 							) : (
-								<p className="u-text-bold">{renderEllipsisWithTooltip(value)}</p>
+								<p className="u-text-bold">{renderEllipsisWithTooltip(label)}</p>
 							)}
 							{name && (
 								<p className="u-text-light">
@@ -85,10 +84,8 @@ export const CONTENT_TYPE_COLUMNS = (
 		disableSorting: true,
 		width: '10%',
 		classList: ['u-text-center'],
-		component(value: any, rowData: ContentTypeDetailCCRow) {
-			return !isNil(rowData.multiple) ? (
-				<StatusIcon active={rowData.multiple ?? false} />
-			) : null;
+		component(multiple: boolean | undefined) {
+			return !isNil(multiple) ? <StatusIcon active={multiple ?? false} /> : null;
 		},
 	},
 	{
@@ -97,10 +94,8 @@ export const CONTENT_TYPE_COLUMNS = (
 		width: '10%',
 		classList: ['u-text-center'],
 		disableSorting: true,
-		component(value: any, rowData: ContentTypeDetailCCRow) {
-			return !isNil(rowData.required) ? (
-				<StatusIcon active={rowData.required ?? false} />
-			) : null;
+		component(required: boolean | undefined) {
+			return !isNil(required) ? <StatusIcon active={required ?? false} /> : null;
 		},
 	},
 	{
@@ -109,10 +104,8 @@ export const CONTENT_TYPE_COLUMNS = (
 		width: '10%',
 		disableSorting: true,
 		classList: ['u-text-center'],
-		component(value: any, rowData: ContentTypeDetailCCRow) {
-			return !isNil(rowData.translatable) ? (
-				<StatusIcon active={rowData.translatable ?? false} />
-			) : null;
+		component(translatable: boolean | undefined) {
+			return !isNil(translatable) ? <StatusIcon active={translatable ?? false} /> : null;
 		},
 	},
 	{
@@ -121,8 +114,8 @@ export const CONTENT_TYPE_COLUMNS = (
 		width: '10%',
 		disableSorting: true,
 		classList: ['u-text-center'],
-		component(value: any, rowData: ContentTypeDetailCCRow) {
-			return !isNil(rowData.hidden) ? <StatusIcon active={rowData.hidden ?? false} /> : null;
+		component(hidden: boolean | undefined) {
+			return !isNil(hidden) ? <StatusIcon active={hidden ?? false} /> : null;
 		},
 	},
 	{
@@ -130,15 +123,13 @@ export const CONTENT_TYPE_COLUMNS = (
 		disableSorting: true,
 		width: '10%',
 		classList: ['is-condensed', 'u-text-right'],
-		component(value: any, rowData: ContentTypeDetailCCRow) {
+		component(value, { id, navigate }: ContentTypeDetailCCRow) {
 			return (
 				<Button
 					ariaLabel="Edit"
 					icon="edit"
 					onClick={() =>
-						rowData.navigate && typeof rowData.navigate === 'function'
-							? rowData.navigate()
-							: onExpand(rowData.id)
+						navigate && typeof navigate === 'function' ? navigate() : onExpand(id)
 					}
 					type="primary"
 					transparent

@@ -5,7 +5,14 @@ import {
 	TooltipTypeMap,
 } from '@acpaas-ui/react-editorial-components';
 import { SiteListModel, UpdateSitePayload } from '@redactie/sites-module';
-import { AlertContainer, useAPIQueryParams } from '@redactie/utils';
+import {
+	AlertContainer,
+	OrderBy,
+	parseOrderByToString,
+	parseStringToOrderBy,
+	TableColumn,
+	useAPIQueryParams,
+} from '@redactie/utils';
 import React, { FC, useEffect, useMemo, useReducer, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -17,8 +24,6 @@ import {
 	ContentTypesDetailRouteProps,
 	SiteContentTypesDetailRouteParams,
 } from '../../../contentTypes.types';
-import { parseOrderBy, parseOrderByString } from '../../../services/helpers/helpers.service';
-import { OrderBy } from '../ContentTypesOverview';
 
 import {
 	PaginatedSitesActionTypes,
@@ -40,7 +45,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			type: 'string',
 		},
 	});
-	const sitesActiveSorting = useMemo(() => parseOrderByString(query.sort), [query.sort]);
+	const sitesActiveSorting = useMemo(() => parseStringToOrderBy(query.sort ?? ''), [query.sort]);
 	const { pagination, loading: sitesLoading } = sitesConnector.hooks.usePaginatedSites(
 		query as any
 	);
@@ -79,7 +84,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 	const handleOrderBy = (orderBy: OrderBy): void => {
 		setQuery({
 			...query,
-			sort: parseOrderBy({
+			sort: parseOrderByToString({
 				...orderBy,
 				key: `${orderBy.key === 'active' ? 'meta' : 'data'}.${orderBy.key}`,
 			}),
@@ -161,22 +166,22 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			isUpdating: !!sitesDetailUIMap && !!sitesDetailUIMap[site.uuid]?.isUpdating,
 		}));
 
-		const sitesColumns = [
+		const sitesColumns: TableColumn<SitesOverviewRowData>[] = [
 			{
 				label: 'Site',
 				value: 'name',
 				width: '35%',
-				component(value: any, rowData: SitesOverviewRowData) {
+				component(name: string, { description }) {
 					return (
 						<div>
 							<p>
 								<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
-									{value}
+									{name}
 								</EllipsisWithTooltip>
 							</p>
 							<p className="u-text-light">
 								<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
-									{rowData.description}
+									{description}
 								</EllipsisWithTooltip>
 							</p>
 						</div>
@@ -188,17 +193,16 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 				width: '25%',
 				value: 'contentItems',
 				disableSorting: true,
-				component(value: string) {
-					return <div>{value || 0}</div>;
+				component(contentItemsAmount: number | undefined) {
+					return <div>{contentItemsAmount ?? 0}</div>;
 				},
 			},
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 				value: 'active',
 				width: '10%',
-				component(value: string) {
-					const isActive = !!value;
-					return <SiteStatus active={isActive} />;
+				component(active: boolean | undefined) {
+					return <SiteStatus active={!!active} />;
 				},
 			},
 			{
@@ -206,16 +210,16 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 				disableSorting: true,
 				classList: ['u-text-right'],
 				width: '25%',
-				component(value: string, rowData: SitesOverviewRowData) {
-					const isActive = (rowData.contentTypes || []).includes(contentType._id);
+				component(value, { contentItems, contentTypes, id, isUpdating }) {
+					const isActive = (contentTypes || []).includes(contentType._id);
 
 					if (isActive) {
 						return (
 							<Button
-								iconLeft={rowData.isUpdating ? 'circle-o-notch fa-spin' : null}
-								disabled={rowData.isUpdating || rowData.contentItems > 0}
+								iconLeft={isUpdating ? 'circle-o-notch fa-spin' : null}
+								disabled={isUpdating || contentItems > 0}
 								onClick={() => {
-									removeCTsFromSites(rowData.id);
+									removeCTsFromSites(id);
 								}}
 								type="danger"
 								outline
@@ -227,10 +231,10 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 
 					return (
 						<Button
-							iconLeft={rowData.isUpdating ? 'circle-o-notch fa-spin' : null}
-							disabled={rowData.isUpdating}
+							iconLeft={isUpdating ? 'circle-o-notch fa-spin' : null}
+							disabled={isUpdating}
 							onClick={() => {
-								setCTsOnSites(rowData.id);
+								setCTsOnSites(id);
 							}}
 							type="success"
 							outline
