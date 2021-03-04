@@ -1,4 +1,5 @@
 import { Tab, TabTypes } from './contentTypes.types';
+import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from './services/contentTypes';
 
 export const DEFAULT_VALIDATION_SCHEMA = {
 	$schema: 'http://json-schema.org/draft-07/schema#',
@@ -15,6 +16,22 @@ export enum ALERT_CONTAINER_IDS {
 }
 
 export const CONTENT_COMPARTMENT_UUID = 'ce569384-6497-4e1b-84c6-52fa43592c69';
+
+export const OVERVIEW_QUERY_PARAMS_CONFIG = {
+	skip: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.skip, type: 'number' },
+	limit: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit, type: 'number' },
+	sparse: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.sparse, type: 'boolean' },
+	search: { type: 'string' },
+	sort: { type: 'string' },
+	direction: { type: 'number' },
+} as const;
+
+export const DEFAULT_OVERVIEW_QUERY_PARAMS = {
+	...DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
+	search: undefined,
+	sort: undefined,
+	direction: undefined,
+};
 
 export const CONTENT_TYPE_DETAIL_TAB_MAP: {
 	[key in 'settings' | 'contentComponents' | 'sites']: Tab;
