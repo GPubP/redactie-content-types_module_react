@@ -4,6 +4,7 @@ import {
 	PaginatedTable,
 	TooltipTypeMap,
 } from '@acpaas-ui/react-editorial-components';
+import { SearchParams } from '@redactie/roles-rights-module/dist/public/lib/services/api';
 import { SiteListModel, UpdateSitePayload } from '@redactie/sites-module';
 import {
 	AlertContainer,
@@ -37,7 +38,6 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 	const unmountedRef = useRef(false);
 	const [query, setQuery] = useAPIQueryParams({
 		sort: {
-			defaultValue: 'data.name',
 			type: 'string',
 		},
 		'content-type': {
