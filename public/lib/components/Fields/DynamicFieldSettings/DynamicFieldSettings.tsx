@@ -9,7 +9,7 @@ import React, { ReactElement, useContext, useEffect, useMemo, useState } from 'r
 import { useHistory } from 'react-router-dom';
 
 import formRendererConnector from '../../../connectors/formRenderer';
-import { useCoreTranslation } from '../../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { DYNAMIC_FIELD_SETTINGS_NAME } from '../../../contentTypes.const';
 import { NewCCFormState } from '../../../contentTypes.types';
 import { sortFieldTypes } from '../../../helpers';
@@ -181,20 +181,9 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 				columns={DYNAMIC_CC_COLUMNS(t)}
 				rows={contentTypeRows}
 				totalValues={fields.length}
+				noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-ITEMS'])}
 			/>
 		);
-	};
-
-	const renderArrayElements = (values: Field[]): ReactElement => {
-		if (!values?.length) {
-			return (
-				<div className={cx('m-dynamic-field__no-content', 'u-margin-top')}>
-					Er zijn geen items om weer te geven.
-				</div>
-			);
-		}
-
-		return renderTableField(values);
 	};
 
 	const renderForm = (): ReactElement => (
@@ -203,7 +192,7 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 				<p className="u-margin-top"> {fieldSchema.config.description} </p>
 			) : null}
 			<div>
-				{renderArrayElements(value)}
+				{renderTableField(value)}
 
 				<Card className="u-margin-top">
 					<FormCTNewCC
