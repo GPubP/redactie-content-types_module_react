@@ -35,7 +35,7 @@ const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
 							Opgelet, indien u deze component verwijdert kan hij niet meer gebruikt
 							worden op het content
 						</p>
-						<Button iconLeft="trash" onClick={onDelete} type="danger">
+						<Button iconLeft="trash-o" onClick={onDelete} type="danger">
 							Verwijderen
 						</Button>
 					</CardBody>
