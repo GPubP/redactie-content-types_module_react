@@ -345,6 +345,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 				rows={contentTypeRows}
 				rowExpansionTemplate={updateCompartmentTemplate}
 				totalValues={contentType.fields.length}
+				noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-ITEMS'])}
 			/>
 		);
 	};
