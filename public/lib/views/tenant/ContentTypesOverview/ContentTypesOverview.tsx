@@ -7,7 +7,7 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { SiteModel } from '@redactie/sites-module';
+import { SiteListModel } from '@redactie/sites-module';
 import {
 	DataLoader,
 	LoadingState,
@@ -130,7 +130,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 		return contentTypes.reduce((acc, contentType) => {
 			if (contentType.uuid) {
 				acc[contentType.uuid] = sites
-					.reduce((acc: string[], site: SiteModel) => {
+					.reduce((acc: string[], site: SiteListModel) => {
 						const containsCT = site.data.contentTypes.includes(contentType._id);
 
 						if (!containsCT) {

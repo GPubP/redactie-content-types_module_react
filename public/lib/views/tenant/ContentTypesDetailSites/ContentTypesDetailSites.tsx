@@ -4,17 +4,16 @@ import {
 	PaginatedTable,
 	TooltipTypeMap,
 } from '@acpaas-ui/react-editorial-components';
-import { SiteModel, UpdateSitePayload } from '@redactie/sites-module';
+import { SiteListModel, UpdateSitePayload } from '@redactie/sites-module';
 import {
 	AlertContainer,
-	LoadingState,
 	OrderBy,
 	parseOrderByToString,
 	parseStringToOrderBy,
 	TableColumn,
 	useAPIQueryParams,
 } from '@redactie/utils';
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useReducer, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 
 import SiteStatus from '../../../components/SiteStatus/SiteStatus';
@@ -26,11 +25,16 @@ import {
 	SiteContentTypesDetailRouteParams,
 } from '../../../contentTypes.types';
 
+import {
+	PaginatedSitesActionTypes,
+	paginatedSitesReducer,
+} from './ContentTypesDetailSites.reducer';
 import { SitesOverviewRowData } from './ContentTypesSites.types';
 
 const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => {
 	const [t] = useCoreTranslation();
 	const { contentTypeUuid } = useParams<SiteContentTypesDetailRouteParams>();
+	const unmountedRef = useRef(false);
 	const [query, setQuery] = useAPIQueryParams({
 		sort: {
 			defaultValue: 'data.name',
@@ -41,10 +45,34 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			type: 'string',
 		},
 	});
-	const [updateSiteId, setUpdateSiteId] = useState<string | null>(null);
 	const sitesActiveSorting = useMemo(() => parseStringToOrderBy(query.sort ?? ''), [query.sort]);
-	const [sitesPagination, refreshPage] = sitesConnector.hooks.useSitesPagination(query as any);
-	const sitesLoadingStates = sitesConnector.hooks.useSitesLoadingStates();
+	const { pagination, loading: sitesLoading } = sitesConnector.hooks.usePaginatedSites(
+		query as any
+	);
+	const paginatedSites = pagination?.data || [];
+	const [paginatedSitesView, dispatch] = useReducer(paginatedSitesReducer, []);
+	const siteIds = useMemo(() => {
+		if (paginatedSitesView.length === 0) {
+			return;
+		}
+		return paginatedSitesView.map(siteData => siteData.uuid);
+	}, [paginatedSitesView]);
+	const [, sitesDetailUIMap] = sitesConnector.hooks.useSitesUIStates(siteIds);
+
+	useEffect(() => {
+		if (paginatedSites.length > 0) {
+			dispatch({
+				type: PaginatedSitesActionTypes.SET,
+				payload: paginatedSites,
+			});
+		}
+	}, [paginatedSites]);
+
+	useEffect(() => {
+		return () => {
+			unmountedRef.current = true;
+		};
+	}, []);
 
 	const handlePageChange = (pageNumber: number): void => {
 		setQuery({
@@ -63,12 +91,12 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 		});
 	};
 
-	const getOgSite = (siteUuid: string): SiteModel | undefined => {
-		if (!sitesPagination) {
+	const getOgSite = (siteUuid: string): SiteListModel | undefined => {
+		if (!paginatedSitesView) {
 			return;
 		}
 
-		return sitesPagination.data?.find((s: SiteModel) => s.uuid === siteUuid);
+		return paginatedSitesView.find((s: SiteListModel) => s.uuid === siteUuid);
 	};
 
 	const setCTsOnSites = (siteUuid: string): void => {
@@ -86,7 +114,16 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			},
 		};
 
-		sitesConnector.sitesFacade.updateSite(payload).finally(() => refreshPage());
+		sitesConnector.sitesFacade.updateSite(payload).then(() => {
+			// Only update when component still exist
+			if (unmountedRef.current) {
+				return;
+			}
+			dispatch({
+				type: PaginatedSitesActionTypes.UPDATE,
+				payload,
+			});
+		});
 	};
 
 	const removeCTsFromSites = (siteUuid: string): void => {
@@ -106,17 +143,27 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			},
 		};
 
-		sitesConnector.sitesFacade.updateSite(payload).finally(() => refreshPage());
+		sitesConnector.sitesFacade.updateSite(payload).then(() => {
+			// Only update when component still exist
+			if (unmountedRef.current) {
+				return;
+			}
+			dispatch({
+				type: PaginatedSitesActionTypes.UPDATE,
+				payload,
+			});
+		});
 	};
 
 	const RenderSitesTable = (): React.ReactElement | null => {
-		const sitesRows: SitesOverviewRowData[] = (sitesPagination?.data || []).map(site => ({
+		const sitesRows: SitesOverviewRowData[] = paginatedSitesView.map(site => ({
 			id: site.uuid,
 			name: site.data.name,
 			description: site.data.description,
 			active: site.meta.active,
 			contentTypes: site.data?.contentTypes,
 			contentItems: site.meta?.contentItemsCount ?? 0,
+			isUpdating: !!sitesDetailUIMap && !!sitesDetailUIMap[site.uuid]?.isUpdating,
 		}));
 
 		const sitesColumns: TableColumn<SitesOverviewRowData>[] = [
@@ -163,19 +210,15 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 				disableSorting: true,
 				classList: ['u-text-right'],
 				width: '25%',
-				component(value, { contentItems, contentTypes, id }) {
+				component(value, { contentItems, contentTypes, id, isUpdating }) {
 					const isActive = (contentTypes || []).includes(contentType._id);
-					const loading =
-						sitesLoadingStates.isUpdating === LoadingState.Loading &&
-						updateSiteId === id;
 
 					if (isActive) {
 						return (
 							<Button
-								iconLeft={loading ? 'circle-o-notch fa-spin' : null}
-								disabled={loading || contentItems > 0}
+								iconLeft={isUpdating ? 'circle-o-notch fa-spin' : null}
+								disabled={isUpdating || contentItems > 0}
 								onClick={() => {
-									setUpdateSiteId(id);
 									removeCTsFromSites(id);
 								}}
 								type="danger"
@@ -188,10 +231,9 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 
 					return (
 						<Button
-							iconLeft={loading ? 'circle-o-notch fa-spin' : null}
-							disabled={loading}
+							iconLeft={isUpdating ? 'circle-o-notch fa-spin' : null}
+							disabled={isUpdating}
 							onClick={() => {
-								setUpdateSiteId(id);
 								setCTsOnSites(id);
 							}}
 							type="success"
@@ -225,15 +267,15 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 					tableClassName="a-table--fixed--sm"
 					columns={sitesColumns}
 					rows={sitesRows}
-					currentPage={sitesPagination?.currentPage}
+					currentPage={pagination?.currentPage}
 					itemsPerPage={query.pagesize}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
 					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 					loadDataMessage="Sites ophalen"
 					activeSorting={sitesActiveSorting}
-					totalValues={sitesPagination?.total ?? 0}
-					loading={sitesLoadingStates.isFetching === LoadingState.Loading}
+					totalValues={pagination?.total ?? 0}
+					loading={sitesLoading}
 				/>
 			</>
 		);

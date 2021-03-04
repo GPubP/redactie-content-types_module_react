@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, CardDescription, CardTitle } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
-import { SiteModel } from '@redactie/sites-module';
+import { SiteListModel } from '@redactie/sites-module';
 import { LeavePrompt, LoadingState, useDetectValueChangesWorker } from '@redactie/utils';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 
@@ -23,11 +23,9 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 	/**
 	 * Hooks
 	 */
-	const [siteData, setSiteData] = useState<SiteModel['data']>();
+	const [siteData, setSiteData] = useState<SiteListModel['data']>();
 	const [t] = useCoreTranslation();
 	const [loadingSites, sites] = useSites();
-	const { isUpdating } = sitesConnector.hooks.useSitesLoadingStates();
-	const isUpdatingSite = useMemo(() => isUpdating === LoadingState.Loading, [isUpdating]);
 	const isLoading = useMemo(() => loadingSites === LoadingState.Loading, [loadingSites]);
 	// Calculate on how many sites the content type is used
 	const amountUsedOnSites = useMemo(
@@ -37,7 +35,12 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 			}, 0),
 		[contentType._id, sites]
 	);
-	const site = useMemo(() => (sites || []).find(s => s.uuid === siteId) || null, [siteId, sites]);
+	const site: SiteListModel | null = useMemo(
+		() => (sites || []).find(s => s.uuid === siteId) || null,
+		[siteId, sites]
+	);
+	const [, siteUI] = sitesConnector.hooks.useSitesUIStates(site?.uuid);
+	const isUpdatingSite = !!siteUI?.isUpdating;
 	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
 		!isLoading,
 		siteData,

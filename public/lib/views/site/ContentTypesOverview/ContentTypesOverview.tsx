@@ -42,7 +42,7 @@ const ContentTypesOverview: React.FC = () => {
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [loadingContentTypes, contentTypes, meta] = useContentTypes();
 	const { siteId } = useSiteContext();
-	const [loadingSite, site] = sitesConnector.hooks.useSite(siteId);
+	const [site, siteUI] = sitesConnector.hooks.useSite(siteId);
 	const [
 		mySecurityRightsLoadingState,
 		mySecurityrights,
@@ -52,7 +52,7 @@ const ContentTypesOverview: React.FC = () => {
 	useEffect(() => {
 		if (
 			loadingContentTypes !== LoadingState.Loading &&
-			loadingSite !== LoadingState.Loading &&
+			!siteUI?.isFetching &&
 			mySecurityRightsLoadingState !== LoadingState.Loading &&
 			contentTypes &&
 			site &&
@@ -63,12 +63,12 @@ const ContentTypesOverview: React.FC = () => {
 		}
 	}, [
 		loadingContentTypes,
-		loadingSite,
 		meta,
 		contentTypes,
 		site,
 		mySecurityrights,
 		mySecurityRightsLoadingState,
+		siteUI,
 	]);
 
 	useEffect(() => {

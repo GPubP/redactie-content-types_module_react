@@ -1,4 +1,4 @@
-import { SearchParams } from '@redactie/sites-module/dist/public/lib/services/api';
+import { SearchParams } from '@redactie/utils';
 import { Observable } from 'rxjs';
 
 import { showAlert } from '../../helpers';
