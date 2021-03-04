@@ -8,7 +8,10 @@ import {
 	DataLoader,
 	LoadingState,
 	OrderBy,
+	parseObjToOrderBy,
+	parseOrderByToObj,
 	SearchParams,
+	useAPIQueryParams,
 	useNavigate,
 	useSiteContext,
 } from '@redactie/utils';
@@ -16,10 +19,13 @@ import React, { ReactElement, useEffect, useState } from 'react';
 
 import rolesRightsConnector from '../../../connectors/rolesRights';
 import sitesConnector from '../../../connectors/sites';
-import { useCoreTranslation } from '../../../connectors/translations';
-import { MODULE_PATHS } from '../../../contentTypes.const';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
+import {
+	DEFAULT_OVERVIEW_QUERY_PARAMS,
+	MODULE_PATHS,
+	OVERVIEW_QUERY_PARAMS_CONFIG,
+} from '../../../contentTypes.const';
 import { useContentTypes, useRoutesBreadcrumbs } from '../../../hooks';
-import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from '../../../services/contentTypes';
 import { ContentTypeModel, contentTypesFacade } from '../../../store/contentTypes';
 
 import { CONTENT_TYPE_OVERVIEW_COLUMNS } from './ContentTypesOverview.const';
@@ -29,6 +35,7 @@ const ContentTypesOverview: React.FC = () => {
 	/**
 	 * Hooks
 	 */
+
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const { navigate } = useNavigate();
 	const [t] = useCoreTranslation();
@@ -40,11 +47,7 @@ const ContentTypesOverview: React.FC = () => {
 		mySecurityRightsLoadingState,
 		mySecurityrights,
 	] = rolesRightsConnector.api.hooks.useMySecurityRightsForTenant(true);
-	const [contentTypesSearchParams, setContentTypesSearchParams] = useState<SearchParams>({
-		...DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
-		site: siteId,
-	});
-	const [activeSorting, setActiveSorting] = useState<OrderBy>();
+	const [query, setQuery] = useAPIQueryParams(OVERVIEW_QUERY_PARAMS_CONFIG, false);
 
 	useEffect(() => {
 		if (
@@ -69,29 +72,32 @@ const ContentTypesOverview: React.FC = () => {
 	]);
 
 	useEffect(() => {
-		contentTypesFacade.getContentTypes(contentTypesSearchParams);
-	}, [contentTypesSearchParams]);
+		contentTypesFacade.getContentTypes(query as SearchParams);
+	}, [query]);
 
 	/**
 	 * Functions
 	 */
 
 	const handlePageChange = (page: number): void => {
-		setContentTypesSearchParams({
-			...contentTypesSearchParams,
-			skip: (page - 1) * DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit,
+		setQuery({
+			skip: (page - 1) * DEFAULT_OVERVIEW_QUERY_PARAMS.limit,
 		});
 	};
 
 	const handleOrderBy = (orderBy: OrderBy): void => {
-		setContentTypesSearchParams({
-			...contentTypesSearchParams,
-			sort: `meta.${orderBy.key}`,
-			direction: orderBy.order === 'desc' ? 1 : -1,
-		});
-		setActiveSorting(orderBy);
+		setQuery(
+			parseOrderByToObj({
+				...orderBy,
+				key: `meta.${orderBy.key}`,
+			})
+		);
 	};
 
+	const activeSorting = parseObjToOrderBy({
+		sort: query.sort ? query.sort.split('.')[1] : '',
+		direction: query.direction ?? 1,
+	});
 	const siteIncludesContentType = (contentType: ContentTypeModel): boolean =>
 		site?.data.contentTypes.includes(contentType._id) || false;
 
@@ -124,15 +130,15 @@ const ContentTypesOverview: React.FC = () => {
 					className="u-margin-top"
 					columns={CONTENT_TYPE_OVERVIEW_COLUMNS(t, mySecurityrights)}
 					rows={contentTypesRows}
-					currentPage={
-						Math.ceil(meta.skip / DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit) + 1
-					}
-					itemsPerPage={DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit}
+					currentPage={Math.ceil(meta.skip / DEFAULT_OVERVIEW_QUERY_PARAMS.limit) + 1}
+					itemsPerPage={DEFAULT_OVERVIEW_QUERY_PARAMS.limit}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
 					activeSorting={activeSorting}
 					totalValues={meta.total || 0}
 					loading={loadingContentTypes === LoadingState.Loading}
+					loadDataMessage="Content types ophalen"
+					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 				/>
 			</>
 		);
