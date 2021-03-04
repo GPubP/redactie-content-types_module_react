@@ -2,7 +2,6 @@ import { Card } from '@acpaas-ui/react-components';
 import { Table } from '@acpaas-ui/react-editorial-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
 import { DataLoader, LoadingState } from '@redactie/utils';
-import classNames from 'classnames/bind';
 import { useFormikContext } from 'formik';
 import { __, compose, equals, pathOr } from 'ramda';
 import React, { ReactElement, useContext, useEffect, useMemo, useState } from 'react';
@@ -22,10 +21,7 @@ import { FormCTNewCCProps } from '../../forms/FormCTNewCC/FormCTNewCC.types';
 
 import { DYNAMIC_CC_COLUMNS } from './DynamicFieldSettings.const';
 import DynamicFieldSettingsContext from './DynamicFieldSettings.context';
-import styles from './DynamicFieldSettings.module.scss';
 import { DynamicFieldCCRow, DynamicFieldFormikContextValues } from './DynamicFieldSettings.types';
-
-const cx = classNames.bind(styles);
 
 const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 	fieldSchema,
