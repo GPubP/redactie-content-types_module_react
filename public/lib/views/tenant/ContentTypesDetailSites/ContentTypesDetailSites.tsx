@@ -4,13 +4,13 @@ import {
 	PaginatedTable,
 	TooltipTypeMap,
 } from '@acpaas-ui/react-editorial-components';
-import { SearchParams } from '@redactie/roles-rights-module/dist/public/lib/services/api';
 import { SiteListModel, UpdateSitePayload } from '@redactie/sites-module';
 import {
 	AlertContainer,
 	OrderBy,
 	parseOrderByToString,
 	parseStringToOrderBy,
+	SearchParams,
 	TableColumn,
 	useAPIQueryParams,
 } from '@redactie/utils';
@@ -47,7 +47,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 	});
 	const sitesActiveSorting = useMemo(() => parseStringToOrderBy(query.sort ?? ''), [query.sort]);
 	const { pagination, loading: sitesLoading } = sitesConnector.hooks.usePaginatedSites(
-		query as any
+		query as SearchParams
 	);
 	const paginatedSites = pagination?.data || [];
 	const [paginatedSitesView, dispatch] = useReducer(paginatedSitesReducer, []);
