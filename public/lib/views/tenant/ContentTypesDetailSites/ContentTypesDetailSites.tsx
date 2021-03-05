@@ -10,6 +10,7 @@ import {
 	OrderBy,
 	parseOrderByToString,
 	parseStringToOrderBy,
+	SearchParams,
 	TableColumn,
 	useAPIQueryParams,
 } from '@redactie/utils';
@@ -37,7 +38,6 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 	const unmountedRef = useRef(false);
 	const [query, setQuery] = useAPIQueryParams({
 		sort: {
-			defaultValue: 'data.name',
 			type: 'string',
 		},
 		'content-type': {
@@ -47,7 +47,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 	});
 	const sitesActiveSorting = useMemo(() => parseStringToOrderBy(query.sort ?? ''), [query.sort]);
 	const { pagination, loading: sitesLoading } = sitesConnector.hooks.usePaginatedSites(
-		query as any
+		query as SearchParams
 	);
 	const paginatedSites = pagination?.data || [];
 	const [paginatedSitesView, dispatch] = useReducer(paginatedSitesReducer, []);
