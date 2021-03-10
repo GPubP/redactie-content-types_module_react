@@ -72,7 +72,7 @@ const ContentTypesOverview: React.FC = () => {
 	]);
 
 	useEffect(() => {
-		contentTypesFacade.getContentTypes(query as SearchParams);
+		contentTypesFacade.getSiteTenantContentTypes(siteId, query as SearchParams);
 	}, [query]);
 
 	/**
