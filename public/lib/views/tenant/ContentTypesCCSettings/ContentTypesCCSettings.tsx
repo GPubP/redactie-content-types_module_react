@@ -14,6 +14,30 @@ const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
 }) => {
 	const initialFormValues = useMemo(() => generateCCFormState(CTField), [CTField]);
 
+	const onChange = (data: any): void => {
+		onSubmit({
+			...data,
+			// Handle multiple in validation object
+			validation: {
+				...data.validation,
+				type:
+					CTField.preset && data.generalConfig.max > 1
+						? 'array'
+						: data.validation?.type || undefined,
+				...(data.generalConfig.max > 1
+					? {
+							max: data.generalConfig.max,
+							min: data.generalConfig.min || 0,
+					  }
+					: {
+							// unset min/max when going from multiple to single
+							min: undefined,
+							max: undefined,
+					  }),
+			},
+		});
+	};
+
 	/**
 	 * Render
 	 */
@@ -24,7 +48,7 @@ const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
 				initialValues={initialFormValues}
 				fieldTypeData={fieldType.data}
 				formikRef={formikRef}
-				onSubmit={onSubmit}
+				onSubmit={onChange}
 				isUpdate={!!onDelete}
 			/>
 			{onDelete && (
