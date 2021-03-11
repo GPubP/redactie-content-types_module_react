@@ -6,6 +6,7 @@ import {
 	CONTENT_TYPES_PREFIX_URL,
 	CONTENT_TYPES_PROXY_PREFIX_URL,
 	DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
+	SITE_CONTENT_TYPES_PROXY_PREFIX_URL,
 } from './contentTypes.service.const';
 import {
 	ContentTypeCreateRequest,
@@ -53,6 +54,26 @@ export class ContentTypesApiService {
 
 			if (!response) {
 				throw new Error('Failed to get content-types');
+			}
+
+			return response;
+		} catch (err) {
+			console.error(err);
+			return null;
+		}
+	}
+
+	public async getSiteTenantContentTypes(
+		siteId: string,
+		searchParams: SearchParams = DEFAULT_CONTENT_TYPES_SEARCH_PARAMS
+	): Promise<ContentTypesResponse | null> {
+		try {
+			const response: ContentTypesResponse = await api
+				.get(`${SITE_CONTENT_TYPES_PROXY_PREFIX_URL}/${siteId}/tenant-content-types?${parseSearchParams(searchParams)}`)
+				.json();
+
+			if (!response) {
+				throw new Error('Failed to get site tenant content-types');
 			}
 
 			return response;

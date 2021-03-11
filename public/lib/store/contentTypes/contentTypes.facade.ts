@@ -75,6 +75,34 @@ export class ContentTypesFacade extends BaseEntityFacade<
 			});
 	}
 
+	public getSiteTenantContentTypes(siteId: string, payload: SearchParams): void {
+		const { isFetching } = this.query.getValue();
+		if (isFetching) {
+			return;
+		}
+
+		this.store.setIsFetching(true);
+
+		this.service
+			.getSiteTenantContentTypes(siteId, payload)
+			.then(response => {
+				if (response) {
+					this.store.set(response.data);
+					this.store.update({
+						error: null,
+						isFetching: false,
+						meta: response.paging,
+					});
+				}
+			})
+			.catch(error => {
+				this.store.update({
+					error,
+					isFetching: false,
+				});
+			});
+	}
+
 	public getContentType(uuid: string): void {
 		const { isFetchingOne, contentType } = this.query.getValue();
 
