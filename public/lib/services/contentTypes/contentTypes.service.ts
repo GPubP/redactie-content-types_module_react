@@ -96,6 +96,19 @@ export class ContentTypesApiService {
 		}
 	}
 
+	public async getSiteContentType(siteUuid: string, contentTypeUuid: string): Promise<ContentTypeDetailResponse | null> {
+		try {
+			const response: ContentTypeDetailResponse = await api
+				.get(`${SITE_CONTENT_TYPES_PROXY_PREFIX_URL}/${siteUuid}/tenant-content-types/${contentTypeUuid}`)
+				.json();
+
+			return response;
+		} catch (err) {
+			console.error(err);
+			return null;
+		}
+	}
+
 	public async updateContentType(
 		contentType: ContentTypeUpdateRequest
 	): Promise<ContentTypeResponse | null> {
