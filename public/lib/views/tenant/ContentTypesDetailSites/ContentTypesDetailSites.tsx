@@ -271,11 +271,12 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 					itemsPerPage={query.pagesize}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
-					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
+					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-ITEMS'])}
 					loadDataMessage="Sites ophalen"
 					activeSorting={sitesActiveSorting}
 					totalValues={pagination?.total ?? 0}
 					loading={sitesLoading}
+					hideResultsMessage
 				/>
 			</>
 		);
