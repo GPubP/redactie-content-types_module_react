@@ -75,7 +75,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 
 	useEffect(() => {
 		if (contentTypeUuid) {
-			contentTypesFacade.getContentType(contentTypeUuid);
+			contentTypesFacade.getSiteContentType(siteId, contentTypeUuid);
 		}
 	}, [contentTypeUuid]);
 
