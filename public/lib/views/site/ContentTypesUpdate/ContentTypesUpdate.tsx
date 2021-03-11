@@ -17,6 +17,7 @@ import {
 import React, { FC, MouseEvent, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import rolesRightsConnector from '../../../connectors/rolesRights';
 import { useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesRouteParams, ContentTypesRouteProps } from '../../../contentTypes.types';
@@ -64,20 +65,40 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		[]
 	);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
+	const [
+		mySecurityRightsLoadingState,
+		mySecurityrights,
+	] = rolesRightsConnector.api.hooks.useMySecurityRightsForSite({
+		siteUuid: siteId,
+		onlyKeys: true,
+	});
+	const canUpdate = useMemo(
+		() =>
+			rolesRightsConnector.api.helpers.checkSecurityRights(
+				mySecurityrights,
+				[rolesRightsConnector.securityRights.update],
+				false
+			),
+		[mySecurityrights]
+	);
 
 	useEffect(() => {
-		if (contentTypeLoadingState !== LoadingState.Loading && contentType) {
+		if (
+			contentTypeLoadingState !== LoadingState.Loading &&
+			mySecurityRightsLoadingState !== LoadingState.Loading &&
+			contentType
+		) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [contentTypeLoadingState, contentType]);
+	}, [contentTypeLoadingState, contentType, mySecurityRightsLoadingState]);
 
 	useEffect(() => {
 		if (contentTypeUuid) {
 			contentTypesFacade.getSiteContentType(siteId, contentTypeUuid);
 		}
-	}, [contentTypeUuid]);
+	}, [contentTypeUuid, siteId]);
 
 	/**
 	 * Methods
@@ -103,6 +124,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		const extraOptions = {
 			contentType,
 			onCancel: navigateToOverview,
+			canUpdate: canUpdate,
 		};
 
 		return (
