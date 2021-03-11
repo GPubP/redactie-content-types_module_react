@@ -186,6 +186,10 @@ export class PresetsFacade {
 		this.detailStore.reset();
 	}
 
+	public updateDetail(presetId: string, preset: PresetDetailModel): void {
+		this.detailStore.update(presetId, preset);
+	}
+
 	public createPreset(
 		payload: CreatePresetPayload,
 		options: CreatePresetPayloadOptions = {
