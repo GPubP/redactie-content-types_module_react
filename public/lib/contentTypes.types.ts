@@ -87,6 +87,7 @@ export interface ContentTypesDetailRouteProps<Params = ContentTypesDetailRoutePa
 	) => void;
 	readonly activeField: ContentTypeFieldDetailModel | null;
 	readonly fieldsHaveChanged: boolean;
+	readonly canUpdate?: boolean;
 }
 
 export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {

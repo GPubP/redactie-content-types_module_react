@@ -15,7 +15,7 @@ import { ContentTypesSelect, DynamicFieldSettings } from './lib/components/Field
 import formRendererConnector from './lib/connectors/formRenderer';
 import rolesRightsConnector from './lib/connectors/rolesRights';
 import sitesConnector from './lib/connectors/sites';
-import { DYNAMIC_FIELD_SETTINGS_NAME, MODULE_PATHS } from './lib/contentTypes.const';
+import { DYNAMIC_FIELD_SETTINGS_NAME, MODULE_PATHS, SITE_PARAM } from './lib/contentTypes.const';
 import { ContentTypesModuleProps } from './lib/contentTypes.types';
 import { getPageBadges, getPageTitle, TitleTypes } from './lib/helpers';
 import { fieldTypesFacade } from './lib/store/fieldTypes';
@@ -349,11 +349,21 @@ sitesConnector.registerRoutes({
 	breadcrumb: false,
 	component: SiteContentTypesComponent,
 	redirect: MODULE_PATHS.site.overview,
+	guards: [
+		rolesRightsConnector.api.guards.securityRightsSiteGuard(SITE_PARAM, [
+			rolesRightsConnector.securityRights.read,
+		]),
+	],
 	navigation: {
 		renderContext: 'site',
 		context: 'site',
 		label: 'Structuur',
 		order: 1,
+		canShown: [
+			rolesRightsConnector.api.canShowns.securityRightsSiteCanShown(SITE_PARAM, [
+				rolesRightsConnector.securityRights.read,
+			]),
+		],
 	},
 	routes: [
 		{

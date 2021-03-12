@@ -17,6 +17,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 	contentType,
 	match,
 	onCancel,
+	canUpdate,
 }) => {
 	const { siteId } = match.params;
 
@@ -114,33 +115,38 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 							  } site(s)`
 							: 'Deze content type is niet actief binnen deze site.'}
 					</CardDescription>
-					<Button
-						onClick={onActiveToggle}
-						className="u-margin-top u-margin-right"
-						type="primary"
-					>
-						{active ? t('BUTTON_DEACTIVATE') : t('BUTTON_ACTIVATE')}
-					</Button>
+					{canUpdate !== false && (
+						<Button
+							onClick={onActiveToggle}
+							className="u-margin-top u-margin-right"
+							type="primary"
+						>
+							{active ? t('BUTTON_DEACTIVATE') : t('BUTTON_ACTIVATE')}
+						</Button>
+					)}
 				</CardBody>
 			</Card>
-			<ActionBar className="o-action-bar--fixed" isOpen>
-				<ActionBarContentSection>
-					<div className="u-wrapper row end-xs">
-						<Button onClick={onCancel} negative>
-							{t(CORE_TRANSLATIONS['BUTTON_CANCEL'])}
-						</Button>
-						<Button
-							iconLeft={isUpdatingSite ? 'circle-o-notch fa-spin' : null}
-							disabled={isLoading || isUpdatingSite || !hasChanges}
-							className="u-margin-left-xs"
-							onClick={onSave}
-							type="success"
-						>
-							{t(CORE_TRANSLATIONS['BUTTON_SAVE'])}
-						</Button>
-					</div>
-				</ActionBarContentSection>
-			</ActionBar>
+			{canUpdate !== false && (
+				<ActionBar className="o-action-bar--fixed" isOpen>
+					<ActionBarContentSection>
+						<div className="u-wrapper row end-xs">
+							<Button onClick={onCancel} negative>
+								{t(CORE_TRANSLATIONS['BUTTON_CANCEL'])}
+							</Button>
+
+							<Button
+								iconLeft={isUpdatingSite ? 'circle-o-notch fa-spin' : null}
+								disabled={isLoading || isUpdatingSite || !hasChanges}
+								className="u-margin-left-xs"
+								onClick={onSave}
+								type="success"
+							>
+								{t(CORE_TRANSLATIONS['BUTTON_SAVE'])}
+							</Button>
+						</div>
+					</ActionBarContentSection>
+				</ActionBar>
+			)}
 			<LeavePrompt when={hasChanges} onConfirm={onSave} />
 		</>
 	);
