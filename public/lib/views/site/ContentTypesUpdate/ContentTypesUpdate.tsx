@@ -124,7 +124,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		const extraOptions = {
 			contentType,
 			onCancel: navigateToOverview,
-			canUpdate: canUpdate,
+			canUpdate,
 		};
 
 		return (
