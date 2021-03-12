@@ -370,13 +370,6 @@ sitesConnector.registerRoutes({
 			path: MODULE_PATHS.site.overview,
 			breadcrumb: false,
 			component: SiteContentTypesOverview,
-			guardOptions: {
-				guards: [
-					rolesRightsConnector.api.guards.securityRightsSiteGuard(SITE_PARAM, [
-						rolesRightsConnector.securityRights.read,
-					]),
-				],
-			},
 			navigation: {
 				context: 'site',
 				label: 'Content types',
@@ -389,13 +382,6 @@ sitesConnector.registerRoutes({
 			breadcrumb: false,
 			component: SiteContentTypesUpdate,
 			redirect: MODULE_PATHS.site.detailSettings,
-			guardOptions: {
-				guards: [
-					rolesRightsConnector.api.guards.securityRightsSiteGuard(SITE_PARAM, [
-						rolesRightsConnector.securityRights.read,
-					]),
-				],
-			},
 			routes: [
 				{
 					path: MODULE_PATHS.site.detailSettings,
