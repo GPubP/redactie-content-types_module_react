@@ -73,7 +73,7 @@ const ContentTypesOverview: React.FC = () => {
 
 	useEffect(() => {
 		contentTypesFacade.getSiteTenantContentTypes(siteId, query as SearchParams);
-	}, [query]);
+	}, [query, siteId]);
 
 	/**
 	 * Functions
@@ -138,7 +138,8 @@ const ContentTypesOverview: React.FC = () => {
 					totalValues={meta.total || 0}
 					loading={loadingContentTypes === LoadingState.Loading}
 					loadDataMessage="Content types ophalen"
-					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
+					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-ITEMS'])}
+					hideResultsMessage
 				/>
 			</>
 		);
