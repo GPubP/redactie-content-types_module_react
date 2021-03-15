@@ -8,17 +8,14 @@ import { CTSettingsForm, SiteStatus } from '../../../components';
 import sitesConnector from '../../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import {
-	ContentTypesDetailRouteProps,
+	ContentTypesSiteDetailRoutePropsParams,
 	SiteContentTypesDetailRouteParams,
 } from '../../../contentTypes.types';
 import { useSites } from '../../../hooks';
 
-const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetailRouteParams>> = ({
-	contentType,
-	match,
-	onCancel,
-	canUpdate,
-}) => {
+const ContentTypeSettings: FC<ContentTypesSiteDetailRoutePropsParams<
+	SiteContentTypesDetailRouteParams
+>> = ({ contentType, match, onCancel, canUpdate }) => {
 	const { siteId } = match.params;
 
 	/**
@@ -96,7 +93,6 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 	/**
 	 * Render
 	 */
-
 	return (
 		<>
 			<CTSettingsForm
@@ -115,7 +111,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 							  } site(s)`
 							: 'Deze content type is niet actief binnen deze site.'}
 					</CardDescription>
-					{canUpdate !== false && (
+					{canUpdate && (
 						<Button
 							onClick={onActiveToggle}
 							className="u-margin-top u-margin-right"
@@ -126,7 +122,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps<SiteContentTypesDetai
 					)}
 				</CardBody>
 			</Card>
-			{canUpdate !== false && (
+			{canUpdate && (
 				<ActionBar className="o-action-bar--fixed" isOpen>
 					<ActionBarContentSection>
 						<div className="u-wrapper row end-xs">
