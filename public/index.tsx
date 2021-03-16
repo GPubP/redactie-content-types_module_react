@@ -11,7 +11,12 @@ import {
 	ContentTypeCCBreadcrumb,
 	DynamicFieldBreadcrumb,
 } from './lib/components/Breadcrumbs';
-import { ContentTypesSelect, DynamicFieldSettings } from './lib/components/Fields';
+import {
+	ContentTypesSelect,
+	DynamicFieldSettings,
+	TextareaWithStyle,
+	TextWithStyle,
+} from './lib/components/Fields';
 import formRendererConnector from './lib/connectors/formRenderer';
 import rolesRightsConnector from './lib/connectors/rolesRights';
 import sitesConnector from './lib/connectors/sites';
@@ -407,6 +412,16 @@ formRendererConnector.api.fieldRegistry.add([
 		name: 'contentTypesSelect',
 		module: 'content-types',
 		component: ContentTypesSelect,
+	},
+	{
+		name: 'textWithStyle',
+		module: 'content-types',
+		component: TextWithStyle,
+	},
+	{
+		name: 'textareaWithStyle',
+		module: 'content-types',
+		component: TextareaWithStyle,
 	},
 ]);
 
