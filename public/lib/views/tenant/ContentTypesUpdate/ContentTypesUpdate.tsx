@@ -4,6 +4,7 @@ import {
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import {
+	AlertContainer,
 	ContextHeaderBadge,
 	ContextHeaderTabLinkProps,
 	DataLoader,
@@ -20,6 +21,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { useCoreTranslation } from '../../../connectors/translations';
 import {
+	ALERT_CONTAINER_IDS,
 	CONTENT_DETAIL_TABS,
 	CONTENT_TYPE_DETAIL_TAB_MAP,
 	MODULE_PATHS,
@@ -272,6 +274,10 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>
+				<AlertContainer
+					toastClassName="u-margin-bottom"
+					containerId={ALERT_CONTAINER_IDS.update}
+				/>
 				<DataLoader loadingState={initialLoading} render={renderChildRoutes} />
 			</Container>
 		</>

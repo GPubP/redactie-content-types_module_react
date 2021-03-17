@@ -1,7 +1,6 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import {
-	alertService,
 	DataLoader,
 	LeavePrompt,
 	LoadingState,
@@ -17,9 +16,14 @@ import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'r
 import { NavLink, useLocation } from 'react-router-dom';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
-import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
+import { MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
-import { filterCompartments, generateFieldFromType, validateCompartments } from '../../../helpers';
+import {
+	filterCompartments,
+	generateFieldFromType,
+	showCompartmentErrorAlert,
+	validateCompartments,
+} from '../../../helpers';
 import {
 	useActiveField,
 	useActiveFieldType,
@@ -200,13 +204,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			contentTypesFacade.addField(activeField);
 			contentTypesFacade.clearActiveField();
 		} else {
-			alertService.danger(
-				{
-					title: 'Er zijn nog fouten',
-					message: 'Lorem ipsum',
-				},
-				{ containerId: ALERT_CONTAINER_IDS.update }
-			);
+			showCompartmentErrorAlert();
 		}
 
 		setHasSubmit(true);

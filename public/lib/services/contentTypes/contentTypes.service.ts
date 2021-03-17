@@ -69,7 +69,11 @@ export class ContentTypesApiService {
 	): Promise<ContentTypesResponse | null> {
 		try {
 			const response: ContentTypesResponse = await api
-				.get(`${SITE_CONTENT_TYPES_PROXY_PREFIX_URL}/${siteId}/tenant-content-types?${parseSearchParams(searchParams)}`)
+				.get(
+					`${SITE_CONTENT_TYPES_PROXY_PREFIX_URL}/${siteId}/tenant-content-types?${parseSearchParams(
+						searchParams
+					)}`
+				)
 				.json();
 
 			if (!response) {
@@ -96,10 +100,15 @@ export class ContentTypesApiService {
 		}
 	}
 
-	public async getSiteContentType(siteUuid: string, contentTypeUuid: string): Promise<ContentTypeDetailResponse | null> {
+	public async getSiteContentType(
+		siteUuid: string,
+		contentTypeUuid: string
+	): Promise<ContentTypeDetailResponse | null> {
 		try {
 			const response: ContentTypeDetailResponse = await api
-				.get(`${SITE_CONTENT_TYPES_PROXY_PREFIX_URL}/${siteUuid}/tenant-content-types/${contentTypeUuid}`)
+				.get(
+					`${SITE_CONTENT_TYPES_PROXY_PREFIX_URL}/${siteUuid}/tenant-content-types/${contentTypeUuid}`
+				)
 				.json();
 
 			return response;
