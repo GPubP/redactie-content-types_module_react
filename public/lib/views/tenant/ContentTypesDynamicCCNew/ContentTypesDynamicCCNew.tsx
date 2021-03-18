@@ -77,13 +77,13 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		BFF_MODULE_PUBLIC_PATH
 	);
 	const [
-		{ compartments, active: activeCompartment },
+		{ compartments, filteredCompartments, active: activeCompartment },
 		register,
 		activate,
 		validate,
 		setVisibility,
 	] = useCompartments();
-	const navListItems = compartments.map(c => ({
+	const navListItems = filteredCompartments.map(c => ({
 		activeClassName: 'is-active',
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
