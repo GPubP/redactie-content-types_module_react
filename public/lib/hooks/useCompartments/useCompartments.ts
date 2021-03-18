@@ -1,6 +1,6 @@
-import { ID } from '@datorama/akita';
 import { useObservable } from '@redactie/utils';
 
+import { filterCompartments } from '../../helpers/compartments';
 import {
 	CompartmentModel,
 	CompartmentRegisterOptions,
@@ -9,29 +9,46 @@ import {
 
 interface CompartmentState {
 	compartments: CompartmentModel[];
+	filteredCompartments: CompartmentModel[];
 	active: CompartmentModel | undefined;
 }
 
 const useCompartments = (): [
 	CompartmentState,
-	(compartments: CompartmentModel[], options: CompartmentRegisterOptions) => void,
-	(names: ID) => void,
-	(name: string, isValid: boolean) => void
+	(compartments: CompartmentModel[], options: CompartmentRegisterOptions, meta?: any) => void,
+	(name: string) => void,
+	(name: string, isValid: boolean) => void,
+	(name: string, isVisible: boolean) => void
 ] => {
 	const register = (
 		compartments: CompartmentModel[] | CompartmentModel,
-		options: CompartmentRegisterOptions
+		options: CompartmentRegisterOptions,
+		meta?: any
 	): void => {
 		compartmentsFacade.register(compartments, options);
+		filterCompartments(
+			Array.isArray(compartments) ? compartments : [compartments],
+			meta,
+			compartmentsFacade.setIsVisible.bind(compartmentsFacade)
+		);
 	};
-	const activate = (name: ID): void => compartmentsFacade.setActiveByNamOrSlug(name);
+	const activate = (name: string): void => compartmentsFacade.setActiveByNamOrSlug(name);
 	const validate = (name: string, isValid: boolean): void =>
 		compartmentsFacade.setValid(name, isValid);
+	const setIsVisible = (name: string, isVisible: boolean): void =>
+		compartmentsFacade.setIsVisible(name, isVisible);
 
 	const compartments = useObservable(compartmentsFacade.all$, []);
+	const filteredCompartments = useObservable(compartmentsFacade.allVisible$, []);
 	const active = useObservable(compartmentsFacade.active$);
 
-	return [{ compartments, active }, register, activate, validate];
+	return [
+		{ compartments, filteredCompartments, active },
+		register,
+		activate,
+		validate,
+		setIsVisible,
+	];
 };
 
 export default useCompartments;

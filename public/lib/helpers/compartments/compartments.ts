@@ -4,37 +4,62 @@ import { CompartmentModel } from '../../store/ui/compartments';
 
 export function filterCompartments(
 	compartments: CompartmentModel[],
-	meta: any
-): CompartmentModel[] {
-	return compartments.reduce<CompartmentModel[]>((acc, { filter, ...rest }) => {
-		if (filter && !filter(meta)) {
-			return acc;
-		}
+	meta: any,
+	setVisibility: (compartmentId: string, isVisible: boolean) => void
+): void {
+	const compartmentsState = compartments.reduce((acc, compartment) => {
+		acc[compartment.name] = {
+			isValid: compartment.isValid ?? true,
+		};
+		return acc;
+	}, {} as Record<string, { isValid: boolean }>);
 
-		return acc.concat([rest]);
-	}, []);
+	compartments.forEach(compartment => {
+		if (typeof compartment.filter === 'function') {
+			const isVisible = compartment.filter(meta, compartmentsState);
+			setVisibility(compartment.name, isVisible);
+		}
+	});
 }
 
 export function validateCompartments(
 	compartments: CompartmentModel[],
 	values: any,
 	setValidity: (compartmentId: string, isValid: boolean) => void,
+	setVisibility: (compartmentId: string, isVisible: boolean) => void,
+	meta: FieldType,
 	fieldType?: FieldType,
 	preset?: Preset
 ): boolean {
-	// Create array of booleans from compartment validation
-	const validatedCompartments: boolean[] = compartments.map(compartment => {
-		if (compartment.validate) {
-			const isValid = compartment.validate(values, fieldType, preset);
-			setValidity(compartment.name, isValid);
+	const validatedCompartments: Record<string, { isValid: boolean }> = compartments.reduce(
+		(acc, compartment) => {
+			if (compartment.validate) {
+				const isValid = compartment.validate(values, fieldType, preset);
+				setValidity(compartment.name, isValid);
+				acc[compartment.name] = {
+					isValid,
+				};
+				return acc;
+			}
 
-			return isValid;
+			acc[compartment.name] = {
+				isValid: true,
+			};
+			return acc;
+		},
+		{} as Record<string, { isValid: boolean }>
+	);
+
+	// Run filters
+	compartments.forEach(compartment => {
+		if (typeof compartment.filter === 'function') {
+			const isVisible = compartment.filter(meta, validatedCompartments);
+			setVisibility(compartment.name, isVisible);
 		}
-
-		// Compartment is valid if no validate function is given
-		return true;
 	});
 
 	// Return false if one of the compartments is invalid
-	return !validatedCompartments.includes(false);
+	return !Object.keys(validatedCompartments)
+		.map(compartmentName => validatedCompartments[compartmentName].isValid)
+		.includes(false);
 }

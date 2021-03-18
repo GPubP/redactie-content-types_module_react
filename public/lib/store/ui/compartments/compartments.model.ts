@@ -18,10 +18,11 @@ export interface CompartmentModel {
 	name: string;
 	label: string;
 	getDescription?: (contentItem: FieldTypeData | undefined) => string | undefined;
-	filter?: (meta: FieldType) => boolean;
+	filter?: (meta: FieldType, compartments: Record<string, { isValid: boolean }>) => boolean;
 	slug?: string;
 	type: CompartmentType;
 	isValid?: boolean;
+	isVisible?: boolean;
 	validate?: (values: ContentTypeFieldDetail, fieldType?: FieldType, preset?: Preset) => boolean;
 }
 

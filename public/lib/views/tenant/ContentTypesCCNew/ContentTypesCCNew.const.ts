@@ -21,6 +21,7 @@ export const CC_NEW_COMPARTMENTS: CompartmentModel[] = [
 		label: 'Configuratie',
 		slug: MODULE_PATHS.detailCCNewConfig,
 		type: CompartmentType.INTERNAL,
+		isValid: false,
 		filter: ctField => !!ctField?.data?.formSchema?.fields?.length,
 		validate: configurationCompartmentValidator,
 	},
@@ -38,7 +39,8 @@ export const CC_NEW_COMPARTMENTS: CompartmentModel[] = [
 		slug: MODULE_PATHS.detailCCNewDefaults,
 		type: CompartmentType.INTERNAL,
 		validate: defaultValueCompartmentValidator,
-		filter: ctField => !!ctField?.data?.generalConfig?.allowDefault,
+		filter: (ctField, compartments) =>
+			compartments.configuration.isValid && !!ctField?.data?.generalConfig?.allowDefault,
 	},
 ];
 

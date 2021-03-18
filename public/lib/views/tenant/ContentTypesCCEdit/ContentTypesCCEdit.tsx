@@ -18,11 +18,7 @@ import { NavLink } from 'react-router-dom';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
-import {
-	filterCompartments,
-	showCompartmentErrorAlert,
-	validateCompartments,
-} from '../../../helpers';
+import { showCompartmentErrorAlert, validateCompartments } from '../../../helpers';
 import {
 	useActiveField,
 	useActiveFieldType,
@@ -69,12 +65,14 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		BFF_MODULE_PUBLIC_PATH
 	);
 	const [
-		{ compartments, active: activeCompartment },
+		{ compartments, filteredCompartments, active: activeCompartment },
 		register,
 		activate,
 		validate,
+		setVisibility,
 	] = useCompartments();
-	const navListItems = compartments.map(c => ({
+
+	const navListItems = filteredCompartments.map(c => ({
 		activeClassName: 'is-active',
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
@@ -95,7 +93,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			return;
 		}
 
-		register(filterCompartments(CC_EDIT_COMPARTMENTS, navItemMatcher), { replace: true });
+		register(CC_EDIT_COMPARTMENTS, { replace: true }, navItemMatcher);
 
 		return () => {
 			compartmentsFacade.clearCompartments();
@@ -148,6 +146,8 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			compartments,
 			data,
 			validate,
+			setVisibility,
+			navItemMatcher,
 			fieldType as FieldType,
 			(preset as unknown) as Preset
 		);
@@ -186,6 +186,8 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			compartments,
 			activeField,
 			validate,
+			setVisibility,
+			navItemMatcher,
 			fieldType as FieldType,
 			(preset as unknown) as Preset
 		);
