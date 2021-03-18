@@ -38,7 +38,8 @@ export const CC_EDIT_COMPARTMENTS: CompartmentModel[] = [
 		name: 'default',
 		slug: MODULE_PATHS.detailCCEditDefaults,
 		type: CompartmentType.INTERNAL,
-		filter: ctField => !!ctField?.data?.generalConfig?.allowDefault,
+		filter: (ctField, compartments) =>
+			compartments.configuration.isValid && !!ctField?.data?.generalConfig?.allowDefault,
 		validate: defaultValueCompartmentValidator,
 	},
 ];

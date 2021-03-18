@@ -17,11 +17,7 @@ import { NavLink } from 'react-router-dom';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
-import {
-	filterCompartments,
-	showCompartmentErrorAlert,
-	validateCompartments,
-} from '../../../helpers';
+import { showCompartmentErrorAlert, validateCompartments } from '../../../helpers';
 import {
 	useCompartments,
 	useCompartmentValidation,
@@ -70,12 +66,13 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		BFF_MODULE_PUBLIC_PATH
 	);
 	const [
-		{ compartments, active: activeCompartment },
+		{ compartments, filteredCompartments, active: activeCompartment },
 		register,
 		activate,
 		validate,
+		setVisibility,
 	] = useCompartments();
-	const navListItems = compartments.map(c => ({
+	const navListItems = filteredCompartments.map(c => ({
 		activeClassName: 'is-active',
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
@@ -100,9 +97,13 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			return;
 		}
 
-		register(filterCompartments(DYNAMIC_CC_EDIT_COMPARTMENTS, navItemMatcher), {
-			replace: true,
-		});
+		register(
+			DYNAMIC_CC_EDIT_COMPARTMENTS,
+			{
+				replace: true,
+			},
+			navItemMatcher
+		);
 
 		return () => {
 			compartmentsFacade.clearCompartments();
@@ -185,6 +186,8 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			compartments,
 			data,
 			validate,
+			setVisibility,
+			navItemMatcher,
 			dynamicActiveField?.fieldType,
 			(dynamicActiveField?.preset as unknown) as PresetListModel
 		);
@@ -213,6 +216,8 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			compartments,
 			dynamicActiveField,
 			validate,
+			setVisibility,
+			navItemMatcher,
 			dynamicActiveField?.fieldType,
 			(dynamicActiveField?.preset as unknown) as PresetListModel
 		);

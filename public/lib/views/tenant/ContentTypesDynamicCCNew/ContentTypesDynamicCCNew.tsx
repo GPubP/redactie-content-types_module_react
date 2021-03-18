@@ -19,7 +19,6 @@ import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/trans
 import { MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
 import {
-	filterCompartments,
 	generateFieldFromType,
 	showCompartmentErrorAlert,
 	validateCompartments,
@@ -78,12 +77,13 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		BFF_MODULE_PUBLIC_PATH
 	);
 	const [
-		{ compartments, active: activeCompartment },
+		{ compartments, filteredCompartments, active: activeCompartment },
 		register,
 		activate,
 		validate,
+		setVisibility,
 	] = useCompartments();
-	const navListItems = compartments.map(c => ({
+	const navListItems = filteredCompartments.map(c => ({
 		activeClassName: 'is-active',
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
@@ -107,9 +107,13 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			return;
 		}
 
-		register(filterCompartments(DYNAMIC_CC_NEW_COMPARTMENTS, navItemMatcher), {
-			replace: true,
-		});
+		register(
+			DYNAMIC_CC_NEW_COMPARTMENTS,
+			{
+				replace: true,
+			},
+			navItemMatcher
+		);
 
 		return () => {
 			compartmentsFacade.clearCompartments();
@@ -233,6 +237,8 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			compartments,
 			dynamicActiveField,
 			validate,
+			setVisibility,
+			navItemMatcher,
 			dynamicActiveField?.fieldType,
 			(preset as unknown) as Preset
 		);
@@ -261,6 +267,8 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			compartments,
 			dynamicActiveField,
 			validate,
+			setVisibility,
+			navItemMatcher,
 			dynamicActiveField?.fieldType,
 			(preset as unknown) as Preset
 		);

@@ -1,5 +1,3 @@
-import { ID } from '@datorama/akita';
-
 import { CompartmentModel, CompartmentRegisterOptions } from './compartments.model';
 import { compartmentsQuery, CompartmentsQuery } from './compartments.query';
 import { compartmentsStore, CompartmentsStore } from './compartments.store';
@@ -8,6 +6,7 @@ export class CompartmentsFacade {
 	constructor(private store: CompartmentsStore, private query: CompartmentsQuery) {}
 
 	public readonly all$ = this.query.all$;
+	public readonly allVisible$ = this.query.allVisible$;
 	public readonly active$ = this.query.active$;
 
 	public register(
@@ -30,7 +29,7 @@ export class CompartmentsFacade {
 		this.store.reset();
 	}
 
-	public setActiveByNamOrSlug(id: ID | string): void {
+	public setActiveByNamOrSlug(id: string): void {
 		const state = this.store.getValue();
 		const compartment = Object.values(state?.entities || {}).find(
 			compartment => compartment.slug === id
@@ -44,12 +43,27 @@ export class CompartmentsFacade {
 		return this.setActive(id);
 	}
 
-	public setActive(name: ID): void {
+	public setActive(name: string): void {
+		if (this.query.hasActive(name)) {
+			return;
+		}
 		this.store.setActive(name);
 	}
 
 	public setValid(name: string, isValid: boolean): void {
+		const compartment = this.query.getEntity(name);
+		if (compartment.isValid === isValid) {
+			return;
+		}
 		this.store.update(name, { isValid });
+	}
+
+	public setIsVisible(name: string, isVisible: boolean): void {
+		const compartment = this.query.getEntity(name);
+		if (compartment.isVisible === isVisible) {
+			return;
+		}
+		this.store.update(name, { isVisible });
 	}
 }
 

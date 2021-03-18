@@ -19,7 +19,6 @@ import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/trans
 import { MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
 import {
-	filterCompartments,
 	generateFieldFromType,
 	showCompartmentErrorAlert,
 	validateCompartments,
@@ -79,12 +78,13 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		keepActiveField: false,
 	};
 	const [
-		{ compartments, active: activeCompartment },
+		{ compartments, filteredCompartments, active: activeCompartment },
 		register,
 		activate,
 		validate,
+		setVisibility,
 	] = useCompartments();
-	const navListItems = compartments.map(c => ({
+	const navListItems = filteredCompartments.map(c => ({
 		activeClassName: 'is-active',
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
@@ -111,7 +111,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			return;
 		}
 
-		register(filterCompartments(CC_NEW_COMPARTMENTS, navItemMatcher), { replace: true });
+		register(CC_NEW_COMPARTMENTS, { replace: true }, navItemMatcher);
 
 		return () => {
 			compartmentsFacade.clearCompartments();
@@ -186,6 +186,8 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			compartments,
 			activeField,
 			validate,
+			setVisibility,
+			navItemMatcher,
 			fieldType as FieldType,
 			(preset as unknown) as Preset
 		);
@@ -215,6 +217,8 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			compartments,
 			data,
 			validate,
+			setVisibility,
+			navItemMatcher,
 			fieldType as FieldType,
 			(preset as unknown) as Preset
 		);
