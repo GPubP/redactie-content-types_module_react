@@ -8,6 +8,7 @@ import {
 	useDetectValueChangesWorker,
 	useNavigate,
 	useTenantContext,
+	useWillUnmount,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
@@ -37,6 +38,7 @@ import { FieldType } from '../../../services/fieldTypes';
 import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
+import { fieldTypesFacade } from '../../../store/fieldTypes';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import { CC_NEW_ALLOWED_PATHS, CC_NEW_COMPARTMENTS } from './ContentTypesCCNew.const';
@@ -50,6 +52,8 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	const [hasSubmit, setHasSubmit] = useState(false);
 	const location = useLocation<{ keepActiveField: boolean }>();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [compartmentsInitialized, setCompartmentsInitialized] = useState(false);
+	const [compartmentsInitialValidated, setCompartmentsInitialValidated] = useState(false);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const activeField = useActiveField();
 	const dynamicField = useDynamicField();
@@ -113,16 +117,55 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 
 		register(CC_NEW_COMPARTMENTS, { replace: true }, navItemMatcher);
 
+		if (!compartmentsInitialized && navItemMatcher) {
+			setCompartmentsInitialized(true);
+		}
+
 		return () => {
 			compartmentsFacade.clearCompartments();
 		};
 	}, [fieldType, navItemMatcher]); // eslint-disable-line
+
+	useWillUnmount(() => fieldTypesFacade.removeActiveFieldType());
 
 	useEffect(() => {
 		if (!fieldTypeUI?.isFetching && !presetUI?.isFetching && activeField) {
 			return setInitialLoading(LoadingState.Loaded);
 		}
 	}, [activeField, fieldTypeUI, presetUI]);
+
+	useEffect(() => {
+		if (
+			!compartmentsInitialValidated &&
+			compartmentsInitialized &&
+			compartments &&
+			activeField &&
+			navItemMatcher &&
+			fieldType &&
+			(!presetUuid || preset)
+		) {
+			// Initial run validation
+			validateCompartments(
+				compartments,
+				activeField,
+				validate,
+				setVisibility,
+				navItemMatcher,
+				fieldType as FieldType,
+				(preset as unknown) as Preset
+			);
+			setCompartmentsInitialValidated(true);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [
+		activeField,
+		compartments,
+		compartmentsInitialized,
+		fieldType,
+		navItemMatcher,
+		preset,
+		presetUuid,
+	]);
 
 	/**
 	 * Generate a new field based on the selected fieldtype and
@@ -153,14 +196,13 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 				name: kebabCase(name || ''),
 				generalConfig: { guideline: fieldType.data.generalConfig.defaultGuideline || '' },
 			};
-			contentTypesFacade.setActiveField(
-				generateFieldFromType(
-					fieldType,
-					initialValues,
-					fieldCompartment,
-					preset || undefined
-				)
+			const generatedActiveField = generateFieldFromType(
+				fieldType,
+				initialValues,
+				fieldCompartment,
+				preset || undefined
 			);
+			contentTypesFacade.setActiveField(generatedActiveField);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fieldType, name, preset, fieldCompartment, locationState.keepActiveField]);
