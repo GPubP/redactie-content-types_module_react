@@ -38,6 +38,7 @@ export const CC_NEW_COMPARTMENTS: CompartmentModel[] = [
 		label: 'Standaard waarde',
 		slug: MODULE_PATHS.detailCCNewDefaults,
 		type: CompartmentType.INTERNAL,
+		isVisible: false,
 		validate: defaultValueCompartmentValidator,
 		filter: (ctField, compartments) =>
 			compartments.configuration.isValid && !!ctField?.data?.generalConfig?.allowDefault,
