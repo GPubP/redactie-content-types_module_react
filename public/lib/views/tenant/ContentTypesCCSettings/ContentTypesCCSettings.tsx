@@ -56,8 +56,8 @@ const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
 					<CardBody>
 						<h6>Verwijderen</h6>
 						<p className="u-margin-top-xs u-margin-bottom">
-							Opgelet, indien u deze component verwijdert kan hij niet meer gebruikt
-							worden op het content
+							Opgelet, indien u deze content component verwijdert kan hij niet meer
+							gebruikt worden op het content type &lsquo;{CTField.label}&rsquo;.
 						</p>
 						<Button iconLeft="trash-o" onClick={onDelete} type="danger">
 							Verwijderen
