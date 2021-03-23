@@ -66,13 +66,13 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		BFF_MODULE_PUBLIC_PATH
 	);
 	const [
-		{ compartments, filteredCompartments, active: activeCompartment },
+		{ compartments, visibleCompartments, active: activeCompartment },
 		register,
 		activate,
 		validate,
 		setVisibility,
 	] = useCompartments();
-	const navListItems = filteredCompartments.map(c => ({
+	const navListItems = visibleCompartments.map(c => ({
 		activeClassName: 'is-active',
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
@@ -184,6 +184,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	const onFieldChange = (data: ContentTypeFieldDetailModel): void => {
 		validateCompartments(
 			compartments,
+			visibleCompartments,
 			data,
 			validate,
 			setVisibility,
@@ -214,6 +215,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		const { current: formikRef } = activeCompartmentFormikRef;
 		const compartmentsAreValid = validateCompartments(
 			compartments,
+			visibleCompartments,
 			dynamicActiveField,
 			validate,
 			setVisibility,

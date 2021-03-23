@@ -9,7 +9,7 @@ import {
 
 interface CompartmentState {
 	compartments: CompartmentModel[];
-	filteredCompartments: CompartmentModel[];
+	visibleCompartments: CompartmentModel[];
 	active: CompartmentModel | undefined;
 }
 
@@ -39,11 +39,11 @@ const useCompartments = (): [
 		compartmentsFacade.setIsVisible(name, isVisible);
 
 	const compartments = useObservable(compartmentsFacade.all$, []);
-	const filteredCompartments = useObservable(compartmentsFacade.allVisible$, []);
+	const visibleCompartments = useObservable(compartmentsFacade.allVisible$, []);
 	const active = useObservable(compartmentsFacade.active$);
 
 	return [
-		{ compartments, filteredCompartments, active },
+		{ compartments, visibleCompartments, active },
 		register,
 		activate,
 		validate,

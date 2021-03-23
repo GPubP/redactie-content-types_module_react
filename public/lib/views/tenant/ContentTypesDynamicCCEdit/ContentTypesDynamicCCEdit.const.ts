@@ -37,7 +37,8 @@ export const DYNAMIC_CC_EDIT_COMPARTMENTS: CompartmentModel[] = [
 		name: 'default',
 		slug: MODULE_PATHS.detailCCEditDynamicEditDefaults,
 		type: CompartmentType.INTERNAL,
-		filter: ctField => !!ctField?.data?.generalConfig?.allowDefault,
+		filter: (ctField, compartments) =>
+			compartments.configuration.isValid && !!ctField?.data?.generalConfig?.allowDefault,
 	},
 ];
 
