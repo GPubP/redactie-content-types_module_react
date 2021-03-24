@@ -24,6 +24,7 @@ export function filterCompartments(
 
 export function validateCompartments(
 	compartments: CompartmentModel[],
+	visibleCompartments: CompartmentModel[],
 	values: any,
 	setValidity: (compartmentId: string, isValid: boolean) => void,
 	setVisibility: (compartmentId: string, isVisible: boolean) => void,
@@ -31,7 +32,7 @@ export function validateCompartments(
 	fieldType?: FieldType,
 	preset?: Preset
 ): boolean {
-	const validatedCompartments: Record<string, { isValid: boolean }> = compartments.reduce(
+	const validatedCompartments: Record<string, { isValid: boolean }> = visibleCompartments.reduce(
 		(acc, compartment) => {
 			if (compartment.validate) {
 				const isValid = compartment.validate(values, fieldType, preset);

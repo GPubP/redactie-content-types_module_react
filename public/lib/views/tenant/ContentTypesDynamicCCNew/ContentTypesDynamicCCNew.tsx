@@ -57,6 +57,8 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	 */
 	const [hasSubmit, setHasSubmit] = useState(false);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [compartmentsInitialized, setCompartmentsInitialized] = useState(false);
+	const [compartmentsInitialValidated, setCompartmentsInitialValidated] = useState(false);
 	const activeCompartmentFormikRef = useRef<FormikProps<FormikValues>>();
 	const { fieldType: fieldTypeUuid, preset: presetUuid } = useQuery();
 	const [preset, presetUI] = useActivePreset(presetUuid);
@@ -77,13 +79,13 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		BFF_MODULE_PUBLIC_PATH
 	);
 	const [
-		{ compartments, filteredCompartments, active: activeCompartment },
+		{ compartments, visibleCompartments, active: activeCompartment },
 		register,
 		activate,
 		validate,
 		setVisibility,
 	] = useCompartments();
-	const navListItems = filteredCompartments.map(c => ({
+	const navListItems = visibleCompartments.map(c => ({
 		activeClassName: 'is-active',
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
@@ -115,6 +117,10 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			navItemMatcher
 		);
 
+		if (!compartmentsInitialized && navItemMatcher) {
+			setCompartmentsInitialized(true);
+		}
+
 		return () => {
 			compartmentsFacade.clearCompartments();
 		};
@@ -127,6 +133,41 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 
 		setInitialLoading(LoadingState.Loading);
 	}, [dynamicActiveField, dynamicField, fieldTypeUI, presetUI]);
+
+	useEffect(() => {
+		if (
+			!compartmentsInitialValidated &&
+			compartmentsInitialized &&
+			compartments &&
+			visibleCompartments &&
+			dynamicActiveField &&
+			navItemMatcher &&
+			dynamicActiveField.fieldType &&
+			(!presetUuid || preset)
+		) {
+			// Initial run validation
+			validateCompartments(
+				compartments,
+				visibleCompartments,
+				dynamicActiveField,
+				validate,
+				setVisibility,
+				navItemMatcher,
+				dynamicActiveField.fieldType,
+				(preset as unknown) as Preset
+			);
+			setCompartmentsInitialValidated(true);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [
+		compartmentsInitialized,
+		compartments,
+		visibleCompartments,
+		dynamicActiveField,
+		navItemMatcher,
+		preset,
+		presetUuid,
+	]);
 
 	useEffect(() => {
 		if (
@@ -235,6 +276,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		const { current: formikRef } = activeCompartmentFormikRef;
 		const compartmentsAreValid = validateCompartments(
 			compartments,
+			visibleCompartments,
 			dynamicActiveField,
 			validate,
 			setVisibility,
@@ -265,7 +307,8 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	const onFieldTypeChange = (data: ContentTypeFieldDetailModel): void => {
 		validateCompartments(
 			compartments,
-			dynamicActiveField,
+			visibleCompartments,
+			data,
 			validate,
 			setVisibility,
 			navItemMatcher,

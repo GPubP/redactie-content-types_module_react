@@ -82,13 +82,13 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		keepActiveField: false,
 	};
 	const [
-		{ compartments, filteredCompartments, active: activeCompartment },
+		{ compartments, visibleCompartments, active: activeCompartment },
 		register,
 		activate,
 		validate,
 		setVisibility,
 	] = useCompartments();
-	const navListItems = filteredCompartments.map(c => ({
+	const navListItems = visibleCompartments.map(c => ({
 		activeClassName: 'is-active',
 		label: c.label,
 		hasError: hasSubmit && c.isValid === false,
@@ -139,6 +139,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			!compartmentsInitialValidated &&
 			compartmentsInitialized &&
 			compartments &&
+			visibleCompartments &&
 			activeField &&
 			navItemMatcher &&
 			fieldType &&
@@ -147,6 +148,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			// Initial run validation
 			validateCompartments(
 				compartments,
+				visibleCompartments,
 				activeField,
 				validate,
 				setVisibility,
@@ -159,6 +161,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
 		activeField,
+		visibleCompartments,
 		compartments,
 		compartmentsInitialized,
 		fieldType,
@@ -226,6 +229,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		const { current: formikRef } = activeCompartmentFormikRef;
 		const compartmentsAreValid = validateCompartments(
 			compartments,
+			visibleCompartments,
 			activeField,
 			validate,
 			setVisibility,
@@ -257,6 +261,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	const onFieldTypeChange = (data: ContentTypeFieldDetailModel): void => {
 		validateCompartments(
 			compartments,
+			visibleCompartments,
 			data,
 			validate,
 			setVisibility,
