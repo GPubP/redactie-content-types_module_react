@@ -13,7 +13,6 @@ export const DYNAMIC_CC_NEW_COMPARTMENTS: CompartmentModel[] = [
 		name: 'settings',
 		slug: MODULE_PATHS.detailCCEditDynamicNewSettings,
 		type: CompartmentType.INTERNAL,
-		isValid: false,
 		validate: settingsCompartmentValidator,
 	},
 	{
@@ -38,7 +37,7 @@ export const DYNAMIC_CC_NEW_COMPARTMENTS: CompartmentModel[] = [
 		slug: MODULE_PATHS.detailCCEditDynamicNewDefaults,
 		type: CompartmentType.INTERNAL,
 		filter: (ctField, compartments) =>
-			compartments.configuration.isValid && !!ctField?.data?.generalConfig?.allowDefault,
+			!!compartments.configuration?.isValid && !!ctField?.data?.generalConfig?.allowDefault,
 	},
 ];
 
