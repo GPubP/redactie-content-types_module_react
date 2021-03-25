@@ -21,7 +21,7 @@ export const CC_EDIT_COMPARTMENTS: CompartmentModel[] = [
 		name: 'configuration',
 		slug: MODULE_PATHS.detailCCEditConfig,
 		type: CompartmentType.INTERNAL,
-		filter: (CtField: FieldType) => !!CtField?.data?.formSchema?.fields?.length,
+		filter: (ctField: FieldType) => !!ctField?.data?.formSchema?.fields?.length,
 		validate: configurationCompartmentValidator,
 	},
 	{
@@ -29,7 +29,7 @@ export const CC_EDIT_COMPARTMENTS: CompartmentModel[] = [
 		name: 'validation',
 		slug: MODULE_PATHS.detailCCEditValidation,
 		type: CompartmentType.INTERNAL,
-		filter: (CtField: FieldType) => !!CtField?.data?.validators?.length,
+		filter: (ctField: FieldType) => !!ctField?.data?.validators?.length,
 		validate: validationCompartmentValidator,
 	},
 	{
