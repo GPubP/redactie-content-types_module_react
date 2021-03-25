@@ -89,7 +89,6 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	useWillUnmount(() => {
 		fieldTypesFacade.removeActiveFieldType();
 		presetsFacade.removeActivePreset();
-		fieldTypesFacade.removeActiveFieldType();
 	});
 
 	/**

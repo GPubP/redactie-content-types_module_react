@@ -109,7 +109,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	useWillUnmount(() => {
 		fieldTypesFacade.removeActiveFieldType();
 		presetsFacade.removeActivePreset();
-		fieldTypesFacade.removeActiveFieldType();
 	});
 
 	/**
