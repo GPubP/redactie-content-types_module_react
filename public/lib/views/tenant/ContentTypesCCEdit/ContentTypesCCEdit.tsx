@@ -9,6 +9,7 @@ import {
 	useDetectValueChangesWorker,
 	useNavigate,
 	useTenantContext,
+	useWillUnmount,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import { equals, isEmpty } from 'ramda';
@@ -32,6 +33,8 @@ import { FieldType } from '../../../services/fieldTypes';
 import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
+import { fieldTypesFacade } from '../../../store/fieldTypes';
+import { presetsFacade } from '../../../store/presets';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import { CC_EDIT_ALLOWED_PATHS, CC_EDIT_COMPARTMENTS } from './ContentTypesCCEdit.const';
@@ -79,6 +82,14 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		onClick: () => activate(c.name),
 		to: generatePath(c.slug || c.name, { contentTypeUuid, contentComponentUuid }),
 	}));
+
+	/**
+	 * Clear store on component destroy
+	 */
+	useWillUnmount(() => {
+		fieldTypesFacade.removeActiveFieldType();
+		presetsFacade.removeActivePreset();
+	});
 
 	/**
 	 * Trigger errors on form when switching from compartments

@@ -8,6 +8,7 @@ import {
 	useDetectValueChangesWorker,
 	useNavigate,
 	useTenantContext,
+	useWillUnmount,
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
@@ -37,6 +38,8 @@ import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynam
 import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel } from '../../../store/contentTypes';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
+import { fieldTypesFacade } from '../../../store/fieldTypes';
+import { presetsFacade } from '../../../store/presets';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import {
@@ -95,6 +98,15 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			contentComponentUuid,
 		}),
 	}));
+
+	/**
+	 * Clear store on component destroy
+	 */
+	useWillUnmount(() => {
+		dynamicFieldFacade.clearActiveField();
+		fieldTypesFacade.removeActiveFieldType();
+		presetsFacade.removeActivePreset();
+	});
 
 	/**
 	 * Trigger errors on form when switching from compartments
@@ -231,16 +243,6 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			);
 		}
 	}, [fieldType, fieldTypeUuid, preset, presetUuid]);
-
-	/**
-	 * Clear store on component destroy
-	 */
-	useEffect(
-		() => () => {
-			dynamicFieldFacade.clearActiveField();
-		},
-		[]
-	);
 
 	/**
 	 * Methods

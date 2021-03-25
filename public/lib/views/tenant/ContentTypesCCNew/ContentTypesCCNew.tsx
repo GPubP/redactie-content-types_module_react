@@ -39,6 +39,7 @@ import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 import { dynamicFieldFacade } from '../../../store/dynamicField/dynamicField.facade';
 import { fieldTypesFacade } from '../../../store/fieldTypes';
+import { presetsFacade } from '../../../store/presets';
 import { compartmentsFacade } from '../../../store/ui/compartments';
 
 import { CC_NEW_ALLOWED_PATHS, CC_NEW_COMPARTMENTS } from './ContentTypesCCNew.const';
@@ -103,6 +104,14 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	}));
 
 	/**
+	 * Clear store on component destroy
+	 */
+	useWillUnmount(() => {
+		fieldTypesFacade.removeActiveFieldType();
+		presetsFacade.removeActivePreset();
+	});
+
+	/**
 	 * Trigger errors on form when switching from compartments
 	 */
 	useCompartmentValidation(activeCompartmentFormikRef, activeCompartment, hasSubmit);
@@ -125,8 +134,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			compartmentsFacade.clearCompartments();
 		};
 	}, [fieldType, navItemMatcher]); // eslint-disable-line
-
-	useWillUnmount(() => fieldTypesFacade.removeActiveFieldType());
 
 	useEffect(() => {
 		if (!fieldTypeUI?.isFetching && !presetUI?.isFetching && activeField) {

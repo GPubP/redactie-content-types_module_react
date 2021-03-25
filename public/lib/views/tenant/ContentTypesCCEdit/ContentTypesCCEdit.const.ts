@@ -14,7 +14,6 @@ export const CC_EDIT_COMPARTMENTS: CompartmentModel[] = [
 		name: 'settings',
 		slug: MODULE_PATHS.detailCCEditSettings,
 		type: CompartmentType.INTERNAL,
-		isValid: false,
 		validate: settingsCompartmentValidator,
 	},
 	{
@@ -39,7 +38,7 @@ export const CC_EDIT_COMPARTMENTS: CompartmentModel[] = [
 		slug: MODULE_PATHS.detailCCEditDefaults,
 		type: CompartmentType.INTERNAL,
 		filter: (ctField, compartments) =>
-			compartments.configuration.isValid && !!ctField?.data?.generalConfig?.allowDefault,
+			!!compartments.configuration?.isValid && !!ctField?.data?.generalConfig?.allowDefault,
 		validate: defaultValueCompartmentValidator,
 	},
 ];
