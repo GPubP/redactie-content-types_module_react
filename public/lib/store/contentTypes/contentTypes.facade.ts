@@ -285,8 +285,6 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	}
 
 	public removeCompartment(uuid: string): void {
-		this.store.setIsUpdating(true);
-
 		this.store.update(state => {
 			if (!state.contentType) {
 				return state;
