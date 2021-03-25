@@ -16,6 +16,7 @@ const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
 
 	const onChange = (data: any): void => {
 		onSubmit({
+			...CTField,
 			...data,
 			// Handle multiple in validation object
 			validation: {

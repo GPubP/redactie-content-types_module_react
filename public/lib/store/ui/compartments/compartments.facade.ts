@@ -16,12 +16,20 @@ export class CompartmentsFacade {
 		const compartments = Array.isArray(data) ? data : [data];
 
 		compartments.forEach(compartment => {
+			const parsedCompartment = {
+				...compartment,
+				isVisible:
+					compartment.filter && typeof compartment.filter === 'function'
+						? compartment.isVisible ?? false
+						: compartment.isVisible ?? true,
+			};
+
 			if (!options?.replace) {
-				this.store.add(compartment);
+				this.store.add(parsedCompartment);
 				return;
 			}
 
-			this.store.upsert(compartment.name, compartment);
+			this.store.upsert(parsedCompartment.name, parsedCompartment);
 		});
 	}
 

@@ -155,7 +155,6 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	const onFieldChange = (data: ContentTypeFieldDetailModel): void => {
 		validateCompartments(
 			compartments,
-			visibleCompartments,
 			data,
 			validate,
 			setVisibility,
@@ -196,7 +195,6 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		const { current: formikRef } = activeCompartmentFormikRef;
 		const compartmentsAreValid = validateCompartments(
 			compartments,
-			visibleCompartments,
 			activeField,
 			validate,
 			setVisibility,

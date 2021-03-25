@@ -195,7 +195,6 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	const onFieldChange = (data: ContentTypeFieldDetailModel): void => {
 		validateCompartments(
 			compartments,
-			visibleCompartments,
 			data,
 			validate,
 			setVisibility,
@@ -226,7 +225,6 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		const { current: formikRef } = activeCompartmentFormikRef;
 		const compartmentsAreValid = validateCompartments(
 			compartments,
-			visibleCompartments,
 			dynamicActiveField,
 			validate,
 			setVisibility,

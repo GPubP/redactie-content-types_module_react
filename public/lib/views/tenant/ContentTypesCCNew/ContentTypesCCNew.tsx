@@ -155,7 +155,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			// Initial run validation
 			validateCompartments(
 				compartments,
-				visibleCompartments,
 				activeField,
 				validate,
 				setVisibility,
@@ -236,7 +235,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		const { current: formikRef } = activeCompartmentFormikRef;
 		const compartmentsAreValid = validateCompartments(
 			compartments,
-			visibleCompartments,
 			activeField,
 			validate,
 			setVisibility,
@@ -268,7 +266,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	const onFieldTypeChange = (data: ContentTypeFieldDetailModel): void => {
 		validateCompartments(
 			compartments,
-			visibleCompartments,
 			data,
 			validate,
 			setVisibility,
