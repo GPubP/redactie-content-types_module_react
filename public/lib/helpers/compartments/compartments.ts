@@ -34,7 +34,7 @@ export function validateCompartments(
 	const validatedCompartments: Record<string, { isValid: boolean }> = compartments.reduce(
 		(acc, compartment) => {
 			// only validate visible compartments
-			if (compartment.validate && !!compartment.isVisible) {
+			if (typeof compartment.validate === 'function' && !!compartment.isVisible) {
 				const isValid = compartment.validate(values, fieldType, preset);
 				setValidity(compartment.name, isValid);
 				acc[compartment.name] = {
