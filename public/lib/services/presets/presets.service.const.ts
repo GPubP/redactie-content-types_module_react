@@ -7,4 +7,5 @@ export const DEFAULT_PRESETS_SEARCH_PARAMS: SearchParams = {
 	pagesize: -1,
 	hidden: false,
 	active: true,
+	sparse: true,
 };
