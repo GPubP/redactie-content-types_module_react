@@ -20,11 +20,11 @@ const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
 			...data,
 			// Handle multiple in validation object
 			validation: {
-				...data.validation,
+				...CTField.validation,
 				type:
 					CTField.preset && data.generalConfig.max > 1
 						? 'array'
-						: data.validation?.type || undefined,
+						: CTField.validation?.type || undefined,
 				...(data.generalConfig.max > 1
 					? {
 							max: data.generalConfig.max,
