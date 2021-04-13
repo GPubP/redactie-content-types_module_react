@@ -25,7 +25,7 @@ import { UsePaginatedPresets } from './hooks/usePaginatedPresets/usePaginatedPre
 import { UsePreset } from './hooks/usePreset/usePreset.types';
 import { UsePresets } from './hooks/usePresets/usePresets.types';
 import { UsePresetsUIStates } from './hooks/usePresetsUIStates/usePresetsUIStates.types';
-import { Field } from './services/contentTypes';
+import { ContentTypeResponse, Field } from './services/contentTypes';
 import { FieldType, FieldTypeMeta, FieldTypesApiService } from './services/fieldTypes';
 import { Preset, PresetsApiService } from './services/presets';
 import {
@@ -107,6 +107,7 @@ export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
 	onDelete?: () => void;
 	onSubmit: (data: any) => void;
 	formikRef: FormikRef;
+	contentType: ContentTypeResponse;
 }
 
 export interface NewCCFormState {

@@ -81,6 +81,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	 */
 	const onCCFormSubmit = ({ name, fieldType, compartment }: NewCCFormState): void => {
 		const selectedFieldType = fields.find(ft => ft.uuid === fieldType);
+
 		if (!selectedFieldType) {
 			return;
 		}
