@@ -260,6 +260,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 					activeCompartmentFormikRef.current = instance;
 				}
 			},
+			contentType,
 		};
 
 		return (
