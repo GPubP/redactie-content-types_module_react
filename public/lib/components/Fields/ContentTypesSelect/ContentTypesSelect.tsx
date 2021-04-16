@@ -34,7 +34,7 @@ const ContentTypesSelect: React.FC<InputFieldProps> = ({
 	}, [ContentTypesLoadingState, contentTypes]);
 
 	useEffect(() => {
-		contentTypesFacade.getContentTypes({ limit: -1, skip: 0 });
+		contentTypesFacade.getContentTypes({ limit: -1, skip: 0, sparse: true });
 	}, []);
 
 	/**
