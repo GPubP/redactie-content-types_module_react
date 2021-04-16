@@ -1,4 +1,11 @@
-import { Button, Card, CardBody, CardDescription, CardTitle } from '@acpaas-ui/react-components';
+import {
+	Button,
+	Card,
+	CardBody,
+	CardDescription,
+	CardTitle,
+	Spinner,
+} from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { SiteListModel } from '@redactie/sites-module';
 import { LeavePrompt, LoadingState, useDetectValueChangesWorker } from '@redactie/utils';
@@ -21,10 +28,23 @@ const ContentTypeSettings: FC<ContentTypesSiteDetailRoutePropsParams<
 	/**
 	 * Hooks
 	 */
-	const [siteData, setSiteData] = useState<SiteListModel['data']>();
 	const [t] = useCoreTranslation();
-	const [loadingSites, sites] = useSites();
-	const isLoading = useMemo(() => loadingSites === LoadingState.Loading, [loadingSites]);
+	const [siteData, setSiteData] = useState<SiteListModel['data']>();
+	const [loadingSites, sites, refreshSites] = useSites();
+	const [site, siteUI] = sitesConnector.hooks.useSite(siteId);
+
+	const isUpdatingSite = !!siteUI?.isUpdating;
+	const isLoading = !!siteUI?.isFetching;
+	const isActive = siteData?.contentTypes.includes(contentType._id) || false;
+	const isStatusLoading =
+		(loadingSites === LoadingState.Loading || isUpdatingSite || isLoading) &&
+		(!siteData || isActive);
+
+	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
+		!isLoading,
+		siteData,
+		BFF_MODULE_PUBLIC_PATH
+	);
 	// Calculate on how many sites the content type is used
 	const amountUsedOnSites = useMemo(
 		() =>
@@ -33,21 +53,6 @@ const ContentTypeSettings: FC<ContentTypesSiteDetailRoutePropsParams<
 			}, 0),
 		[contentType._id, sites]
 	);
-	const site: SiteListModel | null = useMemo(
-		() => (sites || []).find(s => s.uuid === siteId) || null,
-		[siteId, sites]
-	);
-	const [, siteUI] = sitesConnector.hooks.useSitesUIStates(site?.uuid);
-	const isUpdatingSite = !!siteUI?.isUpdating;
-	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
-		!isLoading,
-		siteData,
-		BFF_MODULE_PUBLIC_PATH
-	);
-
-	/**
-	 * Fetch sites
-	 */
 
 	useEffect(() => {
 		if (site) {
@@ -80,15 +85,15 @@ const ContentTypeSettings: FC<ContentTypesSiteDetailRoutePropsParams<
 			return;
 		}
 
-		sitesConnector.sitesFacade.updateSite({
-			id: site.uuid,
-			body: siteData,
-		});
+		sitesConnector.sitesFacade
+			.updateSite({
+				id: site.uuid,
+				body: siteData,
+			})
+			.then(() => refreshSites());
 
 		resetChangeDetection();
 	};
-
-	const active = siteData?.contentTypes.includes(contentType._id) || false;
 
 	/**
 	 * Render
@@ -103,21 +108,33 @@ const ContentTypeSettings: FC<ContentTypesSiteDetailRoutePropsParams<
 			/>
 			<Card className="u-margin-top">
 				<CardBody>
-					<CardTitle>Status: {siteData && <SiteStatus active={active} />}</CardTitle>
+					<CardTitle>
+						Status
+						{siteData && (
+							<>
+								: <SiteStatus active={isActive} />
+							</>
+						)}
+					</CardTitle>
 					<CardDescription>
-						{active
-							? `Dit content type wordt gebruikt op ${
-									amountUsedOnSites !== 0 ? amountUsedOnSites : 1
-							  } site(s)`
-							: 'Deze content type is niet actief binnen deze site.'}
+						{isStatusLoading ? (
+							<Spinner />
+						) : isActive ? (
+							`Dit content type wordt gebruikt op ${
+								amountUsedOnSites !== 0 ? amountUsedOnSites : 1
+							} site(s)`
+						) : (
+							'Deze content type is niet actief binnen deze site.'
+						)}
 					</CardDescription>
-					{canUpdate && (
+					{canUpdate && siteData && (
 						<Button
 							onClick={onActiveToggle}
 							className="u-margin-top u-margin-right"
 							type="primary"
+							disabled={isUpdatingSite}
 						>
-							{active ? t('BUTTON_DEACTIVATE') : t('BUTTON_ACTIVATE')}
+							{isActive ? t('BUTTON_DEACTIVATE') : t('BUTTON_ACTIVATE')}
 						</Button>
 					)}
 				</CardBody>
