@@ -127,10 +127,7 @@ export class DynamicFieldFacade extends BaseEntityFacade<
 				validation: {
 					...activeField.validation,
 					...payload.validation,
-					checks: [
-						...(activeField.validation?.checks || []),
-						...(payload.validation?.checks || []),
-					],
+					checks: payload.validation?.checks || activeField.validation?.checks || [],
 				},
 				defaultValue: clearDefaultValue ? undefined : payload.defaultValue,
 			} as DynamicFieldDetailModel,
