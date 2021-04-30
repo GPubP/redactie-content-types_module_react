@@ -72,6 +72,7 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 		onSubmit({
 			...CTField,
 			...values,
+			defaultValue: values.defaultValue,
 		});
 	};
 
