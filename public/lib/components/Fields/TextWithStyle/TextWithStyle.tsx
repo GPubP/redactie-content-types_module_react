@@ -81,7 +81,7 @@ const TextWithStyle: React.FC<InputFieldProps> = ({
 				</div>
 				{showField ? (
 					<div className="col-xs-3">
-						<div className="a-input u-margin-top">
+						<div className={`a-input ${fieldSchema.label ? 'u-margin-top' : ''}`}>
 							<Select
 								id={`${field.name}.textType`}
 								name={`${field.name}.textType`}
