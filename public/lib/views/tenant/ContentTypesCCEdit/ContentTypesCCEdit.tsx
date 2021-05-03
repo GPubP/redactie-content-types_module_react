@@ -1,6 +1,7 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import {
+	alertService,
 	DataLoader,
 	DeletePrompt,
 	LeavePrompt,
@@ -153,7 +154,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	 */
 
 	const onFieldChange = (data: ContentTypeFieldDetailModel): void => {
-		validateCompartments(
+		const valid = validateCompartments(
 			compartments,
 			data,
 			validate,
@@ -162,6 +163,11 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			fieldType as FieldType,
 			(preset as unknown) as Preset
 		);
+
+		if (valid) {
+			alertService.dismiss();
+		}
+
 		contentTypesFacade.updateActiveField(data);
 	};
 
