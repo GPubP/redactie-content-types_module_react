@@ -12,8 +12,12 @@ const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
 	onDelete,
 	onSubmit,
 	contentType,
+	preset,
 }) => {
 	const initialFormValues = useMemo(() => generateCCFormState(CTField), [CTField]);
+	const isRemovable =
+		(preset && preset?.data?.generalConfig?.removable !== false) ||
+		fieldType?.data?.generalConfig?.removable !== false;
 
 	const onChange = (data: any): void => {
 		onSubmit({
@@ -53,7 +57,7 @@ const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
 				onSubmit={onChange}
 				isUpdate={!!onDelete}
 			/>
-			{onDelete && (
+			{onDelete && isRemovable && (
 				<Card className="u-margin-top">
 					<CardBody>
 						<h6>Verwijderen</h6>
