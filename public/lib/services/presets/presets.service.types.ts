@@ -1,7 +1,7 @@
 import { EmbeddedResponse } from '@redactie/utils';
 
 import { Field } from '../contentTypes';
-import { DataType, FieldType } from '../fieldTypes';
+import { DataType, FieldType, MapValueToContentItemPath } from '../fieldTypes';
 
 /**
  * =========================
@@ -46,6 +46,8 @@ export interface BasePreset<V = string, D = string, F = string> {
 			isTranslate: boolean;
 			isMultiple: boolean;
 			allowDefault: boolean;
+			removable?: boolean;
+			mapValueToContentItemPath?: MapValueToContentItemPath[];
 		};
 		fields: {
 			field: PresetField<D, F>;

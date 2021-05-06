@@ -27,6 +27,12 @@ export interface DataType {
 	uuid: string;
 }
 
+export interface MapValueToContentItemPath {
+	type: 'BE';
+	sourcePath: string[];
+	destPath: string[];
+}
+
 export interface FieldTypeData {
 	label: string;
 	name: string;
@@ -46,6 +52,8 @@ export interface FieldTypeData {
 		defaultLabel?: string;
 		defaultGuideline?: string;
 		allowDefault: boolean;
+		removable?: false;
+		mapValueToContentItemPath?: MapValueToContentItemPath[];
 	};
 	operators: Operator[];
 	module: string;
