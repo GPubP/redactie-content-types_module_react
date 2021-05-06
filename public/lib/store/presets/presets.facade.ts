@@ -130,6 +130,7 @@ export class PresetsFacade {
 	public getPresets(searchParams?: SearchParams, options?: GetPresetsPayloadOptions): void {
 		const defaultOptions: GetPresetsPayloadOptions = {
 			alertContainerId: PRESETS_ALERT_CONTAINER_IDS.fetch,
+			forceReload: false,
 		};
 		const serviceOptions = {
 			...defaultOptions,
@@ -137,7 +138,7 @@ export class PresetsFacade {
 		};
 		const { isFetching } = this.listQuery.getValue();
 
-		if (isFetching) {
+		if (isFetching && !serviceOptions.forceReload) {
 			return;
 		}
 		const alertMessages = getAlertMessages();
