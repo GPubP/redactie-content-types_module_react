@@ -69,9 +69,10 @@ export const CONTENT_DETAIL_TABS: Tab[] = [
 ];
 
 export const SITE_PARAM = 'siteId';
+export const SITES_ROOT = 'sites';
 
 export const TENANT_ROOT = '/:tenantId';
-const SITE_ROOT = `/:${SITE_PARAM}/content-types`;
+const SITE_ROOT = `/:${SITE_PARAM}`;
 const CC_BASE_PATH = '/content-types/:contentTypeUuid/content-componenten';
 const CC_EDIT_PATH = `${CC_BASE_PATH}/:contentComponentUuid/bewerken`;
 const CC_NEW_PATH = `${CC_BASE_PATH}/aanmaken`;
@@ -121,10 +122,11 @@ export const MODULE_PATHS = {
 
 	// SITE
 	site: {
-		root: SITE_ROOT,
-		overview: `${SITE_ROOT}/overzicht`,
-		detail: `${SITE_ROOT}/:contentTypeUuid`,
-		detailSettings: `${SITE_ROOT}/:contentTypeUuid/instellingen`,
+		dashboard: `${SITE_ROOT}/content`,
+		root: `${SITE_ROOT}/content-types`,
+		overview: `${SITE_ROOT}/content-types/overzicht`,
+		detail: `${SITE_ROOT}/content-types/:contentTypeUuid`,
+		detailSettings: `${SITE_ROOT}/content-types/:contentTypeUuid/instellingen`,
 	},
 };
 
