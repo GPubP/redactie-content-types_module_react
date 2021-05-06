@@ -6,6 +6,7 @@ export interface PresetUIModel {
 
 export interface GetPresetsPayloadOptions {
 	alertContainerId: string;
+	forceReload: boolean;
 }
 
 export interface GetPresetsPaginatedPayloadOptions {
