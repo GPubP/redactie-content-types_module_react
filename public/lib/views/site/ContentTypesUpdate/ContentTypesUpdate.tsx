@@ -62,7 +62,8 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 				target: generatePath(`/sites${MODULE_PATHS.site.overview}`, { siteId }),
 			},
 		],
-		[]
+		[],
+		true
 	);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
 	const [
