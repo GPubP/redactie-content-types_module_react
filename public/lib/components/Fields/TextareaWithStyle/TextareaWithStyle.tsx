@@ -14,7 +14,7 @@ const TextareaWithStyle: React.FC<InputFieldProps> = ({
 	const { setValue } = fieldHelperProps;
 	const value: { text: string; textType: string } = field.value as any;
 	const showField = Array.isArray(config.allowedOptions) && config.allowedOptions.length >= 2;
-	const hiddenTextTypeValue: string = Array.isArray(config.allowedOptions)
+	const defaultTextTypeValue: string = Array.isArray(config.allowedOptions)
 		? config.allowedOptions[0] || 'none'
 		: 'none';
 
@@ -33,18 +33,23 @@ const TextareaWithStyle: React.FC<InputFieldProps> = ({
 	// Handle config change of multiple allowed options to single allowed or other allowed
 	useEffect(() => {
 		if (
-			!showField &&
 			typeof value === 'object' &&
-			value?.textType &&
-			value.textType !== hiddenTextTypeValue
+			!value.textType &&
+			value.textType !== defaultTextTypeValue
 		) {
 			setValue({
 				...value,
-				textType: hiddenTextTypeValue,
+				textType: defaultTextTypeValue,
+			});
+		}
+
+		if (!value && defaultTextTypeValue) {
+			setValue({
+				textType: defaultTextTypeValue,
 			});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [hiddenTextTypeValue, showField]);
+	}, [defaultTextTypeValue, showField]);
 
 	/**
 	 * METHODS
@@ -52,7 +57,7 @@ const TextareaWithStyle: React.FC<InputFieldProps> = ({
 	const updateValue = (newPartialValue: Partial<{ text: string; textType: string }>): void => {
 		setValue({
 			...(value || {}),
-			...(!showField ? { textType: hiddenTextTypeValue } : {}),
+			...(!showField ? { textType: defaultTextTypeValue } : {}),
 			...newPartialValue,
 		});
 	};
@@ -81,17 +86,17 @@ const TextareaWithStyle: React.FC<InputFieldProps> = ({
 				</div>
 				{showField ? (
 					<div className="col-xs-3">
-						<div className={`a-input ${fieldSchema.label ? 'u-margin-top' : ''}`}>
+						<div className="a-input">
 							<Select
 								id={`${field.name}.textType`}
 								name={`${field.name}.textType`}
+								label="Opmaak"
 								options={options}
 								value={value?.textType}
 								onChange={(event: ChangeEvent<any>) => {
 									updateValue({ textType: event.target.value });
 								}}
 								required={config.required}
-								placeholder={config.stylePlaceholder}
 							/>
 							<formRendererConnector.api.ErrorMessage
 								name={`${field.name}.textType`}
@@ -103,7 +108,7 @@ const TextareaWithStyle: React.FC<InputFieldProps> = ({
 						<input
 							id={`${field.name}.textType`}
 							name={`${field.name}.textType`}
-							value={hiddenTextTypeValue}
+							value={defaultTextTypeValue}
 							type="hidden"
 						/>
 						<formRendererConnector.api.ErrorMessage name={`${field.name}.textType`} />
