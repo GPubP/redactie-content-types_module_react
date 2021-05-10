@@ -11,16 +11,10 @@ import {
 	ContentTypeCCBreadcrumb,
 	DynamicFieldBreadcrumb,
 } from './lib/components/Breadcrumbs';
-import {
-	ContentTypesSelect,
-	DynamicFieldSettings,
-	TextareaWithStyle,
-	TextWithStyle,
-} from './lib/components/Fields';
-import formRendererConnector from './lib/connectors/formRenderer';
+import { registerFields } from './lib/components/Fields';
 import rolesRightsConnector from './lib/connectors/rolesRights';
 import sitesConnector from './lib/connectors/sites';
-import { DYNAMIC_FIELD_SETTINGS_NAME, MODULE_PATHS, SITE_PARAM } from './lib/contentTypes.const';
+import { MODULE_PATHS, SITE_PARAM } from './lib/contentTypes.const';
 import { ContentTypesModuleProps } from './lib/contentTypes.types';
 import { getPageBadges, getPageTitle, TitleTypes } from './lib/helpers';
 import { fieldTypesFacade } from './lib/store/fieldTypes';
@@ -401,28 +395,6 @@ sitesConnector.registerRoutes({
 });
 
 registerContentTypeAPI();
-
-formRendererConnector.api.fieldRegistry.add([
-	{
-		name: DYNAMIC_FIELD_SETTINGS_NAME,
-		module: 'content-types',
-		component: DynamicFieldSettings,
-	},
-	{
-		name: 'contentTypesSelect',
-		module: 'content-types',
-		component: ContentTypesSelect,
-	},
-	{
-		name: 'textWithStyle',
-		module: 'content-types',
-		component: TextWithStyle,
-	},
-	{
-		name: 'textareaWithStyle',
-		module: 'content-types',
-		component: TextareaWithStyle,
-	},
-]);
+registerFields();
 
 export * from './lib/api/api.types';
