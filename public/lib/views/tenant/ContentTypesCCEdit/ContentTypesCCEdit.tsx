@@ -1,7 +1,7 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import {
-	alertService,
+	AlertContainer,
 	DataLoader,
 	DeletePrompt,
 	LeavePrompt,
@@ -18,9 +18,9 @@ import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'r
 import { NavLink } from 'react-router-dom';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
-import { MODULE_PATHS } from '../../../contentTypes.const';
+import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
-import { showCompartmentErrorAlert, validateCompartments } from '../../../helpers';
+import { COMPARTMENT_ERROR_DEFAULTS, showCompartmentErrorAlert, validateCompartments } from '../../../helpers';
 import {
 	useActiveField,
 	useActiveFieldType,
@@ -154,7 +154,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	 */
 
 	const onFieldChange = (data: ContentTypeFieldDetailModel): void => {
-		const valid = validateCompartments(
+		validateCompartments(
 			compartments,
 			data,
 			validate,
@@ -163,10 +163,6 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			fieldType as FieldType,
 			(preset as unknown) as Preset
 		);
-
-		if (valid) {
-			alertService.dismiss();
-		}
 
 		contentTypesFacade.updateActiveField(data);
 	};
@@ -224,7 +220,11 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			contentTypesFacade.updateField(activeField);
 			contentTypesFacade.clearActiveField();
 		} else {
-			showCompartmentErrorAlert();
+			showCompartmentErrorAlert({
+				title: COMPARTMENT_ERROR_DEFAULTS.title,
+				message: COMPARTMENT_ERROR_DEFAULTS.message,
+				containerId: ALERT_CONTAINER_IDS.configureCC,
+			});
 		}
 
 		setHasSubmit(true);
@@ -320,6 +320,10 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 
 	return (
 		<>
+			<AlertContainer
+				toastClassName="u-margin-bottom"
+				containerId={ALERT_CONTAINER_IDS.configureCC}
+			/>
 			{!invalidCCUuid ? (
 				<DataLoader loadingState={initialLoading} render={renderCCEdit} />
 			) : (

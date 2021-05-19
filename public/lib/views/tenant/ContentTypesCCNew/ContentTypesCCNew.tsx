@@ -1,7 +1,7 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import {
-	alertService,
+	AlertContainer,
 	DataLoader,
 	LeavePrompt,
 	LoadingState,
@@ -18,11 +18,12 @@ import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'r
 import { NavLink, useLocation } from 'react-router-dom';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
-import { MODULE_PATHS } from '../../../contentTypes.const';
+import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
 import {
 	generateFieldFromType,
 	showCompartmentErrorAlert,
+	COMPARTMENT_ERROR_DEFAULTS,
 	validateCompartments,
 } from '../../../helpers';
 import {
@@ -258,14 +259,18 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			contentTypesFacade.addField(activeField);
 			contentTypesFacade.clearActiveField();
 		} else {
-			showCompartmentErrorAlert();
+			showCompartmentErrorAlert({
+				title: COMPARTMENT_ERROR_DEFAULTS.title,
+				message: COMPARTMENT_ERROR_DEFAULTS.message,
+				containerId: ALERT_CONTAINER_IDS.configureCC,
+			});
 		}
 
 		setHasSubmit(true);
 	};
 
 	const onFieldTypeChange = (data: ContentTypeFieldDetailModel): void => {
-		const valid = validateCompartments(
+		validateCompartments(
 			compartments,
 			data,
 			validate,
@@ -274,10 +279,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			fieldType as FieldType,
 			(preset as unknown) as Preset
 		);
-
-		if (valid) {
-			alertService.dismiss();
-		}
 
 		contentTypesFacade.updateActiveField(data);
 	};
@@ -376,6 +377,10 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 
 	return (
 		<>
+			<AlertContainer
+				toastClassName="u-margin-bottom"
+				containerId={ALERT_CONTAINER_IDS.configureCC}
+			/>
 			<DataLoader loadingState={initialLoading} render={renderCCNew} />
 			<LeavePrompt
 				allowedPaths={CC_NEW_ALLOWED_PATHS}

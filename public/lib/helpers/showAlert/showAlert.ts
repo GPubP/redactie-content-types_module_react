@@ -20,7 +20,7 @@ export const showAlert = (
 	}
 };
 
-const COMPARTMENT_ERROR_DEFAULTS = {
+export const COMPARTMENT_ERROR_DEFAULTS = {
 	title: 'Opgelet',
 	message:
 		'Er staan fouten in het formulier op deze pagina of je bent iets vergeten invullen. Gelieve de gemarkeerde velden na te kijken.',
