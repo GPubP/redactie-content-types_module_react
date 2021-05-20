@@ -50,7 +50,7 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 				return contentItemCount > 0 ? (
 					<span>{contentItemCount}</span>
 				) : (
-					<span className="u-text-light">Geen</span>
+					<span className="u-text-light u-text-italic">Geen</span>
 				);
 			},
 			disableSorting: true,
