@@ -154,7 +154,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			fieldType &&
 			(!presetUuid || preset)
 		) {
-			console.log('send', activeField);
 			// Initial run validation
 			validateCompartments(
 				compartments,
