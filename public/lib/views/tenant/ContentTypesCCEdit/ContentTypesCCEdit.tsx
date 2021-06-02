@@ -20,7 +20,11 @@ import { NavLink } from 'react-router-dom';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
-import { COMPARTMENT_ERROR_DEFAULTS, showCompartmentErrorAlert, validateCompartments } from '../../../helpers';
+import {
+	COMPARTMENT_ERROR_DEFAULTS,
+	showCompartmentErrorAlert,
+	validateCompartments,
+} from '../../../helpers';
 import {
 	useActiveField,
 	useActiveFieldType,
@@ -156,7 +160,10 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 	const onFieldChange = (data: ContentTypeFieldDetailModel): void => {
 		validateCompartments(
 			compartments,
-			data,
+			{
+				...activeField,
+				...data,
+			},
 			validate,
 			setVisibility,
 			navItemMatcher,

@@ -21,9 +21,9 @@ import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/trans
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
 import {
+	COMPARTMENT_ERROR_DEFAULTS,
 	generateFieldFromType,
 	showCompartmentErrorAlert,
-	COMPARTMENT_ERROR_DEFAULTS,
 	validateCompartments,
 } from '../../../helpers';
 import {
@@ -154,6 +154,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			fieldType &&
 			(!presetUuid || preset)
 		) {
+			console.log('send', activeField);
 			// Initial run validation
 			validateCompartments(
 				compartments,
@@ -272,7 +273,10 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	const onFieldTypeChange = (data: ContentTypeFieldDetailModel): void => {
 		validateCompartments(
 			compartments,
-			data,
+			{
+				...activeField,
+				...data,
+			},
 			validate,
 			setVisibility,
 			navItemMatcher,

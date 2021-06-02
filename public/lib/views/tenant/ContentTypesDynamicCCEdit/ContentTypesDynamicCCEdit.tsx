@@ -195,7 +195,10 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	const onFieldChange = (data: ContentTypeFieldDetailModel): void => {
 		validateCompartments(
 			compartments,
-			data,
+			{
+				...activeField,
+				...data,
+			},
 			validate,
 			setVisibility,
 			navItemMatcher,

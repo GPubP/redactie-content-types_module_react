@@ -35,6 +35,7 @@ export function validateCompartments(
 		(acc, compartment) => {
 			// only validate visible compartments
 			if (typeof compartment.validate === 'function' && !!compartment.isVisible) {
+				console.log('validate', compartment.name);
 				const isValid = compartment.validate(values, fieldType, preset);
 				setValidity(compartment.name, isValid);
 				acc[compartment.name] = {
