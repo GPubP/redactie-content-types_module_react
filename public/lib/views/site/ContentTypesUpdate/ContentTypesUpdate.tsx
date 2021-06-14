@@ -110,7 +110,12 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 
 	const pageTitle =
 		typeof activeRouteConfig?.title === 'function'
-			? activeRouteConfig.title(contentTypeLoadingState !== LoadingState.Loading ? contentType : null, activeField, dynamicActiveField, t)
+			? activeRouteConfig.title(
+					contentTypeLoadingState !== LoadingState.Loading ? contentType : null,
+					activeField,
+					dynamicActiveField,
+					t
+			  )
 			: '';
 
 	const pageBadges: ContextHeaderBadge =
