@@ -1,9 +1,4 @@
-import { Button } from '@acpaas-ui/react-components';
-import {
-	EllipsisWithTooltip,
-	PaginatedTable,
-	TooltipTypeMap,
-} from '@acpaas-ui/react-editorial-components';
+import { PaginatedTable } from '@acpaas-ui/react-editorial-components';
 import { SiteListModel, UpdateSitePayload } from '@redactie/sites-module';
 import {
 	AlertContainer,
@@ -11,13 +6,11 @@ import {
 	parseOrderByToString,
 	parseStringToOrderBy,
 	SearchParams,
-	TableColumn,
 	useAPIQueryParams,
 } from '@redactie/utils';
 import React, { FC, useEffect, useMemo, useReducer, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 
-import SiteStatus from '../../../components/SiteStatus/SiteStatus';
 import sitesConnector from '../../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS } from '../../../contentTypes.const';
@@ -26,6 +19,7 @@ import {
 	SiteContentTypesDetailRouteParams,
 } from '../../../contentTypes.types';
 
+import { DETAIL_SITES_COLUMNS } from './ContentTypesDetailSites.const';
 import {
 	PaginatedSitesActionTypes,
 	paginatedSitesReducer,
@@ -166,85 +160,12 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 			isUpdating: !!sitesDetailUIMap && !!sitesDetailUIMap[site.uuid]?.isUpdating,
 		}));
 
-		const sitesColumns: TableColumn<SitesOverviewRowData>[] = [
-			{
-				label: 'Site',
-				value: 'name',
-				width: '35%',
-				component(name: string, { description }) {
-					return (
-						<div>
-							<p>
-								<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
-									{name}
-								</EllipsisWithTooltip>
-							</p>
-							<p className="u-text-light">
-								<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
-									{description}
-								</EllipsisWithTooltip>
-							</p>
-						</div>
-					);
-				},
-			},
-			{
-				label: 'Aantal content items',
-				width: '25%',
-				value: 'contentItems',
-				disableSorting: true,
-				component(contentItemsAmount: number | undefined) {
-					return <div>{contentItemsAmount ?? 0}</div>;
-				},
-			},
-			{
-				label: t(CORE_TRANSLATIONS.TABLE_STATUS),
-				value: 'active',
-				width: '10%',
-				component(active: boolean | undefined) {
-					return <SiteStatus active={!!active} />;
-				},
-			},
-			{
-				label: '',
-				disableSorting: true,
-				classList: ['u-text-right'],
-				width: '25%',
-				component(value, { contentItems, contentTypes, id, isUpdating }) {
-					const isActive = (contentTypes || []).includes(contentType._id);
-
-					if (isActive) {
-						return (
-							<Button
-								iconLeft={isUpdating ? 'circle-o-notch fa-spin' : null}
-								disabled={isUpdating || contentItems > 0}
-								onClick={() => {
-									removeCTsFromSites(id);
-								}}
-								type="danger"
-								outline
-							>
-								{t(CORE_TRANSLATIONS.BUTTON_DEACTIVATE)}
-							</Button>
-						);
-					}
-
-					return (
-						<Button
-							iconLeft={isUpdating ? 'circle-o-notch fa-spin' : null}
-							disabled={isUpdating}
-							onClick={() => {
-								setCTsOnSites(id);
-							}}
-							type="success"
-							outline
-						>
-							{t(CORE_TRANSLATIONS.BUTTON_ACTIVATE)}
-						</Button>
-					);
-				},
-			},
-		];
+		const sitesColumns = DETAIL_SITES_COLUMNS(
+			t,
+			contentType._id,
+			removeCTsFromSites,
+			setCTsOnSites
+		);
 
 		return (
 			<>

@@ -156,7 +156,11 @@ export class PresetsFacade {
 				}
 			})
 			.catch(error => {
-				showAlert(serviceOptions.alertContainerId as string, 'error', alertMessages.fetch.error);
+				showAlert(
+					serviceOptions.alertContainerId as string,
+					'error',
+					alertMessages.fetch.error
+				);
 				this.listStore.update({
 					isFetching: false,
 					error,
