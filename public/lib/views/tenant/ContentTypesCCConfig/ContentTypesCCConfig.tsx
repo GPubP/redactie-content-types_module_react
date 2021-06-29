@@ -112,11 +112,20 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		}, [] as FieldSchema[]),
 	});
 
-	const generateFormSchemaFromFieldTypeData = (fieldTypeData: FieldTypeData): FormSchema => ({
-		fields: formRendererConnector.api.parseFields(
+	const generateFormSchemaFromFieldTypeData = (fieldTypeData: FieldTypeData): FormSchema => {
+		const valueSyncMap = formRendererConnector.api.getValueSyncMap(
 			fieldTypeData?.formSchema?.fields as ContentTypeFieldSchema[]
-		),
-	});
+		);
+
+		return {
+			fields: formRendererConnector.api.parseFields(
+				fieldTypeData?.formSchema?.fields as ContentTypeFieldSchema[],
+				{
+					valueSyncMap,
+				}
+			),
+		};
+	};
 
 	const schema: FormSchema = useMemo(
 		() =>
