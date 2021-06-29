@@ -114,7 +114,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 
 	const generateFormSchemaFromFieldTypeData = (fieldTypeData: FieldTypeData): FormSchema => {
 		const valueSyncMap = formRendererConnector.api.getValueSyncMap(
-			fieldTypeData?.formSchema?.fields
+			fieldTypeData?.formSchema?.fields as ContentTypeFieldSchema[]
 		);
 
 		return {
