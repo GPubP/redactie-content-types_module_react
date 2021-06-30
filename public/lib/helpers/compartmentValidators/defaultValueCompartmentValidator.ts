@@ -29,6 +29,7 @@ const getDefaultValueField = (field: ContentTypeFieldDetail): ContentTypeFieldDe
 		name: 'defaultValue',
 		generalConfig: {
 			...field.generalConfig,
+			min: 0,
 			required: false,
 		},
 		validation: {
