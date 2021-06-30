@@ -35,6 +35,7 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 							hidden: false,
 							disabled: false,
 							required: false,
+							min: 0,
 						},
 						name: 'defaultValue',
 					} as ContentTypeFieldSchema,
