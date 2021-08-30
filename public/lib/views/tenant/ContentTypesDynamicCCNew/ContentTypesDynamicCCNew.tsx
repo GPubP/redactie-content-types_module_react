@@ -147,6 +147,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	}, [dynamicActiveField, dynamicField, fieldTypeUI, presetUI]);
 
 	useEffect(() => {
+		console.log(dynamicActiveField);
 		if (
 			!compartmentsInitialValidated &&
 			compartmentsInitialized &&
@@ -237,6 +238,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 					guideline: fieldType.data.generalConfig.defaultGuideline || '',
 				},
 			};
+			console.log('set initial values', initialValues);
 			dynamicFieldFacade.setActiveField(
 				generateFieldFromType(fieldType, initialValues, undefined, preset || undefined)
 			);
@@ -295,7 +297,12 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		}
 		// Only submit the form if all compartments are valid
 		if (compartmentsAreValid) {
-			dynamicFieldFacade.addField(omit(['__new'])(dynamicActiveField));
+			dynamicFieldFacade.addField(
+				omit(['__new'])({
+					...dynamicActiveField,
+					name: kebabCase(dynamicActiveField.label),
+				})
+			);
 			navigateToDetail();
 		} else {
 			showCompartmentErrorAlert();
