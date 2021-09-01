@@ -147,7 +147,6 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	}, [dynamicActiveField, dynamicField, fieldTypeUI, presetUI]);
 
 	useEffect(() => {
-		console.log(dynamicActiveField);
 		if (
 			!compartmentsInitialValidated &&
 			compartmentsInitialized &&
@@ -238,7 +237,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 					guideline: fieldType.data.generalConfig.defaultGuideline || '',
 				},
 			};
-			console.log('set initial values', initialValues);
+
 			dynamicFieldFacade.setActiveField(
 				generateFieldFromType(fieldType, initialValues, undefined, preset || undefined)
 			);
