@@ -13,7 +13,7 @@ import {
 	useTenantContext,
 } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import {
@@ -22,7 +22,12 @@ import {
 	CONTENT_TYPE_DETAIL_TAB_MAP,
 	MODULE_PATHS,
 } from '../../../contentTypes.const';
-import { ContentTypesRouteProps, Tab } from '../../../contentTypes.types';
+import {
+	ContentTypesRouteParams,
+	ContentTypesRouteProps,
+	CtTypes,
+	Tab,
+} from '../../../contentTypes.types';
 import { generateEmptyContentType } from '../../../helpers';
 import { useActiveTabs, useContentType, useRoutesBreadcrumbs } from '../../../hooks';
 import { ContentTypeCreateRequest, ContentTypeMeta } from '../../../services/contentTypes';
@@ -37,10 +42,11 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const { generatePath, navigate } = useNavigate();
 	const [t] = useCoreTranslation();
+	const { ctType } = useParams<ContentTypesRouteParams>();
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
 			name: 'Content types',
-			target: generatePath(MODULE_PATHS.admin),
+			target: generatePath(MODULE_PATHS.admin, { ctType }),
 		},
 	]);
 	const [contentTypeLoadingState, , , contentType] = useContentType();
@@ -61,7 +67,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 
 	useEffect(() => {
 		if (contentType?.uuid) {
-			navigate(MODULE_PATHS.detailCC, { contentTypeUuid: contentType.uuid });
+			navigate(MODULE_PATHS.detailCC, { contentTypeUuid: contentType.uuid, ctType });
 		}
 
 		if (contentTypeLoadingState !== LoadingState.Loading) {
@@ -69,7 +75,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		}
 
 		setInitialLoading(LoadingState.Loading);
-	}, [contentType, contentTypeLoadingState, navigate]);
+	}, [contentType, contentTypeLoadingState, ctType, navigate]);
 
 	/**
 	 * Methods
@@ -82,7 +88,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 						...generateEmptyContentType(),
 						meta: {
 							...(sectionData as ContentTypeMeta),
-							canBeFiltered: true,
+							canBeFiltered: ctType === CtTypes.contentTypes,
 						},
 					} as ContentTypeCreateRequest)
 					.then(() => {
@@ -103,7 +109,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		const extraOptions = {
 			allowedPaths: CT_SETTINGS_CREATE_ALLOWED_PATHS,
 			contentType: contentType || generateEmptyContentType(),
-			onCancel: () => navigate(MODULE_PATHS.admin),
+			onCancel: () => navigate(MODULE_PATHS.root, { ctType }),
 			onSubmit: (sectionData: any, tab: Tab, cb: () => void) =>
 				upsertCT(sectionData, tab, cb),
 		};
@@ -123,7 +129,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 				tabs={activeTabs.slice(0, 1)}
 				linkProps={(props: ContextHeaderTabLinkProps) => ({
 					...props,
-					to: generatePath(`${MODULE_PATHS.create}/${props.href}`),
+					to: generatePath(`${MODULE_PATHS.create}/${props.href}`, { ctType }),
 					component: Link,
 				})}
 				title={pageTitle}

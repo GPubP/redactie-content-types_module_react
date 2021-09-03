@@ -40,6 +40,7 @@ const ContentTypeDetailExternal: FC<ContentTypesDetailRouteProps<ContentTypeDeta
 
 		onSubmit(value, mapExternalTabToTab(activeTab));
 	};
+
 	const getExternalTabValue = (activeTab: Tab): ExternalTabValue => {
 		if (!contentType) {
 			return { config: {}, validationSchema: {} };

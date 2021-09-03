@@ -12,12 +12,17 @@ import React, { FC, useEffect, useMemo, useReducer, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 
 import sitesConnector from '../../../connectors/sites';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
+import {
+	CORE_TRANSLATIONS,
+	useCoreTranslation,
+	useModuleTranslation,
+} from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS } from '../../../contentTypes.const';
 import {
 	ContentTypesDetailRouteProps,
 	SiteContentTypesDetailRouteParams,
 } from '../../../contentTypes.types';
+import { MODULE_TRANSLATIONS } from '../../../i18next/translations.const';
 
 import { DETAIL_SITES_COLUMNS } from './ContentTypesDetailSites.const';
 import {
@@ -28,7 +33,8 @@ import { SitesOverviewRowData } from './ContentTypesSites.types';
 
 const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => {
 	const [t] = useCoreTranslation();
-	const { contentTypeUuid } = useParams<SiteContentTypesDetailRouteParams>();
+	const [tModule] = useModuleTranslation();
+	const { contentTypeUuid, ctType } = useParams<SiteContentTypesDetailRouteParams>();
 	const unmountedRef = useRef(false);
 	const [query, setQuery] = useAPIQueryParams({
 		sort: {
@@ -52,6 +58,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 		return paginatedSitesView.map(siteData => siteData.uuid);
 	}, [paginatedSitesView]);
 	const [, sitesDetailUIMap] = sitesConnector.hooks.useSitesUIStates(siteIds);
+	const TYPE_TRANSLATIONS = MODULE_TRANSLATIONS[ctType];
 
 	useEffect(() => {
 		if (paginatedSites.length > 0) {
@@ -177,11 +184,7 @@ const ContentTypeSites: FC<ContentTypesDetailRouteProps> = ({ contentType }) => 
 					toastClassName="u-margin-bottom"
 					containerId={ALERT_CONTAINER_IDS.detailSites}
 				/>
-				<p className="u-margin-bottom">
-					Bepaal op welke sites dit content type geactiveerd mag worden. Opgelet, u kan
-					het content type enkel deactiveren wanneer er géén content items van dit type
-					meer bestaan binnen de desbetreffende site.
-				</p>
+				<p className="u-margin-bottom">{tModule(TYPE_TRANSLATIONS.SITES_INTRO)}</p>
 				<PaginatedTable
 					fixed
 					className="u-margin-top"

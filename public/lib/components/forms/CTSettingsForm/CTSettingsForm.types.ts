@@ -1,3 +1,4 @@
+import { I18NextTranslations } from '@redactie/translations-module';
 import { FormikProps, FormikValues } from 'formik';
 import { ReactNode, Ref } from 'react';
 
@@ -14,4 +15,5 @@ export interface CTSettingsFormProps {
 	isUpdate?: boolean;
 	formikRef?: Ref<FormikProps<FormikValues>>;
 	onSubmit: (values: ContentTypeDetailModel | null) => void;
+	translations: I18NextTranslations;
 }

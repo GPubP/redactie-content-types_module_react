@@ -19,7 +19,7 @@ import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { useCoreTranslation } from '../../../connectors/translations';
+import { useCoreTranslation, useModuleTranslation } from '../../../connectors/translations';
 import {
 	ALERT_CONTAINER_IDS,
 	CONTENT_DETAIL_TABS,
@@ -42,6 +42,7 @@ import {
 	useRoutesBreadcrumbs,
 } from '../../../hooks';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
+import { MODULE_TRANSLATIONS } from '../../../i18next/translations.const';
 import {
 	ContentTypeMeta,
 	ContentTypeUpdateRequest,
@@ -62,20 +63,26 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const activeField = useActiveField();
 	const [t] = useCoreTranslation();
+	const [tModule] = useModuleTranslation();
 	const dynamicActiveField = useDynamicActiveField();
 	const activeRouteConfig = useActiveRouteConfig(location, route);
-	const { contentTypeUuid } = useParams<ContentTypesRouteParams>();
+	const { contentTypeUuid, ctType } = useParams<ContentTypesRouteParams>();
 	const { navigate, generatePath } = useNavigate();
 	const [fieldTypesLoading, fieldTypes] = useFieldTypes();
 	const [presetsLoading, presets] = usePresets();
 	const [contentTypeLoadingState, , , contentType, fieldsByCompartments] = useContentType();
-	const [{ all: externalTabs, active: activeExternalTab }] = useExternalTabsFacade();
+	const context = useMemo(() => ({ ctType }), [ctType]);
+	const [{ allVisible: externalTabs, active: activeExternalTab }] = useExternalTabsFacade(
+		context,
+		contentType
+	);
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, externalTabs, location.pathname);
 	const { tenantId } = useTenantContext();
+	const TYPE_TRANSLATIONS = MODULE_TRANSLATIONS[ctType];
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
-			name: 'Content types',
-			target: generatePath(MODULE_PATHS.admin),
+			name: tModule(TYPE_TRANSLATIONS.OVERVIEW_TITLE),
+			target: generatePath(MODULE_PATHS.admin, { ctType }),
 		},
 	]);
 	const guardsMeta = useMemo(() => ({ tenantId }), [tenantId]);
@@ -99,7 +106,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 
 	const pageBadges: ContextHeaderBadge =
 		typeof activeRouteConfig?.badges === 'function'
-			? activeRouteConfig.badges(activeField, dynamicActiveField)
+			? activeRouteConfig.badges(activeField, dynamicActiveField, { ctType, t: tModule })
 			: [];
 
 	useEffect(() => {
@@ -207,7 +214,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	};
 
 	const navigateToOverview = (): void => {
-		navigate(MODULE_PATHS.root);
+		navigate(MODULE_PATHS.root, { ctType });
 	};
 
 	const updateCT = (
@@ -261,6 +268,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 				linkProps={(props: ContextHeaderTabLinkProps) => {
 					const to = generatePath(`${MODULE_PATHS.detail}/${props.href}`, {
 						contentTypeUuid,
+						ctType,
 					});
 					return {
 						...props,

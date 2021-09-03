@@ -1,11 +1,14 @@
 import { ContextHeaderBadge } from '@redactie/utils';
 
+import { CtTypes } from '../../contentTypes.types';
+import { MODULE_TRANSLATIONS } from '../../i18next/translations.const';
 import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
 import { TitleTypes } from '../getPageTitle/getPageTitle.types';
 
 export const getPageBadges = (type: TitleTypes) => (
 	activeField: ContentTypeFieldDetailModel,
-	activeDynamicField: ContentTypeFieldDetailModel
+	activeDynamicField: ContentTypeFieldDetailModel,
+	context?: Record<string, any>
 ): ContextHeaderBadge[] => {
 	switch (type) {
 		case TitleTypes.DynamicField: {
@@ -40,7 +43,10 @@ export const getPageBadges = (type: TitleTypes) => (
 		default:
 			return [
 				{
-					name: 'Content type',
+					name:
+						context?.t && context?.ctType
+							? context.t(MODULE_TRANSLATIONS[context.ctType as CtTypes].BADGE_TYPE)
+							: MODULE_TRANSLATIONS[CtTypes.contentTypes].BADGE_TYPE,
 					type: 'primary',
 				},
 			];

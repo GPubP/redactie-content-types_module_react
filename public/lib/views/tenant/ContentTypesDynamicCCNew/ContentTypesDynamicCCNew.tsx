@@ -14,11 +14,14 @@ import { FormikProps, FormikValues } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import { equals, isEmpty, omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { MODULE_PATHS } from '../../../contentTypes.const';
-import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
+import {
+	ContentTypesDetailRouteParams,
+	ContentTypesDetailRouteProps,
+} from '../../../contentTypes.types';
 import {
 	generateFieldFromType,
 	showCompartmentErrorAlert,
@@ -50,10 +53,11 @@ import {
 const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 	contentType,
 	location,
-	match,
 	route,
 }) => {
-	const { contentTypeUuid, contentComponentUuid } = match.params;
+	const { contentTypeUuid, contentComponentUuid, ctType } = useParams<
+		ContentTypesDetailRouteParams
+	>();
 
 	/**
 	 * Hooks
@@ -96,6 +100,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 		to: generatePath(`${c.slug || c.name}${location.search}`, {
 			contentTypeUuid,
 			contentComponentUuid,
+			ctType,
 		}),
 	}));
 
@@ -253,6 +258,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			{
 				contentTypeUuid,
 				contentComponentUuid,
+				ctType,
 			},
 			{
 				// This will keep the current active field (paragraaf) in state when we redirect.

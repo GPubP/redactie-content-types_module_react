@@ -1,4 +1,6 @@
-import { Tab, TabTypes } from './contentTypes.types';
+import { APIQueryParamsConfig } from '@redactie/utils';
+
+import { CtTypes, Tab, TabTypes } from './contentTypes.types';
 import { DEFAULT_CONTENT_TYPES_SEARCH_PARAMS } from './services/contentTypes';
 
 export const DEFAULT_VALIDATION_SCHEMA = {
@@ -18,20 +20,30 @@ export enum ALERT_CONTAINER_IDS {
 
 export const CONTENT_COMPARTMENT_UUID = 'ce569384-6497-4e1b-84c6-52fa43592c69';
 
-export const OVERVIEW_QUERY_PARAMS_CONFIG = {
-	skip: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.skip, type: 'number' },
-	limit: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit, type: 'number' },
-	sparse: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.sparse, type: 'boolean' },
-	search: { type: 'string' },
-	sort: { type: 'string' },
-	direction: { type: 'number' },
-} as const;
+export const OVERVIEW_QUERY_PARAMS_CONFIG = (ctType?: CtTypes): APIQueryParamsConfig =>
+	({
+		skip: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.skip, type: 'number' },
+		limit: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.limit, type: 'number' },
+		sparse: { defaultValue: DEFAULT_CONTENT_TYPES_SEARCH_PARAMS.sparse, type: 'boolean' },
+		search: { type: 'string' },
+		sort: { type: 'string' },
+		direction: { type: 'number' },
+		type: {
+			defaultValue: !ctType
+				? undefined
+				: ctType === CtTypes.contentBlocks
+				? 'content-block'
+				: 'content-type',
+			type: 'boolean',
+		},
+	} as const);
 
 export const DEFAULT_OVERVIEW_QUERY_PARAMS = {
 	...DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
 	search: undefined,
 	sort: undefined,
 	direction: undefined,
+	type: undefined,
 };
 
 export const CONTENT_TYPE_DETAIL_TAB_MAP: {
@@ -74,7 +86,8 @@ export const SITES_ROOT = 'sites';
 
 export const TENANT_ROOT = '/:tenantId';
 const SITE_ROOT = `/:${SITE_PARAM}`;
-const CC_BASE_PATH = '/content-types/:contentTypeUuid/content-componenten';
+const CT_ROOT = '/:ctType(content-types|content-blokken)';
+const CC_BASE_PATH = `${CT_ROOT}/:contentTypeUuid/content-componenten`;
 const CC_EDIT_PATH = `${CC_BASE_PATH}/:contentComponentUuid/bewerken`;
 const CC_NEW_PATH = `${CC_BASE_PATH}/aanmaken`;
 const CC_DYNAMIC_BASE_PATH = `${CC_EDIT_PATH}/dynamisch`;
@@ -84,17 +97,19 @@ const CC_DYNAMIC_NEW_PATH = `${CC_DYNAMIC_BASE_PATH}/aanmaken`;
 export const MODULE_PATHS = {
 	// TENANT
 	dashboard: '/dashboard',
-	root: '/content-types',
-	admin: '/content-types/beheer',
+	root: CT_ROOT,
+	admin: `${CT_ROOT}/beheer`,
+	adminContentTypes: '/:ctType(content-types)/beheer',
+	adminContentBlocks: '/:ctType(content-blokken)/beheer',
 
-	create: '/content-types/aanmaken',
-	createSettings: '/content-types/aanmaken/instellingen',
+	create: `${CT_ROOT}/aanmaken`,
+	createSettings: `${CT_ROOT}/aanmaken/instellingen`,
 
-	detail: '/content-types/:contentTypeUuid',
-	detailSettings: '/content-types/:contentTypeUuid/instellingen',
-	detailCC: '/content-types/:contentTypeUuid/content-componenten',
-	detailSites: '/content-types/:contentTypeUuid/sites',
-	detailExternal: '/content-types/:contentTypeUuid/:tab',
+	detail: `${CT_ROOT}/:contentTypeUuid`,
+	detailSettings: `${CT_ROOT}/:contentTypeUuid/instellingen`,
+	detailCC: `${CT_ROOT}/:contentTypeUuid/content-componenten`,
+	detailSites: `${CT_ROOT}/:contentTypeUuid/sites`,
+	detailExternal: `${CT_ROOT}/:contentTypeUuid/:tab`,
 
 	detailCCNew: CC_NEW_PATH,
 	detailCCNewSettings: `${CC_NEW_PATH}/instellingen`,

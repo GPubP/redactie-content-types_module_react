@@ -11,12 +11,14 @@ import {
 import { FormikProps, FormikValues } from 'formik';
 import { isEmpty } from 'ramda';
 import React, { FC, useMemo, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { CTSettingsForm } from '../../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, CONTENT_TYPE_DETAIL_TAB_MAP } from '../../../contentTypes.const';
-import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
+import { ContentTypesDetailRouteProps, ContentTypesRouteParams } from '../../../contentTypes.types';
 import { useContentType } from '../../../hooks';
+import { MODULE_TRANSLATIONS } from '../../../i18next/translations.const';
 import { ContentTypeDetailModel } from '../../../store/contentTypes';
 
 const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
@@ -31,6 +33,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	 * Hooks
 	 */
 	const [t] = useCoreTranslation();
+	const { ctType } = useParams<ContentTypesRouteParams>();
 	const [, contentTypeIsUpdating, contentTypeIsCreating] = useContentType();
 	const formikRef = useRef<FormikProps<FormikValues>>();
 	const isLoading = useMemo(() => {
@@ -44,6 +47,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 		formValue,
 		BFF_MODULE_PUBLIC_PATH
 	);
+	const TYPE_TRANSLATIONS = MODULE_TRANSLATIONS[ctType];
 
 	/**
 	 * Methods
@@ -114,6 +118,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			<CTSettingsForm
 				formikRef={instance => (formikRef.current = instance || undefined)}
 				contentType={contentType}
+				translations={TYPE_TRANSLATIONS}
 				isUpdate={isUpdate}
 				onSubmit={onFormSubmit}
 			>
