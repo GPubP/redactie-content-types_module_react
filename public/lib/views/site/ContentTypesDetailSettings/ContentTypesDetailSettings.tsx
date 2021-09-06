@@ -19,6 +19,7 @@ import {
 	SiteContentTypesDetailRouteParams,
 } from '../../../contentTypes.types';
 import { useSites } from '../../../hooks';
+import { MODULE_TRANSLATIONS } from '../../../i18next/translations.const';
 
 const ContentTypeSettings: FC<ContentTypesSiteDetailRoutePropsParams<
 	SiteContentTypesDetailRouteParams
@@ -104,6 +105,7 @@ const ContentTypeSettings: FC<ContentTypesSiteDetailRoutePropsParams<
 				contentType={contentType}
 				disabled
 				isUpdate
+				translations={MODULE_TRANSLATIONS['content-types']}
 				onSubmit={() => undefined}
 			/>
 			<Card className="u-margin-top">

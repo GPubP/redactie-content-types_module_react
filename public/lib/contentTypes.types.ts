@@ -49,7 +49,7 @@ export interface ContentTypesModuleProps<Params extends { [K in keyof Params]?: 
 	tenantId: string;
 }
 
-export interface ContentTypesRouteParams {
+export interface ContentTypesRouteParams extends CtBaseParams {
 	contentTypeUuid: string;
 }
 
@@ -58,12 +58,12 @@ export interface ContentTypesRouteProps<Params = ContentTypesRouteParams>
 	routes: ModuleRouteConfig[];
 }
 
-export interface SiteContentTypesDetailRouteParams {
+export interface SiteContentTypesDetailRouteParams extends CtBaseParams {
 	siteId: string;
 	contentTypeUuid: string;
 }
 
-export interface ContentTypesDetailRouteParams {
+export interface ContentTypesDetailRouteParams extends CtBaseParams {
 	contentTypeUuid: string;
 	contentComponentUuid: string;
 }
@@ -199,4 +199,13 @@ export type AlertMessages<T extends string | number | symbol> = Record<
 export interface OverviewFilterItem extends FilterItem {
 	filterKey: string;
 	formvalue?: any;
+}
+
+export enum CtTypes {
+	contentTypes = 'content-types',
+	contentBlocks = 'content-blokken',
+}
+
+export interface CtBaseParams {
+	ctType: CtTypes;
 }

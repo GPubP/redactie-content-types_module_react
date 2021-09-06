@@ -47,7 +47,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	/**
 	 * Hooks
 	 */
-	const { contentTypeUuid } = useParams<ContentTypesDetailRouteParams>();
+	const { contentTypeUuid, ctType } = useParams<ContentTypesDetailRouteParams>();
 	const [expandedRows, setExpandedRows] = useState<Record<string, any>>({});
 	const { navigate, generatePath } = useNavigate();
 	const [t] = useCoreTranslation();
@@ -96,6 +96,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 
 		navigate(`${MODULE_PATHS.detailCCNewSettings}${queryParams}`, {
 			contentTypeUuid,
+			ctType,
 		});
 	};
 
@@ -310,6 +311,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 						id: cc.uuid,
 						path: generatePath(MODULE_PATHS.detailCCEdit, {
 							contentTypeUuid,
+							ctType,
 							contentComponentUuid: cc.uuid,
 						}),
 						label: cc.label,
@@ -327,6 +329,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 						navigate: () =>
 							navigate(MODULE_PATHS.detailCCEdit, {
 								contentTypeUuid,
+								ctType,
 								contentComponentUuid: cc.uuid,
 							}),
 					})),

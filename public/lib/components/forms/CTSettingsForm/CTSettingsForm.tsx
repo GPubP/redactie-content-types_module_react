@@ -3,7 +3,11 @@ import { CopyValue, ErrorMessage } from '@redactie/utils';
 import { Field, Formik, isFunction } from 'formik';
 import React, { FC } from 'react';
 
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
+import {
+	CORE_TRANSLATIONS,
+	useCoreTranslation,
+	useModuleTranslation,
+} from '../../../connectors/translations';
 import { getFieldState } from '../../../helpers/forms';
 
 import { CT_SETTINGS_VALIDATION_SCHEMA } from './CTSettingsForm.const';
@@ -14,6 +18,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 	contentType,
 	disabled = false,
 	formikRef,
+	translations,
 	onSubmit,
 }) => {
 	/**
@@ -21,6 +26,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 	 */
 
 	const [t] = useCoreTranslation();
+	const [tModule] = useModuleTranslation();
 
 	/**
 	 * Render
@@ -43,7 +49,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 								<div className="col-xs-12 col-md-8">
 									<Field
 										as={TextField}
-										description="Geef het content type een korte en duidelijke naam."
+										description={tModule(translations.SETTINGS_NAME_GUIDELINE)}
 										disabled={disabled}
 										id="meta.label"
 										label="Naam"
@@ -71,8 +77,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 									state={getFieldState(touched, errors, 'meta.description')}
 								/>
 								<small className="u-block u-text-light u-margin-top-xs">
-									Geef het content type een duidelijke beschrijving voor in het
-									overzicht.
+									{tModule(translations.SETTINGS_DESCRIPTION_GUIDELINE)}
 								</small>
 								<ErrorMessage
 									className="u-text-danger u-margin-top-xs"

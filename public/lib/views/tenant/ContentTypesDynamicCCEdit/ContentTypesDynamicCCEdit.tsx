@@ -39,11 +39,17 @@ import {
 } from './ContentTypesDynamicCCEdit.const';
 
 const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
+	ctType: string;
 	contentTypeUuid: string;
 	contentComponentUuid: string;
 	dynamicContentComponentUuid: string;
 }>> = ({ match, contentType, route }) => {
-	const { contentTypeUuid, contentComponentUuid, dynamicContentComponentUuid } = match.params;
+	const {
+		ctType,
+		contentTypeUuid,
+		contentComponentUuid,
+		dynamicContentComponentUuid,
+	} = match.params;
 
 	/**
 	 * Hooks
@@ -80,6 +86,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		hasError: hasSubmit && c.isValid === false,
 		onClick: () => activate(c.name),
 		to: generatePath(c.slug || c.name, {
+			ctType,
 			contentTypeUuid,
 			contentComponentUuid,
 			dynamicContentComponentUuid,
@@ -175,7 +182,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 	const navigateToDetail = (): void => {
 		navigate(
 			activeField?.__new ? MODULE_PATHS.detailCCNewConfig : MODULE_PATHS.detailCCEditConfig,
-			{ contentTypeUuid, contentComponentUuid },
+			{ ctType, contentTypeUuid, contentComponentUuid },
 			{
 				// This will keep the current active field (paragraaf) in state when we redirect.
 				// Changes made to the configuration of this field will not be overwritten

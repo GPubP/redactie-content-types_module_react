@@ -19,17 +19,27 @@ import {
 	useNavigate,
 } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { FilterForm, FilterFormState } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
+import {
+	CORE_TRANSLATIONS,
+	useCoreTranslation,
+	useModuleTranslation,
+} from '../../../connectors/translations';
 import {
 	DEFAULT_OVERVIEW_QUERY_PARAMS,
 	MODULE_PATHS,
 	OVERVIEW_QUERY_PARAMS_CONFIG,
 } from '../../../contentTypes.const';
-import { ContentTypesRouteProps, OverviewFilterItem } from '../../../contentTypes.types';
+import {
+	ContentTypesRouteProps,
+	CtBaseParams,
+	OverviewFilterItem,
+} from '../../../contentTypes.types';
 import { useContentTypes, useRoutesBreadcrumbs, useSites } from '../../../hooks';
+import { MODULE_TRANSLATIONS } from '../../../i18next/translations.const';
 import { contentTypesFacade } from '../../../store/contentTypes';
 
 import { CONTENT_TYPE_OVERVIEW_COLUMNS } from './ContentTypesOverview.const';
@@ -40,8 +50,10 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 	 * Hooks
 	 */
 
-	const [query, setQuery] = useAPIQueryParams(OVERVIEW_QUERY_PARAMS_CONFIG, false);
+	const { ctType } = useParams<CtBaseParams>();
+	const [query, setQuery] = useAPIQueryParams(OVERVIEW_QUERY_PARAMS_CONFIG(ctType), false);
 	const { navigate } = useNavigate();
+
 	const breadcrumbs = useRoutesBreadcrumbs();
 	const [loadingContentTypes, contentTypes, meta] = useContentTypes();
 	const [loadingSites, sites] = useSites();
@@ -51,6 +63,8 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 		mySecurityrights,
 	] = rolesRightsConnector.api.hooks.useMySecurityRightsForTenant(true);
 	const [t] = useCoreTranslation();
+	const [tModule] = useModuleTranslation();
+	const TYPE_TRANSLATIONS = MODULE_TRANSLATIONS[ctType];
 
 	useEffect(() => {
 		if (
@@ -170,7 +184,8 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 			sites: sitesForContentTypeList[contentType.uuid as string],
 			contentItemCount: contentType.meta.contentItemCount || 0,
 			deleted: contentType.meta.deleted || false,
-			navigate: contentTypeUuid => navigate(MODULE_PATHS.detailCC, { contentTypeUuid }),
+			navigate: contentTypeUuid =>
+				navigate(MODULE_PATHS.detailCC, { contentTypeUuid, ctType }),
 		}));
 
 		return (
@@ -197,7 +212,7 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 					activeSorting={activeSorting}
 					totalValues={meta.total || 0}
 					loading={loadingContentTypes === LoadingState.Loading}
-					loadDataMessage="Content types ophalen"
+					loadDataMessage={tModule(TYPE_TRANSLATIONS.OVERVIEW_LOADING)}
 					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 				/>
 			</>
@@ -206,10 +221,13 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 
 	return (
 		<>
-			<ContextHeader title="Content types">
+			<ContextHeader title={tModule(TYPE_TRANSLATIONS.OVERVIEW_TITLE)}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
-					<Button iconLeft="plus" onClick={() => navigate(MODULE_PATHS.create)}>
+					<Button
+						iconLeft="plus"
+						onClick={() => navigate(MODULE_PATHS.create, { ctType })}
+					>
 						{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
 					</Button>
 				</ContextHeaderActionsSection>

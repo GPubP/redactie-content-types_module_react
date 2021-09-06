@@ -15,8 +15,9 @@ import { registerFields } from './lib/components/Fields';
 import rolesRightsConnector from './lib/connectors/rolesRights';
 import sitesConnector from './lib/connectors/sites';
 import { MODULE_PATHS, SITE_PARAM } from './lib/contentTypes.const';
-import { ContentTypesModuleProps } from './lib/contentTypes.types';
+import { ContentTypesModuleProps, CtTypes } from './lib/contentTypes.types';
 import { getPageBadges, getPageTitle, TitleTypes } from './lib/helpers';
+import { registerTranslations } from './lib/i18next';
 import { fieldTypesFacade } from './lib/store/fieldTypes';
 import { presetsFacade } from './lib/store/presets';
 import {
@@ -120,18 +121,37 @@ Core.routes.register({
 				rolesRightsConnector.securityRights.read,
 			]),
 		],
-	},
-	redirect: MODULE_PATHS.admin,
+		params: {
+			ctType: CtTypes.contentTypes,
+		},
+	} as any,
+	redirect: MODULE_PATHS.adminContentTypes,
 	routes: [
 		{
-			path: MODULE_PATHS.admin,
+			path: MODULE_PATHS.adminContentBlocks,
+			breadcrumb: false,
+			component: ContentTypesOverview,
+			navigation: {
+				label: 'Content blokken',
+				order: 1,
+				parentPath: MODULE_PATHS.root,
+				params: {
+					ctType: CtTypes.contentBlocks,
+				},
+			} as any,
+		},
+		{
+			path: MODULE_PATHS.adminContentTypes,
 			breadcrumb: false,
 			component: ContentTypesOverview,
 			navigation: {
 				label: 'Content types',
 				order: 0,
 				parentPath: MODULE_PATHS.root,
-			},
+				params: {
+					ctType: CtTypes.contentTypes,
+				},
+			} as any,
 		},
 		{
 			path: MODULE_PATHS.create,
@@ -394,6 +414,7 @@ sitesConnector.registerRoutes({
 	],
 });
 
+registerTranslations();
 registerContentTypeAPI();
 registerFields();
 

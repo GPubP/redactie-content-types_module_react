@@ -47,7 +47,7 @@ const ContentTypesOverview: React.FC = () => {
 		mySecurityRightsLoadingState,
 		mySecurityrights,
 	] = rolesRightsConnector.api.hooks.useMySecurityRightsForTenant(true);
-	const [query, setQuery] = useAPIQueryParams(OVERVIEW_QUERY_PARAMS_CONFIG, false);
+	const [query, setQuery] = useAPIQueryParams(OVERVIEW_QUERY_PARAMS_CONFIG(), false);
 
 	useEffect(() => {
 		if (

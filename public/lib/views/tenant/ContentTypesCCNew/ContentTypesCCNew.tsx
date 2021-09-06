@@ -47,7 +47,7 @@ import { compartmentsFacade } from '../../../store/ui/compartments';
 import { CC_NEW_ALLOWED_PATHS, CC_NEW_COMPARTMENTS } from './ContentTypesCCNew.const';
 
 const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) => {
-	const { contentTypeUuid } = match.params;
+	const { contentTypeUuid, ctType } = match.params;
 
 	/**
 	 * Hooks
@@ -98,6 +98,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		onClick: () => activate(c.name),
 		to: {
 			pathname: generatePath(`${c.slug || c.name}`, {
+				ctType,
 				contentTypeUuid,
 			}),
 			search: location.search,
@@ -219,7 +220,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 	}, [fieldType, name, preset, fieldCompartment, locationState.keepActiveField]);
 
 	const navigateToDetail = (): void => {
-		navigate(MODULE_PATHS.detailCC, { contentTypeUuid });
+		navigate(MODULE_PATHS.detailCC, { ctType, contentTypeUuid });
 	};
 
 	useEffect(() => {
@@ -306,6 +307,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 					generatePath(
 						MODULE_PATHS.detailCCEditDynamicNewSettings,
 						{
+							ctType,
 							contentTypeUuid,
 							contentComponentUuid: activeField?.uuid,
 						},
@@ -315,6 +317,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 					),
 				getEditPath: (uuid: string) =>
 					generatePath(MODULE_PATHS.detailCCEditDynamicEditSettings, {
+						ctType,
 						contentTypeUuid,
 						contentComponentUuid: activeField?.uuid,
 						dynamicContentComponentUuid: uuid,
