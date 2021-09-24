@@ -105,6 +105,7 @@ export interface ModuleSettings {
 	module?: string;
 	config: Record<string, any>;
 	validationSchema?: ValidationSchema;
+	site?: string;
 }
 
 export interface Compartment {

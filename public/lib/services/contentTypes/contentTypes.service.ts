@@ -5,6 +5,7 @@ import api from '../api/api.service';
 import {
 	CONTENT_TYPES_PREFIX_URL,
 	CONTENT_TYPES_PROXY_PREFIX_URL,
+	CONTENT_TYPES_SITE_WORKFLOWS_PREFIX_URL,
 	DEFAULT_CONTENT_TYPES_SEARCH_PARAMS,
 	SITE_CONTENT_TYPES_PROXY_PREFIX_URL,
 } from './contentTypes.service.const';
@@ -16,9 +17,9 @@ import {
 	ContentTypeResponse,
 	ContentTypesResponse,
 	ContentTypeUpdateRequest,
+	ContentTypeWorkflowUpdateRequest,
+	ModuleSettings,
 } from './contentTypes.service.types';
-
-import { CONTENT_TYPES_SITE_WORKFLOWS_PREFIX_URL, ContentTypeWorkflowUpdateRequest } from '.';
 
 export class ContentTypesApiService {
 	private parseContentTypeDetailFields(fields: ContentTypeFieldDetail[]): ContentTypeField[] {
@@ -140,8 +141,8 @@ export class ContentTypesApiService {
 		payload: ContentTypeWorkflowUpdateRequest,
 		contentTypeId: string,
 		siteId: string
-	): Promise<ContentTypeResponse | null> {
-		const response: ContentTypeResponse = await api
+	): Promise<ModuleSettings | null> {
+		const response: ModuleSettings = await api
 			.post(
 				`${CONTENT_TYPES_SITE_WORKFLOWS_PREFIX_URL}/${siteId}/content-types/${contentTypeId}/workflow-update`,
 				{

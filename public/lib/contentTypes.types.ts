@@ -213,6 +213,7 @@ export interface CtBaseParams {
 
 export interface ContentTypeDetailMatchProps {
 	tab: string;
+	siteId: string;
 }
 
 export interface ExternalTabValue {
