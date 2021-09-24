@@ -143,6 +143,7 @@ export const MODULE_PATHS = {
 		overview: `${SITE_ROOT}/content-types/overzicht`,
 		detail: `${SITE_ROOT}/content-types/:contentTypeUuid`,
 		detailSettings: `${SITE_ROOT}/content-types/:contentTypeUuid/instellingen`,
+		detailExternal: `${SITE_ROOT}/content-types/:contentTypeUuid/:tab`,
 	},
 };
 

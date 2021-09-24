@@ -29,6 +29,7 @@ import {
 import {
 	ContentTypesRouteParams,
 	ContentTypesRouteProps,
+	ExternalTabValue,
 	Tab,
 	TabTypes,
 } from '../../../contentTypes.types';
@@ -54,7 +55,6 @@ import {
 	ContentTypeFieldDetailModel,
 	contentTypesFacade,
 } from '../../../store/contentTypes';
-import { ExternalTabValue } from '../ContentTypesDetailExternal';
 
 const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => {
 	/**

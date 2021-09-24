@@ -1,4 +1,4 @@
-import { ContentTypeAPI } from '../contentTypes.types';
+import { ContentTypeAPI, ExternalTabProps } from '../contentTypes.types';
 import {
 	Field,
 	ValicationCheckWithAllowedFields,
@@ -21,7 +21,6 @@ import {
 	PresetDetailUIModel,
 	PresetListModel,
 } from '../store/presets';
-import { ExternalTabProps } from '../views/tenant/ContentTypesDetailExternal';
 
 export {
 	ContentTypeAPI,

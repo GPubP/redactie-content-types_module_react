@@ -3,15 +3,16 @@ import { ContentType } from '@redactie/roles-rights-module/dist/lib/roles.types'
 import { FC } from 'react';
 
 import { ALERT_CONTAINER_IDS } from '../../../contentTypes.const';
-import { CtBaseParams } from '../../../contentTypes.types';
+import { CtBaseParams, ExternalTabProps } from '../../../contentTypes.types';
 import { ContentTypeDetailResponse } from '../../../services/contentTypes';
-import { ExternalTabProps } from '../../../views/tenant/ContentTypesDetailExternal';
 
 export type ExternalTabShow = (
 	context: Partial<CtBaseParams> & Record<string, any>,
 	settings: ExternalTabModel,
 	contentType: ContentType | ContentTypeDetailResponse | null
 ) => boolean | Promise<boolean>;
+
+export type ExternalTabDisabled = (context: Record<string, any>) => boolean;
 
 export interface ExternalTabOptions {
 	label: string;
@@ -20,6 +21,7 @@ export interface ExternalTabOptions {
 	replace?: boolean; // only replace existing if this is true (safety)
 	containerId: ALERT_CONTAINER_IDS;
 	show?: ExternalTabShow;
+	disabled?: boolean | ExternalTabDisabled;
 }
 
 export interface ExternalTabModel {
@@ -27,9 +29,9 @@ export interface ExternalTabModel {
 	name: string;
 	component: FC<ExternalTabProps>;
 	module?: string;
-	disabled?: boolean;
 	containerId: ALERT_CONTAINER_IDS;
 	show?: ExternalTabShow;
+	disabled?: boolean | ExternalTabDisabled;
 }
 
 export interface ExternalTabsState extends EntityState<ExternalTabModel, string>, ActiveState {}

@@ -11,6 +11,7 @@ import {
 	ContentTypesApiService,
 	contentTypesApiService,
 	ContentTypeUpdateRequest,
+	ContentTypeWorkflowUpdateRequest,
 } from '../../services/contentTypes';
 import { presetsFacade, PresetsFacade } from '../presets';
 
@@ -229,6 +230,51 @@ export class ContentTypesFacade extends BaseEntityFacade<
 					isUpdating: false,
 				});
 				this.alertService(alertMessages.update.error, containerId, 'error');
+			});
+	}
+
+	public updateContentTypeSiteWorkflow(
+		payload: ContentTypeWorkflowUpdateRequest,
+		contentType: ContentTypeDetailResponse,
+		siteId: string,
+		containerId: ALERT_CONTAINER_IDS
+	): Promise<void> {
+		this.store.setIsUpdating(true);
+
+		const alertMessages = getAlertMessages(contentType);
+
+		return this.service
+			.updateContentTypeSiteWorkflow(payload, contentType.uuid as string, siteId)
+			.then(response => {
+				console.log(response);
+
+				// if (response) {
+				// 	const { contentType } = this.store.getValue();
+				// 	const fields = this.service.parseContentTypeFields(
+				// 		response.fields,
+				// 		contentType?.fields || []
+				// 	);
+
+				// 	this.store.update({
+				// 		error: null,
+				// 		isUpdating: false,
+				// 		contentType: {
+				// 			...response,
+				// 			fields,
+				// 		},
+				// 	});
+				// 	this.presetFacade.resetDetailStore();
+				// 	this.alertService(alertMessages.update.success, containerId, 'success');
+				// }
+			})
+			.catch(error => {
+				console.log(error);
+
+				// this.store.update({
+				// 	error,
+				// 	isUpdating: false,
+				// });
+				// this.alertService(alertMessages.update.error, containerId, 'error');
 			});
 	}
 

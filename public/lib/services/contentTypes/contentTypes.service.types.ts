@@ -155,6 +155,15 @@ export interface ContentTypesResponse {
 
 export type ContentTypeUpdateRequest = ContentTypeBase<ContentTypeFieldDetail>;
 
+export type ContentTypeWorkflowUpdateRequest = {
+	from: string;
+	to: string;
+	mapping: {
+		from: string;
+		to: string;
+	}[];
+};
+
 export interface ContentTypeCreateRequest {
 	compartments: Compartment[];
 	fields: ContentTypeField[];

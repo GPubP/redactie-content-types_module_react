@@ -39,6 +39,7 @@ import {
 	SiteContentTypesDetailSettings,
 	SiteContentTypesOverview,
 	SiteContentTypesUpdate,
+	SiteContentTypesUpdateExternal,
 } from './lib/views';
 
 // Uncomment the next line if you need to activate the redux devtools
@@ -408,6 +409,20 @@ sitesConnector.registerRoutes({
 					title: getPageTitle(TitleTypes.ContentType),
 					badges: getPageBadges(TitleTypes.ContentType),
 					component: SiteContentTypesDetailSettings,
+				},
+				{
+					path: MODULE_PATHS.site.detailExternal,
+					breadcrumb: false,
+					component: SiteContentTypesUpdateExternal,
+					title: getPageTitle(TitleTypes.ContentType),
+					badges: getPageBadges(TitleTypes.ContentType),
+					guardOptions: {
+						guards: [
+							rolesRightsConnector.api.guards.securityRightsTenantGuard([
+								rolesRightsConnector.securityRights.update,
+							]),
+						],
+					},
 				},
 			],
 		},

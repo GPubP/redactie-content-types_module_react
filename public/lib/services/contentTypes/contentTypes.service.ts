@@ -18,6 +18,8 @@ import {
 	ContentTypeUpdateRequest,
 } from './contentTypes.service.types';
 
+import { CONTENT_TYPES_SITE_WORKFLOWS_PREFIX_URL, ContentTypeWorkflowUpdateRequest } from '.';
+
 export class ContentTypesApiService {
 	private parseContentTypeDetailFields(fields: ContentTypeFieldDetail[]): ContentTypeField[] {
 		return fields.map(field => ({
@@ -129,6 +131,23 @@ export class ContentTypesApiService {
 			.put(`${CONTENT_TYPES_PREFIX_URL}/${contentType.uuid}`, {
 				json: data,
 			})
+			.json();
+
+		return response;
+	}
+
+	public async updateContentTypeSiteWorkflow(
+		payload: ContentTypeWorkflowUpdateRequest,
+		contentTypeId: string,
+		siteId: string
+	): Promise<ContentTypeResponse | null> {
+		const response: ContentTypeResponse = await api
+			.post(
+				`${CONTENT_TYPES_SITE_WORKFLOWS_PREFIX_URL}/${siteId}/content-types/${contentTypeId}/workflow-update`,
+				{
+					json: payload,
+				}
+			)
 			.json();
 
 		return response;
