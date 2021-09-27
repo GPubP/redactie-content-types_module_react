@@ -11,6 +11,7 @@ import {
 	ContentTypesApiService,
 	contentTypesApiService,
 	ContentTypeUpdateRequest,
+	ContentTypeWorkflowUpdateRequest,
 } from '../../services/contentTypes';
 import { presetsFacade, PresetsFacade } from '../presets';
 
@@ -217,6 +218,52 @@ export class ContentTypesFacade extends BaseEntityFacade<
 						contentType: {
 							...response,
 							fields,
+						},
+					});
+					this.presetFacade.resetDetailStore();
+					this.alertService(alertMessages.update.success, containerId, 'success');
+				}
+			})
+			.catch(error => {
+				this.store.update({
+					error,
+					isUpdating: false,
+				});
+				this.alertService(alertMessages.update.error, containerId, 'error');
+			});
+	}
+
+	public updateContentTypeSiteWorkflow(
+		payload: ContentTypeWorkflowUpdateRequest,
+		contentType: ContentTypeDetailResponse,
+		siteId: string,
+		containerId: ALERT_CONTAINER_IDS
+	): Promise<void> {
+		this.store.setIsUpdating(true);
+
+		const alertMessages = getAlertMessages(contentType);
+
+		return this.service
+			.updateContentTypeSiteWorkflow(payload, contentType.uuid as string, siteId)
+			.then(response => {
+				if (response) {
+					const { contentType } = this.store.getValue();
+					const modulesConfig = (contentType as ContentTypeDetailResponse)?.modulesConfig.map(
+						config => {
+							if (config.uuid === response.uuid && config.site === response.site) {
+								return response;
+							}
+
+							return config;
+						}
+					);
+
+					this.store.update({
+						error: null,
+						isUpdating: false,
+						contentType: {
+							...(contentType as any),
+							modulesConfig,
 						},
 					});
 					this.presetFacade.resetDetailStore();

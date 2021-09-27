@@ -46,15 +46,15 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const activeRouteConfig = useActiveRouteConfig(location, route);
 	const { contentTypeUuid } = useParams<ContentTypesRouteParams>();
 	const { navigate, generatePath } = useNavigate();
-	const [contentTypeLoadingState, , , contentType] = useContentType();
+	const [contentTypeLoadingState, contentTypeUpdatingState, , contentType] = useContentType();
 	const [{ all: externalTabs }] = useExternalTabsFacade();
+	const { siteId } = useSiteContext();
 	const activeTabs = useActiveTabs(
 		SITE_CT_DETAIL_TABS,
-		disableTabs(externalTabs) as ExternalTabModel[],
+		disableTabs(externalTabs, {}) as ExternalTabModel[],
 		location.pathname
 	);
 	const { tenantId } = useTenantContext();
-	const { siteId } = useSiteContext();
 	const breadcrumbs = useRoutesBreadcrumbs(
 		[
 			{
@@ -130,6 +130,9 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		const extraOptions = {
 			contentType,
 			onCancel: navigateToOverview,
+			isLoading:
+				contentTypeLoadingState !== LoadingState.Loaded ||
+				contentTypeUpdatingState !== LoadingState.Loaded,
 			canUpdate,
 		};
 

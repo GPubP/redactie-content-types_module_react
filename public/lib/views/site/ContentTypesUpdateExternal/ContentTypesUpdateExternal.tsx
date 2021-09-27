@@ -1,32 +1,23 @@
-import { LoadingState } from '@redactie/utils';
-import React, { FC, useEffect, useMemo } from 'react';
+import React, { FC, useEffect } from 'react';
 
 import {
 	ContentTypeDetailMatchProps,
-	ContentTypesDetailRouteProps,
+	ContentTypesSiteDetailRoutePropsParams,
 	ExternalTabValue,
 	Tab,
 } from '../../../contentTypes.types';
 import { mapExternalTabToTab } from '../../../helpers';
-import { useContentType } from '../../../hooks';
-import { useExternalTabsFacade } from '../../../store/api/externalTabs/externalTabs.facade';
+import { useExternalTabsFacade } from '../../../store/api/externalTabs';
 
-const ContentTypeDetailExternal: FC<ContentTypesDetailRouteProps<ContentTypeDetailMatchProps>> = ({
-	contentType,
-	onCancel,
-	onSubmit,
-	match,
-}) => {
-	const { tab } = match.params;
+const ContentTypesUpdateExternal: FC<ContentTypesSiteDetailRoutePropsParams<
+	ContentTypeDetailMatchProps
+>> = ({ contentType, onCancel, onSubmit, match, isLoading }) => {
+	const { tab, siteId } = match.params;
 
 	/**
 	 * HOOKS
 	 */
 	const [{ active: activeTab }, activate] = useExternalTabsFacade();
-	const [, contentTypIsUpdating] = useContentType();
-	const isLoading = useMemo(() => {
-		return contentTypIsUpdating === LoadingState.Loading;
-	}, [contentTypIsUpdating]);
 
 	useEffect(() => {
 		activate(tab);
@@ -49,8 +40,8 @@ const ContentTypeDetailExternal: FC<ContentTypesDetailRouteProps<ContentTypeDeta
 			return { config: {}, validationSchema: {} };
 		}
 
-		const moduleSettings = contentType.modulesConfig.find(
-			moduleConfig => moduleConfig.name === activeTab.id
+		const moduleSettings = (contentType.modulesConfig || []).find(
+			moduleConfig => moduleConfig.name === activeTab.id && moduleConfig.site === siteId
 		);
 
 		return {
@@ -74,4 +65,4 @@ const ContentTypeDetailExternal: FC<ContentTypesDetailRouteProps<ContentTypeDeta
 	) : null;
 };
 
-export default ContentTypeDetailExternal;
+export default ContentTypesUpdateExternal;

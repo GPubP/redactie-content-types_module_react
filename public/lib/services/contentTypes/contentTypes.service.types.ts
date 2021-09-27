@@ -105,6 +105,7 @@ export interface ModuleSettings {
 	module?: string;
 	config: Record<string, any>;
 	validationSchema?: ValidationSchema;
+	site?: string;
 }
 
 export interface Compartment {
@@ -154,6 +155,15 @@ export interface ContentTypesResponse {
  */
 
 export type ContentTypeUpdateRequest = ContentTypeBase<ContentTypeFieldDetail>;
+
+export type ContentTypeWorkflowUpdateRequest = {
+	from: string;
+	to: string;
+	mapping: {
+		from: string;
+		to: string;
+	}[];
+};
 
 export interface ContentTypeCreateRequest {
 	compartments: Compartment[];

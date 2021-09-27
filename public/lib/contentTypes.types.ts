@@ -25,12 +25,18 @@ import { UsePaginatedPresets } from './hooks/usePaginatedPresets/usePaginatedPre
 import { UsePreset } from './hooks/usePreset/usePreset.types';
 import { UsePresets } from './hooks/usePresets/usePresets.types';
 import { UsePresetsUIStates } from './hooks/usePresetsUIStates/usePresetsUIStates.types';
-import { ContentTypeResponse, Field } from './services/contentTypes';
+import {
+	ContentTypeResponse,
+	ContentTypesApiService,
+	Field,
+	ModuleSettings,
+} from './services/contentTypes';
 import { FieldType, FieldTypeMeta, FieldTypesApiService } from './services/fieldTypes';
 import { Preset, PresetsApiService } from './services/presets';
 import {
 	ContentTypeDetailModel,
 	ContentTypeFieldDetailModel,
+	ContentTypesFacade,
 	FieldsByCompartment,
 } from './store/contentTypes';
 import { DynamicFieldDetailModel } from './store/dynamicField/dynamicField.model';
@@ -40,7 +46,6 @@ import {
 	ContentTypesCCConfig,
 	ContentTypesCCSettings,
 	ContentTypesCCValidation,
-	ExternalTabValue,
 } from './views/tenant';
 
 export interface ContentTypesModuleProps<Params extends { [K in keyof Params]?: string } = {}>
@@ -92,6 +97,7 @@ export interface ContentTypesDetailRouteProps<Params = ContentTypesDetailRoutePa
 export interface ContentTypesSiteDetailRoutePropsParams<Params = ContentTypesDetailRouteParams>
 	extends ContentTypesDetailRouteProps<Params> {
 	canUpdate: boolean;
+	isLoading: boolean;
 }
 
 export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
@@ -156,6 +162,10 @@ export interface ContentTypeAPI {
 			service: FieldTypesApiService;
 			facade: FieldTypesFacade;
 		};
+		contentTypes: {
+			service: ContentTypesApiService;
+			facade: ContentTypesFacade;
+		};
 	};
 	hooks: {
 		// Presets
@@ -208,4 +218,24 @@ export enum CtTypes {
 
 export interface CtBaseParams {
 	ctType: CtTypes;
+	siteId: string;
+}
+
+export interface ContentTypeDetailMatchProps {
+	tab: string;
+	siteId: string;
+}
+
+export interface ExternalTabValue {
+	config: ModuleSettings['config'];
+	validationSchema: ModuleSettings['validationSchema'];
+}
+
+export interface ExternalTabProps {
+	contentType: ContentTypeDetailModel;
+	value: ExternalTabValue;
+	isLoading: boolean;
+	onSubmit: (value: ExternalTabValue) => void;
+	onCancel: () => void;
+	updateContentType: (e: ContentTypeDetailModel) => void;
 }
