@@ -237,7 +237,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 		payload: ContentTypeWorkflowUpdateRequest,
 		contentType: ContentTypeDetailResponse,
 		siteId: string,
-		containerId: ALERT_CONTAINER_IDS
+		containerId: ALERT_CONTAINER_IDS = ALERT_CONTAINER_IDS.update
 	): Promise<void> {
 		this.store.setIsUpdating(true);
 
