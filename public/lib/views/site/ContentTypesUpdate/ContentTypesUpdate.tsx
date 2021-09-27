@@ -20,12 +20,7 @@ import { Link, useParams } from 'react-router-dom';
 import rolesRightsConnector from '../../../connectors/rolesRights';
 import { useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
-import {
-	ContentTypesRouteParams,
-	ContentTypesRouteProps,
-	ExternalTabValue,
-	Tab,
-} from '../../../contentTypes.types';
+import { ContentTypesRouteParams, ContentTypesRouteProps } from '../../../contentTypes.types';
 import { disableTabs } from '../../../helpers/tabs';
 import {
 	useActiveField,
@@ -35,7 +30,6 @@ import {
 	useRoutesBreadcrumbs,
 } from '../../../hooks';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
-import { ContentTypeWorkflowUpdateRequest } from '../../../services/contentTypes';
 import { ExternalTabModel, useExternalTabsFacade } from '../../../store/api/externalTabs';
 import { contentTypesFacade } from '../../../store/contentTypes';
 
@@ -114,21 +108,6 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		navigate(`/sites${MODULE_PATHS.site.overview}`, { siteId });
 	};
 
-	const onSubmit = async (data: ExternalTabValue, tab: Tab): Promise<void> => {
-		if (!contentType) {
-			return;
-		}
-
-		if (tab.id === 'workflow') {
-			await contentTypesFacade.updateContentTypeSiteWorkflow(
-				data.config as ContentTypeWorkflowUpdateRequest,
-				contentType,
-				siteId,
-				ALERT_CONTAINER_IDS.update
-			);
-		}
-	};
-
 	const pageTitle =
 		typeof activeRouteConfig?.title === 'function'
 			? activeRouteConfig.title(
@@ -150,7 +129,6 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const renderChildRoutes = (): ReactElement | null => {
 		const extraOptions = {
 			contentType,
-			onSubmit,
 			onCancel: navigateToOverview,
 			isLoading:
 				contentTypeLoadingState !== LoadingState.Loaded ||

@@ -25,12 +25,18 @@ import { UsePaginatedPresets } from './hooks/usePaginatedPresets/usePaginatedPre
 import { UsePreset } from './hooks/usePreset/usePreset.types';
 import { UsePresets } from './hooks/usePresets/usePresets.types';
 import { UsePresetsUIStates } from './hooks/usePresetsUIStates/usePresetsUIStates.types';
-import { ContentTypeResponse, Field, ModuleSettings } from './services/contentTypes';
+import {
+	ContentTypeResponse,
+	ContentTypesApiService,
+	Field,
+	ModuleSettings,
+} from './services/contentTypes';
 import { FieldType, FieldTypeMeta, FieldTypesApiService } from './services/fieldTypes';
 import { Preset, PresetsApiService } from './services/presets';
 import {
 	ContentTypeDetailModel,
 	ContentTypeFieldDetailModel,
+	ContentTypesFacade,
 	FieldsByCompartment,
 } from './store/contentTypes';
 import { DynamicFieldDetailModel } from './store/dynamicField/dynamicField.model';
@@ -155,6 +161,10 @@ export interface ContentTypeAPI {
 		fieldTypes: {
 			service: FieldTypesApiService;
 			facade: FieldTypesFacade;
+		};
+		contentTypes: {
+			service: ContentTypesApiService;
+			facade: ContentTypesFacade;
 		};
 	};
 	hooks: {
