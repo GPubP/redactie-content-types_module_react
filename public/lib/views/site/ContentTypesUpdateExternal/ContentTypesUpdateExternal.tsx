@@ -12,7 +12,7 @@ import { useExternalTabsFacade } from '../../../store/api/externalTabs';
 const ContentTypesUpdateExternal: FC<ContentTypesSiteDetailRoutePropsParams<
 	ContentTypeDetailMatchProps
 >> = ({ contentType, onCancel, onSubmit, match, isLoading }) => {
-	const { tab } = match.params;
+	const { tab, siteId } = match.params;
 
 	/**
 	 * HOOKS
@@ -41,7 +41,7 @@ const ContentTypesUpdateExternal: FC<ContentTypesSiteDetailRoutePropsParams<
 		}
 
 		const moduleSettings = (contentType.modulesConfig || []).find(
-			moduleConfig => moduleConfig.name === activeTab.id
+			moduleConfig => moduleConfig.name === activeTab.id && moduleConfig.site === siteId
 		);
 
 		return {
