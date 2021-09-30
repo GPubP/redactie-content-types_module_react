@@ -18,6 +18,7 @@ import React, { FC, MouseEvent, ReactElement, useEffect, useMemo, useState } fro
 import { Link, useParams } from 'react-router-dom';
 
 import rolesRightsConnector from '../../../connectors/rolesRights';
+import sitesConnector from '../../../connectors/sites';
 import { useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesRouteParams, ContentTypesRouteProps } from '../../../contentTypes.types';
@@ -49,11 +50,20 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const [contentTypeLoadingState, contentTypeUpdatingState, , contentType] = useContentType();
 	const [{ all: externalTabs }] = useExternalTabsFacade();
 	const { siteId } = useSiteContext();
+	const [site] = sitesConnector.hooks.useSite(siteId);
+	const isActive = useMemo(() => {
+		if (!site || !contentType) {
+			return false;
+		}
+
+		return site.data.contentTypes.includes(contentType._id) || false;
+	}, [contentType, site]);
 	const activeTabs = useActiveTabs(
 		SITE_CT_DETAIL_TABS,
-		disableTabs(externalTabs, {}) as ExternalTabModel[],
+		disableTabs(externalTabs, { isActive }) as ExternalTabModel[],
 		location.pathname
 	);
+
 	const { tenantId } = useTenantContext();
 	const breadcrumbs = useRoutesBreadcrumbs(
 		[
