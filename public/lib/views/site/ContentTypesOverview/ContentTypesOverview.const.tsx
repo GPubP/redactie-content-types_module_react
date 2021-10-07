@@ -67,8 +67,6 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 		},
 	];
 
-	console.log('canUpdate', canUpdate);
-
 	if (!canUpdate) {
 		return defaultColumns;
 	}
