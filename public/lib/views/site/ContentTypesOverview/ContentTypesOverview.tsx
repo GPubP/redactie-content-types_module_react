@@ -35,7 +35,6 @@ const ContentTypesOverview: React.FC = () => {
 	/**
 	 * Hooks
 	 */
-
 	const breadcrumbs = useRoutesBreadcrumbs(undefined, undefined, true);
 	const { navigate } = useNavigate();
 	const [t] = useCoreTranslation();
@@ -46,7 +45,10 @@ const ContentTypesOverview: React.FC = () => {
 	const [
 		mySecurityRightsLoadingState,
 		mySecurityrights,
-	] = rolesRightsConnector.api.hooks.useMySecurityRightsForTenant(true);
+	] = rolesRightsConnector.api.hooks.useMySecurityRightsForSite({
+		siteUuid: siteId,
+		onlyKeys: true,
+	});
 	const [query, setQuery] = useAPIQueryParams(OVERVIEW_QUERY_PARAMS_CONFIG(), false);
 
 	useEffect(() => {

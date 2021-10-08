@@ -18,6 +18,7 @@ export const CONTENT_TYPE_OVERVIEW_COLUMNS = (
 	const canUpdate = rolesRightsConnector.api.helpers.checkSecurityRights(mySecurityRights, [
 		rolesRightsConnector.securityRights.update,
 	]);
+
 	const defaultColumns: TableColumn<ContentTypesPerSiteOverviewTableRow>[] = [
 		{
 			label: t(CORE_TRANSLATIONS.TABLE_NAME),
