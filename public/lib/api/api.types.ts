@@ -1,5 +1,6 @@
 import { ContentTypeAPI, ExternalTabProps } from '../contentTypes.types';
 import {
+	ContentTypesResponse,
 	Field,
 	ValicationCheckWithAllowedFields,
 	ValicationCheckWithFields,
@@ -36,6 +37,7 @@ export {
 	ValidationCheckField,
 	ContentTypeDetailModel,
 	ContentTypeFieldDetailModel,
+	ContentTypesResponse,
 	// Presets types
 	CreatePresetPayload,
 	UpdatePresetPayload,
