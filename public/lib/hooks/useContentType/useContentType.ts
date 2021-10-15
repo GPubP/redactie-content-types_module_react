@@ -28,9 +28,7 @@ const useContentType = (): [
 	const fetchingState = error ? LoadingState.Error : isFetching;
 	const updatingState = error ? LoadingState.Error : isUpdating;
 	const creatingState = error ? LoadingState.Error : isCreating;
-	const isFetchingSiteModulesConfigState = error
-		? LoadingState.Error
-		: isFetchingSiteModulesConfig;
+	const fetchingSiteModulesConfigState = error ? LoadingState.Error : isFetchingSiteModulesConfig;
 
 	return [
 		fetchingState,
@@ -38,7 +36,7 @@ const useContentType = (): [
 		creatingState,
 		contentType,
 		fieldsByCompartments,
-		isFetchingSiteModulesConfigState,
+		fetchingSiteModulesConfigState,
 	];
 };
 

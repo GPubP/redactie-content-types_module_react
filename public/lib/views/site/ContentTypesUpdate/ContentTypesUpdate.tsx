@@ -53,18 +53,18 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		,
 		contentType,
 		,
-		isFetchingSiteModulesConfigState,
+		siteModulesConfigState,
 	] = useContentType();
 	const [{ all: externalTabs }] = useExternalTabsFacade();
 	const { siteId } = useSiteContext();
 	const [site] = sitesConnector.hooks.useSite(siteId);
 	const isActive = useMemo(() => {
-		if (!site || !contentType || isFetchingSiteModulesConfigState !== LoadingState.Loaded) {
+		if (!site || !contentType || siteModulesConfigState !== LoadingState.Loaded) {
 			return false;
 		}
 
 		return site.data.contentTypes.includes(contentType._id) || false;
-	}, [contentType, isFetchingSiteModulesConfigState, site]);
+	}, [contentType, siteModulesConfigState, site]);
 	const activeTabs = useActiveTabs(
 		SITE_CT_DETAIL_TABS,
 		disableTabs(externalTabs, { isActive }) as ExternalTabModel[],
