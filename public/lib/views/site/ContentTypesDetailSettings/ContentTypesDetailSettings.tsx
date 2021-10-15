@@ -94,7 +94,7 @@ const ContentTypeSettings: FC<ContentTypesSiteDetailRoutePropsParams<
 			})
 			.then(() => {
 				refreshSites();
-				contentTypesFacade.silentRefreshContentType(siteId, contentType?.uuid as string);
+				contentTypesFacade.fetchSiteModulesConfig(siteId, contentType?.uuid as string);
 			});
 
 		resetChangeDetection();

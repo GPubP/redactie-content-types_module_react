@@ -1,5 +1,11 @@
 import { arrayAdd, arrayRemove, arrayUpdate } from '@datorama/akita';
-import { AlertProps, alertService, BaseEntityFacade, SearchParams } from '@redactie/utils';
+import {
+	AlertProps,
+	alertService,
+	BaseEntityFacade,
+	LoadingState,
+	SearchParams,
+} from '@redactie/utils';
 import { insert, move, omit } from 'ramda';
 
 import { ALERT_CONTAINER_IDS, CONTENT_COMPARTMENT_UUID } from '../../contentTypes.const';
@@ -28,6 +34,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	public readonly meta$ = this.query.meta$;
 	public readonly contentTypes$ = this.query.contentTypes$;
 	public readonly contentType$ = this.query.contentType$;
+	public readonly isFetchingSiteModulesConfig$ = this.query.isFetchingSiteModulesConfig$;
 	public readonly activeField$ = this.query.activeField$;
 	public readonly fieldsByCompartments$ = this.query.fieldsByCompartments$;
 	private readonly presetFacade: PresetsFacade;
@@ -162,7 +169,11 @@ export class ContentTypesFacade extends BaseEntityFacade<
 			});
 	}
 
-	public silentRefreshContentType(siteUuid: string, contentTypeUuid: string): void {
+	public fetchSiteModulesConfig(siteUuid: string, contentTypeUuid: string): void {
+		this.store.update({
+			isFetchingSiteModulesConfig: LoadingState.Loading,
+		});
+
 		this.service
 			.getSiteContentType(siteUuid, contentTypeUuid)
 			.then(response => {
@@ -171,6 +182,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 						error: null,
 						isFetchingOne: false,
 						contentType: response,
+						isFetchingSiteModulesConfig: LoadingState.Loaded,
 					});
 				}
 			})
@@ -178,6 +190,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 				this.store.update({
 					error,
 					isFetchingOne: false,
+					isFetchingSiteModulesConfig: LoadingState.Loaded,
 				});
 			});
 	}
