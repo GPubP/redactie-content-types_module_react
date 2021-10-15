@@ -17,6 +17,9 @@ export class ContentTypesQuery extends BaseEntityQuery<ContentTypesState> {
 	);
 	public contentTypes$ = this.selectAll();
 	public contentType$ = this.select(state => state.contentType).pipe(distinctUntilChanged());
+	public isFetchingSiteModulesConfig$ = this.select(
+		state => state.isFetchingSiteModulesConfig
+	).pipe(distinctUntilChanged());
 	public activeField$ = this.select(state => state.activeField).pipe(distinctUntilChanged());
 
 	public fieldsByCompartments$ = this.contentType$.pipe(

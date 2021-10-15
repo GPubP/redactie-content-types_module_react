@@ -20,6 +20,7 @@ import {
 } from '../../../contentTypes.types';
 import { useSites } from '../../../hooks';
 import { MODULE_TRANSLATIONS } from '../../../i18next/translations.const';
+import { contentTypesFacade } from '../../../store/contentTypes';
 
 const ContentTypeSettings: FC<ContentTypesSiteDetailRoutePropsParams<
 	SiteContentTypesDetailRouteParams
@@ -91,7 +92,10 @@ const ContentTypeSettings: FC<ContentTypesSiteDetailRoutePropsParams<
 				id: site.uuid,
 				body: siteData,
 			})
-			.then(() => refreshSites());
+			.then(() => {
+				refreshSites();
+				contentTypesFacade.fetchSiteModulesConfig(siteId, contentType?.uuid as string);
+			});
 
 		resetChangeDetection();
 	};

@@ -8,5 +8,6 @@ export type UseContentType = () => [
 	LoadingState,
 	LoadingState,
 	ContentTypeDetailModel | null | undefined,
-	FieldsByCompartment[] | undefined
+	FieldsByCompartment[] | undefined,
+	LoadingState
 ];

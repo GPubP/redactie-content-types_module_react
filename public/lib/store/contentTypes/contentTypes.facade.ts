@@ -1,5 +1,11 @@
 import { arrayAdd, arrayRemove, arrayUpdate } from '@datorama/akita';
-import { AlertProps, alertService, BaseEntityFacade, SearchParams } from '@redactie/utils';
+import {
+	AlertProps,
+	alertService,
+	BaseEntityFacade,
+	LoadingState,
+	SearchParams,
+} from '@redactie/utils';
 import { insert, move, omit } from 'ramda';
 
 import { ALERT_CONTAINER_IDS, CONTENT_COMPARTMENT_UUID } from '../../contentTypes.const';
@@ -28,6 +34,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	public readonly meta$ = this.query.meta$;
 	public readonly contentTypes$ = this.query.contentTypes$;
 	public readonly contentType$ = this.query.contentType$;
+	public readonly isFetchingSiteModulesConfig$ = this.query.isFetchingSiteModulesConfig$;
 	public readonly activeField$ = this.query.activeField$;
 	public readonly fieldsByCompartments$ = this.query.fieldsByCompartments$;
 	private readonly presetFacade: PresetsFacade;
@@ -131,10 +138,14 @@ export class ContentTypesFacade extends BaseEntityFacade<
 			});
 	}
 
-	public getSiteContentType(siteUuid: string, contentTypeUuid: string): void {
+	public getSiteContentType(
+		siteUuid: string,
+		contentTypeUuid: string,
+		forceReload = false
+	): void {
 		const { isFetchingOne, contentType } = this.query.getValue();
 
-		if (isFetchingOne || contentType?.uuid === contentTypeUuid) {
+		if (isFetchingOne || (contentType?.uuid === contentTypeUuid && !forceReload)) {
 			return;
 		}
 
@@ -154,6 +165,32 @@ export class ContentTypesFacade extends BaseEntityFacade<
 				this.store.update({
 					error,
 					isFetchingOne: false,
+				});
+			});
+	}
+
+	public fetchSiteModulesConfig(siteUuid: string, contentTypeUuid: string): void {
+		this.store.update({
+			isFetchingSiteModulesConfig: LoadingState.Loading,
+		});
+
+		this.service
+			.getSiteContentType(siteUuid, contentTypeUuid)
+			.then(response => {
+				if (response) {
+					this.store.update({
+						error: null,
+						isFetchingOne: false,
+						contentType: response,
+						isFetchingSiteModulesConfig: LoadingState.Loaded,
+					});
+				}
+			})
+			.catch(error => {
+				this.store.update({
+					error,
+					isFetchingOne: false,
+					isFetchingSiteModulesConfig: LoadingState.Loaded,
 				});
 			});
 	}

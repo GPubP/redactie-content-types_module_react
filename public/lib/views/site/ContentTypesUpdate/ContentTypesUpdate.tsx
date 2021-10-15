@@ -47,17 +47,24 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const activeRouteConfig = useActiveRouteConfig(location, route);
 	const { contentTypeUuid } = useParams<ContentTypesRouteParams>();
 	const { navigate, generatePath } = useNavigate();
-	const [contentTypeLoadingState, contentTypeUpdatingState, , contentType] = useContentType();
+	const [
+		contentTypeLoadingState,
+		contentTypeUpdatingState,
+		,
+		contentType,
+		,
+		siteModulesConfigState,
+	] = useContentType();
 	const [{ all: externalTabs }] = useExternalTabsFacade();
 	const { siteId } = useSiteContext();
 	const [site] = sitesConnector.hooks.useSite(siteId);
 	const isActive = useMemo(() => {
-		if (!site || !contentType) {
+		if (!site || !contentType || siteModulesConfigState !== LoadingState.Loaded) {
 			return false;
 		}
 
 		return site.data.contentTypes.includes(contentType._id) || false;
-	}, [contentType, site]);
+	}, [contentType, siteModulesConfigState, site]);
 	const activeTabs = useActiveTabs(
 		SITE_CT_DETAIL_TABS,
 		disableTabs(externalTabs, { isActive }) as ExternalTabModel[],
@@ -107,7 +114,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 
 	useEffect(() => {
 		if (contentTypeUuid) {
-			contentTypesFacade.getSiteContentType(siteId, contentTypeUuid);
+			contentTypesFacade.getSiteContentType(siteId, contentTypeUuid, true);
 		}
 	}, [contentTypeUuid, siteId]);
 
