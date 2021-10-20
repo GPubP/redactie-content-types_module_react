@@ -158,6 +158,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 						error: null,
 						isFetchingOne: false,
 						contentType: response,
+						isFetchingSiteModulesConfig: LoadingState.Loaded,
 					});
 				}
 			})
