@@ -121,6 +121,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 				translations={TYPE_TRANSLATIONS}
 				isUpdate={isUpdate}
 				onSubmit={onFormSubmit}
+				ctType={ctType}
 			>
 				{({ submitForm }) => {
 					const submit = (): void => {

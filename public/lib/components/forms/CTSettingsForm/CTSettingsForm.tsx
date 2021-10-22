@@ -8,6 +8,7 @@ import {
 	useCoreTranslation,
 	useModuleTranslation,
 } from '../../../connectors/translations';
+import { CtTypes } from '../../../contentTypes.types';
 import { getFieldState } from '../../../helpers/forms';
 
 import { CT_SETTINGS_VALIDATION_SCHEMA } from './CTSettingsForm.const';
@@ -20,6 +21,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 	formikRef,
 	translations,
 	onSubmit,
+	ctType,
 }) => {
 	/**
 	 * Hooks
@@ -65,7 +67,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 								</div>
 							</div>
 						</div>
-						<div className="row u-margin-bottom-lg">
+						<div className="row">
 							<div className="col-xs-12 u-margin-top">
 								<Field
 									as={Textarea}
@@ -86,6 +88,32 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 								/>
 							</div>
 						</div>
+						{ctType === CtTypes.contentTypes && (
+							<div className="row u-margin-bottom-lg">
+								<div className="col-xs-12 u-margin-top">
+									<Field
+										as={TextField}
+										disabled={disabled}
+										id="meta.urlPath.pattern"
+										label="Url patroon"
+										name="meta.urlPath.pattern"
+										state={getFieldState(
+											touched,
+											errors,
+											'meta.urlPath.pattern'
+										)}
+									/>
+									<small className="u-block u-text-light u-margin-top-xs">
+										Voorzie een pad dat voor de slug geplaatst moet worden
+									</small>
+									<ErrorMessage
+										className="u-text-danger u-margin-top-xs"
+										component="p"
+										name="meta.urlPath.pattern"
+									/>
+								</div>
+							</div>
+						)}
 						{values.uuid && (
 							<div className="row u-margin-top">
 								<CopyValue
