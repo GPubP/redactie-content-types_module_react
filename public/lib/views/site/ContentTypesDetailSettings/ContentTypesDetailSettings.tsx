@@ -16,6 +16,7 @@ import sitesConnector from '../../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import {
 	ContentTypesSiteDetailRoutePropsParams,
+	CtTypes,
 	SiteContentTypesDetailRouteParams,
 } from '../../../contentTypes.types';
 import { useSites } from '../../../hooks';
@@ -111,6 +112,9 @@ const ContentTypeSettings: FC<ContentTypesSiteDetailRoutePropsParams<
 				isUpdate
 				translations={MODULE_TRANSLATIONS['content-types']}
 				onSubmit={() => undefined}
+				ctType={
+					contentType.meta.canBeFiltered ? CtTypes.contentTypes : CtTypes.contentBlocks
+				}
 			/>
 			<Card className="u-margin-top">
 				<CardBody>

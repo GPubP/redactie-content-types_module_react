@@ -2,6 +2,7 @@ import { I18NextTranslations } from '@redactie/translations-module';
 import { FormikProps, FormikValues } from 'formik';
 import { ReactNode, Ref } from 'react';
 
+import { CtTypes } from '../../../contentTypes.types';
 import { ContentTypeDetailModel } from '../../../store/contentTypes';
 
 export type CTSettingsFormChildrenFn = (
@@ -16,4 +17,5 @@ export interface CTSettingsFormProps {
 	formikRef?: Ref<FormikProps<FormikValues>>;
 	onSubmit: (values: ContentTypeDetailModel | null) => void;
 	translations: I18NextTranslations;
+	ctType: CtTypes;
 }
