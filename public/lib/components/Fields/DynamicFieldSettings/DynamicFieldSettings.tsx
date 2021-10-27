@@ -115,6 +115,15 @@ const DynamicFieldSettings: React.FC<InputFieldProps> = ({
 									val: values.amount.maxValue,
 									err: 'Er zijn maximum ${params.limit} item(s) toegelaten',
 								},
+								...(!isNaN(values.amount.minValue) && values.amount.minValue > 0
+									? [
+											{
+												key: 'required',
+												val: true,
+												err: 'Dit veld is verplicht',
+											},
+									  ]
+									: []),
 							],
 					  }
 					: {}),
