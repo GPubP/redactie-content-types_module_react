@@ -6,8 +6,8 @@ export const CT_SETTINGS_VALIDATION_SCHEMA = object().shape({
 		description: string().required('Beschrijving is een verplicht veld'),
 		urlPath: object().shape({
 			pattern: string().matches(
-				/^\/[/.a-zA-Z0-9-]+$/,
-				'Het URL patroon is niet correct. Dit moet een geldig pad zijn dat begint met een "/"'
+				/^((\/\[([a-zA-Z0-9])+:([a-zA-Z0-9])+\])|(\/([a-zA-Z0-9-])+))+$/,
+				'Het URL patroon is niet correct. Dit moet een geldig pad zijn dat begint met een "/" en mag enkel pad segmenten en placeholders bevatten'
 			),
 		}),
 	}),
