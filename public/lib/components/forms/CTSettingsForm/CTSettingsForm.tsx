@@ -97,6 +97,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 										id="meta.urlPath.pattern"
 										label="Url patroon"
 										name="meta.urlPath.pattern"
+										required
 										state={getFieldState(
 											touched,
 											errors,
