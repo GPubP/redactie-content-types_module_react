@@ -236,6 +236,14 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		});
 	};
 
+	const removeCT = async (): Promise<void> => {
+		if (!contentType) {
+			return;
+		}
+
+		return contentTypesFacade.removeContentType(contentType).then(() => navigateToOverview());
+	};
+
 	const showTabs = !/\/(aanmaken|bewerken)\//.test(location.pathname);
 
 	/**
@@ -249,6 +257,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			fieldsByCompartments,
 			onCancel: navigateToOverview,
 			onSubmit: updateCT,
+			onDelete: removeCT,
 			fieldsHaveChanged,
 		};
 

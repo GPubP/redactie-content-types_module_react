@@ -10,6 +10,7 @@ export const DEFAULT_VALIDATION_SCHEMA = {
 };
 
 export enum ALERT_CONTAINER_IDS {
+	overview = 'overview',
 	create = 'create',
 	update = 'update',
 	configureCC = 'configure-CC',

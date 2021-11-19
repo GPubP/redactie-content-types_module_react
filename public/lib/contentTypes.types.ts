@@ -91,6 +91,7 @@ export interface ContentTypesDetailRouteProps<Params = ContentTypesDetailRoutePa
 		tab: Tab,
 		cb?: () => void
 	) => void;
+	onDelete?: () => Promise<void>;
 	readonly activeField: ContentTypeFieldDetailModel | null;
 	readonly fieldsHaveChanged: boolean;
 }

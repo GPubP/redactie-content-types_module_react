@@ -1,3 +1,4 @@
+import { SitesResponse } from '@redactie/sites-module';
 import { parseSearchParams, SearchParams } from '@redactie/utils';
 
 import api from '../api/api.service';
@@ -103,6 +104,14 @@ export class ContentTypesApiService {
 		}
 	}
 
+	public async getContentTypeSiteOccurrences(uuid: string): Promise<SitesResponse> {
+		const response: SitesResponse = await api
+			.get(`${CONTENT_TYPES_PROXY_PREFIX_URL}/${uuid}/site-occurrences`)
+			.json();
+
+		return response;
+	}
+
 	public async getSiteContentType(
 		siteUuid: string,
 		contentTypeUuid: string
@@ -164,6 +173,10 @@ export class ContentTypesApiService {
 			.json();
 
 		return response;
+	}
+
+	public async removeContentType(contentTypeUuid: string): Promise<Response> {
+		return await api.delete(`${CONTENT_TYPES_PREFIX_URL}/${contentTypeUuid}`);
 	}
 }
 

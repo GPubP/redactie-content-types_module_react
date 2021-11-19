@@ -9,6 +9,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { SiteListModel } from '@redactie/sites-module';
 import {
+	AlertContainer,
 	DataLoader,
 	LoadingState,
 	OrderBy,
@@ -29,6 +30,7 @@ import {
 	useModuleTranslation,
 } from '../../../connectors/translations';
 import {
+	ALERT_CONTAINER_IDS,
 	DEFAULT_OVERVIEW_QUERY_PARAMS,
 	MODULE_PATHS,
 	OVERVIEW_QUERY_PARAMS_CONFIG,
@@ -233,6 +235,10 @@ const ContentTypesOverview: FC<ContentTypesRouteProps> = () => {
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<Container>
+				<AlertContainer
+					toastClassName="u-margin-bottom"
+					containerId={ALERT_CONTAINER_IDS.overview}
+				/>
 				<DataLoader loadingState={initialLoading} render={renderOverview} />
 			</Container>
 		</>

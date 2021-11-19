@@ -138,9 +138,13 @@ export interface ContentTypeBase<T> {
 	compartments: Compartment[];
 }
 
-export type ContentTypeResponse = ContentTypeBase<ContentTypeField>;
+export interface ContentTypeResponse extends ContentTypeBase<ContentTypeField> {
+	uuid: string;
+}
 
-export type ContentTypeDetailResponse = ContentTypeBase<ContentTypeFieldDetail>;
+export interface ContentTypeDetailResponse extends ContentTypeBase<ContentTypeFieldDetail> {
+	uuid: string;
+}
 
 export interface ContentTypesResponse {
 	data: ContentTypeResponse[];
@@ -154,7 +158,7 @@ export interface ContentTypesResponse {
  * =========================
  */
 
-export type ContentTypeUpdateRequest = ContentTypeBase<ContentTypeFieldDetail>;
+export type ContentTypeUpdateRequest = ContentTypeDetailResponse;
 
 export type ContentTypeWorkflowUpdateRequest = {
 	from: string;

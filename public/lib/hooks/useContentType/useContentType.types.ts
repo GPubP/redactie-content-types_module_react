@@ -1,13 +1,17 @@
+import { SiteResponse } from '@redactie/sites-module';
 import { LoadingState } from '@redactie/utils';
 
-import { ContentTypeDetailModel } from '../../..';
-import { FieldsByCompartment } from '../../store/contentTypes';
+import { ContentTypeDetailModel, FieldsByCompartment } from '../../store/contentTypes';
 
-export type UseContentType = () => [
+export type UseContentTypeResponse = [
 	LoadingState,
 	LoadingState,
 	LoadingState,
 	ContentTypeDetailModel | null | undefined,
 	FieldsByCompartment[] | undefined,
-	LoadingState
+	LoadingState,
+	LoadingState,
+	LoadingState,
+	SiteResponse[] | null
 ];
+export type UseContentType = () => UseContentTypeResponse;

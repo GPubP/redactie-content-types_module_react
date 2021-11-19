@@ -1,3 +1,4 @@
+import { SiteDetailModel } from '@redactie/sites-module';
 import { BaseEntityState } from '@redactie/utils';
 
 import {
@@ -15,6 +16,9 @@ export interface ContentTypesState extends BaseEntityState<ContentTypeModel, str
 	meta?: ContentTypePaging;
 	contentType?: ContentTypeDetailModel;
 	activeField?: ContentTypeFieldDetailModel;
+	siteOccurences: SiteDetailModel[];
+	isFetchingOccurrences: boolean;
+	isRemoving: boolean;
 }
 
 export interface FieldsByCompartment {
