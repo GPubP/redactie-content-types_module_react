@@ -148,7 +148,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 						</p>
 					) : (
 						<p className="u-margin-top-xs u-margin-bottom">
-							Het content-type is actief op <b>{siteOccurrences?.length}</b> sites
+							Het content type is actief op <b>{siteOccurrences?.length}</b> sites
 							waardoor deze niet kan verwijderd worden. Deactiveer het content-type
 							voor alle sites om alsnog het content-type te verwijderen
 						</p>
@@ -231,7 +231,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 								onConfirm={submit}
 							/>
 							<DeletePrompt
-								body="Ben je zeker dat je dit content-type wil verwijderen? Dit kan niet ongedaan gemaakt worden."
+								body="Ben je zeker dat je dit content type wil verwijderen? Dit kan niet ongedaan gemaakt worden."
 								isDeleting={isLoading}
 								show={showDeleteModal}
 								onCancel={() => setShowDeleteModal(false)}
