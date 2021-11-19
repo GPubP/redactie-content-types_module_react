@@ -1,8 +1,11 @@
-import { Button } from '@acpaas-ui/react-components';
+import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
+import { SiteResponse } from '@redactie/sites-module';
 import {
 	AlertContainer,
 	alertService,
+	DataLoader,
+	DeletePrompt,
 	FormikOnChangeHandler,
 	LeavePrompt,
 	LoadingState,
@@ -10,7 +13,7 @@ import {
 } from '@redactie/utils';
 import { FormikProps, FormikValues } from 'formik';
 import { isEmpty } from 'ramda';
-import React, { FC, useMemo, useRef, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { CTSettingsForm } from '../../../components';
@@ -19,12 +22,13 @@ import { ALERT_CONTAINER_IDS, CONTENT_TYPE_DETAIL_TAB_MAP } from '../../../conte
 import { ContentTypesDetailRouteProps, ContentTypesRouteParams } from '../../../contentTypes.types';
 import { useContentType } from '../../../hooks';
 import { MODULE_TRANSLATIONS } from '../../../i18next/translations.const';
-import { ContentTypeDetailModel } from '../../../store/contentTypes';
+import { ContentTypeDetailModel, contentTypesFacade } from '../../../store/contentTypes';
 
 const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	allowedPaths,
 	onCancel,
 	onSubmit,
+	onDelete,
 	contentType,
 }) => {
 	const isUpdate = !!contentType.uuid;
@@ -34,7 +38,17 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	 */
 	const [t] = useCoreTranslation();
 	const { ctType } = useParams<ContentTypesRouteParams>();
-	const [, contentTypeIsUpdating, contentTypeIsCreating] = useContentType();
+	const [
+		,
+		contentTypeIsUpdating,
+		contentTypeIsCreating,
+		,
+		,
+		,
+		,
+		isFetchingSiteOccurrences,
+		siteOccurrences,
+	] = useContentType();
 	const formikRef = useRef<FormikProps<FormikValues>>();
 	const isLoading = useMemo(() => {
 		return isUpdate
@@ -42,12 +56,20 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			: contentTypeIsCreating === LoadingState.Loading;
 	}, [contentTypeIsCreating, contentTypeIsUpdating, isUpdate]);
 	const [formValue, setFormValue] = useState<ContentTypeDetailModel | null>(contentType ?? null);
+	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 	const [hasChanges, resetChangeDetection] = useDetectValueChangesWorker(
 		!isLoading,
 		formValue,
 		BFF_MODULE_PUBLIC_PATH
 	);
 	const TYPE_TRANSLATIONS = MODULE_TRANSLATIONS[ctType];
+	const isRemovable = useMemo(() => Array.isArray(siteOccurrences) && !siteOccurrences.length, [
+		siteOccurrences,
+	]);
+
+	useEffect(() => {
+		contentTypesFacade.getContentTypeSiteOccurrences(contentType.uuid);
+	}, [contentType]);
 
 	/**
 	 * Methods
@@ -109,6 +131,48 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	/**
 	 * Render
 	 */
+
+	const renderDelete = (): ReactElement => {
+		if (!onDelete) {
+			return <></>;
+		}
+
+		return (
+			<Card className="u-margin-top">
+				<CardBody>
+					<h6>Verwijderen</h6>
+					{isRemovable ? (
+						<p className="u-margin-top-xs u-margin-bottom">
+							Opgelet, indien u dit content type verwijdert kan deze niet meer
+							gebruikt worden op sites.
+						</p>
+					) : (
+						<p className="u-margin-top-xs u-margin-bottom">
+							Het content type is actief op <b>{siteOccurrences?.length}</b> sites
+							waardoor deze niet kan verwijderd worden. Deactiveer het content-type
+							voor alle sites om alsnog het content-type te verwijderen
+						</p>
+					)}
+					{!isRemovable && siteOccurrences && (
+						<ul>
+							{siteOccurrences.map((occurrence: SiteResponse, index: number) => (
+								<li key={`${index}_${occurrence.uuid}`}>{occurrence.data.name}</li>
+							))}
+						</ul>
+					)}
+					<Button
+						iconLeft="trash-o"
+						onClick={() => isRemovable && setShowDeleteModal(true)}
+						type="danger"
+						disabled={!isRemovable}
+					>
+						Verwijderen
+					</Button>
+				</CardBody>
+			</Card>
+		);
+	};
+
 	return (
 		<>
 			<AlertContainer
@@ -133,6 +197,10 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 						<>
 							<FormikOnChangeHandler
 								onChange={values => setFormValue(values as ContentTypeDetailModel)}
+							/>
+							<DataLoader
+								loadingState={isFetchingSiteOccurrences}
+								render={renderDelete}
 							/>
 							<ActionBar className="o-action-bar--fixed" isOpen>
 								<ActionBarContentSection>
@@ -161,6 +229,13 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 								when={hasChanges}
 								shouldBlockNavigationOnConfirm
 								onConfirm={submit}
+							/>
+							<DeletePrompt
+								body="Ben je zeker dat je dit content type wil verwijderen? Dit kan niet ongedaan gemaakt worden."
+								isDeleting={isLoading}
+								show={showDeleteModal}
+								onCancel={() => setShowDeleteModal(false)}
+								onConfirm={() => isRemovable && onDelete && onDelete()}
 							/>
 						</>
 					);

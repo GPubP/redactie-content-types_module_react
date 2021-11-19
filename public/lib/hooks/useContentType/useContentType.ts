@@ -1,23 +1,20 @@
 import { LoadingState, useObservable } from '@redactie/utils';
 
-import {
-	ContentTypeDetailModel,
-	contentTypesFacade,
-	FieldsByCompartment,
-} from '../../store/contentTypes';
+import { contentTypesFacade } from '../../store/contentTypes';
 
-const useContentType = (): [
-	LoadingState,
-	LoadingState,
-	LoadingState,
-	ContentTypeDetailModel | null | undefined,
-	FieldsByCompartment[] | undefined,
-	LoadingState
-] => {
+import { UseContentTypeResponse } from './useContentType.types';
+
+const useContentType = (): UseContentTypeResponse => {
 	const isFetching = useObservable(contentTypesFacade.isFetchingOne$, LoadingState.Loading);
 	const isUpdating = useObservable(contentTypesFacade.isUpdating$, LoadingState.Loading);
 	const isCreating = useObservable(contentTypesFacade.isCreating$, LoadingState.Loading);
+	const isRemoving = useObservable(contentTypesFacade.isRemoving$, LoadingState.Loading);
+	const isFetchingSiteOccurrences = useObservable(
+		contentTypesFacade.isFetchingSiteOccurrences$,
+		LoadingState.Loading
+	);
 	const contentType = useObservable(contentTypesFacade.contentType$, null);
+	const siteOccurrences = useObservable(contentTypesFacade.siteOccurrences$, null);
 	const isFetchingSiteModulesConfig = useObservable(
 		contentTypesFacade.isFetchingSiteModulesConfig$,
 		LoadingState.Loading
@@ -37,6 +34,9 @@ const useContentType = (): [
 		contentType,
 		fieldsByCompartments,
 		fetchingSiteModulesConfigState,
+		isRemoving,
+		isFetchingSiteOccurrences,
+		siteOccurrences,
 	];
 };
 

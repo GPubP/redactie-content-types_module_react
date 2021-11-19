@@ -34,6 +34,9 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	public readonly meta$ = this.query.meta$;
 	public readonly contentTypes$ = this.query.contentTypes$;
 	public readonly contentType$ = this.query.contentType$;
+	public readonly siteOccurrences$ = this.query.siteOccurrences$;
+	public readonly isRemoving$ = this.query.isRemoving$;
+	public readonly isFetchingSiteOccurrences$ = this.query.isFetchingSiteOccurrences$;
 	public readonly isFetchingSiteModulesConfig$ = this.query.isFetchingSiteModulesConfig$;
 	public readonly activeField$ = this.query.activeField$;
 	public readonly fieldsByCompartments$ = this.query.fieldsByCompartments$;
@@ -134,6 +137,30 @@ export class ContentTypesFacade extends BaseEntityFacade<
 				this.store.update({
 					error,
 					isFetchingOne: false,
+				});
+			});
+	}
+
+	public getContentTypeSiteOccurrences(uuid: string): void {
+		this.store.update({
+			isFetchingOccurrences: true,
+		});
+
+		this.service
+			.getContentTypeSiteOccurrences(uuid)
+			.then(response => {
+				if (response?._embedded) {
+					this.store.update({
+						siteOccurences: response._embedded,
+					});
+				}
+			})
+			.catch(error => {
+				// Do nothing
+			})
+			.finally(() => {
+				this.store.update({
+					isFetchingOccurrences: false,
 				});
 			});
 	}
@@ -243,24 +270,26 @@ export class ContentTypesFacade extends BaseEntityFacade<
 		return this.service
 			.updateContentType(payload)
 			.then(response => {
-				if (response) {
-					const { contentType } = this.store.getValue();
-					const fields = this.service.parseContentTypeFields(
-						response.fields,
-						contentType?.fields || []
-					);
-
-					this.store.update({
-						error: null,
-						isUpdating: false,
-						contentType: {
-							...response,
-							fields,
-						},
-					});
-					this.presetFacade.resetDetailStore();
-					this.alertService(alertMessages.update.success, containerId, 'success');
+				if (!response) {
+					return;
 				}
+
+				const { contentType } = this.store.getValue();
+				const fields = this.service.parseContentTypeFields(
+					response.fields,
+					contentType?.fields || []
+				);
+
+				this.store.update({
+					error: null,
+					isUpdating: false,
+					contentType: {
+						...response,
+						fields,
+					},
+				});
+				this.presetFacade.resetDetailStore();
+				this.alertService(alertMessages.update.success, containerId, 'success');
 			})
 			.catch(error => {
 				this.store.update({
@@ -314,6 +343,39 @@ export class ContentTypesFacade extends BaseEntityFacade<
 					isUpdating: false,
 				});
 				this.alertService(alertMessages.update.error, containerId, 'error');
+			});
+	}
+
+	public async removeContentType(contentType: ContentTypeDetailResponse): Promise<void> {
+		this.store.update({
+			isRemoving: true,
+		});
+		const alertMessages = getAlertMessages(
+			(contentType as unknown) as ContentTypeDetailResponse
+		);
+
+		return this.service
+			.removeContentType(contentType.uuid)
+			.then(() => {
+				this.store.update({
+					isRemoving: false,
+				});
+
+				this.presetFacade.resetDetailStore();
+				this.alertService(
+					alertMessages.remove.success,
+					ALERT_CONTAINER_IDS.overview,
+					'success'
+				);
+			})
+			.catch(error => {
+				this.store.update({
+					error,
+					isRemoving: false,
+				});
+				this.alertService(alertMessages.remove.error, ALERT_CONTAINER_IDS.update, 'error');
+
+				throw error;
 			});
 	}
 
