@@ -31,7 +31,7 @@ export const getAlertMessages = (data: ContentTypeDetailResponse): AlertMessages
 	remove: {
 		success: {
 			title: 'Content type verwijderd',
-			message: `U hebt het content-type ${data.meta.label} succesvol verwijderd`,
+			message: `U hebt het content type ${data.meta.label} succesvol verwijderd`,
 		},
 		error: {
 			title: 'Content type verwijderen mislukt',
