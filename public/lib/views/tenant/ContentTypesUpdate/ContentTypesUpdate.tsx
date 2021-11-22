@@ -70,7 +70,11 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const { navigate, generatePath } = useNavigate();
 	const [fieldTypesLoading, fieldTypes] = useFieldTypes();
 	const [presetsLoading, presets] = usePresets();
-	const [contentTypeLoadingState, , , contentType, fieldsByCompartments] = useContentType();
+	const {
+		fetchingState: contentTypeLoadingState,
+		contentType,
+		fieldsByCompartments,
+	} = useContentType();
 	const context = useMemo(() => ({ ctType }), [ctType]);
 	const [{ allVisible: externalTabs, active: activeExternalTab }] = useExternalTabsFacade(
 		context,

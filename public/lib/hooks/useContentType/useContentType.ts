@@ -25,19 +25,21 @@ const useContentType = (): UseContentTypeResponse => {
 	const fetchingState = error ? LoadingState.Error : isFetching;
 	const updatingState = error ? LoadingState.Error : isUpdating;
 	const creatingState = error ? LoadingState.Error : isCreating;
+	const removingState = error ? LoadingState.Error : isRemoving;
+	const isFetchingSiteOccurrencesState = error ? LoadingState.Error : isFetchingSiteOccurrences;
 	const fetchingSiteModulesConfigState = error ? LoadingState.Error : isFetchingSiteModulesConfig;
 
-	return [
+	return {
 		fetchingState,
 		updatingState,
 		creatingState,
+		removingState,
 		contentType,
 		fieldsByCompartments,
 		fetchingSiteModulesConfigState,
-		isRemoving,
-		isFetchingSiteOccurrences,
+		isFetchingSiteOccurrencesState,
 		siteOccurrences,
-	];
+	};
 };
 
 export default useContentType;

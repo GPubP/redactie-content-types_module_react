@@ -51,7 +51,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 	const [expandedRows, setExpandedRows] = useState<Record<string, any>>({});
 	const { navigate, generatePath } = useNavigate();
 	const [t] = useCoreTranslation();
-	const [, contentTypeIsUpdating] = useContentType();
+	const { updatingState: contentTypeIsUpdating } = useContentType();
 	const isLoading = useMemo(() => {
 		return contentTypeIsUpdating === LoadingState.Loading;
 	}, [contentTypeIsUpdating]);
