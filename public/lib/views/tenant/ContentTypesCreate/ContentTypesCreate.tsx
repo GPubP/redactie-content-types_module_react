@@ -49,7 +49,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			target: generatePath(MODULE_PATHS.admin, { ctType }),
 		},
 	]);
-	const [contentTypeLoadingState, , , contentType] = useContentType();
+	const { fetchingState: contentTypeLoadingState, contentType } = useContentType();
 	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, [], location.pathname);
 	const { tenantId } = useTenantContext();
 	const guardsMeta = useMemo(

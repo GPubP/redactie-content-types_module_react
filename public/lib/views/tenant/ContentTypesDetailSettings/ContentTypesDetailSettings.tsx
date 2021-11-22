@@ -38,17 +38,12 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	 */
 	const [t] = useCoreTranslation();
 	const { ctType } = useParams<ContentTypesRouteParams>();
-	const [
-		,
-		contentTypeIsUpdating,
-		contentTypeIsCreating,
-		,
-		,
-		,
-		,
-		isFetchingSiteOccurrences,
+	const {
+		updatingState: contentTypeIsUpdating,
+		creatingState: contentTypeIsCreating,
+		isFetchingSiteOccurrencesState,
 		siteOccurrences,
-	] = useContentType();
+	} = useContentType();
 	const formikRef = useRef<FormikProps<FormikValues>>();
 	const isLoading = useMemo(() => {
 		return isUpdate
@@ -204,7 +199,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 							/>
 							{contentType?.uuid && (
 								<DataLoader
-									loadingState={isFetchingSiteOccurrences}
+									loadingState={isFetchingSiteOccurrencesState}
 									render={renderDelete}
 								/>
 							)}

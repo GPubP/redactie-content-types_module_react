@@ -23,10 +23,10 @@ const ContentTypeDetailExternal: FC<ContentTypesDetailRouteProps<ContentTypeDeta
 	 * HOOKS
 	 */
 	const [{ active: activeTab }, activate] = useExternalTabsFacade();
-	const [, contentTypIsUpdating] = useContentType();
+	const { updatingState: contentTypeIsUpdating } = useContentType();
 	const isLoading = useMemo(() => {
-		return contentTypIsUpdating === LoadingState.Loading;
-	}, [contentTypIsUpdating]);
+		return contentTypeIsUpdating === LoadingState.Loading;
+	}, [contentTypeIsUpdating]);
 
 	useEffect(() => {
 		activate(tab);
