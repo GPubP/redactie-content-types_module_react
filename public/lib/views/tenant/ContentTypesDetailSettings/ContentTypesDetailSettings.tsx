@@ -68,8 +68,12 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	]);
 
 	useEffect(() => {
+		if (!contentType.uuid) {
+			return;
+		}
+
 		contentTypesFacade.getContentTypeSiteOccurrences(contentType.uuid);
-	}, [contentType]);
+	}, [contentType.uuid]);
 
 	/**
 	 * Methods
@@ -198,10 +202,12 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 							<FormikOnChangeHandler
 								onChange={values => setFormValue(values as ContentTypeDetailModel)}
 							/>
-							<DataLoader
-								loadingState={isFetchingSiteOccurrences}
-								render={renderDelete}
-							/>
+							{contentType.uuid && (
+								<DataLoader
+									loadingState={isFetchingSiteOccurrences}
+									render={renderDelete}
+								/>
+							)}
 							<ActionBar className="o-action-bar--fixed" isOpen>
 								<ActionBarContentSection>
 									<div className="u-wrapper u-text-right">
