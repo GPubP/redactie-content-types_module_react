@@ -68,12 +68,12 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	]);
 
 	useEffect(() => {
-		if (!contentType.uuid) {
+		if (!contentType?.uuid) {
 			return;
 		}
 
 		contentTypesFacade.getContentTypeSiteOccurrences(contentType.uuid);
-	}, [contentType.uuid]);
+	}, [contentType]);
 
 	/**
 	 * Methods
@@ -202,7 +202,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 							<FormikOnChangeHandler
 								onChange={values => setFormValue(values as ContentTypeDetailModel)}
 							/>
-							{contentType.uuid && (
+							{contentType?.uuid && (
 								<DataLoader
 									loadingState={isFetchingSiteOccurrences}
 									render={renderDelete}
