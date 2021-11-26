@@ -41,6 +41,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	const {
 		updatingState: contentTypeIsUpdating,
 		creatingState: contentTypeIsCreating,
+		removingState: contentTypeisRemoving,
 		isFetchingSiteOccurrencesState,
 		siteOccurrences,
 	} = useContentType();
@@ -233,7 +234,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 							/>
 							<DeletePrompt
 								body="Ben je zeker dat je dit content type wil verwijderen? Dit kan niet ongedaan gemaakt worden."
-								isDeleting={isLoading}
+								isDeleting={contentTypeisRemoving === LoadingState.Loading}
 								show={showDeleteModal}
 								onCancel={() => setShowDeleteModal(false)}
 								onConfirm={() => isRemovable && onDelete && onDelete()}
