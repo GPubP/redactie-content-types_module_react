@@ -97,6 +97,9 @@ export interface ContentTypeMeta {
 	status?: string;
 	lastEditor: string;
 	canBeFiltered: boolean;
+	urlPath?: {
+		pattern: string;
+	};
 }
 export interface ModuleSettings {
 	uuid?: string;
