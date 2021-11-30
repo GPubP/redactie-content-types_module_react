@@ -19,7 +19,11 @@ import { useParams } from 'react-router-dom';
 import { CTSettingsForm } from '../../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, CONTENT_TYPE_DETAIL_TAB_MAP } from '../../../contentTypes.const';
-import { ContentTypesDetailRouteProps, ContentTypesRouteParams } from '../../../contentTypes.types';
+import {
+	ContentTypesDetailRouteProps,
+	ContentTypesRouteParams,
+	CtTypes,
+} from '../../../contentTypes.types';
 import { useContentType } from '../../../hooks';
 import { MODULE_TRANSLATIONS } from '../../../i18next/translations.const';
 import { ContentTypeDetailModel, contentTypesFacade } from '../../../store/contentTypes';
@@ -143,14 +147,16 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 					<h6>Verwijderen</h6>
 					{isRemovable ? (
 						<p className="u-margin-top-xs u-margin-bottom">
-							Opgelet, indien u dit content type verwijdert kan deze niet meer
-							gebruikt worden op sites.
+							Opgelet, indien u dit{' '}
+							{ctType === CtTypes.contentTypes ? 'content type' : 'content blok'}{' '}
+							verwijdert kan deze niet meer gebruikt worden op sites.
 						</p>
 					) : (
 						<p className="u-margin-top-xs u-margin-bottom">
-							Het content type is actief op <b>{siteOccurrences?.length}</b> sites
-							waardoor deze niet kan verwijderd worden. Deactiveer het content-type
-							voor alle sites om alsnog het content-type te verwijderen
+							Het {ctType === CtTypes.contentTypes ? 'content type' : 'content blok'}{' '}
+							is actief op <b>{siteOccurrences?.length}</b> sites waardoor deze niet
+							kan verwijderd worden. Deactiveer het content-type voor alle sites om
+							alsnog het content-type te verwijderen
 						</p>
 					)}
 					{!isRemovable && siteOccurrences && (
