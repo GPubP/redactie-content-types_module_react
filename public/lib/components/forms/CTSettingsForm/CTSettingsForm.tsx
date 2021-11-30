@@ -1,6 +1,7 @@
 import { Textarea, TextField } from '@acpaas-ui/react-components';
 import { CopyValue, ErrorMessage } from '@redactie/utils';
 import { Field, Formik, isFunction } from 'formik';
+import { path } from 'ramda';
 import React, { FC } from 'react';
 
 import {
@@ -42,7 +43,14 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA}
 		>
 			{formikProps => {
-				const { errors, touched, values } = formikProps;
+				const { errors, touched, values, setFieldValue } = formikProps;
+
+				if (
+					!path(['meta', 'urlPath', 'pattern'], touched) &&
+					!values.meta?.urlPath?.pattern
+				) {
+					setFieldValue('meta.urlPath.pattern', '/[item:slug]');
+				}
 
 				return (
 					<>
