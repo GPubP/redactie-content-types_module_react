@@ -40,7 +40,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 			innerRef={instance => isFunction(formikRef) && formikRef(instance)}
 			initialValues={contentType}
 			onSubmit={onSubmit}
-			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA}
+			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA(ctType)}
 		>
 			{formikProps => {
 				const { errors, touched, values, setFieldValue } = formikProps;

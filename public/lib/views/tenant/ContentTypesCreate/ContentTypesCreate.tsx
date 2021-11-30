@@ -45,7 +45,7 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const { ctType } = useParams<ContentTypesRouteParams>();
 	const breadcrumbs = useRoutesBreadcrumbs([
 		{
-			name: 'Content types',
+			name: ctType === CtTypes.contentTypes ? 'Content types' : 'Content blokken',
 			target: generatePath(MODULE_PATHS.admin, { ctType }),
 		},
 	]);
@@ -100,7 +100,9 @@ const ContentTypesCreate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		}
 	};
 
-	const pageTitle = `Content type ${t(CORE_TRANSLATIONS.ROUTING_CREATE)}`;
+	const pageTitle = `${ctType === CtTypes.contentTypes ? 'Content type' : 'Content blok'} ${t(
+		CORE_TRANSLATIONS.ROUTING_CREATE
+	)}`;
 
 	/**
 	 * Render
