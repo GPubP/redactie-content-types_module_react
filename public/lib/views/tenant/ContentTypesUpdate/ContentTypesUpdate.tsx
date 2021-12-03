@@ -218,7 +218,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	};
 
 	const navigateToOverview = (): void => {
-		navigate(MODULE_PATHS.root, { ctType });
+		navigate(MODULE_PATHS.admin, { ctType });
 	};
 
 	const updateCT = (
