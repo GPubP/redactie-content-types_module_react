@@ -59,7 +59,7 @@ export const CONTENT_TYPE_DETAIL_TAB_MAP: {
 		containerId: ALERT_CONTAINER_IDS.detailSettings,
 	},
 	contentComponents: {
-		name: 'Content Componenten',
+		name: 'Content componenten',
 		target: 'content-componenten',
 		type: TabTypes.INTERNAL,
 		active: false,

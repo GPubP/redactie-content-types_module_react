@@ -368,7 +368,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 				<div className="u-margin-top">
 					<Card>
 						<div className="u-margin">
-							<h5>Voeg een content componenten toe</h5>
+							<h5>Voeg een content component toe</h5>
 							<FormCTNewCC
 								className="u-margin-top"
 								fieldTypeOptions={fieldTypeOptions}

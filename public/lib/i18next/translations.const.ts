@@ -21,11 +21,11 @@ const MODULE_TRANSLATIONS = Object.freeze<{
 		),
 		SETTINGS_DESCRIPTION_GUIDELINE: tKey(
 			'CT_SETTINGS_NAME_GUIDELINE',
-			'Geef het content type een duidelijke beschrijving voor in het overzicht.'
+			'Geef het content type een duidelijke beschrijving. Deze wordt gebruikt in het overzicht.'
 		),
 		SITES_INTRO: tKey(
 			'CT_SITES_INTRO',
-			'Bepaal op welke sites dit content type geactiveerd mag worden. Opgelet, u kan het content type enkel deactiveren wanneer er géén content items van dit type meer bestaan binnen de desbetreffende site.'
+			'Bepaal op welke sites dit content type geactiveerd mag worden. Opgelet: je kan het content type enkel deactiveren wanneer er géén content items van dit type meer bestaan binnen de desbetreffende site.'
 		),
 	}),
 	[CtTypes.contentBlocks]: Object.freeze<I18NextTranslations>({
@@ -38,11 +38,11 @@ const MODULE_TRANSLATIONS = Object.freeze<{
 		),
 		SETTINGS_DESCRIPTION_GUIDELINE: tKey(
 			'CB_SETTINGS_NAME_GUIDELINE',
-			'Geef het content blok een duidelijke beschrijving voor in het overzicht.'
+			'Geef het content blok een duidelijke beschrijving. Deze wordt gebruikt in het overzicht'
 		),
 		SITES_INTRO: tKey(
 			'CB_SITES_INTRO',
-			'Bepaal op welke sites dit content blok geactiveerd mag worden. Opgelet, u kan het content blok enkel deactiveren wanneer er géén content items van dit type meer bestaan binnen de desbetreffende site.'
+			'Bepaal op welke sites dit content blok geactiveerd mag worden. Opgelet: je kan het content blok enkel deactiveren wanneer er géén content items van dit type meer bestaan binnen de desbetreffende site.'
 		),
 	}),
 });

@@ -11,7 +11,7 @@ export const SITE_CT_DETAIL_TABS: Tab[] = [
 		containerId: ALERT_CONTAINER_IDS.detailSettings,
 	},
 	{
-		name: 'Content Componenten',
+		name: 'Content componenten',
 		target: 'content-componenten',
 		type: TabTypes.INTERNAL,
 		active: false,

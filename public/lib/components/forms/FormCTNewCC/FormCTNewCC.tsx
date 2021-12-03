@@ -50,7 +50,7 @@ const FormGeneralCC: FC<FormCTNewCCProps> = ({
 							<Field
 								required
 								as={TextField}
-								description="Kies een gebruiksvriendelijke redactie naam, bijvoorbeeld 'Titel'."
+								description="Kies een gebruiksvriendelijk label, bijvoorbeeld 'Titel'."
 								id="name"
 								label="Naam"
 								name="name"

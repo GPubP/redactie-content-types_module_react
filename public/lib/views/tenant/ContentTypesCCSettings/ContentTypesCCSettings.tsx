@@ -1,8 +1,13 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import React, { FC, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { FormCCSettings } from '../../../components';
-import { ContentTypesCCRouteProps } from '../../../contentTypes.types';
+import {
+	ContentTypesCCRouteProps,
+	ContentTypesRouteParams,
+	CtTypes,
+} from '../../../contentTypes.types';
 import { generateCCFormState } from '../../../helpers';
 
 const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
@@ -13,8 +18,10 @@ const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
 	onSubmit,
 	contentType,
 	preset,
+	parentPreset,
 }) => {
 	const initialFormValues = useMemo(() => generateCCFormState(CTField), [CTField]);
+	const { ctType } = useParams<ContentTypesRouteParams>();
 	const isRemovable =
 		(preset && preset?.data?.generalConfig?.removable !== false) ||
 		fieldType?.data?.generalConfig?.removable !== false;
@@ -62,9 +69,14 @@ const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
 					<CardBody>
 						<h6>Verwijderen</h6>
 						<p className="u-margin-top-xs u-margin-bottom">
-							Opgelet, indien u deze content component verwijdert kan hij niet meer
-							gebruikt worden op het content type &lsquo;
-							{contentType?.meta?.label || ''}&rsquo;.
+							Opgelet: indien je deze content component verwijdert kan hij niet meer
+							gebruikt worden op het{' '}
+							{ctType === CtTypes.contentTypes ? 'content type' : 'content blok'}{' '}
+							&lsquo;
+							{ctType === CtTypes.contentTypes
+								? contentType.meta?.label
+								: parentPreset?.data.label}
+							&rsquo;.
 						</p>
 						<Button iconLeft="trash-o" onClick={onDelete} type="danger">
 							Verwijderen

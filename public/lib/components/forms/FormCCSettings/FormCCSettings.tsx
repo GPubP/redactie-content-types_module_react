@@ -109,7 +109,7 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 							<div className="row u-margin-top">
 								<div className="col-xs-12">
 									<RadioGroup
-										description="Bepaal hoeveel items van dit component er aangemaakt kunnen worden"
+										description="Bepaal hoeveel items van deze content component aangemaakt kunnen worden"
 										id="isMultiple"
 										name="isMultiple"
 										onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -158,9 +158,9 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 									label="Verborgen"
 								/>
 								<small className="u-block u-text-light">
-									Bepaal of deze content component zichtbaar mag zijn. Opgelet,
+									Bepaal of deze content component zichtbaar mag zijn. Opgelet:
 									content componenten die een standaard waarde krijgen en als
-									&apos;niet aanpasbaar&apos; worden ingesteld worden onzichtbaar
+									&apos;niet aanpasbaar&apos; zijn ingesteld, worden onzichtbaar
 									voor de redacteur.
 								</small>
 							</div>

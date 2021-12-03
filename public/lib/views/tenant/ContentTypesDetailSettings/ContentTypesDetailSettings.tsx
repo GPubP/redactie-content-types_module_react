@@ -141,22 +141,23 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			return <></>;
 		}
 
+		const type = ctType === CtTypes.contentTypes ? 'content type' : 'content blok';
+
 		return (
 			<Card className="u-margin-top">
 				<CardBody>
 					<h6>Verwijderen</h6>
 					{isRemovable ? (
 						<p className="u-margin-top-xs u-margin-bottom">
-							Opgelet, indien u dit{' '}
-							{ctType === CtTypes.contentTypes ? 'content type' : 'content blok'}{' '}
-							verwijdert kan deze niet meer gebruikt worden op sites.
+							Opgelet: indien je dit {type} verwijdert kan deze niet meer gebruikt
+							worden op sites.
 						</p>
 					) : (
 						<p className="u-margin-top-xs u-margin-bottom">
-							Het {ctType === CtTypes.contentTypes ? 'content type' : 'content blok'}{' '}
-							is actief op <b>{siteOccurrences?.length}</b> sites waardoor deze niet
-							kan verwijderd worden. Deactiveer het content-type voor alle sites om
-							alsnog het content-type te verwijderen
+							Het {type} is actief op <b>{siteOccurrences?.length}</b>{' '}
+							{siteOccurrences?.length === 1 ? 'site' : 'sites'} waardoor deze niet
+							kan verwijderd worden. Deactiveer het {type} voor alle sites om alsnog
+							het {type} te verwijderen
 						</p>
 					)}
 					{!isRemovable && siteOccurrences && (
