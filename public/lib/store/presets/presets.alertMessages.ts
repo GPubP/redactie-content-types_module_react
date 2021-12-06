@@ -6,43 +6,43 @@ export const getAlertMessages = (
 	create: {
 		success: {
 			title: 'Aangemaakt',
-			message: `U hebt de content component ${name} succesvol aangemaakt`,
+			message: `Je hebt de content component ${name} succesvol aangemaakt.`,
 		},
 		error: {
 			title: 'Aanmaken mislukt',
-			message: `Aanmaken van de content component ${name} is mislukt`,
+			message: `Aanmaken van de content component ${name} is mislukt.`,
 		},
 	},
 	update: {
 		success: {
 			title: 'Bewaard',
-			message: `U hebt de content component ${name} succesvol gewijzigd`,
+			message: `Je hebt de content component ${name} succesvol gewijzigd.`,
 		},
 		error: {
 			title: 'Bewaren mislukt',
-			message: `Bewaren van de content component ${name} is mislukt`,
+			message: `Bewaren van de content component ${name} is mislukt.`,
 		},
 	},
 	fetch: {
 		error: {
 			title: 'Ophalen',
-			message: 'Ophalen van content componenten is mislukt',
+			message: 'Ophalen van content componenten is mislukt.',
 		},
 	},
 	fetchOne: {
 		error: {
 			title: 'Ophalen',
-			message: 'Ophalen van content component is mislukt',
+			message: 'Ophalen van content component is mislukt.',
 		},
 	},
 	delete: {
 		success: {
 			title: 'Verwijderen',
-			message: `U hebt de content component ${name} succesvol verwijderd`,
+			message: `Je hebt de content component ${name} succesvol verwijderd.`,
 		},
 		error: {
 			title: 'Verwijderen',
-			message: `Verwijderen van content component ${name} is mislukt`,
+			message: `Verwijderen van content component ${name} is mislukt.`,
 		},
 	},
 });
