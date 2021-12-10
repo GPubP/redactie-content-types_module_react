@@ -1,6 +1,7 @@
 import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import {
+	alertService,
 	DataLoader,
 	LeavePrompt,
 	LoadingState,
@@ -17,16 +18,12 @@ import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'r
 import { NavLink, useParams } from 'react-router-dom';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
-import { MODULE_PATHS } from '../../../contentTypes.const';
+import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import {
 	ContentTypesDetailRouteParams,
 	ContentTypesDetailRouteProps,
 } from '../../../contentTypes.types';
-import {
-	generateFieldFromType,
-	showCompartmentErrorAlert,
-	validateCompartments,
-} from '../../../helpers';
+import { generateFieldFromType, validateCompartments } from '../../../helpers';
 import {
 	useActiveFieldType,
 	useActivePreset,
@@ -310,7 +307,9 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			);
 			navigateToDetail();
 		} else {
-			showCompartmentErrorAlert();
+			/* alertService.invalidForm({
+				containerId: ALERT_CONTAINER_IDS.update,
+			}); */
 		}
 
 		setHasSubmit(true);

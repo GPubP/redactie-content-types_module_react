@@ -2,6 +2,7 @@ import { Button, Card, CardBody } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection, NavList } from '@acpaas-ui/react-editorial-components';
 import {
 	AlertContainer,
+	alertService,
 	DataLoader,
 	LeavePrompt,
 	LoadingState,
@@ -20,12 +21,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
-import {
-	COMPARTMENT_ERROR_DEFAULTS,
-	generateFieldFromType,
-	showCompartmentErrorAlert,
-	validateCompartments,
-} from '../../../helpers';
+import { generateFieldFromType, validateCompartments } from '../../../helpers';
 import {
 	useActiveField,
 	useActiveFieldType,
@@ -260,11 +256,9 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			contentTypesFacade.addField(activeField);
 			contentTypesFacade.clearActiveField();
 		} else {
-			showCompartmentErrorAlert({
-				title: COMPARTMENT_ERROR_DEFAULTS.title,
-				message: COMPARTMENT_ERROR_DEFAULTS.message,
+			/* alertService.invalidForm({
 				containerId: ALERT_CONTAINER_IDS.configureCC,
-			});
+			}); */
 		}
 
 		setHasSubmit(true);
