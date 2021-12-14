@@ -416,13 +416,6 @@ sitesConnector.registerRoutes({
 					component: SiteContentTypesUpdateExternal,
 					title: getPageTitle(TitleTypes.ContentType),
 					badges: getPageBadges(TitleTypes.ContentType),
-					guardOptions: {
-						guards: [
-							rolesRightsConnector.api.guards.securityRightsTenantGuard([
-								rolesRightsConnector.securityRights.update,
-							]),
-						],
-					},
 				},
 			],
 		},
