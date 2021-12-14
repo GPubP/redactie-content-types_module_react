@@ -115,7 +115,11 @@ const TextWithStyle: React.FC<InputFieldProps> = ({
 					</>
 				)}
 			</div>
-			{config.description && <small>{config.description}</small>}
+			{config.description && (
+				<div className="u-margin-bottom-xs u-margin-top-xs">
+					<small>{config.description}</small>
+				</div>
+			)}
 			<formRendererConnector.api.ErrorMessage name={field.name} />
 		</>
 	);
