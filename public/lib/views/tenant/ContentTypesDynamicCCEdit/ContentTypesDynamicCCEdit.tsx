@@ -257,9 +257,9 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			dynamicFieldFacade.updateField(omit(['__new'])(dynamicActiveField));
 			navigateToDetail();
 		} else {
-			/* alertService.invalidForm({
+			alertService.invalidForm({
 				containerId: ALERT_CONTAINER_IDS.update,
-			}); */
+			});
 		}
 
 		setHasSubmit(false);

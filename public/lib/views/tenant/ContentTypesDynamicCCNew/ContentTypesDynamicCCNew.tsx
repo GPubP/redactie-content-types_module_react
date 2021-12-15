@@ -307,9 +307,9 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 			);
 			navigateToDetail();
 		} else {
-			/* alertService.invalidForm({
+			alertService.invalidForm({
 				containerId: ALERT_CONTAINER_IDS.update,
-			}); */
+			});
 		}
 
 		setHasSubmit(true);

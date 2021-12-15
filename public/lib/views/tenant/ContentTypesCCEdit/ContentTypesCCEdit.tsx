@@ -224,9 +224,9 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			contentTypesFacade.updateField(activeField);
 			contentTypesFacade.clearActiveField();
 		} else {
-			/* alertService.invalidForm({
+			alertService.invalidForm({
 				containerId: ALERT_CONTAINER_IDS.configureCC,
-			}); */
+			});
 		}
 
 		setHasSubmit(true);

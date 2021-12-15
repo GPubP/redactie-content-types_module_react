@@ -256,9 +256,9 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			contentTypesFacade.addField(activeField);
 			contentTypesFacade.clearActiveField();
 		} else {
-			/* alertService.invalidForm({
+			alertService.invalidForm({
 				containerId: ALERT_CONTAINER_IDS.configureCC,
-			}); */
+			});
 		}
 
 		setHasSubmit(true);
