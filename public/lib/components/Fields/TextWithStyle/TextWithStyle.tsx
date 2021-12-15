@@ -1,6 +1,5 @@
 import { Select, TextField } from '@acpaas-ui/react-components';
 import { InputFieldProps } from '@redactie/form-renderer-module';
-import { getIn } from 'formik';
 import React, { ChangeEvent, useEffect, useMemo } from 'react';
 
 import formRendererConnector from '../../../connectors/formRenderer';
@@ -11,9 +10,7 @@ const TextWithStyle: React.FC<InputFieldProps> = ({
 	fieldHelperProps,
 }: InputFieldProps) => {
 	const config = fieldSchema.config || {};
-	const { field, form } = fieldProps;
-	const touch = getIn(form.touched, field.name);
-	const error = getIn(form.errors, field.name);
+	const { field } = fieldProps;
 	const { setValue } = fieldHelperProps;
 	const value: { text: string; textType: string } = field.value as any;
 	const showField = Array.isArray(config.allowedOptions) && config.allowedOptions.length >= 2;
@@ -118,9 +115,7 @@ const TextWithStyle: React.FC<InputFieldProps> = ({
 					</>
 				)}
 			</div>
-			{config.description && (!error || !touch) && (
-				<p className="small u-margin-top-xs">{config.description}</p>
-			)}
+			{config.description && <small>{config.description}</small>}
 			<formRendererConnector.api.ErrorMessage name={field.name} />
 		</>
 	);
