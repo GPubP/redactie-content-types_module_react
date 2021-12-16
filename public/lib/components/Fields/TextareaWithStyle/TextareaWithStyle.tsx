@@ -17,7 +17,7 @@ const TextareaWithStyle: React.FC<InputFieldProps> = ({
 	const defaultTextTypeValue: string = Array.isArray(config.allowedOptions)
 		? config.allowedOptions[0] || 'none'
 		: 'none';
-	const FormRendererFieldTitle = formRendererConnector.getFormRendererFieldTitle();
+	const FormRendererFieldTitle = formRendererConnector.api.FormRendererFieldTitle;
 
 	/**
 	 * HOOKS
