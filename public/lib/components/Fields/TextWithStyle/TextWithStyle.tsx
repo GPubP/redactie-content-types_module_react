@@ -17,6 +17,7 @@ const TextWithStyle: React.FC<InputFieldProps> = ({
 	const defaultTextTypeValue: string = Array.isArray(config.allowedOptions)
 		? config.allowedOptions[0] || 'none'
 		: 'none';
+	const FormRendererFieldTitle = formRendererConnector.getFormRendererFieldTitle();
 
 	/**
 	 * HOOKS
@@ -69,13 +70,17 @@ const TextWithStyle: React.FC<InputFieldProps> = ({
 		<>
 			<div className="row">
 				<div className="col-xs">
+					<FormRendererFieldTitle
+						isRequired={config.required}
+						className="u-margin-bottom-xs"
+					>
+						{fieldSchema.label}
+					</FormRendererFieldTitle>
 					<div className="a-input">
 						<TextField
 							id={`${field.name}.text`}
 							name={`${field.name}.text`}
-							label={fieldSchema.label}
 							value={value?.text}
-							required={config.required}
 							placeholder={config.placeholder}
 							onChange={(event: ChangeEvent<any>) =>
 								updateValue({ text: event.target.value })
@@ -85,12 +90,17 @@ const TextWithStyle: React.FC<InputFieldProps> = ({
 					</div>
 				</div>
 				{showField ? (
-					<div className="col-xs-3">
+					<div className="col-xs-3 u-flex u-flex-align-end">
 						<div className="a-input">
+							<FormRendererFieldTitle
+								isRequired={config.required}
+								className="u-margin-bottom-xs"
+							>
+								Opmaak
+							</FormRendererFieldTitle>
 							<Select
 								id={`${field.name}.textType`}
 								name={`${field.name}.textType`}
-								label="Opmaak"
 								options={options}
 								value={value?.textType}
 								onChange={(event: ChangeEvent<any>) =>
