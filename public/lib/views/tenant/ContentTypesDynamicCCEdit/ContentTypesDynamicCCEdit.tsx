@@ -271,6 +271,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		}
 
 		const extraOptions = {
+			contentType,
 			CTField: dynamicActiveField,
 			fieldType: dynamicActiveField?.fieldType,
 			preset: dynamicActiveField?.preset,

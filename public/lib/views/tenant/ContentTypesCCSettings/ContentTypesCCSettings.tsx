@@ -74,7 +74,7 @@ const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
 							{ctType === CtTypes.contentTypes ? 'content type' : 'content blok'}{' '}
 							&lsquo;
 							{ctType === CtTypes.contentTypes
-								? contentType.meta?.label
+								? contentType?.meta?.label
 								: parentPreset?.data.label}
 							&rsquo;.
 						</p>
