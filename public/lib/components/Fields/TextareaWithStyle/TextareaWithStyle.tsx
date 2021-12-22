@@ -17,6 +17,7 @@ const TextareaWithStyle: React.FC<InputFieldProps> = ({
 	const defaultTextTypeValue: string = Array.isArray(config.allowedOptions)
 		? config.allowedOptions[0] || 'none'
 		: 'none';
+	const FormRendererFieldTitle = formRendererConnector.api.FormRendererFieldTitle;
 
 	/**
 	 * HOOKS
@@ -69,16 +70,20 @@ const TextareaWithStyle: React.FC<InputFieldProps> = ({
 		<>
 			<div className="row">
 				<div className="col-xs">
+					<FormRendererFieldTitle
+						isRequired={config.required}
+						className="u-margin-bottom-xs"
+					>
+						{fieldSchema.label}
+					</FormRendererFieldTitle>
 					<div className="a-input">
 						<Textarea
 							id={`${field.name}.text`}
 							name={`${field.name}.text`}
-							label={fieldSchema.label}
 							value={value?.text}
 							onChange={(event: ChangeEvent<any>) =>
 								updateValue({ text: event.target.value })
 							}
-							required={config.required}
 							placeholder={config.placeholder}
 						/>
 						<formRendererConnector.api.ErrorMessage name={`${field.name}.text`} />
@@ -87,10 +92,15 @@ const TextareaWithStyle: React.FC<InputFieldProps> = ({
 				{showField ? (
 					<div className="col-xs-3">
 						<div className="a-input">
+							<FormRendererFieldTitle
+								isRequired={config.required}
+								className="u-margin-bottom-xs"
+							>
+								Opmaak
+							</FormRendererFieldTitle>
 							<Select
 								id={`${field.name}.textType`}
 								name={`${field.name}.textType`}
-								label="Opmaak"
 								options={options}
 								value={value?.textType}
 								onChange={(event: ChangeEvent<any>) => {
