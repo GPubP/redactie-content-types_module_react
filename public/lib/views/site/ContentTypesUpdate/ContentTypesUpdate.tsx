@@ -19,9 +19,13 @@ import { Link, useParams } from 'react-router-dom';
 
 import rolesRightsConnector from '../../../connectors/rolesRights';
 import sitesConnector from '../../../connectors/sites';
-import { useCoreTranslation } from '../../../connectors/translations';
+import { useCoreTranslation, useModuleTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
-import { ContentTypesRouteParams, ContentTypesRouteProps } from '../../../contentTypes.types';
+import {
+	ContentTypesRouteParams,
+	ContentTypesRouteProps,
+	CtTypes,
+} from '../../../contentTypes.types';
 import { disableTabs } from '../../../helpers/tabs';
 import {
 	useActiveField,
@@ -44,6 +48,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const [t] = useCoreTranslation();
 	const activeField = useActiveField();
 	const dynamicActiveField = useDynamicActiveField();
+	const [tModule] = useModuleTranslation();
 	const activeRouteConfig = useActiveRouteConfig(location, route);
 	const { contentTypeUuid } = useParams<ContentTypesRouteParams>();
 	const { navigate, generatePath } = useNavigate();
@@ -135,7 +140,10 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 
 	const pageBadges: ContextHeaderBadge =
 		typeof activeRouteConfig?.badges === 'function'
-			? activeRouteConfig.badges(activeField, dynamicActiveField)
+			? activeRouteConfig.badges(activeField, dynamicActiveField, {
+					ctType: CtTypes.contentTypes,
+					t: tModule,
+			  })
 			: [];
 
 	/**
