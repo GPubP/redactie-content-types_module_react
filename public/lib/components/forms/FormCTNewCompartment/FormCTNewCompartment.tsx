@@ -12,6 +12,7 @@ import { FormCTNewCompartmentProps } from './FormCTNewCompartment.types';
 const FormCTNewCompartment: FC<FormCTNewCompartmentProps> = ({
 	onSubmit,
 	formState,
+	compartments,
 	className,
 }) => {
 	const [t] = useCoreTranslation();
@@ -19,7 +20,7 @@ const FormCTNewCompartment: FC<FormCTNewCompartmentProps> = ({
 	return (
 		<Formik
 			initialValues={formState}
-			validationSchema={NEW_COMPARTMENT_FORM_VALIDATION_SCHEMA}
+			validationSchema={NEW_COMPARTMENT_FORM_VALIDATION_SCHEMA(compartments)}
 			onSubmit={onSubmit}
 		>
 			{({ submitForm }) => (

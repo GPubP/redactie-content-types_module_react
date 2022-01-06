@@ -167,3 +167,5 @@ export const DEFAULT_VALIDATOR_ERROR_MESSAGES: Record<string, string> = {
 };
 
 export const DYNAMIC_FIELD_SETTINGS_NAME = 'dynamicFieldSettings';
+
+export const DEFAULT_COMPARTMENTS = ['informatie', 'status', 'planning', 'navigatie'];

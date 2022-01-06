@@ -135,6 +135,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 
 	const updateCompartmentTemplate = (row: ContentTypeDetailCCRow): ReactElement | null => {
 		const compartment = contentType.compartments.find(c => c.uuid === row.id);
+		const otherCompartments = contentType.compartments.filter(c => c.uuid !== row.id);
 		if (!compartment) {
 			return null;
 		}
@@ -145,6 +146,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 					isLoading={isLoading}
 					formState={{ name: row.label }}
 					isRemovable={isRemovable}
+					compartments={otherCompartments}
 					onSubmit={value =>
 						onCompartmentUpdateFormSubmit(row.id, {
 							uuid: row.id,
@@ -393,6 +395,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 							<FormCTNewCompartment
 								className="u-margin-top"
 								formState={{ name: '' }}
+								compartments={contentType.compartments}
 								onSubmit={onCompartmentFormSubmit}
 							/>
 						</div>
