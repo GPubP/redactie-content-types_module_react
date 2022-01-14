@@ -12,20 +12,21 @@ export const generateConfigFromValidationData = (
 	fieldConfig?: ContentTypeFieldDetail['config'],
 	schema?: FormSchema
 ): Record<string, any> => {
+	const adjustedFieldConfig = schema
+		? schema.fields.reduce(
+				(acc, field) => {
+					if (field?.config?.mapToConfig) {
+						return {
+							...acc,
+							[field.name]: data[field.name],
+						};
+					}
 
-	const adjustedFieldConfig = schema?.fields.reduce(
-		(acc, field) => {
-			if (field?.config?.mapToConfig) {
-				return {
-					...acc,
-					[field.name]: data[field.name],
-				};
-			}
-
-			return acc;
-		},
-		{ ...fieldConfig }
-	);
+					return acc;
+				},
+				{ ...fieldConfig }
+		  )
+		: fieldConfig;
 
 	return preset
 		? Object.keys(data).reduce(
@@ -34,10 +35,12 @@ export const generateConfigFromValidationData = (
 
 					return {
 						...acc,
-						fields: acc.field?.map((subField: any) => {
+						fields: acc.fields?.map((subField: any) => {
 							if (subField.name !== fieldName || required === null) {
 								return subField;
 							}
+
+							console.log('test', subField);
 
 							return {
 								...subField,
