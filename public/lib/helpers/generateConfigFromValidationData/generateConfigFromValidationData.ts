@@ -34,7 +34,7 @@ export const generateConfigFromValidationData = (
 
 					return {
 						...acc,
-						fields: acc.fields.map((subField: any) => {
+						fields: acc.field?.map((subField: any) => {
 							if (subField.name !== fieldName || required === null) {
 								return subField;
 							}

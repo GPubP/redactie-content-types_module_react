@@ -22,6 +22,8 @@ export const generateFieldFromType = (
 	// Generate baseConfig
 	const baseConfig = generateConfig(fieldType.data, preset);
 	// Enrich the baseConfig with required settings
+
+	// TODO: add schema
 	const config = generateConfigFromValidationData(validationData, preset, baseConfig);
 
 	return {
