@@ -13,6 +13,7 @@ const FormCTEditCompartment: FC<FormCTEditCompartmentProps> = ({
 	formState,
 	className,
 	isRemovable = true,
+	compartments,
 	onSubmit,
 	onCancel,
 	onDelete,
@@ -33,7 +34,9 @@ const FormCTEditCompartment: FC<FormCTEditCompartmentProps> = ({
 	return (
 		<Formik
 			initialValues={formState}
-			validationSchema={EDIT_COMPARTMENT_FORM_VALIDATION_SCHEMA}
+			validationSchema={EDIT_COMPARTMENT_FORM_VALIDATION_SCHEMA(
+				compartments
+			)}
 			onSubmit={onSubmit}
 		>
 			{({ submitForm }) => (
