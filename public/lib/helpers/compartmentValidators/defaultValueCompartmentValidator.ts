@@ -41,21 +41,6 @@ const getDefaultValueField = (field: ContentTypeFieldDetail): ContentTypeFieldDe
 	};
 };
 
-// needed to remove mask validation, only affects the default compartment
-const removeMaskValidator = (validationSchema: Record<string, any>): Record<string, any> => {
-	if (validationSchema.properties.defaultValue) {
-		if (validationSchema.properties.defaultValue.mask) {
-			delete validationSchema.properties.defaultValue.mask;
-		}
-		if (validationSchema.properties.defaultValue.properties) {
-			Object.keys(validationSchema.properties.defaultValue.properties).map(prop => {
-				delete validationSchema.properties.defaultValue.properties[prop].mask;
-			});
-		}
-	}
-	return validationSchema;
-};
-
 export const getDefaultValueSchemas = (
 	field: ContentTypeFieldDetail,
 	fieldType?: FieldType
@@ -91,10 +76,8 @@ export const defaultValueCompartmentValidator = (
 ): boolean => {
 	const { validationSchema, errorMessages } = getDefaultValueSchemas(field, fieldType);
 
-	const validationSchemaWithoutMask = removeMaskValidator(validationSchema);
-
 	const validator = new (formRendererConnector.api as any).CustomValidator(
-		validationSchemaWithoutMask,
+		validationSchema,
 		errorMessages,
 		{
 			allErrors: true,

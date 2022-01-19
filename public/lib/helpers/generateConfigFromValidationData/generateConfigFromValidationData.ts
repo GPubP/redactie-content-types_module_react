@@ -40,8 +40,6 @@ export const generateConfigFromValidationData = (
 								return subField;
 							}
 
-							console.log('test', subField);
-
 							return {
 								...subField,
 								config: generateConfigFromValidationData(
