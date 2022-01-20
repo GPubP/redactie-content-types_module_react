@@ -1,6 +1,6 @@
 {
 	"name": "@redactie/content-types-module",
-	"version": "3.2.2",
+	"version": "3.3.0",
 	"description": "redactie content types module",
 	"main": "dist/redactie-content-types-module.umd.js",
 	"module": "dist/redactie-content-types-module.umd.js",
