@@ -8,6 +8,8 @@ import {
 	generateValidationChecks,
 	settingsCompartmentValidator,
 	validationCompartmentValidator,
+	generateFormSchemaFromPreset,
+	generateFormSchemaFromFieldTypeData,
 } from '../helpers';
 
 export const helpers: ContentTypeAPI['helpers'] = {
@@ -19,4 +21,6 @@ export const helpers: ContentTypeAPI['helpers'] = {
 	generateValidationChecks,
 	settingsCompartmentValidator,
 	validationCompartmentValidator,
+	generateFormSchemaFromPreset,
+	generateFormSchemaFromFieldTypeData,
 };

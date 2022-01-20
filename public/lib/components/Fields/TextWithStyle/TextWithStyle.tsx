@@ -81,8 +81,13 @@ const TextWithStyle: React.FC<InputFieldProps> = ({
 							id={`${field.name}.text`}
 							name={`${field.name}.text`}
 							value={value?.text}
-							placeholder={config.placeholder}
+							placeholder={
+								config.placeholder ||
+								(config.mask &&
+									config.mask.replaceAll(new RegExp('a|9|[*]', 'g'), '_'))
+							}
 							mask={config.mask}
+							maskChar=""
 							onChange={(event: ChangeEvent<any>) =>
 								updateValue({ text: event.target.value })
 							}

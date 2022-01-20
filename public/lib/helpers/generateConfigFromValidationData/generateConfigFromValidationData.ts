@@ -1,3 +1,4 @@
+import { FormSchema } from '@redactie/form-renderer-module';
 import { FormikValues } from 'formik';
 
 import { ContentTypeFieldDetail } from '../../services/contentTypes';
@@ -8,16 +9,33 @@ import { parseRequiredToBool } from './parseRequiredToBool';
 export const generateConfigFromValidationData = (
 	data: FormikValues,
 	preset?: PresetDetailModel,
-	fieldConfig?: ContentTypeFieldDetail['config']
+	fieldConfig?: ContentTypeFieldDetail['config'],
+	schema?: FormSchema
 ): Record<string, any> => {
+	const adjustedFieldConfig = schema
+		? schema.fields.reduce(
+				(acc, field) => {
+					if (field?.config?.mapToConfig) {
+						return {
+							...acc,
+							[field.name]: data[field.name],
+						};
+					}
+
+					return acc;
+				},
+				{ ...fieldConfig }
+		  )
+		: fieldConfig;
+
 	return preset
 		? Object.keys(data).reduce(
-				(acc, fieldName) => {
+				(acc: any, fieldName: string) => {
 					const required = parseRequiredToBool(data[fieldName]?.required);
 
 					return {
 						...acc,
-						fields: acc.fields?.map(subField => {
+						fields: acc.fields?.map((subField: any) => {
 							if (subField.name !== fieldName || required === null) {
 								return subField;
 							}
@@ -38,8 +56,8 @@ export const generateConfigFromValidationData = (
 					};
 				},
 				{
-					...(fieldConfig || {}),
+					...(adjustedFieldConfig || {}),
 				}
 		  )
-		: fieldConfig || {};
+		: adjustedFieldConfig || {};
 };

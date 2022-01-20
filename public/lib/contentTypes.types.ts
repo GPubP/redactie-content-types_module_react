@@ -14,6 +14,8 @@ import {
 	generateValidationChecks,
 	settingsCompartmentValidator,
 	validationCompartmentValidator,
+	generateFormSchemaFromPreset,
+	generateFormSchemaFromFieldTypeData,
 } from './helpers';
 import { UseActiveFieldType } from './hooks/useActiveFieldType/useActiveFieldType.types';
 import { UseActivePreset } from './hooks/useActivePreset/useActivePreset.types';
@@ -203,6 +205,8 @@ export interface ContentTypeAPI {
 		generateValidationChecks: typeof generateValidationChecks;
 		createInitialValuesFromChecks: typeof createInitialValuesFromChecks;
 		generateConfigFromValidationData: typeof generateConfigFromValidationData;
+		generateFormSchemaFromPreset: typeof generateFormSchemaFromPreset;
+		generateFormSchemaFromFieldTypeData: typeof generateFormSchemaFromFieldTypeData;
 	};
 }
 
