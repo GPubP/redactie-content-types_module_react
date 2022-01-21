@@ -177,9 +177,11 @@ export interface ContentTypeCreateRequest {
 	fields: ContentTypeField[];
 	modulesConfig: ModuleSettings[];
 	meta: {
+		canBeFiltered: boolean;
 		label: string;
-		description: string;
 		safeLabel: string;
+		description: string;
+		urlPath: { pattern: string };
 		// TODO: fix in backend that this isn't needed
 		deleted: boolean;
 	};

@@ -2,11 +2,15 @@
   "CT_OVERVIEW_TITLE": "Content types",
   "CT_OVERVIEW_LOADING": "Content types ophalen",
   "CT_BADGE_TYPE": "Content type",
+  "CT_ALERT_TITLE": "Content type",
+  "CT_ALERT_MESSAGE": "content type",
   "CT_SETTINGS_NAME_GUIDELINE": "Geef het content type een korte en duidelijke naam.",
   "CT_SITES_INTRO": "Bepaal op welke sites dit content type geactiveerd mag worden. Opgelet: je kan het content type enkel deactiveren wanneer er géén content items van dit type meer bestaan binnen de desbetreffende site.",
   "CB_OVERVIEW_TITLE": "Content blokken",
   "CB_OVERVIEW_LOADING": "Content blokken ophalen",
   "CB_BADGE_TYPE": "Content blok",
+  "CB_ALERT_TITLE": "Content blok",
+  "CB_ALERT_MESSAGE": "content blok",
   "CB_SETTINGS_NAME_GUIDELINE": "Geef het content blok een korte en duidelijke naam.",
   "CB_SITES_INTRO": "Bepaal op welke sites dit content blok geactiveerd mag worden. Opgelet: je kan het content blok enkel deactiveren wanneer er géén content items van dit type meer bestaan binnen de desbetreffende site."
 }

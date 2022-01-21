@@ -66,6 +66,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const [tModule] = useModuleTranslation();
 	const dynamicActiveField = useDynamicActiveField();
 	const activeRouteConfig = useActiveRouteConfig(location, route);
+	//gaan kijken welk type er binnenkomt, content type of content blok en dan in facade juiste message meeegeven
 	const { contentTypeUuid, ctType } = useParams<ContentTypesRouteParams>();
 	const { navigate, generatePath } = useNavigate();
 	const [fieldTypesLoading, fieldTypes] = useFieldTypes();

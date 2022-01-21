@@ -17,7 +17,11 @@ import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'r
 import { useParams } from 'react-router-dom';
 
 import { CTSettingsForm } from '../../../components';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
+import {
+	CORE_TRANSLATIONS,
+	moduleTranslate,
+	useCoreTranslation,
+} from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, CONTENT_TYPE_DETAIL_TAB_MAP } from '../../../contentTypes.const';
 import {
 	ContentTypesDetailRouteProps,
@@ -141,7 +145,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			return <></>;
 		}
 
-		const type = ctType === CtTypes.contentTypes ? 'content type' : 'content blok';
+		const type = moduleTranslate(MODULE_TRANSLATIONS[ctType].ALERT_MESSAGE);
 
 		return (
 			<Card className="u-margin-top">
@@ -240,7 +244,9 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 								onConfirm={submit}
 							/>
 							<DeletePrompt
-								body="Ben je zeker dat je dit content type wil verwijderen? Dit kan niet ongedaan gemaakt worden."
+								body={`Ben je zeker dat je dit
+									${moduleTranslate(MODULE_TRANSLATIONS[ctType].ALERT_MESSAGE)}
+									 wil verwijderen? Dit kan niet ongedaan gemaakt worden.`}
 								isDeleting={contentTypeisRemoving === LoadingState.Loading}
 								show={showDeleteModal}
 								onCancel={() => setShowDeleteModal(false)}

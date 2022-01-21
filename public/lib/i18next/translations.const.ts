@@ -15,6 +15,8 @@ const MODULE_TRANSLATIONS = Object.freeze<{
 		OVERVIEW_TITLE: tKey('CT_OVERVIEW_TITLE', 'Content types'),
 		OVERVIEW_LOADING: tKey('CT_OVERVIEW_LOADING', 'Content types ophalen'),
 		BADGE_TYPE: tKey('CT_BADGE_TYPE', 'Content type'),
+		ALERT_TITLE: tKey('CT_ALERT_TITLE', 'Content type'),
+		ALERT_MESSAGGE: tKey('CT_ALERT_MESSAGE', 'content type'),
 		SETTINGS_NAME_GUIDELINE: tKey(
 			'CT_SETTINGS_NAME_GUIDELINE',
 			'Geef het content type een korte en duidelijke naam.'
@@ -32,6 +34,8 @@ const MODULE_TRANSLATIONS = Object.freeze<{
 		OVERVIEW_TITLE: tKey('CB_OVERVIEW_TITLE', 'Content blokken'),
 		OVERVIEW_LOADING: tKey('CB_OVERVIEW_LOADING', 'Content blokken ophalen'),
 		BADGE_TYPE: tKey('CB_BADGE_TYPE', 'Content blok'),
+		ALERT_TITLE: tKey('CB_ALERT_TITLE', 'Content blok'),
+		ALERT_MESSAGE: tKey('CB_ALERT_MESSAGE', 'content blok'),
 		SETTINGS_NAME_GUIDELINE: tKey(
 			'CB_SETTINGS_NAME_GUIDELINE',
 			'Geef het content blok een korte en duidelijke naam.'

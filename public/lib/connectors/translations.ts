@@ -10,6 +10,7 @@ export const translationsAPI = Core.modules.getModuleAPI<
 			addTranslation: (id: string, lang: string, translation: I18NextTranslations) => void;
 			updateTranslation: (id: string, lang: string, translation: I18NextTranslations) => void;
 			useTranslation: (module: string, lang: string) => [TranslateFunc];
+			translate: (module: string, lang: string, key: string) => string;
 		};
 	}
 >('translations-module');
@@ -29,5 +30,10 @@ export const useModuleTranslation = (): [(keys: string | string[]) => string] =>
 	translationsAPI?.modules?.useTranslation
 		? translationsAPI.modules.useTranslation('content-types', 'nl_BE')
 		: [() => 'TRANSLATIONS MODULE ERROR'];
+
+export const moduleTranslate = (key: string): string =>
+	translationsAPI?.modules?.translate
+		? translationsAPI.modules.translate('content-types', 'nl_BE', key)
+		: 'TRANSLATIONS MODULE ERROR';
 
 export const CORE_TRANSLATIONS = translationsAPI?.core?.CORE_TRANSLATIONS || {};
