@@ -68,11 +68,6 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 
 		return site.data.contentTypes.includes(contentType._id) || false;
 	}, [contentType, fetchingSiteModulesConfigState, site]);
-	const activeTabs = useActiveTabs(
-		SITE_CT_DETAIL_TABS,
-		disableTabs(externalTabs, { isActive }) as ExternalTabModel[],
-		location.pathname
-	);
 
 	const { tenantId } = useTenantContext();
 	const breadcrumbs = useRoutesBreadcrumbs(
@@ -101,6 +96,11 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 				false
 			),
 		[mySecurityrights]
+	);
+	const activeTabs = useActiveTabs(
+		SITE_CT_DETAIL_TABS,
+		disableTabs(externalTabs, { isActive, mySecurityrights }) as ExternalTabModel[],
+		location.pathname
 	);
 
 	useEffect(() => {
