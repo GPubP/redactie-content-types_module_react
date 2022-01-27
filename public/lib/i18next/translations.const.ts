@@ -20,7 +20,7 @@ const MODULE_TRANSLATIONS = Object.freeze<{
 			'Geef het content type een korte en duidelijke naam.'
 		),
 		SETTINGS_DESCRIPTION_GUIDELINE: tKey(
-			'CT_SETTINGS_NAME_GUIDELINE',
+			'CT_SETTINGS_DESCRIPTION_GUIDELINE',
 			'Geef het content type een duidelijke beschrijving. Deze wordt gebruikt in het overzicht.'
 		),
 		SITES_INTRO: tKey(
@@ -37,7 +37,7 @@ const MODULE_TRANSLATIONS = Object.freeze<{
 			'Geef het content blok een korte en duidelijke naam.'
 		),
 		SETTINGS_DESCRIPTION_GUIDELINE: tKey(
-			'CB_SETTINGS_NAME_GUIDELINE',
+			'CB_SETTINGS_DESCRIPTION_GUIDELINE',
 			'Geef het content blok een duidelijke beschrijving. Deze wordt gebruikt in het overzicht'
 		),
 		SITES_INTRO: tKey(
