@@ -16,7 +16,7 @@ const MODULE_TRANSLATIONS = Object.freeze<{
 		OVERVIEW_LOADING: tKey('CT_OVERVIEW_LOADING', 'Content types ophalen'),
 		BADGE_TYPE: tKey('CT_BADGE_TYPE', 'Content type'),
 		ALERT_TITLE: tKey('CT_ALERT_TITLE', 'Content type'),
-		ALERT_MESSAGGE: tKey('CT_ALERT_MESSAGE', 'content type'),
+		ALERT_MESSAGE: tKey('CT_ALERT_MESSAGE', 'content type'),
 		SETTINGS_NAME_GUIDELINE: tKey(
 			'CT_SETTINGS_NAME_GUIDELINE',
 			'Geef het content type een korte en duidelijke naam.'

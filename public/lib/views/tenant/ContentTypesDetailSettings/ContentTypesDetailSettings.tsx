@@ -67,6 +67,8 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 		BFF_MODULE_PUBLIC_PATH
 	);
 	const TYPE_TRANSLATIONS = MODULE_TRANSLATIONS[ctType];
+	const type = moduleTranslate(MODULE_TRANSLATIONS[ctType].ALERT_MESSAGE);
+
 	const isRemovable = useMemo(() => Array.isArray(siteOccurrences) && !siteOccurrences.length, [
 		siteOccurrences,
 	]);
@@ -145,13 +147,11 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			return <></>;
 		}
 
-		const type = moduleTranslate(MODULE_TRANSLATIONS[ctType].ALERT_MESSAGE);
-
 		return (
 			<Card className="u-margin-top">
 				<CardBody>
 					<h6>Verwijderen</h6>
-					{isRemovable ? (
+					{type && isRemovable ? (
 						<p className="u-margin-top-xs u-margin-bottom">
 							Opgelet: indien je dit {type} verwijdert kan deze niet meer gebruikt
 							worden op sites.
@@ -243,15 +243,15 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 								shouldBlockNavigationOnConfirm
 								onConfirm={submit}
 							/>
-							<DeletePrompt
-								body={`Ben je zeker dat je dit
-									${moduleTranslate(MODULE_TRANSLATIONS[ctType].ALERT_MESSAGE)}
-									 wil verwijderen? Dit kan niet ongedaan gemaakt worden.`}
-								isDeleting={contentTypeisRemoving === LoadingState.Loading}
-								show={showDeleteModal}
-								onCancel={() => setShowDeleteModal(false)}
-								onConfirm={() => isRemovable && onDelete && onDelete()}
-							/>
+							{type && (
+								<DeletePrompt
+									body={`Ben je zeker dat je dit ${type} wil verwijderen? Dit kan niet ongedaan gemaakt worden.`}
+									isDeleting={contentTypeisRemoving === LoadingState.Loading}
+									show={showDeleteModal}
+									onCancel={() => setShowDeleteModal(false)}
+									onConfirm={() => isRemovable && onDelete && onDelete()}
+								/>
+							)}
 						</>
 					);
 				}}
