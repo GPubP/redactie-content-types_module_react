@@ -19,15 +19,11 @@ import { useParams } from 'react-router-dom';
 import { CTSettingsForm } from '../../../components';
 import {
 	CORE_TRANSLATIONS,
-	moduleTranslate,
 	useCoreTranslation,
+	useModuleTranslation,
 } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, CONTENT_TYPE_DETAIL_TAB_MAP } from '../../../contentTypes.const';
-import {
-	ContentTypesDetailRouteProps,
-	ContentTypesRouteParams,
-	CtTypes,
-} from '../../../contentTypes.types';
+import { ContentTypesDetailRouteProps, ContentTypesRouteParams } from '../../../contentTypes.types';
 import { useContentType } from '../../../hooks';
 import { MODULE_TRANSLATIONS } from '../../../i18next/translations.const';
 import { ContentTypeDetailModel, contentTypesFacade } from '../../../store/contentTypes';
@@ -45,6 +41,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	 * Hooks
 	 */
 	const [t] = useCoreTranslation();
+	const [mt] = useModuleTranslation();
 	const { ctType } = useParams<ContentTypesRouteParams>();
 	const {
 		updatingState: contentTypeIsUpdating,
@@ -67,7 +64,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 		BFF_MODULE_PUBLIC_PATH
 	);
 	const TYPE_TRANSLATIONS = MODULE_TRANSLATIONS[ctType];
-	const type = moduleTranslate(MODULE_TRANSLATIONS[ctType].ALERT_MESSAGE);
+	const type = mt(MODULE_TRANSLATIONS[ctType].ALERT_MESSAGE);
 
 	const isRemovable = useMemo(() => Array.isArray(siteOccurrences) && !siteOccurrences.length, [
 		siteOccurrences,
