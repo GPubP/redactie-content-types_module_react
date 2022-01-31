@@ -9,6 +9,7 @@ import {
 import { insert, move, omit } from 'ramda';
 
 import { ALERT_CONTAINER_IDS, CONTENT_COMPARTMENT_UUID } from '../../contentTypes.const';
+import { CtTypes } from '../../contentTypes.types';
 import {
 	Compartment,
 	ContentTypeCreateRequest,
@@ -226,7 +227,10 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	public createContentType(payload: ContentTypeCreateRequest): Promise<void> {
 		this.store.setIsCreating(true);
 
-		const alertMessages = getAlertMessages((payload as unknown) as ContentTypeDetailResponse);
+		const alertMessages = getAlertMessages(
+			(payload as unknown) as ContentTypeDetailResponse,
+			payload?.meta.canBeFiltered === true ? CtTypes.contentTypes : CtTypes.contentBlocks
+		);
 
 		return this.service
 			.createContentType(payload)
@@ -265,7 +269,11 @@ export class ContentTypesFacade extends BaseEntityFacade<
 		containerId: ALERT_CONTAINER_IDS
 	): Promise<void> {
 		this.store.setIsUpdating(true);
-		const alertMessages = getAlertMessages((payload as unknown) as ContentTypeDetailResponse);
+
+		const alertMessages = getAlertMessages(
+			(payload as unknown) as ContentTypeDetailResponse,
+			payload?.meta.canBeFiltered === true ? CtTypes.contentTypes : CtTypes.contentBlocks
+		);
 
 		return this.service
 			.updateContentType(payload)
@@ -289,6 +297,7 @@ export class ContentTypesFacade extends BaseEntityFacade<
 					},
 				});
 				this.presetFacade.resetDetailStore();
+
 				this.alertService(alertMessages.update.success, containerId, 'success');
 			})
 			.catch(error => {
@@ -308,7 +317,10 @@ export class ContentTypesFacade extends BaseEntityFacade<
 	): Promise<void> {
 		this.store.setIsUpdating(true);
 
-		const alertMessages = getAlertMessages(contentType);
+		const alertMessages = getAlertMessages(
+			contentType,
+			contentType?.meta.canBeFiltered === true ? CtTypes.contentTypes : CtTypes.contentBlocks
+		);
 
 		return this.service
 			.updateContentTypeSiteWorkflow(payload, contentType.uuid as string, siteId)
@@ -351,7 +363,8 @@ export class ContentTypesFacade extends BaseEntityFacade<
 			isRemoving: true,
 		});
 		const alertMessages = getAlertMessages(
-			(contentType as unknown) as ContentTypeDetailResponse
+			(contentType as unknown) as ContentTypeDetailResponse,
+			contentType?.meta.canBeFiltered === true ? CtTypes.contentTypes : CtTypes.contentBlocks
 		);
 
 		return this.service

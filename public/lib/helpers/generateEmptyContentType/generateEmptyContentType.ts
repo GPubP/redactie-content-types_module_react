@@ -12,9 +12,11 @@ export const generateEmptyContentType = (): ContentTypeCreateRequest => ({
 	fields: [],
 	modulesConfig: [],
 	meta: {
+		canBeFiltered: false,
+		label: '',
 		safeLabel: '',
 		description: '',
-		label: '',
+		urlPath: { pattern: '' },
 		deleted: false,
 	},
 });

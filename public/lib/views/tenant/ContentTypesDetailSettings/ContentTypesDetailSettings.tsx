@@ -17,13 +17,13 @@ import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'r
 import { useParams } from 'react-router-dom';
 
 import { CTSettingsForm } from '../../../components';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
-import { ALERT_CONTAINER_IDS, CONTENT_TYPE_DETAIL_TAB_MAP } from '../../../contentTypes.const';
 import {
-	ContentTypesDetailRouteProps,
-	ContentTypesRouteParams,
-	CtTypes,
-} from '../../../contentTypes.types';
+	CORE_TRANSLATIONS,
+	useCoreTranslation,
+	useModuleTranslation,
+} from '../../../connectors/translations';
+import { ALERT_CONTAINER_IDS, CONTENT_TYPE_DETAIL_TAB_MAP } from '../../../contentTypes.const';
+import { ContentTypesDetailRouteProps, ContentTypesRouteParams } from '../../../contentTypes.types';
 import { useContentType } from '../../../hooks';
 import { MODULE_TRANSLATIONS } from '../../../i18next/translations.const';
 import { ContentTypeDetailModel, contentTypesFacade } from '../../../store/contentTypes';
@@ -41,6 +41,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 	 * Hooks
 	 */
 	const [t] = useCoreTranslation();
+	const [mt] = useModuleTranslation();
 	const { ctType } = useParams<ContentTypesRouteParams>();
 	const {
 		updatingState: contentTypeIsUpdating,
@@ -63,6 +64,8 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 		BFF_MODULE_PUBLIC_PATH
 	);
 	const TYPE_TRANSLATIONS = MODULE_TRANSLATIONS[ctType];
+	const type = mt(MODULE_TRANSLATIONS[ctType].ALERT_MESSAGE);
+
 	const isRemovable = useMemo(() => Array.isArray(siteOccurrences) && !siteOccurrences.length, [
 		siteOccurrences,
 	]);
@@ -141,13 +144,11 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 			return <></>;
 		}
 
-		const type = ctType === CtTypes.contentTypes ? 'content type' : 'content blok';
-
 		return (
 			<Card className="u-margin-top">
 				<CardBody>
 					<h6>Verwijderen</h6>
-					{isRemovable ? (
+					{type && isRemovable ? (
 						<p className="u-margin-top-xs u-margin-bottom">
 							Opgelet: indien je dit {type} verwijdert kan deze niet meer gebruikt
 							worden op sites.
@@ -239,13 +240,15 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 								shouldBlockNavigationOnConfirm
 								onConfirm={submit}
 							/>
-							<DeletePrompt
-								body="Ben je zeker dat je dit content type wil verwijderen? Dit kan niet ongedaan gemaakt worden."
-								isDeleting={contentTypeisRemoving === LoadingState.Loading}
-								show={showDeleteModal}
-								onCancel={() => setShowDeleteModal(false)}
-								onConfirm={() => isRemovable && onDelete && onDelete()}
-							/>
+							{type && (
+								<DeletePrompt
+									body={`Ben je zeker dat je dit ${type} wil verwijderen? Dit kan niet ongedaan gemaakt worden.`}
+									isDeleting={contentTypeisRemoving === LoadingState.Loading}
+									show={showDeleteModal}
+									onCancel={() => setShowDeleteModal(false)}
+									onConfirm={() => isRemovable && onDelete && onDelete()}
+								/>
+							)}
 						</>
 					);
 				}}
