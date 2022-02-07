@@ -117,7 +117,7 @@ export function generateValidationChecks(
 	];
 	const { checks } = allChecksReverseOrder.reduce(
 		(acc, check) => {
-			if (!check.key || acc.keys.includes(check.key)) {
+			if (!check.key || acc.keys.includes(check.key) || typeof check.val === 'undefined') {
 				return acc;
 			}
 
