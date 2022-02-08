@@ -1,4 +1,4 @@
-import { Textarea, TextField } from '@acpaas-ui/react-components';
+import { Textarea, TextField, RadioGroup } from '@acpaas-ui/react-components';
 import { CopyValue, ErrorMessage } from '@redactie/utils';
 import { Field, Formik, isFunction } from 'formik';
 import { path } from 'ramda';
@@ -11,8 +11,13 @@ import {
 } from '../../../connectors/translations';
 import { CtTypes } from '../../../contentTypes.types';
 import { getFieldState } from '../../../helpers/forms';
+import { ContentTypeDetailModel } from '../../../store/contentTypes';
 
-import { CT_SETTINGS_VALIDATION_SCHEMA } from './CTSettingsForm.const';
+import {
+	CT_SETTINGS_VALIDATION_SCHEMA,
+	ISSUED_PREFILL_OPTIONS,
+	ISSUED_EDITABLE_OPTIONS,
+} from './CTSettingsForm.const';
 import { CTSettingsFormChildrenFn, CTSettingsFormProps } from './CTSettingsForm.types';
 
 const CTSettingsForm: FC<CTSettingsFormProps> = ({
@@ -24,6 +29,15 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 	onSubmit,
 	ctType,
 }) => {
+	const initialValues: ContentTypeDetailModel = {
+		...contentType,
+		meta: {
+			...contentType.meta,
+			issuedOnPrefill: contentType.meta?.issuedOnPrefill || ISSUED_PREFILL_OPTIONS[0].value,
+			issuedOnEditable: contentType.meta?.issuedOnEditable || false,
+		},
+	};
+
 	/**
 	 * Hooks
 	 */
@@ -38,7 +52,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 	return (
 		<Formik
 			innerRef={instance => isFunction(formikRef) && formikRef(instance)}
-			initialValues={contentType}
+			initialValues={initialValues}
 			onSubmit={onSubmit}
 			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA(ctType)}
 		>
@@ -97,7 +111,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 							</div>
 						</div>
 						{ctType === CtTypes.contentTypes && (
-							<div className="row u-margin-bottom-lg">
+							<div className="row">
 								<div className="col-xs-12 u-margin-top">
 									<Field
 										as={TextField}
@@ -123,6 +137,28 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 								</div>
 							</div>
 						)}
+						<div className="row">
+							<div className="col-xs-12 u-margin-top">
+								<Field
+									as={RadioGroup}
+									id="meta.issuedOnPrefill"
+									name="meta.issuedOnPrefill"
+									options={ISSUED_PREFILL_OPTIONS}
+									label="Bepaal met welke publicatie datum het uitgifte tijdstip ge-prefilled zal worden"
+								/>
+							</div>
+						</div>
+						<div className="row u-margin-bottom-lg">
+							<div className="col-xs-12 u-margin-top">
+								<Field
+									as={RadioGroup}
+									id="meta.issuedOnEditable"
+									name="meta.issuedOnEditable"
+									options={ISSUED_EDITABLE_OPTIONS}
+									label="Bepaal of de redacteur de uitgifte datum mag aanpassen"
+								/>
+							</div>
+						</div>
 						{values.uuid && (
 							<div className="row u-margin-top">
 								<CopyValue

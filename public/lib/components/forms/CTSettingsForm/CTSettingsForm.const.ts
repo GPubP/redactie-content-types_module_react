@@ -19,3 +19,13 @@ export const CT_SETTINGS_VALIDATION_SCHEMA = (ctType: CtTypes): ObjectSchema =>
 			}),
 		}),
 	});
+
+	export const ISSUED_PREFILL_OPTIONS = [
+		{ key: 'first-publication', label: 'Eerste publicatie', value: 'firstPublication' },
+		{ key: 'last-publication', label: 'Laatste publicatie', value: 'lastPublication' },
+	];
+
+	export const ISSUED_EDITABLE_OPTIONS = [
+		{ key: 'non-editable-prefill', label: 'Niet aanpasbaar', value: false },
+		{ key: 'editable-prefill', label: 'Aanpasbaar', value: true },
+	];

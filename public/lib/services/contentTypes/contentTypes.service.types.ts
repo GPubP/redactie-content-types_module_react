@@ -100,6 +100,8 @@ export interface ContentTypeMeta {
 	urlPath?: {
 		pattern: string;
 	};
+	issuedOnPrefill?: string;
+	issuedOnEditable?: boolean;
 }
 export interface ModuleSettings {
 	uuid?: string;
