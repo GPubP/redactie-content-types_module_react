@@ -19,6 +19,11 @@ export enum ALERT_CONTAINER_IDS {
 	detailSites = 'detail-sites',
 }
 
+export enum ISSUED_PUBLICATION_OPTIONS {
+	firstPublication = 'firstPublication',
+	lastPublication = 'lastPublication'
+}
+
 export const CONTENT_COMPARTMENT_UUID = 'ce569384-6497-4e1b-84c6-52fa43592c69';
 
 export const OVERVIEW_QUERY_PARAMS_CONFIG = (ctType?: CtTypes): APIQueryParamsConfig =>

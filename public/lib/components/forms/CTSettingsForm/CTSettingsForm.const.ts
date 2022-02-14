@@ -1,4 +1,5 @@
 import { object, ObjectSchema, string } from 'yup';
+import { ISSUED_PUBLICATION_OPTIONS } from '../../../contentTypes.const';
 
 import { CtTypes } from '../../../contentTypes.types';
 
@@ -21,8 +22,8 @@ export const CT_SETTINGS_VALIDATION_SCHEMA = (ctType: CtTypes): ObjectSchema =>
 	});
 
 	export const ISSUED_PREFILL_OPTIONS = [
-		{ key: 'first-publication', label: 'Eerste publicatie', value: 'firstPublication' },
-		{ key: 'last-publication', label: 'Laatste publicatie', value: 'lastPublication' },
+		{ key: 'first-publication', label: 'Eerste publicatie', value: ISSUED_PUBLICATION_OPTIONS.firstPublication },
+		{ key: 'last-publication', label: 'Laatste publicatie', value: ISSUED_PUBLICATION_OPTIONS.lastPublication },
 	];
 
 	export const ISSUED_EDITABLE_OPTIONS = [
