@@ -1,3 +1,4 @@
+import { ISSUED_PUBLICATION_OPTIONS } from '../../contentTypes.const';
 import { DataType, FieldType, Operator } from '../fieldTypes';
 import { Preset, PresetDetailResponse, Validator } from '../presets';
 
@@ -100,6 +101,8 @@ export interface ContentTypeMeta {
 	urlPath?: {
 		pattern: string;
 	};
+	issuedOnPrefill?: ISSUED_PUBLICATION_OPTIONS;
+	issuedOnEditable?: boolean;
 }
 export interface ModuleSettings {
 	uuid?: string;
