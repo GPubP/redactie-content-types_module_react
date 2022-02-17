@@ -45,6 +45,7 @@ const ContentTypesUpdateExternal: FC<ContentTypesSiteDetailRoutePropsParams<
 		);
 
 		return {
+			...moduleSettings,
 			config: moduleSettings?.config || {},
 			validationSchema: moduleSettings?.validationSchema || {},
 		};

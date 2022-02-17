@@ -11,11 +11,11 @@ import {
 	defaultValueCompartmentValidator,
 	generateConfig,
 	generateConfigFromValidationData,
+	generateFormSchemaFromFieldTypeData,
+	generateFormSchemaFromPreset,
 	generateValidationChecks,
 	settingsCompartmentValidator,
 	validationCompartmentValidator,
-	generateFormSchemaFromPreset,
-	generateFormSchemaFromFieldTypeData,
 } from './helpers';
 import { UseActiveFieldType } from './hooks/useActiveFieldType/useActiveFieldType.types';
 import { UseActivePreset } from './hooks/useActivePreset/useActivePreset.types';
@@ -35,6 +35,7 @@ import {
 	ModuleSettings,
 } from './services/contentTypes';
 import { FieldType, FieldTypeMeta, FieldTypesApiService } from './services/fieldTypes';
+import { MetadataApiService } from './services/metadata';
 import { Preset, PresetsApiService } from './services/presets';
 import {
 	ContentTypeDetailModel,
@@ -44,6 +45,7 @@ import {
 } from './store/contentTypes';
 import { DynamicFieldDetailModel } from './store/dynamicField/dynamicField.model';
 import { FieldTypesFacade } from './store/fieldTypes';
+import { MetadataFacade } from './store/metadata';
 import { PresetDetailModel, PresetsFacade } from './store/presets';
 import {
 	ContentTypesCCConfig,
@@ -170,6 +172,10 @@ export interface ContentTypeAPI {
 		contentTypes: {
 			service: ContentTypesApiService;
 			facade: ContentTypesFacade;
+		};
+		metadata: {
+			service: MetadataApiService;
+			facade: MetadataFacade;
 		};
 	};
 	hooks: {
