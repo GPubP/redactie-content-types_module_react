@@ -46,6 +46,8 @@ import {
 // NOTE!: don't commit when redux devtools is active
 // akitaDevtools();
 
+console.log('content-types');
+
 const ContentTypesComponent: FC<ContentTypesModuleProps> = ({ route, tenantId }) => {
 	useEffect(() => {
 		fieldTypesFacade.getFieldTypes();

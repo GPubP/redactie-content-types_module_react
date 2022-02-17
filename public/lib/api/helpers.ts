@@ -5,11 +5,11 @@ import {
 	defaultValueCompartmentValidator,
 	generateConfig,
 	generateConfigFromValidationData,
+	generateFormSchemaFromFieldTypeData,
+	generateFormSchemaFromPreset,
 	generateValidationChecks,
 	settingsCompartmentValidator,
 	validationCompartmentValidator,
-	generateFormSchemaFromPreset,
-	generateFormSchemaFromFieldTypeData,
 } from '../helpers';
 
 export const helpers: ContentTypeAPI['helpers'] = {
