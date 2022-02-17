@@ -1,8 +1,8 @@
-import { Textarea, TextField, RadioGroup } from '@acpaas-ui/react-components';
+import { RadioGroup, Textarea, TextField } from '@acpaas-ui/react-components';
 import { CopyValue, ErrorMessage } from '@redactie/utils';
 import { Field, Formik, isFunction } from 'formik';
 import { path } from 'ramda';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 
 import {
 	CORE_TRANSLATIONS,
@@ -15,8 +15,8 @@ import { ContentTypeDetailModel } from '../../../store/contentTypes';
 
 import {
 	CT_SETTINGS_VALIDATION_SCHEMA,
-	ISSUED_PREFILL_OPTIONS,
 	ISSUED_EDITABLE_OPTIONS,
+	ISSUED_PREFILL_OPTIONS,
 } from './CTSettingsForm.const';
 import { CTSettingsFormChildrenFn, CTSettingsFormProps } from './CTSettingsForm.types';
 
@@ -44,6 +44,14 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 
 	const [t] = useCoreTranslation();
 	const [tModule] = useModuleTranslation();
+	const IssuedEditableOptions = useMemo(
+		() => ISSUED_EDITABLE_OPTIONS.map(option => ({ ...option, disabled })),
+		[disabled]
+	);
+	const IssuedPrefillOptions = useMemo(
+		() => ISSUED_PREFILL_OPTIONS.map(option => ({ ...option, disabled })),
+		[disabled]
+	);
 
 	/**
 	 * Render
@@ -143,7 +151,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 									as={RadioGroup}
 									id="meta.issuedOnPrefill"
 									name="meta.issuedOnPrefill"
-									options={ISSUED_PREFILL_OPTIONS}
+									options={IssuedPrefillOptions}
 									label="Bepaal met welke publicatie datum het uitgifte tijdstip ge-prefilled zal worden"
 								/>
 							</div>
@@ -154,7 +162,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 									as={RadioGroup}
 									id="meta.issuedOnEditable"
 									name="meta.issuedOnEditable"
-									options={ISSUED_EDITABLE_OPTIONS}
+									options={IssuedEditableOptions}
 									label="Bepaal of de redacteur de uitgifte datum mag aanpassen"
 								/>
 							</div>
