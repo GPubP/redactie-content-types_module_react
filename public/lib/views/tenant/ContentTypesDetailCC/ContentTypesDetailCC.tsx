@@ -248,9 +248,9 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 			fieldsByCompartments.findIndex(comp => comp.uuid == source.id);
 
 		const moveFieldToCompartment =
-			source.type === 'row-2' && sourceCompartmentUuid !== targetCompartmentUuid;
-		const moveFieldToField = source.type === 'row-2' && target.type === 'row-2';
-		const moveCompartment = source.type === 'row-1' && target.type === 'row-1';
+			source.level === 2 && sourceCompartmentUuid !== targetCompartmentUuid;
+		const moveFieldToField = source.level === 2 && target.level === 2;
+		const moveCompartment = source.level === 1 && target.level === 1;
 
 		if (moveCompartment) {
 			contentTypesFacade.updateCompartments(
@@ -352,6 +352,7 @@ const ContentTypeDetailCC: FC<ContentTypesDetailRouteProps> = ({
 				rowExpansionTemplate={updateCompartmentTemplate}
 				totalValues={contentType.fields.length}
 				noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-ITEMS'])}
+				allowHorizontalDrag={false}
 			/>
 		);
 	};
