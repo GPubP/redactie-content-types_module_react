@@ -24,4 +24,5 @@ export interface RowDnDEvent {
 	index: number;
 	type: string;
 	id: string;
+	level: number;
 }
