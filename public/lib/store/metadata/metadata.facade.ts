@@ -69,7 +69,7 @@ export class MetadataFacade extends BaseEntityFacade<
 			.updateMetadata(siteId, contentType.uuid, metadataId, payload)
 			.then(metadata => {
 				this.store.update({
-					isCreating: false,
+					isUpdating: false,
 					error: null,
 					metadata,
 				});
@@ -79,7 +79,7 @@ export class MetadataFacade extends BaseEntityFacade<
 			.catch(error => {
 				showAlert(containerId, 'error', alertMessages.upsert.error);
 				this.store.update({
-					isCreating: false,
+					isUpdating: false,
 					error,
 				});
 			});

@@ -32,6 +32,7 @@ import {
 	useActiveRouteConfig,
 	useActiveTabs,
 	useContentType,
+	useContentTypeMetadata,
 	useRoutesBreadcrumbs,
 } from '../../../hooks';
 import useDynamicActiveField from '../../../hooks/useDynamicActiveField/useDynamicActiveField';
@@ -58,6 +59,10 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		contentType,
 		fetchingSiteModulesConfigState,
 	} = useContentType();
+	const {
+		updatingState: contentTypeMetadataUpdatingState,
+		creatingState: contentTypeMetadataCreatingState,
+	} = useContentTypeMetadata();
 	const [{ all: externalTabs }] = useExternalTabsFacade();
 	const { siteId } = useSiteContext();
 	const [site] = sitesConnector.hooks.useSite(siteId);
@@ -155,7 +160,9 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			onCancel: navigateToOverview,
 			isLoading:
 				contentTypeLoadingState !== LoadingState.Loaded ||
-				contentTypeUpdatingState !== LoadingState.Loaded,
+				contentTypeUpdatingState !== LoadingState.Loaded ||
+				contentTypeMetadataUpdatingState !== LoadingState.Loaded ||
+				contentTypeMetadataCreatingState !== LoadingState.Loaded,
 			canUpdate,
 		};
 

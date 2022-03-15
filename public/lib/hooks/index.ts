@@ -19,3 +19,4 @@ export { default as usePreset } from './usePreset/usePreset';
 export { default as useFieldType } from './useFieldType/useFieldType';
 export { default as useDynamicField } from './useDynamicField/useDynamicField';
 export { default as useSites } from './useSites/useSites';
+export { default as useContentTypeMetadata } from './useContentTypeMetadata/useContentTypeMetadata';
