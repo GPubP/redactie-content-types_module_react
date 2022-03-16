@@ -353,6 +353,13 @@ Core.routes.register({
 					component: ContentTypesDetailSites,
 				},
 				{
+					path: MODULE_PATHS.detailExternalChild,
+					breadcrumb: false,
+					title: getPageTitle(TitleTypes.ContentType),
+					badges: getPageBadges(TitleTypes.ContentType),
+					component: ContentTypesDetailExternal,
+				},
+				{
 					path: MODULE_PATHS.detailExternal,
 					breadcrumb: false,
 					title: getPageTitle(TitleTypes.ContentType),
@@ -409,6 +416,13 @@ sitesConnector.registerRoutes({
 					title: getPageTitle(TitleTypes.ContentType),
 					badges: getPageBadges(TitleTypes.ContentType),
 					component: SiteContentTypesDetailSettings,
+				},
+				{
+					path: MODULE_PATHS.site.detailExternalChild,
+					breadcrumb: false,
+					title: getPageTitle(TitleTypes.ContentType),
+					badges: getPageBadges(TitleTypes.ContentType),
+					component: SiteContentTypesUpdateExternal,
 				},
 				{
 					path: MODULE_PATHS.site.detailExternal,

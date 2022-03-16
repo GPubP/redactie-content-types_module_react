@@ -21,7 +21,7 @@ export enum ALERT_CONTAINER_IDS {
 
 export enum ISSUED_PUBLICATION_OPTIONS {
 	firstPublication = 'firstPublication',
-	lastPublication = 'lastPublication'
+	lastPublication = 'lastPublication',
 }
 
 export const CONTENT_COMPARTMENT_UUID = 'ce569384-6497-4e1b-84c6-52fa43592c69';
@@ -116,6 +116,7 @@ export const MODULE_PATHS = {
 	detailCC: `${CT_ROOT}/:contentTypeUuid/content-componenten`,
 	detailSites: `${CT_ROOT}/:contentTypeUuid/sites`,
 	detailExternal: `${CT_ROOT}/:contentTypeUuid/:tab`,
+	detailExternalChild: `${CT_ROOT}/:contentTypeUuid/:tab/:child`,
 
 	detailCCNew: CC_NEW_PATH,
 	detailCCNewSettings: `${CC_NEW_PATH}/instellingen`,
@@ -150,6 +151,7 @@ export const MODULE_PATHS = {
 		detail: `${SITE_ROOT}/content-types/:contentTypeUuid`,
 		detailSettings: `${SITE_ROOT}/content-types/:contentTypeUuid/instellingen`,
 		detailExternal: `${SITE_ROOT}/content-types/:contentTypeUuid/:tab`,
+		detailExternalChild: `${SITE_ROOT}/content-types/:contentTypeUuid/:tab/:child`,
 	},
 };
 
