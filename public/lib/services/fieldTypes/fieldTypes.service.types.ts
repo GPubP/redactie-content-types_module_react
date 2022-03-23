@@ -47,7 +47,8 @@ export interface FieldTypeData {
 	dataType: DataType;
 	generalConfig: {
 		isQueryable: boolean;
-		isTranslate: boolean;
+		isTranslatable: boolean;
+		defaultTranslateValue: boolean;
 		isMultiple: boolean;
 		defaultLabel?: string;
 		defaultGuideline?: string;
