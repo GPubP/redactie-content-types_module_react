@@ -1,10 +1,10 @@
 import {
+	Card,
+	CardBody,
 	Checkbox,
 	RadioGroup,
 	Textarea,
 	TextField,
-	Card,
-	CardBody,
 } from '@acpaas-ui/react-components';
 import { CopyValue, FormikOnChangeHandler } from '@redactie/utils';
 import { ErrorMessage, Field, Formik } from 'formik';
@@ -27,9 +27,6 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 	formikRef,
 }) => {
 	const [isMultiple, setIsMultiple] = useState((initialValues?.generalConfig?.max || 0) > 1);
-	const [isTranslatable, setIsTranslatable] = useState<boolean>(
-		(fieldTypeData.generalConfig.isTranslatable) || false
-	);
 	const [t] = useCoreTranslation();
 
 	const onFormSubmit = (values: CCSettingsFormState): void => {
@@ -53,10 +50,6 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 				max: isMultiple ? values.generalConfig.max : 1,
 			},
 		});
-	};
-
-	const translatable = (): void => {
-		setIsTranslatable(!isTranslatable);
 	};
 
 	return (
@@ -190,29 +183,26 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 							</div>
 						)}
 						<div className="u-margin-top u-margin-bottom">
-						<Card>
-							<CardBody>
-								<h6>Vertalen</h6>
-								<p className="u-margin-top u-margin-bottom">
-									{fieldTypeData.generalConfig.isTranslatable
-										? 'Bepaal of er voor deze component andere inhoud kan ingegeven worden per taal. Zoniet blijft de inhoud over de talen heen gelijk.'
-										: 'Voor deze component kan er geen andere inhoud ingegeven worden per taal. De inhoud blijft over de talen heen gelijk.'}
-								</p>
+							<Card>
+								<CardBody>
+									<h6>Vertalen</h6>
+									<p className="u-margin-top u-margin-bottom">
+										{fieldTypeData.generalConfig.isTranslatable
+											? 'Bepaal of er voor deze component andere inhoud kan ingegeven worden per taal. Zoniet blijft de inhoud over de talen heen gelijk.'
+											: 'Voor deze component kan er geen andere inhoud ingegeven worden per taal. De inhoud blijft over de talen heen gelijk.'}
+									</p>
 
 									<Field
-										checked={isTranslatable}
+										as={Checkbox}
+										checked={values.generalConfig.isMultilanguage}
 										disabled={!fieldTypeData.generalConfig.isTranslatable}
-										onChange={translatable}
-										id="fieldTypeData.generalConfig.isTranslatable"
-										name="fieldTypeData.generalConfig.isTranslatable"
+										id="generalConfig.isMultilanguage"
+										name="generalConfig.isMultilanguage"
 										label="Inhoud vertalen"
 									/>
-
-
-							</CardBody>
-						</Card>
+								</CardBody>
+							</Card>
 						</div>
-
 					</>
 				);
 			}}
