@@ -1,10 +1,12 @@
 import { pathOr } from 'ramda';
 
 import { CCSettingsFormState } from '../../contentTypes.types';
+import { FieldType } from '../../services/fieldTypes/fieldTypes.service.types';
 import { ContentTypeFieldDetailModel } from '../../store/contentTypes';
 
 export const generateCCFormState = (
-	initialValues: Partial<ContentTypeFieldDetailModel> = {}
+	initialValues: Partial<ContentTypeFieldDetailModel> = {},
+	fieldType: FieldType
 ): CCSettingsFormState => ({
 	uuid: initialValues.uuid || '',
 	label: initialValues.label || '',
@@ -17,5 +19,10 @@ export const generateCCFormState = (
 		disabled: pathOr(false, ['generalConfig', 'disabled'], initialValues),
 		min: pathOr(0, ['generalConfig', 'min'], initialValues),
 		max: pathOr(1, ['generalConfig', 'max'], initialValues),
+		isMultilanguage: pathOr(
+			fieldType?.data?.generalConfig.defaultTranslateValue,
+			['generalConfig', 'isMultilanguage'],
+			initialValues
+		),
 	},
 });
