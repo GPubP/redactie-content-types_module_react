@@ -194,10 +194,10 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 
 									<Field
 										as={Checkbox}
-										checked={values.generalConfig.isMultilanguage}
+										checked={values.generalConfig.multiLanguage}
 										disabled={!fieldTypeData.generalConfig.isTranslatable}
-										id="generalConfig.isMultilanguage"
-										name="generalConfig.isMultilanguage"
+										id="generalConfig.multiLanguage"
+										name="generalConfig.multiLanguage"
 										label="Inhoud vertalen"
 									/>
 								</CardBody>

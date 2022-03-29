@@ -19,9 +19,9 @@ export const generateCCFormState = (
 		disabled: pathOr(false, ['generalConfig', 'disabled'], initialValues),
 		min: pathOr(0, ['generalConfig', 'min'], initialValues),
 		max: pathOr(1, ['generalConfig', 'max'], initialValues),
-		isMultilanguage: pathOr(
+		multiLanguage: pathOr(
 			fieldType?.data?.generalConfig.defaultTranslateValue,
-			['generalConfig', 'isMultilanguage'],
+			['generalConfig', 'multiLanguage'],
 			initialValues
 		),
 	},
