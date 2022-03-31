@@ -43,7 +43,8 @@ export interface BasePreset<V = string, D = string, F = string> {
 		fieldType: F;
 		generalConfig: {
 			isQueryable: boolean;
-			isTranslate: boolean;
+			isTranslatable: boolean;
+			defaultTranslateValue: boolean;
 			isMultiple: boolean;
 			allowDefault: boolean;
 			removable?: boolean;

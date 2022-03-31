@@ -141,6 +141,7 @@ export interface CCSettingsFormState {
 		disabled: boolean;
 		min: number;
 		max: number;
+		multiLanguage: boolean;
 	};
 }
 

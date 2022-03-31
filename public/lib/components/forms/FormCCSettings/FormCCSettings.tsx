@@ -1,4 +1,11 @@
-import { Checkbox, RadioGroup, Textarea, TextField } from '@acpaas-ui/react-components';
+import {
+	Card,
+	CardBody,
+	Checkbox,
+	RadioGroup,
+	Textarea,
+	TextField,
+} from '@acpaas-ui/react-components';
 import { CopyValue, FormikOnChangeHandler } from '@redactie/utils';
 import { ErrorMessage, Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
@@ -175,6 +182,27 @@ const FormCCSettings: FC<FormCCSettingsProps> = ({
 								/>
 							</div>
 						)}
+						<div className="u-margin-top u-margin-bottom">
+							<Card>
+								<CardBody>
+									<h6>Vertalen</h6>
+									<p className="u-margin-top u-margin-bottom">
+										{fieldTypeData.generalConfig.isTranslatable
+											? 'Bepaal of er voor deze component andere inhoud kan ingegeven worden per taal. Zoniet blijft de inhoud over de talen heen gelijk.'
+											: 'Voor deze component kan er geen andere inhoud ingegeven worden per taal. De inhoud blijft over de talen heen gelijk.'}
+									</p>
+
+									<Field
+										as={Checkbox}
+										checked={values.generalConfig.multiLanguage}
+										disabled={!fieldTypeData.generalConfig.isTranslatable}
+										id="generalConfig.multiLanguage"
+										name="generalConfig.multiLanguage"
+										label="Inhoud vertalen"
+									/>
+								</CardBody>
+							</Card>
+						</div>
 					</>
 				);
 			}}

@@ -20,7 +20,10 @@ const ContentTypesCCSettings: FC<ContentTypesCCRouteProps> = ({
 	preset,
 	parentPreset,
 }) => {
-	const initialFormValues = useMemo(() => generateCCFormState(CTField), [CTField]);
+	const initialFormValues = useMemo(() => generateCCFormState(CTField, fieldType), [
+		CTField,
+		fieldType,
+	]);
 	const { ctType } = useParams<ContentTypesRouteParams>();
 	const isRemovable =
 		(preset && preset?.data?.generalConfig?.removable !== false) ||
