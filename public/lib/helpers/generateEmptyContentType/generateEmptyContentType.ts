@@ -16,7 +16,6 @@ export const generateEmptyContentType = (): ContentTypeCreateRequest => ({
 		label: '',
 		safeLabel: '',
 		description: '',
-		urlPath: { pattern: '' },
 		deleted: false,
 	},
 });
