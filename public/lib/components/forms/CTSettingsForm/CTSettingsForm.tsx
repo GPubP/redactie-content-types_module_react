@@ -9,7 +9,6 @@ import {
 	useCoreTranslation,
 	useModuleTranslation,
 } from '../../../connectors/translations';
-import { CtTypes } from '../../../contentTypes.types';
 import { getFieldState } from '../../../helpers/forms';
 import { ContentTypeDetailModel } from '../../../store/contentTypes';
 
@@ -27,7 +26,6 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 	formikRef,
 	translations,
 	onSubmit,
-	ctType,
 }) => {
 	const initialValues: ContentTypeDetailModel = {
 		...contentType,
@@ -62,17 +60,10 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 			innerRef={instance => isFunction(formikRef) && formikRef(instance)}
 			initialValues={initialValues}
 			onSubmit={onSubmit}
-			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA(ctType)}
+			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA()}
 		>
 			{formikProps => {
-				const { errors, touched, values, setFieldValue } = formikProps;
-
-				if (
-					!path(['meta', 'urlPath', 'pattern'], touched) &&
-					!values.meta?.urlPath?.pattern
-				) {
-					setFieldValue('meta.urlPath.pattern', '/[item:slug]');
-				}
+				const { errors, touched, values } = formikProps;
 
 				return (
 					<>
@@ -118,33 +109,6 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 								/>
 							</div>
 						</div>
-						{ctType === CtTypes.contentTypes && (
-							<div className="row">
-								<div className="col-xs-12 u-margin-top">
-									<Field
-										as={TextField}
-										disabled={disabled}
-										id="meta.urlPath.pattern"
-										label="Url patroon"
-										name="meta.urlPath.pattern"
-										required
-										state={getFieldState(
-											touched,
-											errors,
-											'meta.urlPath.pattern'
-										)}
-									/>
-									<small className="u-block u-text-light u-margin-top-xs">
-										Voorzie een pad dat voor de slug geplaatst moet worden
-									</small>
-									<ErrorMessage
-										className="u-text-danger u-margin-top-xs"
-										component="p"
-										name="meta.urlPath.pattern"
-									/>
-								</div>
-							</div>
-						)}
 						<div className="row">
 							<div className="col-xs-12 u-margin-top">
 								<Field
