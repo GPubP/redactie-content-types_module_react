@@ -205,7 +205,6 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 				generalConfig: {
 					guideline: fieldType.data.generalConfig.defaultGuideline || '',
 					multiLanguage:
-						preset?.data.generalConfig.isTranslatable ||
 						preset?.data.generalConfig.defaultTranslateValue ||
 						fieldType.data.generalConfig.defaultTranslateValue ||
 						false,
