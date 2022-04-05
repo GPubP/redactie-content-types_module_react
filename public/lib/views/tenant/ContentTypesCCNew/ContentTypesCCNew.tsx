@@ -202,7 +202,14 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			const initialValues = {
 				label: name || fieldType.data.generalConfig.defaultLabel || '',
 				name: kebabCase(name || ''),
-				generalConfig: { guideline: fieldType.data.generalConfig.defaultGuideline || '' },
+				generalConfig: {
+					guideline: fieldType.data.generalConfig.defaultGuideline || '',
+					multiLanguage:
+						preset?.data.generalConfig.isTranslatable ||
+						preset?.data.generalConfig.defaultTranslateValue ||
+						fieldType.data.generalConfig.defaultTranslateValue ||
+						false,
+				},
 			};
 			const generatedActiveField = generateFieldFromType(
 				fieldType,
