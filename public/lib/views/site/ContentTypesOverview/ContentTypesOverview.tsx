@@ -17,6 +17,7 @@ import {
 } from '@redactie/utils';
 import React, { ReactElement, useEffect, useState } from 'react';
 
+import { FilterForm, FilterFormState } from '../../../components';
 import rolesRightsConnector from '../../../connectors/rolesRights';
 import sitesConnector from '../../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
@@ -25,6 +26,7 @@ import {
 	MODULE_PATHS,
 	OVERVIEW_QUERY_PARAMS_CONFIG,
 } from '../../../contentTypes.const';
+import { OverviewFilterItem } from '../../../contentTypes.types';
 import { useContentTypes, useRoutesBreadcrumbs } from '../../../hooks';
 import { ContentTypeModel, contentTypesFacade } from '../../../store/contentTypes';
 
@@ -80,6 +82,35 @@ const ContentTypesOverview: React.FC = () => {
 	/**
 	 * Functions
 	 */
+	const createFilterItems = ({ name }: FilterFormState): OverviewFilterItem[] => [
+		...(name
+			? [
+					{
+						filterKey: 'search',
+						valuePrefix: 'Zoekterm',
+						value: name,
+					},
+			  ]
+			: []),
+	];
+
+	const onSubmit = (filterFormState: FilterFormState): void => {
+		setQuery({
+			search: filterFormState.name,
+			skip: 0,
+		});
+	};
+
+	const deleteAllFilters = (): void => {
+		setQuery(DEFAULT_OVERVIEW_QUERY_PARAMS);
+	};
+
+	const deleteFilter = (item: OverviewFilterItem): void => {
+		setQuery({
+			skip: 0,
+			[item.filterKey]: undefined,
+		});
+	};
 
 	const handlePageChange = (page: number): void => {
 		setQuery({
@@ -96,6 +127,8 @@ const ContentTypesOverview: React.FC = () => {
 		);
 	};
 
+	const filterFormState: FilterFormState = { name: query.search ?? '' };
+	const activeFilters = createFilterItems(filterFormState);
 	const activeSorting = parseObjToOrderBy({
 		sort: query.sort ? query.sort.split('.')[1] : '',
 		direction: query.direction ?? 1,
@@ -126,6 +159,15 @@ const ContentTypesOverview: React.FC = () => {
 
 		return (
 			<>
+				<div className="u-margin-top">
+					<FilterForm
+						initialState={filterFormState}
+						onCancel={deleteAllFilters}
+						onSubmit={onSubmit}
+						deleteActiveFilter={deleteFilter}
+						activeFilters={activeFilters}
+					/>
+				</div>
 				<PaginatedTable
 					fixed
 					tableClassName="a-table--fixed--sm"
@@ -141,7 +183,6 @@ const ContentTypesOverview: React.FC = () => {
 					loading={loadingContentTypes === LoadingState.Loading}
 					loadDataMessage="Content types ophalen"
 					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-ITEMS'])}
-					hideResultsMessage
 				/>
 			</>
 		);
