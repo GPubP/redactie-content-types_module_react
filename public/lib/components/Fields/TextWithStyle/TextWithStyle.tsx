@@ -10,7 +10,6 @@ const TextWithStyle: React.FC<InputFieldProps> = ({
 	fieldHelperProps,
 }: InputFieldProps) => {
 	const config = fieldSchema.config || {};
-	console.log('render', config);
 	const { field } = fieldProps;
 	const { setValue } = fieldHelperProps;
 	const value: { text: string; textType: string } = field.value as any;
