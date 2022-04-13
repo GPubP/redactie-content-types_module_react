@@ -81,6 +81,7 @@ const TextareaWithStyle: React.FC<InputFieldProps> = ({
 							id={`${field.name}.text`}
 							name={`${field.name}.text`}
 							value={value?.text}
+							disabled={config.disabled}
 							onChange={(event: ChangeEvent<any>) =>
 								updateValue({ text: event.target.value })
 							}
@@ -103,6 +104,7 @@ const TextareaWithStyle: React.FC<InputFieldProps> = ({
 								name={`${field.name}.textType`}
 								options={options}
 								value={value?.textType}
+								disabled={config.disabled}
 								onChange={(event: ChangeEvent<any>) => {
 									updateValue({ textType: event.target.value });
 								}}

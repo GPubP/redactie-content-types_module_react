@@ -10,6 +10,7 @@ const TextWithStyle: React.FC<InputFieldProps> = ({
 	fieldHelperProps,
 }: InputFieldProps) => {
 	const config = fieldSchema.config || {};
+	console.log('render', config);
 	const { field } = fieldProps;
 	const { setValue } = fieldHelperProps;
 	const value: { text: string; textType: string } = field.value as any;
@@ -78,6 +79,7 @@ const TextWithStyle: React.FC<InputFieldProps> = ({
 					</FormRendererFieldTitle>
 					<div className="a-input">
 						<TextField
+							disabled={config.disabled}
 							id={`${field.name}.text`}
 							name={`${field.name}.text`}
 							value={value?.text}
@@ -105,6 +107,7 @@ const TextWithStyle: React.FC<InputFieldProps> = ({
 								Opmaak
 							</FormRendererFieldTitle>
 							<Select
+								disabled={config.disabled}
 								id={`${field.name}.textType`}
 								name={`${field.name}.textType`}
 								options={options}
