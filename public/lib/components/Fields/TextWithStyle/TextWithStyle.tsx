@@ -78,6 +78,7 @@ const TextWithStyle: React.FC<InputFieldProps> = ({
 					</FormRendererFieldTitle>
 					<div className="a-input">
 						<TextField
+							disabled={config.disabled}
 							id={`${field.name}.text`}
 							name={`${field.name}.text`}
 							value={value?.text}
@@ -105,6 +106,7 @@ const TextWithStyle: React.FC<InputFieldProps> = ({
 								Opmaak
 							</FormRendererFieldTitle>
 							<Select
+								disabled={config.disabled}
 								id={`${field.name}.textType`}
 								name={`${field.name}.textType`}
 								options={options}
