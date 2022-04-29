@@ -102,9 +102,14 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			),
 		[mySecurityrights]
 	);
+
 	const activeTabs = useActiveTabs(
 		SITE_CT_DETAIL_TABS,
-		disableTabs(externalTabs, { isActive, mySecurityrights }) as ExternalTabModel[],
+		disableTabs(externalTabs, {
+			isActive,
+			mySecurityrights,
+			contentType,
+		}) as ExternalTabModel[],
 		location.pathname
 	);
 
@@ -146,7 +151,9 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 	const pageBadges: ContextHeaderBadge =
 		typeof activeRouteConfig?.badges === 'function'
 			? activeRouteConfig.badges(activeField, dynamicActiveField, {
-					ctType: CtTypes.contentTypes,
+					ctType: contentType?.meta.canBeFiltered
+						? CtTypes.contentTypes
+						: CtTypes.contentBlocks,
 					t: tModule,
 			  })
 			: [];
