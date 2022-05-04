@@ -35,7 +35,7 @@ export const useExternalTabsFacade = (
 		return () => {
 			subscriptions.map(it => it.unsubscribe());
 		};
-	}, [contentType, context?.ctType]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [contentType, context]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return [{ all, allVisible, active }, activate];
 };
