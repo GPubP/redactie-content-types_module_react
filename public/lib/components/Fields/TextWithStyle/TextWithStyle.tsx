@@ -72,6 +72,7 @@ const TextWithStyle: React.FC<InputFieldProps> = ({
 				<div className="col-xs">
 					<FormRendererFieldTitle
 						isRequired={config.required}
+						isSynced={config.synced}
 						className="u-margin-bottom-xs"
 					>
 						{fieldSchema.label}
