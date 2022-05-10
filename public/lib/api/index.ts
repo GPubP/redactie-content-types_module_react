@@ -9,14 +9,17 @@ import { registerCTDetailTab } from './registerCTDetailTab';
 import { store } from './store';
 import { views } from './views';
 
-export const registerContentTypeAPI = (): void => {
-	const api: ContentTypeAPI = {
-		registerCTDetailTab,
-		parseFields: formRendererConnector.api.parseFields,
-		store,
-		hooks,
-		views,
-		helpers,
-	};
-	Core.modules.exposeModuleApi('content-type-module', api);
+const API: ContentTypeAPI = {
+	registerCTDetailTab,
+	parseFields: formRendererConnector.api.parseFields,
+	store,
+	hooks,
+	views,
+	helpers,
 };
+
+export const registerContentTypeAPI = (): void => {
+	Core.modules.exposeModuleApi('content-type-module', API);
+};
+
+export { API };
