@@ -19,6 +19,7 @@ import { omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import rolesRightsConnector from '../../../connectors/rolesRights';
 import { useCoreTranslation, useModuleTranslation } from '../../../connectors/translations';
 import {
 	ALERT_CONTAINER_IDS,
@@ -33,6 +34,7 @@ import {
 	Tab,
 	TabTypes,
 } from '../../../contentTypes.types';
+import { disableTabs } from '../../../helpers';
 import {
 	useActiveField,
 	useActiveRouteConfig,
@@ -49,6 +51,7 @@ import {
 	ContentTypeUpdateRequest,
 	ModuleSettings,
 } from '../../../services/contentTypes';
+import { ExternalTabModel } from '../../../store/api/externalTabs';
 import { useExternalTabsFacade } from '../../../store/api/externalTabs/externalTabs.facade';
 import {
 	ContentTypeDetailModel,
@@ -75,12 +78,29 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		contentType,
 		fieldsByCompartments,
 	} = useContentType();
-	const context = useMemo(() => ({ ctType }), [ctType]);
+	const [
+		mySecurityRightsLoadingState,
+		mySecurityrights,
+	] = rolesRightsConnector.api.hooks.useMySecurityRightsForTenant(true);
+	const context = useMemo(
+		() => ({
+			ctType,
+			mySecurityrights,
+			contentType,
+			isActive: true,
+			site: false,
+		}),
+		[contentType, ctType, mySecurityrights]
+	);
 	const [{ allVisible: externalTabs, active: activeExternalTab }] = useExternalTabsFacade(
 		context,
 		contentType
 	);
-	const activeTabs = useActiveTabs(CONTENT_DETAIL_TABS, externalTabs, location.pathname);
+	const activeTabs = useActiveTabs(
+		CONTENT_DETAIL_TABS,
+		disableTabs(externalTabs, context) as ExternalTabModel[],
+		location.pathname
+	);
 	const { tenantId } = useTenantContext();
 	const TYPE_TRANSLATIONS = MODULE_TRANSLATIONS[ctType];
 	const breadcrumbs = useRoutesBreadcrumbs([
@@ -118,6 +138,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			!presetsLoading &&
 			!fieldTypesLoading &&
 			contentTypeLoadingState !== LoadingState.Loading &&
+			mySecurityRightsLoadingState !== LoadingState.Loading &&
 			contentType &&
 			fieldTypes &&
 			presets
@@ -133,6 +154,7 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		presets,
 		presetsLoading,
 		fieldTypesLoading,
+		mySecurityRightsLoadingState,
 	]);
 
 	useEffect(() => {

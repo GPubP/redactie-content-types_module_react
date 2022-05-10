@@ -63,7 +63,6 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 		updatingState: contentTypeMetadataUpdatingState,
 		creatingState: contentTypeMetadataCreatingState,
 	} = useContentTypeMetadata();
-	const [{ all: externalTabs }] = useExternalTabsFacade();
 	const { siteId } = useSiteContext();
 	const [site] = sitesConnector.hooks.useSite(siteId);
 	const isActive = useMemo(() => {
@@ -102,14 +101,20 @@ const ContentTypesUpdate: FC<ContentTypesRouteProps> = ({ location, route }) => 
 			),
 		[mySecurityrights]
 	);
-
-	const activeTabs = useActiveTabs(
-		SITE_CT_DETAIL_TABS,
-		disableTabs(externalTabs, {
+	const context = useMemo(
+		() => ({
+			ctType: contentType?.meta.canBeFiltered ? CtTypes.contentTypes : CtTypes.contentBlocks,
 			isActive,
 			mySecurityrights,
 			contentType,
-		}) as ExternalTabModel[],
+			site: true,
+		}),
+		[contentType, isActive, mySecurityrights]
+	);
+	const [{ allVisible: externalTabs }] = useExternalTabsFacade(context, contentType);
+	const activeTabs = useActiveTabs(
+		SITE_CT_DETAIL_TABS,
+		disableTabs(externalTabs, context) as ExternalTabModel[],
 		location.pathname
 	);
 
