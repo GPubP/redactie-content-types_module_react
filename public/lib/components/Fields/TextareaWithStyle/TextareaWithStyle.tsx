@@ -96,6 +96,7 @@ const TextareaWithStyle: React.FC<InputFieldProps> = ({
 						<div className="a-input">
 							<FormRendererFieldTitle
 								isRequired={config.required}
+								isSynced={config.synced}
 								className="u-margin-bottom-xs"
 							>
 								Opmaak
