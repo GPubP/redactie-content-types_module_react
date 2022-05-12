@@ -1,11 +1,57 @@
 import { Field, generateErrorMessages, generateSchema } from '@wcm/jsonschema-generator';
-import { isEmpty } from 'ramda';
+import { isEmpty, pathOr } from 'ramda';
 
 import formRendererConnector from '../../connectors/formRenderer';
-import { ContentTypeFieldDetail, Validation, ValidationCheck } from '../../services/contentTypes';
+import { ContentTypeFieldDetail, ValicationCheckWithAllowedFields, ValicationCheckWithFields, Validation, ValidationCheck } from '../../services/contentTypes';
 import { FieldType } from '../../services/fieldTypes/fieldTypes.service.types';
 
 const getDefaultValueField = (field: ContentTypeFieldDetail): ContentTypeFieldDetail => {
+	const filterRequired = (checks: (ValidationCheck | ValicationCheckWithFields | ValicationCheckWithAllowedFields)[]) => {
+		return checks.map((check) => {
+			const key = pathOr(null, ['key'], check)
+			const nestedChecks = pathOr([], ['checks'], check) as ValidationCheck[]
+			if(key && key !== 'required') {
+				return check;
+			}
+
+			if(nestedChecks.length) {
+				return {
+					...check,
+					checks: (nestedChecks).filter((check: ValidationCheck) => check.key !== 'required')
+				}
+			}
+
+			return;
+		})
+	};
+
+	const defaultNotRequired = {
+		...field,
+		name: 'defaultValue',
+		generalConfig: {
+			...field.generalConfig,
+			min: 0,
+			required: false,
+		},
+		validation: {
+			...field.validation,
+			checks: filterRequired(field.validation?.checks || [])
+			/* checks: (field.validation?.checks || []).map((f: any) => {
+				return {
+					...f,
+					checks: filterRequired(f.checks),
+				};
+			}), */
+		} as Validation,
+	};
+
+	// min amount of fields is 1 or more. This doesn't mean that de field is required in a default value context
+	// => Remove required props for validation
+	if (field.config?.amount?.minValue >= 1) {
+		console.log('yes');
+		return defaultNotRequired;
+	}
+
 	// Return validation as is when it is not required
 	if (!field.generalConfig.required) {
 		return {
@@ -24,21 +70,7 @@ const getDefaultValueField = (field: ContentTypeFieldDetail): ContentTypeFieldDe
 
 	// Field is not hidden but required. This doesn't mean that de field is required in a default value context
 	// => Remove required props for validation
-	return {
-		...field,
-		name: 'defaultValue',
-		generalConfig: {
-			...field.generalConfig,
-			min: 0,
-			required: false,
-		},
-		validation: {
-			...field.validation,
-			checks: (field.validation?.checks || []).filter(
-				check => (check as ValidationCheck).key !== 'required'
-			),
-		} as Validation,
-	};
+	return defaultNotRequired;
 };
 
 export const getDefaultValueSchemas = (
@@ -50,6 +82,7 @@ export const getDefaultValueSchemas = (
 } => {
 	const dataTypes = fieldType?.data.dataType ? [fieldType.data.dataType] : [];
 	const generateSchemaFieldInput = getDefaultValueField(field);
+	console.log({ generateSchemaFieldInput });
 	const validationSchema = generateSchema(
 		[
 			({
