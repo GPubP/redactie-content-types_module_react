@@ -98,6 +98,7 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 				errorMessages={errorMessages}
 				onChange={onDefaultValueFormSubmit}
 				allowedHeaders={ALLOWED_FORM_HEADERS}
+				noSync
 			/>
 		);
 	};
