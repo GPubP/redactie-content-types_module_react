@@ -61,7 +61,6 @@ const getDefaultValueField = (field: ContentTypeFieldDetail): ContentTypeFieldDe
 	// min amount of fields is 1 or more. This doesn't mean that de field is required in a default value context
 	// => Remove required props for validation
 	if (field.config?.amount?.minValue >= 1) {
-		console.log('yes');
 		return defaultNotRequired;
 	}
 
