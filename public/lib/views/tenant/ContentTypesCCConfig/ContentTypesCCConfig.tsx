@@ -259,6 +259,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 					errorMessages={errorMessages}
 					onChange={onFormSubmit}
 					allowedHeaders={ALLOWED_FORM_HEADERS}
+					noSync
 				/>
 			</DynamicFieldSettingsContext.Provider>
 		);
