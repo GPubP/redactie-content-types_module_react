@@ -2,27 +2,46 @@ import { Field, generateErrorMessages, generateSchema } from '@wcm/jsonschema-ge
 import { isEmpty, pathOr } from 'ramda';
 
 import formRendererConnector from '../../connectors/formRenderer';
-import { ContentTypeFieldDetail, ValicationCheckWithAllowedFields, ValicationCheckWithFields, Validation, ValidationCheck } from '../../services/contentTypes';
+import {
+	ContentTypeFieldDetail,
+	ValicationCheckWithAllowedFields,
+	ValicationCheckWithFields,
+	Validation,
+	ValidationCheck,
+} from '../../services/contentTypes';
 import { FieldType } from '../../services/fieldTypes/fieldTypes.service.types';
 
 const getDefaultValueField = (field: ContentTypeFieldDetail): ContentTypeFieldDetail => {
-	const filterRequired = (checks: (ValidationCheck | ValicationCheckWithFields | ValicationCheckWithAllowedFields)[]) => {
-		return checks.map((check) => {
-			const key = pathOr(null, ['key'], check)
-			const nestedChecks = pathOr([], ['checks'], check) as ValidationCheck[]
-			if(key && key !== 'required') {
-				return check;
-			}
-
-			if(nestedChecks.length) {
-				return {
-					...check,
-					checks: (nestedChecks).filter((check: ValidationCheck) => check.key !== 'required')
+	const filterRequired = (
+		checks: (ValidationCheck | ValicationCheckWithFields | ValicationCheckWithAllowedFields)[]
+	): (ValidationCheck | ValicationCheckWithFields | ValicationCheckWithAllowedFields)[] => {
+		return checks.reduce(
+			(
+				acc: any,
+				check:
+					| ValidationCheck
+					| ValicationCheckWithFields
+					| ValicationCheckWithAllowedFields
+			) => {
+				const key = pathOr(null, ['key'], check);
+				const nestedChecks = pathOr([], ['checks'], check) as ValidationCheck[];
+				if (key && key !== 'required') {
+					acc.push(check);
 				}
-			}
 
-			return;
-		})
+				if (nestedChecks.length) {
+					acc.push({
+						...check,
+						checks: nestedChecks.filter(
+							(check: ValidationCheck) => check.key !== 'required'
+						),
+					});
+				}
+
+				return acc;
+			},
+			[] as (ValidationCheck | ValicationCheckWithFields | ValicationCheckWithAllowedFields)[]
+		);
 	};
 
 	const defaultNotRequired = {
@@ -35,13 +54,7 @@ const getDefaultValueField = (field: ContentTypeFieldDetail): ContentTypeFieldDe
 		},
 		validation: {
 			...field.validation,
-			checks: filterRequired(field.validation?.checks || [])
-			/* checks: (field.validation?.checks || []).map((f: any) => {
-				return {
-					...f,
-					checks: filterRequired(f.checks),
-				};
-			}), */
+			checks: filterRequired(field.validation?.checks || []),
 		} as Validation,
 	};
 
@@ -82,7 +95,6 @@ export const getDefaultValueSchemas = (
 } => {
 	const dataTypes = fieldType?.data.dataType ? [fieldType.data.dataType] : [];
 	const generateSchemaFieldInput = getDefaultValueField(field);
-	console.log({ generateSchemaFieldInput });
 	const validationSchema = generateSchema(
 		[
 			({
