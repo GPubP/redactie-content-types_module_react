@@ -240,12 +240,12 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	);
 	const validationSchema: Record<string, any> = useMemo(() => {
 		const schema: Record<string, any> = preset
-			? preset?.validateSchema.configuration
-			: fieldType?.validateSchema.configuration;
+			? preset?.validateSchema?.configuration
+			: fieldType?.validateSchema?.configuration;
 
 		return {
 			...omit(['schema'])(schema),
-			$schema: schema.schema,
+			$schema: schema?.schema || {},
 		};
 	}, [fieldType, preset]);
 	const errorMessages: Record<string, string> = useMemo(
@@ -430,7 +430,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 					languages={activeLanguages}
 					activeLanguage={activeLanguage}
 					onChangeLanguage={(language: string) => setActiveLanguage({ key: language })}
-					isVisible={isMultiLanguageForm}
+					isVisible={!!isMultiLanguageForm}
 				>
 					<div className={isMultiLanguageForm ? 'u-margin-top' : ''}>
 						<LanguageHeaderContext.Consumer>

@@ -60,7 +60,7 @@ export class CompartmentsFacade {
 
 	public setValid(name: string, isValid: boolean): void {
 		const compartment = this.query.getEntity(name);
-		if (compartment.isValid === isValid) {
+		if (compartment?.isValid === isValid) {
 			return;
 		}
 		this.store.update(name, { isValid });
@@ -68,7 +68,7 @@ export class CompartmentsFacade {
 
 	public setIsVisible(name: string, isVisible: boolean): void {
 		const compartment = this.query.getEntity(name);
-		if (compartment.isVisible === isVisible) {
+		if (compartment?.isVisible === isVisible) {
 			return;
 		}
 		this.store.update(name, { isVisible });
