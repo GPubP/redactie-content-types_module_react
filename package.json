@@ -46,6 +46,7 @@
 		"@commitlint/config-conventional": "8.3.4",
 		"@datorama/akita": "^4.22.1",
 		"@redactie/form-renderer-module": "^1.8.12",
+		"@redactie/language-module": "0.0.13",
 		"@redactie/module-webpack-plugin": "2.0.0",
 		"@redactie/react-router-guards": "^1.0.2",
 		"@redactie/redactie-core": "2.1.0-1",
@@ -115,7 +116,9 @@
 		"yup": "0.28.3"
 	},
 	"dependencies": {
+		"@wcm/content-mappers": "^0.1.2-0",
 		"@wcm/jsonschema-generator": "^1.2.0",
+		"jsonpath": "^1.1.1",
 		"lodash.debounce": "^4.0.8",
 		"lodash.kebabcase": "4.1.1",
 		"query-string": "^6.13.1",

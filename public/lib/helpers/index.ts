@@ -17,3 +17,4 @@ export * from './onEmit';
 export * from './showAlert';
 export * from './tabs';
 export * from './typeMap';
+export * from './fieldsHasMultiLanguage';
