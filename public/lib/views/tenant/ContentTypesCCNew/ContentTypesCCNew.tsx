@@ -18,6 +18,7 @@ import { equals, isEmpty } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 
+import languagesConnector from '../../../connectors/languages';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
@@ -87,6 +88,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 		validate,
 		setVisibility,
 	] = useCompartments();
+	const [, languages] = languagesConnector.hooks.useActiveLanguages();
 	const navListItems = visibleCompartments.map(c => ({
 		activeClassName: 'is-active',
 		label: c.label,
@@ -159,7 +161,8 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 				setVisibility,
 				navItemMatcher,
 				fieldType as FieldType,
-				(preset as unknown) as Preset
+				(preset as unknown) as Preset,
+				languages || []
 			);
 			setCompartmentsInitialValidated(true);
 		}
@@ -245,7 +248,8 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			setVisibility,
 			navItemMatcher,
 			fieldType as FieldType,
-			(preset as unknown) as Preset
+			(preset as unknown) as Preset,
+			languages || []
 		);
 
 		// Validate current form to trigger fields error states
@@ -281,7 +285,8 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 			setVisibility,
 			navItemMatcher,
 			fieldType as FieldType,
-			(preset as unknown) as Preset
+			(preset as unknown) as Preset,
+			languages || []
 		);
 
 		contentTypesFacade.updateActiveField(data);
@@ -330,6 +335,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 					activeCompartmentFormikRef.current = instance;
 				}
 			},
+			activeLanguages: languages || [],
 		};
 
 		return (

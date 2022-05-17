@@ -1,3 +1,5 @@
+import { LanguageSchema } from '@redactie/language-module';
+
 import { FieldType } from '../../services/fieldTypes/fieldTypes.service.types';
 import { Preset } from '../../services/presets';
 import { CompartmentModel } from '../../store/ui/compartments';
@@ -29,13 +31,14 @@ export function validateCompartments(
 	setVisibility: (compartmentId: string, isVisible: boolean) => void,
 	meta: FieldType,
 	fieldType?: FieldType,
-	preset?: Preset
+	preset?: Preset,
+	languages: LanguageSchema[] = []
 ): boolean {
 	const validatedCompartments: Record<string, { isValid: boolean }> = compartments.reduce(
 		(acc, compartment) => {
 			// only validate visible compartments
 			if (typeof compartment.validate === 'function' && !!compartment.isVisible) {
-				const isValid = compartment.validate(values, fieldType, preset);
+				const isValid = compartment.validate(values, fieldType, preset, languages);
 				setValidity(compartment.name, isValid);
 				acc[compartment.name] = {
 					isValid,

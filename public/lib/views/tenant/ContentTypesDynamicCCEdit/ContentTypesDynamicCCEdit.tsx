@@ -16,6 +16,7 @@ import { equals, isEmpty, omit } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
+import languagesConnector from '../../../connectors/languages';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, MODULE_PATHS } from '../../../contentTypes.const';
 import { ContentTypesDetailRouteProps } from '../../../contentTypes.types';
@@ -81,6 +82,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 		validate,
 		setVisibility,
 	] = useCompartments();
+	const [, languages] = languagesConnector.hooks.useActiveLanguages();
 	const navListItems = visibleCompartments.map(c => ({
 		activeClassName: 'is-active',
 		label: c.label,
@@ -211,7 +213,8 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			setVisibility,
 			navItemMatcher,
 			dynamicActiveField?.fieldType,
-			(dynamicActiveField?.preset as unknown) as PresetListModel
+			(dynamicActiveField?.preset as unknown) as PresetListModel,
+			languages || []
 		);
 		dynamicFieldFacade.updateActiveField({
 			...data,
@@ -241,7 +244,8 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 			setVisibility,
 			navItemMatcher,
 			dynamicActiveField?.fieldType,
-			(dynamicActiveField?.preset as unknown) as PresetListModel
+			(dynamicActiveField?.preset as unknown) as PresetListModel,
+			languages || []
 		);
 
 		// Validate current form to trigger fields error states
@@ -285,6 +289,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 					activeCompartmentFormikRef.current = instance;
 				}
 			},
+			activeLanguages: languages || [],
 		};
 
 		return (
