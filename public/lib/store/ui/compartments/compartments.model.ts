@@ -1,4 +1,5 @@
 import { ActiveState, EntityState } from '@datorama/akita';
+import { LanguageSchema } from '@redactie/language-module';
 
 import { ContentTypeFieldDetail } from '../../../services/contentTypes';
 import { FieldType, FieldTypeData } from '../../../services/fieldTypes';
@@ -23,7 +24,12 @@ export interface CompartmentModel {
 	type: CompartmentType;
 	isValid?: boolean;
 	isVisible?: boolean;
-	validate?: (values: ContentTypeFieldDetail, fieldType?: FieldType, preset?: Preset) => boolean;
+	validate?: (
+		values: ContentTypeFieldDetail,
+		fieldType?: FieldType,
+		preset?: Preset,
+		languages?: LanguageSchema[]
+	) => boolean;
 }
 
 export interface CompartmentState extends EntityState<CompartmentModel, string>, ActiveState {}

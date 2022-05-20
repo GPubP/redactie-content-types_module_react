@@ -1,19 +1,32 @@
+import { LanguageHeader, LanguageHeaderContext } from '@acpaas-ui/react-editorial-components';
 import {
 	ContentTypeFieldSchema,
 	FieldSchema,
 	FormSchema,
 	FormValues,
 } from '@redactie/form-renderer-module';
-import { omit } from 'ramda';
-import React, { FC, ReactElement, useMemo } from 'react';
+import { LanguagesSchema } from '@redactie/language-module';
+import {
+	ContentSchema,
+	getSyncedTranslationValue,
+	getTranslationSyncMappers,
+} from '@wcm/content-mappers';
+import { FormikProps, FormikValues } from 'formik';
+import { equals, omit } from 'ramda';
+import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 
 import { DynamicFieldSettingsContext } from '../../../components/Fields';
 import formRendererConnector from '../../../connectors/formRenderer';
 import { ContentTypesCCRouteProps } from '../../../contentTypes.types';
-import { generateFRFieldFromCTField } from '../../../helpers';
-import { Field, Validation } from '../../../services/contentTypes';
+import {
+	fieldsHasMultiLanguage,
+	generateFRFieldFromCTField,
+	getConfigurationValidation,
+} from '../../../helpers';
+import { ContentTypeFieldDetail, Field, Validation } from '../../../services/contentTypes';
 import { ValicationCheckWithAllowedFields } from '../../../services/contentTypes/contentTypes.service.types';
 import { FieldTypeData } from '../../../services/fieldTypes';
+import { Preset } from '../../../services/presets';
 import { ContentTypeFieldDetailModel } from '../../../store/contentTypes';
 import { PresetDetailModel } from '../../../store/presets';
 
@@ -26,6 +39,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	preset,
 	onSubmit,
 	dynamicFieldSettingsContext,
+	activeLanguages,
 }) => {
 	/**
 	 * Hooks
@@ -38,6 +52,89 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		}),
 		[CTField, dynamicFieldSettingsContext]
 	);
+	const localFormikRef = useRef<FormikProps<FormikValues>>();
+	const [activeLanguage, setActiveLanguage] = useState<LanguagesSchema>();
+	const formFields = useMemo(
+		() =>
+			!preset
+				? fieldType?.data.formSchema?.fields
+				: preset.data.fields.reduce((acc, field) => {
+						return [...acc, ...field.formSchema.fields];
+				  }, [] as Field[]),
+		[fieldType.data.formSchema.fields, preset]
+	);
+	const isMultiLanguageForm = useMemo(
+		() => CTField.generalConfig.multiLanguage && fieldsHasMultiLanguage(formFields),
+		[CTField.generalConfig.multiLanguage, formFields]
+	);
+
+	useEffect(() => {
+		if (Array.isArray(activeLanguages) || !isMultiLanguageForm) {
+			const primaryLang = activeLanguages?.find(l => l.primary) || activeLanguages[0];
+
+			!activeLanguage || activeLanguage?.key !== primaryLang?.key
+				? setActiveLanguage(primaryLang)
+				: null;
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeLanguages]);
+
+	useEffect(() => {
+		if (!Array.isArray(activeLanguages) || !activeLanguage) {
+			return;
+		}
+
+		const primaryLang = activeLanguages.find(l => l.primary) || activeLanguage;
+
+		if (isMultiLanguageForm && !CTField.config.multiLanguage) {
+			const translationMappers = getTranslationSyncMappers(formFields as any, {
+				includeOptional: true,
+			});
+
+			onSubmit({
+				...CTField,
+				config: activeLanguages?.reduce(
+					(acc, language) => {
+						const newLangConfig = getSyncedTranslationValue(
+							translationMappers,
+							{
+								fields: omit(['fields'], CTField.config || {}),
+							} as ContentSchema,
+							{ fields: CTField.config[language.key] || {} } as ContentSchema
+						)?.fields;
+
+						return {
+							...acc,
+							[language.key]:
+								language.key === primaryLang?.key
+									? omit(['fields'], CTField.config || {})
+									: newLangConfig,
+						};
+					},
+					{ multiLanguage: true, fields: CTField.config.fields || [] }
+				),
+			});
+		}
+
+		if (!isMultiLanguageForm && CTField.config.multiLanguage) {
+			onSubmit({
+				...CTField,
+				config: {
+					multiLanguage: false,
+					fields: CTField.config.fields || [],
+					...(CTField.config[primaryLang.key] || {}),
+				},
+			});
+		}
+	}, [
+		CTField,
+		CTField.config.multiLanguage,
+		activeLanguage,
+		activeLanguages,
+		formFields,
+		isMultiLanguageForm,
+		onSubmit,
+	]);
 
 	const spreadIfObject = (item: any): any =>
 		typeof item === 'object' && item !== null ? { ...item } : item;
@@ -75,9 +172,11 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	 */
 	const initialFormValue: FormValues = useMemo(() => {
 		const { config = {} } = CTField;
+		const langConfig =
+			(config.multiLanguage && activeLanguage ? config[activeLanguage.key] : config) || {};
 
-		if (preset && Array.isArray(config.fields)) {
-			return config.fields.reduce((initialValues: FormValues, field: Field) => {
+		if (preset && Array.isArray(langConfig.fields)) {
+			return langConfig.fields.reduce((initialValues: FormValues, field: Field) => {
 				// Spreads are necessary because Formik seems to mark objects as readonly ¯\_(ツ)_/¯
 				initialValues[field.name] = spreadIfObject(field.config);
 				const presetField = preset.data.fields.find(f => f.field.name === field.name);
@@ -95,8 +194,10 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 			}, {});
 		}
 
-		return config;
-	}, [CTField, preset]);
+		localFormikRef.current?.setValues(langConfig);
+
+		return langConfig;
+	}, [CTField, activeLanguage, preset]);
 
 	/**
 	 * Methods
@@ -136,12 +237,12 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	);
 	const validationSchema: Record<string, any> = useMemo(() => {
 		const schema: Record<string, any> = preset
-			? preset?.validateSchema.configuration
-			: fieldType?.validateSchema.configuration;
+			? preset?.validateSchema?.configuration
+			: fieldType?.validateSchema?.configuration;
 
 		return {
 			...omit(['schema'])(schema),
-			$schema: schema.schema,
+			$schema: schema?.schema || {},
 		};
 	}, [fieldType, preset]);
 	const errorMessages: Record<string, string> = useMemo(
@@ -229,16 +330,87 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		return !!fieldTypeData.formSchema?.fields?.length;
 	};
 
-	const onFormSubmit = (data: FormValues): void => {
-		const config = generateFieldConfig(data, CTField, preset);
+	const mapAndTransformToMultiLangConfig = (
+		CTField: ContentTypeFieldDetail,
+		config: Record<string, any>
+	): ContentTypeFieldDetail['config'] => {
+		if (!activeLanguage || !isMultiLanguageForm) {
+			return config;
+		}
 
-		onSubmit({
-			...CTField,
-			config: config.config,
-			...(Array.isArray(config.validationChecks) && config.validationChecks.length > 0
-				? { validation: { checks: config.validationChecks } }
-				: {}),
+		const langConfig: Record<string, any> = {
+			...CTField.config, // Old to new output (should be temp)
+			[activeLanguage.key]: omit(['fields'], config), // Don't sync fields over languages (fields input are multilanguage)
+			fields: config?.fields || [],
+			multiLanguage: true,
+		};
+		const translationMappers = getTranslationSyncMappers(formFields as any, {
+			includeOptional: true,
 		});
+
+		return activeLanguages.reduce((conf, language) => {
+			if (language.key === activeLanguage.key) {
+				return conf;
+			}
+
+			const newLangConfig = getSyncedTranslationValue(
+				translationMappers,
+				{ fields: langConfig[activeLanguage.key] } as ContentSchema,
+				{ fields: CTField.config[language.key] || {} } as ContentSchema
+			)?.fields;
+
+			if (equals(newLangConfig, CTField.config[language.key])) {
+				return conf;
+			}
+
+			return {
+				...conf,
+				[language.key]: newLangConfig,
+			};
+		}, langConfig);
+	};
+
+	const onFormSubmit = (
+		data: FormValues,
+		setErrors: (errors: Record<string, string>) => void
+	): void => {
+		const config = generateFieldConfig(data, CTField, preset);
+		const multiLanguageConfig = mapAndTransformToMultiLangConfig(CTField, config.config);
+		const newValue: ContentTypeFieldDetail = {
+			...CTField,
+			config: multiLanguageConfig,
+			...((Array.isArray(config.validationChecks) && config.validationChecks.length > 0
+				? { validation: { checks: config.validationChecks } }
+				: {}) as Pick<ContentTypeFieldDetail, 'validation'>),
+		};
+
+		onSubmit(newValue);
+
+		if (isMultiLanguageForm) {
+			const validation = getConfigurationValidation(
+				newValue,
+				fieldType,
+				(preset as unknown) as Preset,
+				activeLanguages
+			);
+			setErrors(
+				Object.keys(validation).reduce(
+					(acc, valKey) => ({
+						...acc,
+						[valKey]: [validation[valKey]],
+					}),
+					{}
+				)
+			);
+		}
+	};
+
+	const createFormikRef = (instance: FormikProps<FormikValues>): void => {
+		if (!equals(localFormikRef.current, instance)) {
+			localFormikRef.current = instance;
+		}
+
+		formikRef ? formikRef(instance) : null;
 	};
 
 	/**
@@ -251,16 +423,34 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 
 		return (
 			<DynamicFieldSettingsContext.Provider value={dynamicFieldSettingsContextValue}>
-				<formRendererConnector.api.Form
-					formikRef={formikRef}
-					initialValues={initialFormValue}
-					schema={schema}
-					validationSchema={validationSchema}
-					errorMessages={errorMessages}
-					onChange={onFormSubmit}
-					allowedHeaders={ALLOWED_FORM_HEADERS}
-					noSync
-				/>
+				<LanguageHeader
+					languages={activeLanguages}
+					activeLanguage={activeLanguage}
+					onChangeLanguage={(language: string) => setActiveLanguage({ key: language })}
+					isVisible={!!isMultiLanguageForm}
+				>
+					<div className={isMultiLanguageForm ? 'u-margin-top u-bg-light u-padding' : ''}>
+						<LanguageHeaderContext.Consumer>
+							{({
+								setErrors,
+							}: {
+								setErrors: (errors: Record<string, string>) => void;
+							}) => (
+								<formRendererConnector.api.Form
+									key={`form-lang-${activeLanguage?.key || 'none'}`}
+									formikRef={createFormikRef}
+									initialValues={initialFormValue}
+									schema={schema}
+									validationSchema={validationSchema}
+									errorMessages={errorMessages}
+									onChange={values => onFormSubmit(values, setErrors)}
+									allowedHeaders={ALLOWED_FORM_HEADERS}
+									noSync={!isMultiLanguageForm}
+								/>
+							)}
+						</LanguageHeaderContext.Consumer>
+					</div>
+				</LanguageHeader>
 			</DynamicFieldSettingsContext.Provider>
 		);
 	};

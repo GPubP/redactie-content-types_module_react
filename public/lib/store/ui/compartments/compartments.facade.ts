@@ -55,22 +55,27 @@ export class CompartmentsFacade {
 		if (this.query.hasActive(name)) {
 			return;
 		}
+
 		this.store.setActive(name);
 	}
 
 	public setValid(name: string, isValid: boolean): void {
 		const compartment = this.query.getEntity(name);
-		if (compartment.isValid === isValid) {
+
+		if (compartment?.isValid === isValid) {
 			return;
 		}
+
 		this.store.update(name, { isValid });
 	}
 
 	public setIsVisible(name: string, isVisible: boolean): void {
 		const compartment = this.query.getEntity(name);
-		if (compartment.isVisible === isVisible) {
+
+		if (compartment?.isVisible === isVisible) {
 			return;
 		}
+
 		this.store.update(name, { isVisible });
 	}
 }

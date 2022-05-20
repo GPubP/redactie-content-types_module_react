@@ -1,5 +1,6 @@
+import { LanguageSchema } from '@redactie/language-module';
 import { Field, generateErrorMessages, generateSchema } from '@wcm/jsonschema-generator';
-import { isEmpty, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 
 import formRendererConnector from '../../connectors/formRenderer';
 import {
@@ -10,6 +11,8 @@ import {
 	ValidationCheck,
 } from '../../services/contentTypes';
 import { FieldType } from '../../services/fieldTypes/fieldTypes.service.types';
+import { Preset } from '../../services/presets';
+import { fieldsHasMultiLanguage } from '../fieldsHasMultiLanguage';
 
 const getDefaultValueField = (field: ContentTypeFieldDetail): ContentTypeFieldDetail => {
 	const filterRequired = (
@@ -114,12 +117,12 @@ export const getDefaultValueSchemas = (
 	return { validationSchema, errorMessages };
 };
 
-export const defaultValueCompartmentValidator = (
+export const getDefaultValueCompartmentValidation = (
 	field: ContentTypeFieldDetail,
-	fieldType?: FieldType
-): boolean => {
+	fieldType?: FieldType,
+	languages?: LanguageSchema[]
+): Record<string, string> => {
 	const { validationSchema, errorMessages } = getDefaultValueSchemas(field, fieldType);
-
 	const validator = new (formRendererConnector.api as any).CustomValidator(
 		validationSchema,
 		errorMessages,
@@ -128,8 +131,40 @@ export const defaultValueCompartmentValidator = (
 			messages: true,
 		}
 	);
+	const formFields =
+		!Array.isArray(field.config.fields) || !field.config.fields.length
+			? ([] as ContentTypeFieldDetail[])
+			: field.config.fields.reduce((acc, f) => {
+					return [...acc, f];
+			  }, [] as ContentTypeFieldDetail[]);
+	const isMultiLanguageForm =
+		field.generalConfig.multiLanguage &&
+		(!Array.isArray(field.config.fields) ||
+			!field.config.fields.length ||
+			fieldsHasMultiLanguage(formFields));
 
-	const validated = validator.validate({ defaultValue: field.defaultValue } || {});
+	return isMultiLanguageForm && languages?.length
+		? languages.reduce((errors, language) => {
+				const langValidated = validator.validate(
+					{ defaultValue: (field.defaultValue || {})[language.key] } || {}
+				);
+				return {
+					...errors,
+					...(typeof langValidated !== 'object' || !Object.keys(langValidated).length
+						? {}
+						: { [language.key]: langValidated }),
+				};
+		  }, {})
+		: validator.validate({ defaultValue: field.defaultValue } || {});
+};
 
-	return isEmpty(validated);
+export const defaultValueCompartmentValidator = (
+	field: ContentTypeFieldDetail,
+	fieldType?: FieldType,
+	preset?: Preset,
+	languages?: LanguageSchema[]
+): boolean => {
+	const validated = getDefaultValueCompartmentValidation(field, fieldType, languages);
+
+	return typeof validated !== 'object' || !Object.keys(validated).length;
 };
