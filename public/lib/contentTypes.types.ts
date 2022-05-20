@@ -1,5 +1,5 @@
 import { FormsAPI } from '@redactie/form-renderer-module';
-import { LanguagesSchema } from '@redactie/language-module';
+import { LanguageSchema } from '@redactie/language-module';
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 import { AlertProps, ContextHeaderTab, FilterItem } from '@redactie/utils';
 import { FormikConfig, FormikValues } from 'formik';
@@ -122,7 +122,8 @@ export interface ContentTypesCCRouteProps extends ContentTypesRouteProps {
 	onSubmit: (data: any) => void;
 	formikRef: FormikRef;
 	contentType: ContentTypeResponse;
-	activeLanguages: LanguagesSchema[];
+	activeLanguages: LanguageSchema[];
+	hasSubmit: boolean;
 }
 
 export interface NewCCFormState {

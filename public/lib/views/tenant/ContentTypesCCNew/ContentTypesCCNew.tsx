@@ -336,6 +336,7 @@ const ContentTypesCCNew: FC<ContentTypesDetailRouteProps> = ({ match, route }) =
 				}
 			},
 			activeLanguages: languages || [],
+			hasSubmit,
 		};
 
 		return (

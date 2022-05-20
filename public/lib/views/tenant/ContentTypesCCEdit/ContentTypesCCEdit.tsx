@@ -78,7 +78,6 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 		setVisibility,
 	] = useCompartments();
 	const [, languages] = languagesConnector.hooks.useActiveLanguages();
-
 	const navListItems = visibleCompartments.map(c => ({
 		activeClassName: 'is-active',
 		label: c.label,
@@ -276,6 +275,7 @@ const ContentTypesCCEdit: FC<ContentTypesDetailRouteProps> = ({ match, contentTy
 			},
 			contentType,
 			activeLanguages: languages || [],
+			hasSubmit,
 		};
 
 		return (
