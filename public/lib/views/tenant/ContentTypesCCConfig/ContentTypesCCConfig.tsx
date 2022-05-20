@@ -40,11 +40,11 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	onSubmit,
 	dynamicFieldSettingsContext,
 	activeLanguages,
+	hasSubmit,
 }) => {
 	/**
 	 * Hooks
 	 */
-
 	const dynamicFieldSettingsContextValue = useMemo(
 		() => ({
 			activeField: CTField,
@@ -54,6 +54,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 	);
 	const localFormikRef = useRef<FormikProps<FormikValues>>();
 	const [activeLanguage, setActiveLanguage] = useState<LanguagesSchema>();
+	const [setErrors, setSetErrors] = useState<(errors: Record<string, string>) => void>();
 	const formFields = useMemo(
 		() =>
 			!preset
@@ -135,6 +136,27 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		isMultiLanguageForm,
 		onSubmit,
 	]);
+
+	useEffect(() => {
+		if (hasSubmit && isMultiLanguageForm && setErrors) {
+			const validation = getConfigurationValidation(
+				CTField,
+				fieldType,
+				(preset as unknown) as Preset,
+				activeLanguages
+			);
+			setErrors(
+				Object.keys(validation).reduce(
+					(acc, valKey) => ({
+						...acc,
+						[valKey]: [validation[valKey]],
+					}),
+					{}
+				)
+			);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [CTField, activeLanguages, fieldType, hasSubmit, isMultiLanguageForm, preset]);
 
 	const spreadIfObject = (item: any): any =>
 		typeof item === 'object' && item !== null ? { ...item } : item;
@@ -370,10 +392,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		}, langConfig);
 	};
 
-	const onFormSubmit = (
-		data: FormValues,
-		setErrors: (errors: Record<string, string>) => void
-	): void => {
+	const onFormSubmit = (data: FormValues): void => {
 		const config = generateFieldConfig(data, CTField, preset);
 		const multiLanguageConfig = mapAndTransformToMultiLangConfig(CTField, config.config);
 		const newValue: ContentTypeFieldDetail = {
@@ -385,24 +404,6 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		};
 
 		onSubmit(newValue);
-
-		if (isMultiLanguageForm) {
-			const validation = getConfigurationValidation(
-				newValue,
-				fieldType,
-				(preset as unknown) as Preset,
-				activeLanguages
-			);
-			setErrors(
-				Object.keys(validation).reduce(
-					(acc, valKey) => ({
-						...acc,
-						[valKey]: [validation[valKey]],
-					}),
-					{}
-				)
-			);
-		}
 	};
 
 	const createFormikRef = (instance: FormikProps<FormikValues>): void => {
@@ -432,22 +433,26 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 					<div className={isMultiLanguageForm ? 'u-margin-top u-bg-light u-padding' : ''}>
 						<LanguageHeaderContext.Consumer>
 							{({
-								setErrors,
+								setErrors: setFn,
 							}: {
 								setErrors: (errors: Record<string, string>) => void;
-							}) => (
-								<formRendererConnector.api.Form
-									key={`form-lang-${activeLanguage?.key || 'none'}`}
-									formikRef={createFormikRef}
-									initialValues={initialFormValue}
-									schema={schema}
-									validationSchema={validationSchema}
-									errorMessages={errorMessages}
-									onChange={values => onFormSubmit(values, setErrors)}
-									allowedHeaders={ALLOWED_FORM_HEADERS}
-									noSync={!isMultiLanguageForm}
-								/>
-							)}
+							}) => {
+								setSetErrors(() => setFn);
+
+								return (
+									<formRendererConnector.api.Form
+										key={`form-lang-${activeLanguage?.key || 'none'}`}
+										formikRef={createFormikRef}
+										initialValues={initialFormValue}
+										schema={schema}
+										validationSchema={validationSchema}
+										errorMessages={errorMessages}
+										onChange={values => onFormSubmit(values)}
+										allowedHeaders={ALLOWED_FORM_HEADERS}
+										noSync={!isMultiLanguageForm}
+									/>
+								);
+							}}
 						</LanguageHeaderContext.Consumer>
 					</div>
 				</LanguageHeader>
