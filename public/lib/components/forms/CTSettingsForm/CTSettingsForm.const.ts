@@ -13,12 +13,12 @@ export const CT_SETTINGS_VALIDATION_SCHEMA = (): ObjectSchema =>
 export const ISSUED_PREFILL_OPTIONS = [
 	{
 		key: 'first-publication',
-		label: 'Eerste publicatie',
+		label: 'Datum eerste publicatie',
 		value: ISSUED_PUBLICATION_OPTIONS.firstPublication,
 	},
 	{
 		key: 'last-publication',
-		label: 'Laatste publicatie',
+		label: 'Datum laatste publicatie',
 		value: ISSUED_PUBLICATION_OPTIONS.lastPublication,
 	},
 ];

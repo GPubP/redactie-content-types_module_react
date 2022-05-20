@@ -6,6 +6,8 @@
   "CT_ALERT_MESSAGE": "content type",
   "CT_SETTINGS_NAME_GUIDELINE": "Geef het content type een korte en duidelijke naam.",
   "CT_SETTINGS_DESCRIPTION_GUIDELINE": "Geef het content type een duidelijke beschrijving. Deze wordt gebruikt in het overzicht.",
+  "CT_SETTINGS_ISSUED_ON_PREFILL": "Bepaal met welke publicatiedatum de uitgiftedatum vooraf ingevuld zal worden",
+  "CT_SETTINGS_ISSUED_ON_EDITABLE": "Bepaal of de redacteur de uitgiftedatum mag aanpassen",
   "CT_SITES_INTRO": "Bepaal op welke sites dit content type geactiveerd mag worden. Opgelet: je kan het content type enkel deactiveren wanneer er géén content items van dit type meer bestaan binnen de desbetreffende site.",
   "CB_OVERVIEW_TITLE": "Content blokken",
   "CB_OVERVIEW_LOADING": "Content blokken ophalen",
@@ -14,5 +16,7 @@
   "CB_ALERT_MESSAGE": "content blok",
   "CB_SETTINGS_NAME_GUIDELINE": "Geef het content blok een korte en duidelijke naam.",
   "CB_SETTINGS_DESCRIPTION_GUIDELINE": "Geef het content blok een duidelijke beschrijving. Deze wordt gebruikt in het overzicht",
+  "CB_SETTINGS_ISSUED_ON_PREFILL": "Bepaal met welke publicatiedatum de uitgiftedatum vooraf ingevuld zal worden",
+  "CB_SETTINGS_ISSUED_ON_EDITABLE": "Bepaal of de redacteur de uitgiftedatum mag aanpassen",
   "CB_SITES_INTRO": "Bepaal op welke sites dit content blok geactiveerd mag worden. Opgelet: je kan het content blok enkel deactiveren wanneer er géén content items van dit type meer bestaan binnen de desbetreffende site."
 }

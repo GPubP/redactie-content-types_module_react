@@ -1,7 +1,6 @@
 import { RadioGroup, Textarea, TextField } from '@acpaas-ui/react-components';
 import { CopyValue, ErrorMessage } from '@redactie/utils';
 import { Field, Formik, isFunction } from 'formik';
-import { path } from 'ramda';
 import React, { FC, useMemo } from 'react';
 
 import {
@@ -116,7 +115,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 									id="meta.issuedOnPrefill"
 									name="meta.issuedOnPrefill"
 									options={IssuedPrefillOptions}
-									label="Bepaal met welke publicatie datum het uitgifte tijdstip ge-prefilled zal worden"
+									label={tModule(translations.SETTINGS_ISSUED_ON_PREFILL)}
 								/>
 							</div>
 						</div>
@@ -127,7 +126,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 									id="meta.issuedOnEditable"
 									name="meta.issuedOnEditable"
 									options={IssuedEditableOptions}
-									label="Bepaal of de redacteur de uitgifte datum mag aanpassen"
+									label={tModule(translations.SETTINGS_ISSUED_ON_EDITABLE)}
 								/>
 							</div>
 						</div>

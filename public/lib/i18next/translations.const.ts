@@ -25,6 +25,14 @@ const MODULE_TRANSLATIONS = Object.freeze<{
 			'CT_SETTINGS_DESCRIPTION_GUIDELINE',
 			'Geef het content type een duidelijke beschrijving. Deze wordt gebruikt in het overzicht.'
 		),
+		SETTINGS_ISSUED_ON_PREFILL: tKey(
+			'CT_SETTINGS_ISSUED_ON_PREFILL',
+			'Bepaal met welke publicatiedatum de uitgiftedatum vooraf ingevuld zal worden'
+		),
+		SETTINGS_ISSUED_ON_EDITABLE: tKey(
+			'CT_SETTINGS_ISSUED_ON_EDITABLE',
+			'Bepaal of de redacteur de uitgiftedatum mag aanpassen'
+		),
 		SITES_INTRO: tKey(
 			'CT_SITES_INTRO',
 			'Bepaal op welke sites dit content type geactiveerd mag worden. Opgelet: je kan het content type enkel deactiveren wanneer er géén content items van dit type meer bestaan binnen de desbetreffende site.'
@@ -43,6 +51,14 @@ const MODULE_TRANSLATIONS = Object.freeze<{
 		SETTINGS_DESCRIPTION_GUIDELINE: tKey(
 			'CB_SETTINGS_DESCRIPTION_GUIDELINE',
 			'Geef het content blok een duidelijke beschrijving. Deze wordt gebruikt in het overzicht'
+		),
+		SETTINGS_ISSUED_ON_PREFILL: tKey(
+			'CB_SETTINGS_ISSUED_ON_PREFILL',
+			'Bepaal met welke publicatiedatum de uitgiftedatum vooraf ingevuld zal worden'
+		),
+		SETTINGS_ISSUED_ON_EDITABLE: tKey(
+			'CB_SETTINGS_ISSUED_ON_EDITABLE',
+			'Bepaal of de redacteur de uitgiftedatum mag aanpassen'
 		),
 		SITES_INTRO: tKey(
 			'CB_SITES_INTRO',
