@@ -290,6 +290,7 @@ const ContentTypesDynamicCCEdit: FC<ContentTypesDetailRouteProps<{
 				}
 			},
 			activeLanguages: languages || [],
+			hasSubmit,
 		};
 
 		return (

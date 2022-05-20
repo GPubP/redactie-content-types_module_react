@@ -23,7 +23,6 @@ import {
 	generateFRFieldFromCTField,
 	getConfigurationValidation,
 } from '../../../helpers';
-import { configurationCompartmentValidator } from '../../../helpers/compartmentValidators/configurationCompartmentValidator';
 import { ContentTypeFieldDetail, Field, Validation } from '../../../services/contentTypes';
 import { ValicationCheckWithAllowedFields } from '../../../services/contentTypes/contentTypes.service.types';
 import { FieldTypeData } from '../../../services/fieldTypes';
@@ -53,8 +52,8 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		}),
 		[CTField, dynamicFieldSettingsContext]
 	);
-	const [activeLanguage, setActiveLanguage] = useState<LanguagesSchema>();
 	const localFormikRef = useRef<FormikProps<FormikValues>>();
+	const [activeLanguage, setActiveLanguage] = useState<LanguagesSchema>();
 	const formFields = useMemo(
 		() =>
 			!preset
@@ -71,7 +70,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 
 	useEffect(() => {
 		if (Array.isArray(activeLanguages) || !isMultiLanguageForm) {
-			const primaryLang = activeLanguages.find(l => l.primary) || activeLanguages[0];
+			const primaryLang = activeLanguages?.find(l => l.primary) || activeLanguages[0];
 
 			!activeLanguage || activeLanguage?.key !== primaryLang?.key
 				? setActiveLanguage(primaryLang)
@@ -132,11 +131,9 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 		CTField.config.multiLanguage,
 		activeLanguage,
 		activeLanguages,
-		fieldType.data.formSchema.fields,
 		formFields,
 		isMultiLanguageForm,
 		onSubmit,
-		preset,
 	]);
 
 	const spreadIfObject = (item: any): any =>
@@ -432,7 +429,7 @@ const ContentTypesCCConfig: FC<ContentTypesCCRouteProps> = ({
 					onChangeLanguage={(language: string) => setActiveLanguage({ key: language })}
 					isVisible={!!isMultiLanguageForm}
 				>
-					<div className={isMultiLanguageForm ? 'u-margin-top' : ''}>
+					<div className={isMultiLanguageForm ? 'u-margin-top u-bg-light u-padding' : ''}>
 						<LanguageHeaderContext.Consumer>
 							{({
 								setErrors,

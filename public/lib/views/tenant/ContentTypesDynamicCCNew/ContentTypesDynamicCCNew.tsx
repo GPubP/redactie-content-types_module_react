@@ -355,6 +355,7 @@ const ContentTypesDynamicCCNew: FC<ContentTypesDetailRouteProps> = ({
 				}
 			},
 			activeLanguages: languages || [],
+			hasSubmit,
 		};
 
 		return (
