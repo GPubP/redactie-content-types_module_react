@@ -76,10 +76,14 @@ const ContentTypesCCDefaults: FC<ContentTypesCCRouteProps> = ({
 						name: 'defaultValue',
 					} as ContentTypeFieldSchema,
 				],
-				{ noHiddenFields: true, noDisabledFields: true }
+				{
+					noHiddenFields: true,
+					noDisabledFields: true,
+					activeLanguageKey: activeLanguage?.key,
+				}
 			),
 		}),
-		[CTField]
+		[CTField, activeLanguage]
 	);
 
 	const initialDefaultValueFormValue = useMemo(() => {
