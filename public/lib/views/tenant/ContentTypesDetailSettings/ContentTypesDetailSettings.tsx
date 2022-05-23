@@ -17,13 +17,18 @@ import React, { FC, ReactElement, useEffect, useMemo, useRef, useState } from 'r
 import { useParams } from 'react-router-dom';
 
 import { CTSettingsForm } from '../../../components';
+import navigationConnector from '../../../connectors/navigation';
 import {
 	CORE_TRANSLATIONS,
 	useCoreTranslation,
 	useModuleTranslation,
 } from '../../../connectors/translations';
 import { ALERT_CONTAINER_IDS, CONTENT_TYPE_DETAIL_TAB_MAP } from '../../../contentTypes.const';
-import { ContentTypesDetailRouteProps, ContentTypesRouteParams } from '../../../contentTypes.types';
+import {
+	ContentTypesDetailRouteProps,
+	ContentTypesRouteParams,
+	CtTypes,
+} from '../../../contentTypes.types';
 import { useContentType } from '../../../hooks';
 import { MODULE_TRANSLATIONS } from '../../../i18next/translations.const';
 import { ContentTypeDetailModel, contentTypesFacade } from '../../../store/contentTypes';
@@ -193,6 +198,7 @@ const ContentTypeSettings: FC<ContentTypesDetailRouteProps> = ({
 				translations={TYPE_TRANSLATIONS}
 				isUpdate={isUpdate}
 				onSubmit={onFormSubmit}
+				renderUrlPattern={ctType === CtTypes.contentTypes && !navigationConnector.api}
 			>
 				{({ submitForm }) => {
 					const submit = (): void => {

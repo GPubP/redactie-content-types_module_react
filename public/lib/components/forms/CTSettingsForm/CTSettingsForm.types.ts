@@ -16,4 +16,5 @@ export interface CTSettingsFormProps {
 	formikRef?: Ref<FormikProps<FormikValues>>;
 	onSubmit: (values: ContentTypeDetailModel | null) => void;
 	translations: I18NextTranslations;
+	renderUrlPattern: boolean;
 }

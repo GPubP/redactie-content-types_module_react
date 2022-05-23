@@ -1,6 +1,7 @@
 import { RadioGroup, Textarea, TextField } from '@acpaas-ui/react-components';
 import { CopyValue, ErrorMessage } from '@redactie/utils';
 import { Field, Formik, isFunction } from 'formik';
+import { path } from 'ramda';
 import React, { FC, useMemo } from 'react';
 
 import {
@@ -25,6 +26,7 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 	formikRef,
 	translations,
 	onSubmit,
+	renderUrlPattern = false,
 }) => {
 	const initialValues: ContentTypeDetailModel = {
 		...contentType,
@@ -59,10 +61,18 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 			innerRef={instance => isFunction(formikRef) && formikRef(instance)}
 			initialValues={initialValues}
 			onSubmit={onSubmit}
-			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA()}
+			validationSchema={CT_SETTINGS_VALIDATION_SCHEMA(renderUrlPattern)}
 		>
 			{formikProps => {
-				const { errors, touched, values } = formikProps;
+				const { errors, touched, values, setFieldValue } = formikProps;
+
+				if (
+					!path(['meta', 'urlPath', 'pattern'], touched) &&
+					!values.meta?.urlPath?.pattern &&
+					renderUrlPattern
+				) {
+					setFieldValue('meta.urlPath.pattern', '/[item:slug]');
+				}
 
 				return (
 					<>
@@ -108,6 +118,33 @@ const CTSettingsForm: FC<CTSettingsFormProps> = ({
 								/>
 							</div>
 						</div>
+						{renderUrlPattern && (
+							<div className="row">
+								<div className="col-xs-12 u-margin-top">
+									<Field
+										as={TextField}
+										disabled={disabled}
+										id="meta.urlPath.pattern"
+										label="Url patroon"
+										name="meta.urlPath.pattern"
+										required
+										state={getFieldState(
+											touched,
+											errors,
+											'meta.urlPath.pattern'
+										)}
+									/>
+									<small className="u-block u-text-light u-margin-top-xs">
+										Voorzie een pad dat voor de slug geplaatst moet worden
+									</small>
+									<ErrorMessage
+										className="u-text-danger u-margin-top-xs"
+										component="p"
+										name="meta.urlPath.pattern"
+									/>
+								</div>
+							</div>
+						)}
 						<div className="row">
 							<div className="col-xs-12 u-margin-top">
 								<Field
