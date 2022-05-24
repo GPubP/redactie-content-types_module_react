@@ -12,6 +12,7 @@ import { LeavePrompt, LoadingState, useDetectValueChangesWorker } from '@redacti
 import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import { CTSettingsForm, SiteStatus } from '../../../components';
+import navigationConnector from '../../../connectors/navigation';
 import sitesConnector from '../../../connectors/sites';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors/translations';
 import {
@@ -111,6 +112,7 @@ const ContentTypeSettings: FC<ContentTypesSiteDetailRoutePropsParams<
 				isUpdate
 				translations={MODULE_TRANSLATIONS['content-types']}
 				onSubmit={() => undefined}
+				renderUrlPattern={contentType.meta.canBeFiltered && !navigationConnector.api}
 			/>
 			<Card className="u-margin-top">
 				<CardBody>

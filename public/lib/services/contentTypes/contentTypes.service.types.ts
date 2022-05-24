@@ -98,6 +98,9 @@ export interface ContentTypeMeta {
 	status?: string;
 	lastEditor: string;
 	canBeFiltered: boolean;
+	urlPath?: {
+		pattern: string;
+	};
 	issuedOnPrefill?: ISSUED_PUBLICATION_OPTIONS;
 	issuedOnEditable?: boolean;
 }
@@ -181,6 +184,7 @@ export interface ContentTypeCreateRequest {
 		label: string;
 		safeLabel: string;
 		description: string;
+		urlPath: { pattern: string };
 		// TODO: fix in backend that this isn't needed
 		deleted: boolean;
 	};
