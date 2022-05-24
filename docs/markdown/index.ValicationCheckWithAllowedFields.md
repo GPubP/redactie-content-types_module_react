@@ -6,15 +6,15 @@
 
 ### Properties
 
-- [allowedFields](../wiki/index.ValicationCheckWithAllowedFields#allowedfields-1)
-- [id](../wiki/index.ValicationCheckWithAllowedFields#id-1)
-- [type](../wiki/index.ValicationCheckWithAllowedFields#type-1)
+- [allowedFields](../wiki/index.ValicationCheckWithAllowedFields#allowedfields)
+- [id](../wiki/index.ValicationCheckWithAllowedFields#id)
+- [type](../wiki/index.ValicationCheckWithAllowedFields#type)
 
 ## Properties
 
 ### allowedFields
 
-• **allowedFields**: `ValidationCheckAllowedField`[]
+• **allowedFields**: [`ValidationCheckAllowedField`](../wiki/index.%3Cinternal%3E.ValidationCheckAllowedField)[]
 
 #### Defined in
 

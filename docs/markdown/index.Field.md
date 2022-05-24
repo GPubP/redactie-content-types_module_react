@@ -6,29 +6,29 @@
 
 | Name | Type |
 | :------ | :------ |
-| `D` | `DataType` |
-| `F` | `FieldType` |
-| `P` | `Preset` \| `PresetDetailResponse` |
+| `D` | [`DataType`](../wiki/index.%3Cinternal%3E.DataType) |
+| `F` | [`FieldType`](../wiki/index.%3Cinternal%3E.FieldType) |
+| `P` | [`Preset`](../wiki/index.%3Cinternal%3E#preset) \| [`PresetDetailResponse`](../wiki/index.%3Cinternal%3E#presetdetailresponse) |
 
 ## Table of contents
 
 ### Properties
 
-- [\_\_new](../wiki/index.Field#__new-1)
-- [compartment](../wiki/index.Field#compartment-1)
-- [config](../wiki/index.Field#config-1)
-- [dataType](../wiki/index.Field#datatype-1)
-- [defaultValue](../wiki/index.Field#defaultvalue-1)
-- [fieldType](../wiki/index.Field#fieldtype-1)
-- [generalConfig](../wiki/index.Field#generalconfig-1)
-- [label](../wiki/index.Field#label-1)
-- [module](../wiki/index.Field#module-1)
-- [name](../wiki/index.Field#name-1)
-- [operators](../wiki/index.Field#operators-1)
-- [preset](../wiki/index.Field#preset-1)
-- [uuid](../wiki/index.Field#uuid-1)
-- [validation](../wiki/index.Field#validation-1)
-- [validators](../wiki/index.Field#validators-1)
+- [\_\_new](../wiki/index.Field#__new)
+- [compartment](../wiki/index.Field#compartment)
+- [config](../wiki/index.Field#config)
+- [dataType](../wiki/index.Field#datatype)
+- [defaultValue](../wiki/index.Field#defaultvalue)
+- [fieldType](../wiki/index.Field#fieldtype)
+- [generalConfig](../wiki/index.Field#generalconfig)
+- [label](../wiki/index.Field#label)
+- [module](../wiki/index.Field#module)
+- [name](../wiki/index.Field#name)
+- [operators](../wiki/index.Field#operators)
+- [preset](../wiki/index.Field#preset)
+- [uuid](../wiki/index.Field#uuid)
+- [validation](../wiki/index.Field#validation)
+- [validators](../wiki/index.Field#validators)
 
 ## Properties
 
@@ -44,7 +44,7 @@ ___
 
 ### compartment
 
-• **compartment**: `FieldCompartment`
+• **compartment**: [`FieldCompartment`](../wiki/index.%3Cinternal%3E.FieldCompartment)
 
 #### Defined in
 
@@ -64,7 +64,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `fields?` | [`Field`](../wiki/index.Field)<`DataType`, `FieldType`, `Preset` \| `PresetDetailResponse`\>[] |
+| `fields?` | [`Field`](../wiki/index.Field)<[`DataType`](../wiki/index.%3Cinternal%3E.DataType), [`FieldType`](../wiki/index.%3Cinternal%3E.FieldType), [`Preset`](../wiki/index.%3Cinternal%3E#preset) \| [`PresetDetailResponse`](../wiki/index.%3Cinternal%3E#presetdetailresponse)\>[] |
 
 #### Defined in
 
@@ -158,7 +158,7 @@ ___
 
 ### operators
 
-• **operators**: `Operator`[]
+• **operators**: [`Operator`](../wiki/index.%3Cinternal%3E.Operator)[]
 
 #### Defined in
 
@@ -198,7 +198,7 @@ ___
 
 ### validators
 
-• **validators**: `Validator`[]
+• **validators**: [`Validator`](../wiki/index.%3Cinternal%3E.Validator)[]
 
 #### Defined in
 

@@ -6,13 +6,13 @@
 
 ### Properties
 
-- [component](../wiki/index.ExternalTabOptions#component-1)
-- [containerId](../wiki/index.ExternalTabOptions#containerid-1)
-- [disabled](../wiki/index.ExternalTabOptions#disabled-1)
-- [label](../wiki/index.ExternalTabOptions#label-1)
-- [module](../wiki/index.ExternalTabOptions#module-1)
-- [replace](../wiki/index.ExternalTabOptions#replace-1)
-- [show](../wiki/index.ExternalTabOptions#show-1)
+- [component](../wiki/index.ExternalTabOptions#component)
+- [containerId](../wiki/index.ExternalTabOptions#containerid)
+- [disabled](../wiki/index.ExternalTabOptions#disabled)
+- [label](../wiki/index.ExternalTabOptions#label)
+- [module](../wiki/index.ExternalTabOptions#module)
+- [replace](../wiki/index.ExternalTabOptions#replace)
+- [show](../wiki/index.ExternalTabOptions#show)
 
 ## Properties
 
@@ -28,7 +28,7 @@ ___
 
 ### containerId
 
-• **containerId**: `ALERT_CONTAINER_IDS`
+• **containerId**: [`ALERT_CONTAINER_IDS`](../wiki/index.%3Cinternal%3E.ALERT_CONTAINER_IDS)
 
 #### Defined in
 
@@ -38,7 +38,7 @@ ___
 
 ### disabled
 
-• `Optional` **disabled**: `boolean` \| `ExternalTabDisabled`
+• `Optional` **disabled**: `boolean` \| [`ExternalTabDisabled`](../wiki/index.%3Cinternal%3E#externaltabdisabled)
 
 #### Defined in
 
@@ -78,7 +78,7 @@ ___
 
 ### show
 
-• `Optional` **show**: `ExternalTabShow`
+• `Optional` **show**: [`ExternalTabShow`](../wiki/index.%3Cinternal%3E#externaltabshow)
 
 #### Defined in
 

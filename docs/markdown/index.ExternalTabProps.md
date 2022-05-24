@@ -6,25 +6,25 @@
 
 ### Properties
 
-- [contentType](../wiki/index.ExternalTabProps#contenttype-1)
-- [isLoading](../wiki/index.ExternalTabProps#isloading-1)
-- [value](../wiki/index.ExternalTabProps#value-1)
+- [contentType](../wiki/index.ExternalTabProps#contenttype)
+- [isLoading](../wiki/index.ExternalTabProps#isloading)
+- [value](../wiki/index.ExternalTabProps#value)
 
 ### Methods
 
-- [onCancel](../wiki/index.ExternalTabProps#oncancel-1)
-- [onSubmit](../wiki/index.ExternalTabProps#onsubmit-1)
-- [updateContentType](../wiki/index.ExternalTabProps#updatecontenttype-1)
+- [onCancel](../wiki/index.ExternalTabProps#oncancel)
+- [onSubmit](../wiki/index.ExternalTabProps#onsubmit)
+- [updateContentType](../wiki/index.ExternalTabProps#updatecontenttype)
 
 ## Properties
 
 ### contentType
 
-• **contentType**: `ContentTypeDetailResponse`
+• **contentType**: [`ContentTypeDetailResponse`](../wiki/index.%3Cinternal%3E.ContentTypeDetailResponse)
 
 #### Defined in
 
-public/lib/contentTypes.types.ts:251
+public/lib/contentTypes.types.ts:254
 
 ___
 
@@ -34,17 +34,17 @@ ___
 
 #### Defined in
 
-public/lib/contentTypes.types.ts:253
+public/lib/contentTypes.types.ts:256
 
 ___
 
 ### value
 
-• **value**: `ExternalTabValue`
+• **value**: [`ExternalTabValue`](../wiki/index.%3Cinternal%3E.ExternalTabValue)
 
 #### Defined in
 
-public/lib/contentTypes.types.ts:252
+public/lib/contentTypes.types.ts:255
 
 ## Methods
 
@@ -58,7 +58,7 @@ public/lib/contentTypes.types.ts:252
 
 #### Defined in
 
-public/lib/contentTypes.types.ts:255
+public/lib/contentTypes.types.ts:258
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `value` | `ExternalTabValue` |
+| `value` | [`ExternalTabValue`](../wiki/index.%3Cinternal%3E.ExternalTabValue) |
 
 #### Returns
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-public/lib/contentTypes.types.ts:254
+public/lib/contentTypes.types.ts:257
 
 ___
 
@@ -90,7 +90,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `e` | `ContentTypeDetailResponse` |
+| `e` | [`ContentTypeDetailResponse`](../wiki/index.%3Cinternal%3E.ContentTypeDetailResponse) |
 
 #### Returns
 
@@ -98,4 +98,4 @@ ___
 
 #### Defined in
 
-public/lib/contentTypes.types.ts:256
+public/lib/contentTypes.types.ts:259

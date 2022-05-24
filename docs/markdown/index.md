@@ -2,6 +2,10 @@
 
 ## Table of contents
 
+### Namespaces
+
+- [&lt;internal\&gt;](../wiki/index.%3Cinternal%3E)
+
 ### Interfaces
 
 - [ContentTypeAPI](../wiki/index.ContentTypeAPI)
@@ -20,20 +24,20 @@
 
 ### Type aliases
 
-- [ContentTypeDetailModel](../wiki/index#contenttypedetailmodel-1)
-- [ContentTypeFieldDetailModel](../wiki/index#contenttypefielddetailmodel-1)
-- [FieldTypeDetailModel](../wiki/index#fieldtypedetailmodel-1)
-- [FieldTypeDetailUIModel](../wiki/index#fieldtypedetailuimodel-1)
-- [FieldTypeListModel](../wiki/index#fieldtypelistmodel-1)
-- [PresetDetailFieldModel](../wiki/index#presetdetailfieldmodel-1)
-- [PresetDetailModel](../wiki/index#presetdetailmodel-1)
-- [PresetListModel](../wiki/index#presetlistmodel-1)
+- [ContentTypeDetailModel](../wiki/index#contenttypedetailmodel)
+- [ContentTypeFieldDetailModel](../wiki/index#contenttypefielddetailmodel)
+- [FieldTypeDetailModel](../wiki/index#fieldtypedetailmodel)
+- [FieldTypeDetailUIModel](../wiki/index#fieldtypedetailuimodel)
+- [FieldTypeListModel](../wiki/index#fieldtypelistmodel)
+- [PresetDetailFieldModel](../wiki/index#presetdetailfieldmodel)
+- [PresetDetailModel](../wiki/index#presetdetailmodel)
+- [PresetListModel](../wiki/index#presetlistmodel)
 
 ## Type aliases
 
 ### ContentTypeDetailModel
 
-Ƭ **ContentTypeDetailModel**: `ContentTypeDetailResponse`
+Ƭ **ContentTypeDetailModel**: [`ContentTypeDetailResponse`](../wiki/index.%3Cinternal%3E.ContentTypeDetailResponse)
 
 #### Defined in
 
@@ -43,7 +47,7 @@ ___
 
 ### ContentTypeFieldDetailModel
 
-Ƭ **ContentTypeFieldDetailModel**: `ContentTypeFieldDetail`
+Ƭ **ContentTypeFieldDetailModel**: [`ContentTypeFieldDetail`](../wiki/index.%3Cinternal%3E#contenttypefielddetail)
 
 #### Defined in
 
@@ -53,7 +57,7 @@ ___
 
 ### FieldTypeDetailModel
 
-Ƭ **FieldTypeDetailModel**: `FieldType`
+Ƭ **FieldTypeDetailModel**: [`FieldType`](../wiki/index.%3Cinternal%3E.FieldType)
 
 #### Defined in
 
@@ -73,7 +77,7 @@ ___
 
 ### FieldTypeListModel
 
-Ƭ **FieldTypeListModel**: `FieldType`
+Ƭ **FieldTypeListModel**: [`FieldType`](../wiki/index.%3Cinternal%3E.FieldType)
 
 #### Defined in
 
@@ -83,7 +87,7 @@ ___
 
 ### PresetDetailFieldModel
 
-Ƭ **PresetDetailFieldModel**: `PresetDetailField`
+Ƭ **PresetDetailFieldModel**: [`PresetDetailField`](../wiki/index.%3Cinternal%3E#presetdetailfield)
 
 #### Defined in
 
@@ -93,7 +97,7 @@ ___
 
 ### PresetDetailModel
 
-Ƭ **PresetDetailModel**: `PresetDetailResponse`
+Ƭ **PresetDetailModel**: [`PresetDetailResponse`](../wiki/index.%3Cinternal%3E#presetdetailresponse)
 
 #### Defined in
 
@@ -103,7 +107,7 @@ ___
 
 ### PresetListModel
 
-Ƭ **PresetListModel**: `Preset`
+Ƭ **PresetListModel**: [`Preset`](../wiki/index.%3Cinternal%3E#preset)
 
 #### Defined in
 
