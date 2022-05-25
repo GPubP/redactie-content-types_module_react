@@ -6,12 +6,12 @@
 
 ### Properties
 
-- [helpers](../wiki/index.ContentTypeAPI#helpers-1)
-- [hooks](../wiki/index.ContentTypeAPI#hooks-1)
-- [parseFields](../wiki/index.ContentTypeAPI#parsefields-1)
-- [registerCTDetailTab](../wiki/index.ContentTypeAPI#registerctdetailtab-1)
-- [store](../wiki/index.ContentTypeAPI#store-1)
-- [views](../wiki/index.ContentTypeAPI#views-1)
+- [helpers](../wiki/index.ContentTypeAPI#helpers)
+- [hooks](../wiki/index.ContentTypeAPI#hooks)
+- [parseFields](../wiki/index.ContentTypeAPI#parsefields)
+- [registerCTDetailTab](../wiki/index.ContentTypeAPI#registerctdetailtab)
+- [store](../wiki/index.ContentTypeAPI#store)
+- [views](../wiki/index.ContentTypeAPI#views)
 
 ## Properties
 
@@ -23,20 +23,20 @@
 
 | Name | Type |
 | :------ | :------ |
-| `configurationCompartmentValidator` | (`values`: `ContentTypeFieldDetail`, `fieldType?`: `FieldType`, `preset?`: `Preset`) => `boolean` |
+| `configurationCompartmentValidator` | (`values`: [`ContentTypeFieldDetail`](../wiki/index.%3Cinternal%3E#contenttypefielddetail), `fieldType?`: [`FieldType`](../wiki/index.%3Cinternal%3E.FieldType), `preset?`: [`Preset`](../wiki/index.%3Cinternal%3E#preset), `languages`: `LanguageSchema`[]) => `boolean` |
 | `createInitialValuesFromChecks` | (`checks`: (`ValidationCheck` \| `ValicationCheckWithFields` \| `ValicationCheckWithAllowedFields`)[]) => `FormValues` |
-| `defaultValueCompartmentValidator` | (`field`: `ContentTypeFieldDetail`, `fieldType?`: `FieldType`) => `boolean` |
-| `generateConfig` | (`fieldTypeData`: `FieldTypeData`, `preset?`: `PresetDetailResponse`) => `Record`<`string`, `any`\> |
-| `generateConfigFromValidationData` | (`data`: `FormikValues`, `preset?`: `PresetDetailResponse`, `fieldConfig?`: { `[key: string]`: `any`; `fields?`: [`Field`](../wiki/index.Field)<`DataType`, `FieldType`, `Preset` \| `PresetDetailResponse`\>[]  }, `schema?`: `FormSchema`) => `Record`<`string`, `any`\> |
-| `generateFormSchemaFromFieldTypeData` | (`fieldTypeData`: `FieldTypeData`) => `FormSchema` |
-| `generateFormSchemaFromPreset` | (`preset`: `PresetDetailResponse`) => `FormSchema` |
-| `generateValidationChecks` | (`data`: `FormikValues`, `fieldTypeData`: `FieldTypeData`, `preset?`: `PresetDetailResponse`, `ctField?`: `ContentTypeFieldDetail` \| `PresetDetailField`) => [`Validation`](../wiki/index.Validation) |
-| `settingsCompartmentValidator` | (`values`: `ContentTypeFieldDetail`) => `boolean` |
-| `validationCompartmentValidator` | (`values`: `ContentTypeFieldDetail`, `fieldType?`: `FieldType`, `preset?`: `Preset`) => `boolean` |
+| `defaultValueCompartmentValidator` | (`field`: [`ContentTypeFieldDetail`](../wiki/index.%3Cinternal%3E#contenttypefielddetail), `fieldType?`: [`FieldType`](../wiki/index.%3Cinternal%3E.FieldType), `preset?`: [`Preset`](../wiki/index.%3Cinternal%3E#preset), `languages?`: `LanguageSchema`[]) => `boolean` |
+| `generateConfig` | (`fieldTypeData`: [`FieldTypeData`](../wiki/index.%3Cinternal%3E.FieldTypeData), `preset?`: [`PresetDetailResponse`](../wiki/index.%3Cinternal%3E#presetdetailresponse)) => `Record`<`string`, `any`\> |
+| `generateConfigFromValidationData` | (`data`: `FormikValues`, `preset?`: [`PresetDetailResponse`](../wiki/index.%3Cinternal%3E#presetdetailresponse), `fieldConfig?`: { `[key: string]`: `any`; `fields?`: [`Field`](../wiki/index.Field)<[`DataType`](../wiki/index.%3Cinternal%3E.DataType), [`FieldType`](../wiki/index.%3Cinternal%3E.FieldType), [`Preset`](../wiki/index.%3Cinternal%3E#preset) \| [`PresetDetailResponse`](../wiki/index.%3Cinternal%3E#presetdetailresponse)\>[]  }, `schema?`: `FormSchema`) => `Record`<`string`, `any`\> |
+| `generateFormSchemaFromFieldTypeData` | (`fieldTypeData`: [`FieldTypeData`](../wiki/index.%3Cinternal%3E.FieldTypeData)) => `FormSchema` |
+| `generateFormSchemaFromPreset` | (`preset`: [`PresetDetailResponse`](../wiki/index.%3Cinternal%3E#presetdetailresponse)) => `FormSchema` |
+| `generateValidationChecks` | (`data`: `FormikValues`, `fieldTypeData`: [`FieldTypeData`](../wiki/index.%3Cinternal%3E.FieldTypeData), `preset?`: [`PresetDetailResponse`](../wiki/index.%3Cinternal%3E#presetdetailresponse), `ctField?`: [`ContentTypeFieldDetail`](../wiki/index.%3Cinternal%3E#contenttypefielddetail) \| [`PresetDetailField`](../wiki/index.%3Cinternal%3E#presetdetailfield)) => [`Validation`](../wiki/index.Validation) |
+| `settingsCompartmentValidator` | (`values`: [`ContentTypeFieldDetail`](../wiki/index.%3Cinternal%3E#contenttypefielddetail)) => `boolean` |
+| `validationCompartmentValidator` | (`values`: [`ContentTypeFieldDetail`](../wiki/index.%3Cinternal%3E#contenttypefielddetail), `fieldType?`: [`FieldType`](../wiki/index.%3Cinternal%3E.FieldType), `preset?`: [`Preset`](../wiki/index.%3Cinternal%3E#preset)) => `boolean` |
 
 #### Defined in
 
-public/lib/contentTypes.types.ts:206
+public/lib/contentTypes.types.ts:209
 
 ___
 
@@ -48,21 +48,21 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `useActiveFieldType` | `UseActiveFieldType` |
-| `useActivePreset` | `UseActivePreset` |
-| `useContentType` | `UseContentType` |
-| `useFieldType` | `UseFieldType` |
-| `useFieldTypes` | `UseFieldTypes` |
-| `useFieldTypesUIStates` | `UseFieldTypesUIStates` |
-| `useNavItemMatcher` | `UseNavItemMatcher` |
-| `usePaginatedPresets` | `UsePaginatedPresets` |
-| `usePreset` | `UsePreset` |
-| `usePresets` | `UsePresets` |
-| `usePresetsUIStates` | `UsePresetsUIStates` |
+| `useActiveFieldType` | [`UseActiveFieldType`](../wiki/index.%3Cinternal%3E#useactivefieldtype) |
+| `useActivePreset` | [`UseActivePreset`](../wiki/index.%3Cinternal%3E#useactivepreset) |
+| `useContentType` | [`UseContentType`](../wiki/index.%3Cinternal%3E#usecontenttype) |
+| `useFieldType` | [`UseFieldType`](../wiki/index.%3Cinternal%3E#usefieldtype) |
+| `useFieldTypes` | [`UseFieldTypes`](../wiki/index.%3Cinternal%3E#usefieldtypes) |
+| `useFieldTypesUIStates` | [`UseFieldTypesUIStates`](../wiki/index.%3Cinternal%3E#usefieldtypesuistates) |
+| `useNavItemMatcher` | [`UseNavItemMatcher`](../wiki/index.%3Cinternal%3E#usenavitemmatcher) |
+| `usePaginatedPresets` | [`UsePaginatedPresets`](../wiki/index.%3Cinternal%3E#usepaginatedpresets) |
+| `usePreset` | [`UsePreset`](../wiki/index.%3Cinternal%3E#usepreset) |
+| `usePresets` | [`UsePresets`](../wiki/index.%3Cinternal%3E#usepresets) |
+| `usePresetsUIStates` | [`UsePresetsUIStates`](../wiki/index.%3Cinternal%3E#usepresetsuistates) |
 
 #### Defined in
 
-public/lib/contentTypes.types.ts:182
+public/lib/contentTypes.types.ts:185
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-public/lib/contentTypes.types.ts:163
+public/lib/contentTypes.types.ts:166
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 #### Defined in
 
-public/lib/contentTypes.types.ts:162
+public/lib/contentTypes.types.ts:165
 
 ___
 
@@ -124,22 +124,22 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `contentTypes` | { `facade`: `ContentTypesFacade` ; `service`: `ContentTypesApiService`  } |
-| `contentTypes.facade` | `ContentTypesFacade` |
-| `contentTypes.service` | `ContentTypesApiService` |
-| `fieldTypes` | { `facade`: `FieldTypesFacade` ; `service`: `FieldTypesApiService`  } |
-| `fieldTypes.facade` | `FieldTypesFacade` |
-| `fieldTypes.service` | `FieldTypesApiService` |
-| `metadata` | { `facade`: `MetadataFacade` ; `service`: `MetadataApiService`  } |
-| `metadata.facade` | `MetadataFacade` |
-| `metadata.service` | `MetadataApiService` |
-| `presets` | { `facade`: `PresetsFacade` ; `service`: `PresetsApiService`  } |
-| `presets.facade` | `PresetsFacade` |
-| `presets.service` | `PresetsApiService` |
+| `contentTypes` | { `facade`: [`ContentTypesFacade`](../wiki/index.%3Cinternal%3E.ContentTypesFacade) ; `service`: [`ContentTypesApiService`](../wiki/index.%3Cinternal%3E.ContentTypesApiService)  } |
+| `contentTypes.facade` | [`ContentTypesFacade`](../wiki/index.%3Cinternal%3E.ContentTypesFacade) |
+| `contentTypes.service` | [`ContentTypesApiService`](../wiki/index.%3Cinternal%3E.ContentTypesApiService) |
+| `fieldTypes` | { `facade`: [`FieldTypesFacade`](../wiki/index.%3Cinternal%3E.FieldTypesFacade) ; `service`: [`FieldTypesApiService`](../wiki/index.%3Cinternal%3E.FieldTypesApiService)  } |
+| `fieldTypes.facade` | [`FieldTypesFacade`](../wiki/index.%3Cinternal%3E.FieldTypesFacade) |
+| `fieldTypes.service` | [`FieldTypesApiService`](../wiki/index.%3Cinternal%3E.FieldTypesApiService) |
+| `metadata` | { `facade`: [`MetadataFacade`](../wiki/index.%3Cinternal%3E.MetadataFacade) ; `service`: [`MetadataApiService`](../wiki/index.%3Cinternal%3E.MetadataApiService)  } |
+| `metadata.facade` | [`MetadataFacade`](../wiki/index.%3Cinternal%3E.MetadataFacade) |
+| `metadata.service` | [`MetadataApiService`](../wiki/index.%3Cinternal%3E.MetadataApiService) |
+| `presets` | { `facade`: [`PresetsFacade`](../wiki/index.%3Cinternal%3E.PresetsFacade) ; `service`: [`PresetsApiService`](../wiki/index.%3Cinternal%3E.PresetsApiService)  } |
+| `presets.facade` | [`PresetsFacade`](../wiki/index.%3Cinternal%3E.PresetsFacade) |
+| `presets.service` | [`PresetsApiService`](../wiki/index.%3Cinternal%3E.PresetsApiService) |
 
 #### Defined in
 
-public/lib/contentTypes.types.ts:164
+public/lib/contentTypes.types.ts:167
 
 ___
 
@@ -151,11 +151,11 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `tenant` | { `ContentTypesCCConfig`: `FC`<`ContentTypesCCRouteProps`\> ; `ContentTypesCCSettings`: `FC`<`ContentTypesCCRouteProps`\> ; `ContentTypesCCValidation`: `FC`<`ContentTypesCCRouteProps`\>  } |
-| `tenant.ContentTypesCCConfig` | `FC`<`ContentTypesCCRouteProps`\> |
-| `tenant.ContentTypesCCSettings` | `FC`<`ContentTypesCCRouteProps`\> |
-| `tenant.ContentTypesCCValidation` | `FC`<`ContentTypesCCRouteProps`\> |
+| `tenant` | { `ContentTypesCCConfig`: `FC`<[`ContentTypesCCRouteProps`](../wiki/index.%3Cinternal%3E.ContentTypesCCRouteProps)\> ; `ContentTypesCCSettings`: `FC`<[`ContentTypesCCRouteProps`](../wiki/index.%3Cinternal%3E.ContentTypesCCRouteProps)\> ; `ContentTypesCCValidation`: `FC`<[`ContentTypesCCRouteProps`](../wiki/index.%3Cinternal%3E.ContentTypesCCRouteProps)\>  } |
+| `tenant.ContentTypesCCConfig` | `FC`<[`ContentTypesCCRouteProps`](../wiki/index.%3Cinternal%3E.ContentTypesCCRouteProps)\> |
+| `tenant.ContentTypesCCSettings` | `FC`<[`ContentTypesCCRouteProps`](../wiki/index.%3Cinternal%3E.ContentTypesCCRouteProps)\> |
+| `tenant.ContentTypesCCValidation` | `FC`<[`ContentTypesCCRouteProps`](../wiki/index.%3Cinternal%3E.ContentTypesCCRouteProps)\> |
 
 #### Defined in
 
-public/lib/contentTypes.types.ts:199
+public/lib/contentTypes.types.ts:202

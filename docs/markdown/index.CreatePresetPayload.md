@@ -6,7 +6,7 @@
 
 ### Properties
 
-- [data](../wiki/index.CreatePresetPayload#data-1)
+- [data](../wiki/index.CreatePresetPayload#data)
 
 ## Properties
 
@@ -19,7 +19,7 @@
 | Name | Type |
 | :------ | :------ |
 | `fieldType` | `string` |
-| `fields?` | { `field`: `PresetField`<`DataType`, `FieldType`\> ; `formSchema`: { `fields`: [`Field`](../wiki/index.Field)<`DataType`, `FieldType`, `Preset` \| `PresetDetailResponse`\>[]  } ; `validators`: `Validator`[]  }[] |
+| `fields?` | { `field`: [`PresetField`](../wiki/index.%3Cinternal%3E#presetfield)<[`DataType`](../wiki/index.%3Cinternal%3E.DataType), [`FieldType`](../wiki/index.%3Cinternal%3E.FieldType)\> ; `formSchema`: { `fields`: [`Field`](../wiki/index.Field)<[`DataType`](../wiki/index.%3Cinternal%3E.DataType), [`FieldType`](../wiki/index.%3Cinternal%3E.FieldType), [`Preset`](../wiki/index.%3Cinternal%3E#preset) \| [`PresetDetailResponse`](../wiki/index.%3Cinternal%3E#presetdetailresponse)\>[]  } ; `validators`: [`Validator`](../wiki/index.%3Cinternal%3E.Validator)[]  }[] |
 | `label` | `string` |
 | `name` | `string` |
 | `validators?` | `string`[] |

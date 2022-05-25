@@ -10,9 +10,9 @@ Base types
 
 ### Properties
 
-- [err](../wiki/index.ValidationCheck#err-1)
-- [key](../wiki/index.ValidationCheck#key-1)
-- [val](../wiki/index.ValidationCheck#val-1)
+- [err](../wiki/index.ValidationCheck#err)
+- [key](../wiki/index.ValidationCheck#key)
+- [val](../wiki/index.ValidationCheck#val)
 
 ## Properties
 

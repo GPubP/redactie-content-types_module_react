@@ -6,8 +6,8 @@
 
 ### Properties
 
-- [fields](../wiki/index.ValicationCheckWithFields#fields-1)
-- [type](../wiki/index.ValicationCheckWithFields#type-1)
+- [fields](../wiki/index.ValicationCheckWithFields#fields)
+- [type](../wiki/index.ValicationCheckWithFields#type)
 
 ## Properties
 

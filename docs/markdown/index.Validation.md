@@ -6,8 +6,8 @@
 
 ### Properties
 
-- [checks](../wiki/index.Validation#checks-1)
-- [type](../wiki/index.Validation#type-1)
+- [checks](../wiki/index.Validation#checks)
+- [type](../wiki/index.Validation#type)
 
 ## Properties
 

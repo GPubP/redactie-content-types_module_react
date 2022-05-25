@@ -6,14 +6,14 @@
 
 ### Properties
 
-- [data](../wiki/index.ContentTypesResponse#data-1)
-- [paging](../wiki/index.ContentTypesResponse#paging-1)
+- [data](../wiki/index.ContentTypesResponse#data)
+- [paging](../wiki/index.ContentTypesResponse#paging)
 
 ## Properties
 
 ### data
 
-• **data**: `ContentTypeResponse`[]
+• **data**: [`ContentTypeResponse`](../wiki/index.%3Cinternal%3E.ContentTypeResponse)[]
 
 #### Defined in
 
@@ -23,7 +23,7 @@ ___
 
 ### paging
 
-• **paging**: `ContentTypePaging`
+• **paging**: [`ContentTypePaging`](../wiki/index.%3Cinternal%3E.ContentTypePaging)
 
 #### Defined in
 

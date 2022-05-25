@@ -4,15 +4,15 @@
 
 ### Variables
 
-- [helpers](../wiki/Module%20API#helpers-1)
-- [hooks](../wiki/Module%20API#hooks-1)
-- [store](../wiki/Module%20API#store-1)
-- [views](../wiki/Module%20API#views-1)
+- [helpers](../wiki/Module%20API#helpers)
+- [hooks](../wiki/Module%20API#hooks)
+- [store](../wiki/Module%20API#store)
+- [views](../wiki/Module%20API#views)
 
 ### Functions
 
-- [parseFields](../wiki/Module%20API#parsefields-1)
-- [registerCTDetailTab](../wiki/Module%20API#registerctdetailtab-1)
+- [parseFields](../wiki/Module%20API#parsefields)
+- [registerCTDetailTab](../wiki/Module%20API#registerctdetailtab)
 
 ## Variables
 

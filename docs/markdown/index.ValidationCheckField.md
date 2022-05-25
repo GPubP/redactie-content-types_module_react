@@ -6,11 +6,11 @@
 
 ### Properties
 
-- [checks](../wiki/index.ValidationCheckField#checks-1)
-- [max](../wiki/index.ValidationCheckField#max-1)
-- [min](../wiki/index.ValidationCheckField#min-1)
-- [name](../wiki/index.ValidationCheckField#name-1)
-- [type](../wiki/index.ValidationCheckField#type-1)
+- [checks](../wiki/index.ValidationCheckField#checks)
+- [max](../wiki/index.ValidationCheckField#max)
+- [min](../wiki/index.ValidationCheckField#min)
+- [name](../wiki/index.ValidationCheckField#name)
+- [type](../wiki/index.ValidationCheckField#type)
 
 ## Properties
 
